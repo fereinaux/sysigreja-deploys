@@ -11,7 +11,7 @@ function AddCabecalhoEvento(doc, titulo, evento) {
     doc.setFont('helvetica',"normal")
     doc.setFontSize(12);
     var img = new Image();
-    img.src = `/Images/logo-preto.png`;
+    img.src = `data:image/png;base64,${logo}`;
     doc.addImage(img, 'PNG', 10, 10, 50, 21);
     doc.text(64, 14, evento);
     doc.text(64, 22, titulo);

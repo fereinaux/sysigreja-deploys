@@ -41,7 +41,7 @@ function CarregarTabelaEquipe() {
 function header(doc, evento, page) {
 
     var img = new Image();
-    img.src = `/Images/logo-preto.png`;
+    img.src = `data:image/png;base64,${logo}`;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.addImage(img, 'PNG', 10, 10, 50, 21);

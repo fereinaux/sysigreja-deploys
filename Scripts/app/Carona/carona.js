@@ -84,7 +84,7 @@ function PrintCarona(row) {
 
 
             var img = new Image();
-            img.src = `/Images/logo-preto.png`;
+            img.src = `data:image/png;base64,${logo}`;
 
             doc.setFont('helvetica', "normal")
             doc.setFontSize(12);

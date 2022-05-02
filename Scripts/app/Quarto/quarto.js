@@ -55,16 +55,16 @@ $(document).ready(function () {
     GetQuartosComParticipantes();
 });
 
-function PrintQuarto(row) {
+async function PrintQuarto(row) {
     $.ajax({
         url: window.location.href.includes('QuartoEquipe') ? '/Quarto/GetEquipantesByQuarto' : '/Participante/GetParticipantesByQuarto',
         data: { QuartoId: row.Id },
         datatype: "json",
         type: "GET",
-        success: (result) => {
+        success: async (result) => {
             var doc = CriarPDFA4();
             var titulo = `Quarto - ${row.Titulo}`;
-            doc = AddCabecalhoEvento(doc, titulo, $("#quarto-eventoid option:selected").text());
+            doc = await AddCabecalhoEvento(doc, titulo, $("#quarto-eventoid option:selected").text());
             doc.line(10, 38, 195, 38);
 
             doc.setFontStyle("bold");

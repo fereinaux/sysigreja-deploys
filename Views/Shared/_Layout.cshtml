@@ -10,12 +10,12 @@
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Realidade">
+    <meta name="application-name" content="SVES">
     <link rel="icon" type="image/png" sizes="16x16"/>
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Realidade">
+    <meta name="apple-mobile-web-app-title" content="SVES">
     <link rel="manifest" href="~/manifest.json" />
     <title></title>
 
@@ -90,6 +90,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         const { jsPDF } = window.jspdf;
+        let logo;
         var config = {}
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
@@ -102,6 +103,7 @@
                 config = data.Configuracao
                 $('title').text(`${config.Titulo} | ${$('#title').text()}`)
                 if (config.LogoId) {
+                    logo = config.Logo
                     $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
                     $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
                 }

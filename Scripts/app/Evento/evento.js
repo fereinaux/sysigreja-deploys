@@ -21,7 +21,8 @@
                 }
             },
             { data: "Capacidade", name: "Capacidade", autoWidth: true},
-            { data: "Valor", name: "Valor", autoWidth: true},
+            { data: "Valor", name: "Valor", autoWidth: true },
+            { data: "ValorTaxa", name: "ValorTaxa", autoWidth: true },
             {
                 data: "DataEvento", name: "DataEvento", autoWidth: true,
                 "render": function (data, type, row) {
@@ -66,6 +67,7 @@ function GetEvento(id) {
                 $("#evento-numeracao").val(data.Evento.Numeracao);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
                 $("#evento-valor").val(data.Evento.Valor);
+                $("#evento-taxa").val(data.Evento.ValorTaxa);
                 $("#evento-data").val(moment(data.Evento.DataEvento).format('DD/MM/YYYY'));
                 $("#evento-tipo").val(data.Evento.TipoEvento).trigger("chosen:updated");
             }
@@ -77,6 +79,7 @@ function GetEvento(id) {
         $("#evento-capacidade").val("");
         $("#evento-data").val("");
         $("#evento-valor").val("");
+        $("#evento-taxa").val("");
     }
 }
 
@@ -140,6 +143,7 @@ function PostEvento() {
                     Numeracao: $("#evento-numeracao").val(),
                     Capacidade: $("#evento-capacidade").val(),
                     Valor: $("#evento-valor").val(),
+                    ValorTaxa: $("#evento-taxa").val(),
                     DataEvento: moment($("#evento-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON()
                 }),
             success: function () {

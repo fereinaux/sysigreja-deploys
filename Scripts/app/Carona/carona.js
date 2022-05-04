@@ -73,7 +73,7 @@ function CaronaRefresh() {
 
 function PrintCarona(row) {
     $.ajax({
-        url: '/Participante/GetParticipantesByCarona',
+        url: '/Carona/GetParticipantesByCarona',
         data: { CaronaId: row.Id },
         datatype: "json",
         type: "GET",
@@ -83,12 +83,14 @@ function PrintCarona(row) {
             var evento = $("#carona-eventoid option:selected").text()
 
 
-            var img = new Image();
-            img.src = `/Images/logo-preto.png`;
+            if (logoRelatorio) {
+                var img = new Image();
+                img.src = `data:image/png;base64,${logoRelatorio}`;
+                doc.addImage(img, 'PNG', 10, 10, 50, 21);
+            }
 
             doc.setFont('helvetica', "normal")
             doc.setFontSize(12);
-            doc.addImage(img, 'PNG', 10, 10, 64, 21);
             doc.text(77, 15, $("#carona-eventoid option:selected").text());
 
 
@@ -111,7 +113,7 @@ function PrintCarona(row) {
             $(result.data).each((index, participante) => {
                 doc.text(12, height, participante.Nome);
                 doc.text(117, height, participante.Apelido);
-                doc.text(152, height, participante.Fone);
+                //doc.text(152, height, participante.Fone);
                 height += 6;
             });
 

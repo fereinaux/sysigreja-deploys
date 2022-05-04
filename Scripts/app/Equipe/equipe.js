@@ -40,11 +40,15 @@ function CarregarTabelaEquipe() {
 
 function header(doc, evento, page) {
 
-    var img = new Image();
-    img.src = `/Images/logo-preto.png`;
+
+    if (logoRelatorio) {
+        var img = new Image();
+        img.src = `data:image/png;base64,${logoRelatorio}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.addImage(img, 'PNG', 10, 10, 50, 21);
     doc.text(64, 14, evento);
     doc.text(64, 22, Titulo);
     doc.text(64, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')} - Página ${page}`);

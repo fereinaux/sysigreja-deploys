@@ -6,13 +6,15 @@ function CriarPDFA4() {
 }
 
 function AddCabecalhoEvento(doc, titulo, evento) {
-   
 
-    doc.setFont('helvetica',"normal")
+
+    doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    var img = new Image();
-    img.src = `/Images/logo-preto.png`;
-    doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    if (logoRelatorio) {
+        var img = new Image();
+        img.src = `data:image/png;base64,${logoRelatorio}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
     doc.text(64, 14, evento);
     doc.text(64, 22, titulo);
     doc.text(64, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);
@@ -23,7 +25,7 @@ function AddCabecalhoEvento(doc, titulo, evento) {
 function AddCount(doc, data, height, width) {
     height += -3;
     doc.line(10, height, width ? width : 195, height);
-    doc.setFont('helvetica',"bold")
+    doc.setFont('helvetica', "bold")
     doc.text(12, height + 5, "Total:");
     doc.text(24, height + 5, data.length.toString());
 }

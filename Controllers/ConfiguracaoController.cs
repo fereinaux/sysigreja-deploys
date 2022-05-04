@@ -86,5 +86,22 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
+
+        [HttpPost]
+        public ActionResult PostLogoRelatorio(int id)
+        {
+            configuracaoBusiness.PostLogoRelatorio(id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult PostBackgroundCelular(int id)
+        {
+            configuracaoBusiness.PostBackgroundCelular(id);
+
+            return new HttpStatusCodeResult(200);
+        }
     }
 }

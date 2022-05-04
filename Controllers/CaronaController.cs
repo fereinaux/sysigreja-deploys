@@ -139,5 +139,17 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(400, mensagem);
         }
+
+        [HttpGet]
+        public ActionResult GetParticipantesByCarona(int CaronaId)
+        {
+            var result = caronasBusiness.GetParticipantesByCaronas(CaronaId).ToList().Select(x => new
+            {
+                Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
+            });
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

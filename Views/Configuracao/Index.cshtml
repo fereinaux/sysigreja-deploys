@@ -77,12 +77,34 @@
                 </div>
 
                 <div class="col-sm-6 p-w-md m-t-md text-center">
+                    <h5>Logo Relatórios</h5>
+                    <img id="img-logorelatorio" style="width:20%;margin:auto" src="" class="m-auto" />
+                    <form enctype="multipart/form-data" id="frm-logorelatorio" method="post" novalidate="novalidate">
+                        <label for="logorelatorio" class="inputFile">
+                            <span id="add-logorelatorio" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                            <input accept="image/*" onchange='LogoRelatorio()' style="display: none;" class="custom-file-input inputFile" id="logorelatorio" name="logorelatorio" type="file" value="">
+                        </label>
+                    </form>
+                </div>
+
+                <div class="col-sm-6 p-w-md m-t-md text-center">
                     <h5>Background</h5>
                     <img id="img-background" style="width:50%;margin:auto" src="" class="m-auto" />
                     <form enctype="multipart/form-data" id="frm-background" method="post" novalidate="novalidate">
                         <label for="background" class="inputFile">
                             <span id="add-background" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
                             <input accept="image/*" onchange='Background()' style="display: none;" class="custom-file-input inputFile" id="background" name="background" type="file" value="">
+                        </label>
+                    </form>
+                </div>
+
+                <div class="col-sm-6 p-w-md m-t-md text-center">
+                    <h5>Background Celular</h5>
+                    <img id="img-backgroundcelular" style="width:50%;margin:auto" src="" class="m-auto" />
+                    <form enctype="multipart/form-data" id="frm-backgroundcelular" method="post" novalidate="novalidate">
+                        <label for="backgroundcelular" class="inputFile">
+                            <span id="add-backgroundcelular" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                            <input accept="image/*" onchange='BackgroundCelular()' style="display: none;" class="custom-file-input inputFile" id="backgroundcelular" name="backgroundcelular" type="file" value="">
                         </label>
                     </form>
                 </div>
@@ -169,12 +191,25 @@
                         $('#img-logo').css('display', 'none')
                     }
 
-
                     if (config.BackgroundId) {
                         $('#img-background').css('display', 'block')
                         $('#img-background').attr("src", 'data:image/jpeg;base64,' + config.Background)
                     } else {
                         $('#img-background').css('display', 'none')
+                    }
+
+                    if (config.LogoRelatorioId) {
+                        $('#img-logorelatorio').css('display', 'block')
+                        $('#img-logorelatorio').attr("src", 'data:image/jpeg;base64,' + config.LogoRelatorio)
+                    } else {
+                        $('#img-logorelatorio').css('display', 'none')
+                    }
+
+                    if (config.BackgroundCelularId) {
+                        $('#img-backgroundcelular').css('display', 'block')
+                        $('#img-backgroundcelular').attr("src", 'data:image/jpeg;base64,' + config.BackgroundCelular)
+                    } else {
+                        $('#img-backgroundcelular').css('display', 'none')
                     }
                 }
             });
@@ -246,6 +281,14 @@ ${campos.map(p => `<option value=${p.Id}>${p.Description}</option>`)}
 
         function Background() {
             postArquivo('Background')
+        }
+
+        function LogoRelatorio() {
+            postArquivo('logorelatorio')
+        }
+
+        function BackgroundCelular() {
+            postArquivo('backgroundcelular')
         }
     </script>
 }

@@ -57,13 +57,23 @@
 
 <script src="~/Scripts/jquery-3.1.1.min.js"></script>
 <script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="~/Scripts/app/Util/forms.js"></script>
 
 <script>
       $(document).ready(function () {
-        if (@ViewBag.Configuracao.BackgroundId) {
-            $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`)
-            $('.background-evento').css('background-size', 'cover')
+         if (isMobile) {
+            @if (ViewBag.Configuracao.BackgroundCelularId != null)
+            {
+                <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.BackgroundCelular) no-repeat center center fixed`) </text>
+                <text> $('.background-evento').css('background-size', 'cover')</text>
+            }
+        } else {
 
+            @if (ViewBag.Configuracao.BackgroundId != null)
+            {
+                <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`) </text>
+                <text> $('.background-evento').css('background-size', 'cover')</text>
+            }
         }
     })
 

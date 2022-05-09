@@ -1,11 +1,7 @@
-﻿using Core.Business.CentroCusto;
-using Core.Business.Configuracao;
-using Core.Models.CentroCusto;
+﻿using Core.Business.Configuracao;
 using Core.Models.Configuracao;
-using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -87,6 +83,23 @@ namespace SysIgreja.Controllers
         public ActionResult PostBackground(int id)
         {
             configuracaoBusiness.PostBackground(id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult PostLogoRelatorio(int id)
+        {
+            configuracaoBusiness.PostLogoRelatorio(id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult PostBackgroundCelular(int id)
+        {
+            configuracaoBusiness.PostBackgroundCelular(id);
 
             return new HttpStatusCodeResult(200);
         }

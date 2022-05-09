@@ -5,6 +5,7 @@ using Core.Business.Configuracao;
 using Core.Business.ContaBancaria;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
+using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
@@ -32,6 +33,7 @@ namespace SysIgreja.Controllers
     public class EquipanteController : Controller
     {
         private readonly IEquipantesBusiness equipantesBusiness;
+        private readonly IEtiquetasBusiness etiquetasBusiness;
         private readonly IQuartosBusiness quartosBusiness;
         private readonly IArquivosBusiness arquivoBusiness;
         private readonly IEventosBusiness eventosBusiness;
@@ -40,13 +42,13 @@ namespace SysIgreja.Controllers
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
         private readonly IContaBancariaBusiness contaBancariaBusiness;
-        private readonly IConfiguracaoBusiness configuracaoBusiness ;
+        private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
         private readonly int qtdReunioes;
 
 
-        public EquipanteController(IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness,IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IContaBancariaBusiness contaBancariaBusiness, IArquivosBusiness arquivoBusiness)
+        public EquipanteController(IEquipantesBusiness equipantesBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IContaBancariaBusiness contaBancariaBusiness, IArquivosBusiness arquivoBusiness)
         {
             this.quartosBusiness = quartosBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
@@ -57,6 +59,7 @@ namespace SysIgreja.Controllers
             this.lancamentoBusiness = lancamentoBusiness;
             this.contaBancariaBusiness = contaBancariaBusiness;
             this.meioPagamentoBusiness = meioPagamentoBusiness;
+            this.etiquetasBusiness = etiquetasBusiness;
             this.reunioesBusiness = reunioesBusiness;
             this.datatableService = datatableService;
             var eventoAtivo = eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().ToList().LastOrDefault();
@@ -119,11 +122,49 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                var eventoId = eventosBusiness.GetEventoAtivo().Id;
+                var eventoId = model.EventoId ?? eventosBusiness.GetEventoAtivo().Id;
                 var result = equipantesBusiness.GetEquipantes();
 
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;
+
+
+
+                if (model.Etiquetas != null && model.Etiquetas.Count > 0)
+                {
+                    model.Etiquetas.ForEach(etiqueta =>
+                    result = result.Where(x => x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+
+                }
+
+                if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
+                {
+                    model.NaoEtiquetas.ForEach(etiqueta =>
+                 result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                }
+
+                if (model.EventoId != null)
+                {
+
+                    result = result.Where(x => x.Equipes.Any(y => y.EventoId == model.EventoId));
+
+                    filteredResultsCount = result.Count();
+                }
+
+                if (model.Status != null)
+                {
+                    if (model.Status == "pendente")
+                    {
+                        result = result.Where(x => (!x.Lancamentos.Any(y => y.EventoId ==  (x.Equipes.Any() ? x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().EventoId : 0))));
+                    }
+                    else if (model.Status == "pago")
+                    {
+                        result = result.Where(x => (x.Lancamentos.Any(y => y.EventoId == (x.Equipes.Any() ? x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().EventoId : 0))));
+
+                    }
+                    filteredResultsCount = result.Count();
+                }
+
 
                 if (model.Equipe != null)
                 {
@@ -229,16 +270,16 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipante(int Id)
         {
-            var result = equipantesBusiness.GetEquipanteById(Id);
+            var result = mapper.Map<EquipanteListModel>(equipantesBusiness.GetEquipantes().ToList().FirstOrDefault(x => x.Id == Id));
             int eventoId = (eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().OrderByDescending(x => x.DataEvento).First()).Id;
 
-            result.Nome = UtilServices.CapitalizarNome(result.Nome);
-            result.Apelido = UtilServices.CapitalizarNome(result.Apelido);
-            var equipeAtual = equipesBusiness.GetEquipeAtual(eventoId, result.Id);
-            result.Equipe = equipeAtual?.Equipe.GetDescription() ?? "";
-            result.Checkin = equipeAtual?.Checkin ?? false;
-
-            var equipante = mapper.Map<PostEquipanteModel>(result);
+            var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
+              .Select(x => new
+              {
+                  Nome = x.Nome,
+                  Id = x.Id,
+                  Cor = x.Cor
+              });
 
             var dadosAdicionais = new
             {
@@ -246,7 +287,7 @@ namespace SysIgreja.Controllers
                 Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? ""
             };
 
-            return Json(new { Equipante = equipante }, JsonRequestBehavior.AllowGet);
+            return Json(new { Equipante = result, Etiquetas = etiquetas, }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -294,7 +335,15 @@ namespace SysIgreja.Controllers
 
             var equipante = mapper.Map<PostEquipanteModel>(result);
 
-            return Json(new { Equipante = equipante }, JsonRequestBehavior.AllowGet);
+            var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
+            .Select(x => new
+            {
+                Nome = x.Nome,
+                Id = x.Id,
+                Cor = x.Cor
+            });
+
+            return Json(new { Equipante = equipante, Etiquetas = etiquetas }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -312,6 +361,14 @@ namespace SysIgreja.Controllers
                 return new HttpStatusCodeResult(200);
             }
 
+        }
+
+        [HttpPost]
+        public ActionResult PostEtiquetas(string[] etiquetas, int id)
+        {
+            equipantesBusiness.PostEtiquetas(etiquetas, id);
+
+            return new HttpStatusCodeResult(200);
         }
 
         [HttpPost]

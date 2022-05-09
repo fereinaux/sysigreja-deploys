@@ -10,9 +10,11 @@ function AddCabecalhoEvento(doc, titulo, evento) {
 
     doc.setFont('helvetica',"normal")
     doc.setFontSize(12);
-    var img = new Image();
-    img.src = `/Images/logo-preto.png`;
-    doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    if (logoRelatorio) {
+        var img = new Image();
+        img.src = `data:image/png;base64,${logoRelatorio}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
     doc.text(64, 14, evento);
     doc.text(64, 22, titulo);
     doc.text(64, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);

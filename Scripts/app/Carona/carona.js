@@ -82,13 +82,14 @@ function PrintCarona(row) {
 
             var evento = $("#carona-eventoid option:selected").text()
 
-
-            var img = new Image();
-            img.src = `/Images/logo-preto.png`;
+            if (logoRelatorio) {
+                var img = new Image();
+                img.src = `data:image/png;base64,${logoRelatorio}`;
+                doc.addImage(img, 'PNG', 10, 10, 50, 21);
+            }
 
             doc.setFont('helvetica', "normal")
             doc.setFontSize(12);
-            doc.addImage(img, 'PNG', 10, 10, 64, 21);
             doc.text(77, 15, $("#carona-eventoid option:selected").text());
 
 

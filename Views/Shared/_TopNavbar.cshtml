@@ -17,10 +17,119 @@
                     <li>
                         Olá @UtilServices.CapitalizarNome(User.Identity.GetUserName()) !
                     </li>
-
+                    <li>
+                        <span id="enableNotifications" onclick="displayNotification()" class="btn btn-primary">Notificar</span>
+                    </li>
                     <li><a href="javascript:document.getElementById('logoutForm').submit()">Sair <i class="fa fa-sign-out"></i></a></li>
                 </ul>
             }
         }
     </nav>
 </div>
+<script type="module">
+    "use strict";
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-app.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-messaging.js";
+    import {  onBackgroundMessage } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-messaging-sw.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDMSVKwGtL4CaMFrQzHn0jfcLZ-7BWA-4Q",
+        authDomain: "sysigreja.firebaseapp.com",
+        projectId: "sysigreja",
+        storageBucket: "sysigreja.appspot.com",
+        messagingSenderId: "139435123544",
+        appId: "1:139435123544:web:212c9270f57be9a64e7b2d"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+    onBackgroundMessage(messaging, ({ notification }) => {
+        const { title, body, image } = notification ?? {}
+
+        if (!title) {
+            return
+        }
+
+        swRegistration.showNotification(title, {
+            body,
+            icon: image
+        })
+    })
+
+
+    getToken(messaging, { vapidKey: 'BExxMK3HOw2iDkEQIWHHC4RGXQkd_BLOqX780BO7ee9SnA_44aNYW0lBOsfoUIaKp67UBgELPks-30bbBwGXQ6c' }).then((currentToken) => {
+        if (currentToken) {
+            // Send the token to your server and update the UI if necessary
+            console.log(currentToken);
+            // ...
+        } else {
+            // Show permission request UI
+            console.log('No registration token available. Request permission to generate one.');
+            // ...
+        }
+    }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+        // ...
+    });
+
+    let swRegistration = null;
+
+    initializeAppWoker();
+
+    function initializeAppWoker() {
+        if ("serviceWorker" in navigator && "PushManager" in window) {
+            console.log("Service Worker and Push is supported");
+
+            //Register the service worker
+            navigator.serviceWorker
+                .register("/Scripts/sw.js")
+                .then(swReg => {
+                    swRegistration = swReg;
+                })
+                .catch(error => {
+                    console.error("Service Worker Error", error);
+                });
+        } else {
+            console.warn("Push messaging is not supported");
+
+        }
+    }
+
+
+
+    function displayNotification() {
+        if (window.Notification && Notification.permission === "granted") {
+            notification();
+        }
+        // If the user hasn't told if he wants to be notified or not
+        // Note: because of Chrome, we are not sure the permission property
+        // is set, therefore it's unsafe to check for the "default" value.
+        else if (window.Notification && Notification.permission !== "denied") {
+            Notification.requestPermission(status => {
+                if (status === "granted") {
+                    notification();
+                } else {
+                    alert("You denied or dismissed permissions to notifications.");
+                }
+            });
+        } else {
+            // If the user refuses to get notified
+            alert(
+                "You denied permissions to notifications. Please go to your browser or phone setting to allow notifications."
+            );
+        }
+    }
+
+    function notification() {
+        const options = {
+            body: "Testing Our Notification",
+            icon: "/Images/crown.png"
+        };
+        swRegistration.showNotification("PWA Notification!");
+    }
+</script>

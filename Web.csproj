@@ -79,6 +79,9 @@
     <Reference Include="EvernoteSDK, Version=1.0.12.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\evernote-cloud-sdk-windows.1.0.8\lib\net40\EvernoteSDK.dll</HintPath>
     </Reference>
+    <Reference Include="Firebase.Auth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Firebase.Auth.1.0.0\lib\netstandard1.1\Firebase.Auth.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -838,6 +841,7 @@
     <Content Include="Content\Images\login_Patrimonio.png" />
     <Content Include="Content\Images\logo-bradesco-.png" />
     <Content Include="Content\plugins\dataTables\responsive.dataTables.min.css" />
+    <Content Include="firebase-messaging-sw.js" />
     <Content Include="fonts\font-awesome\css\all.css" />
     <Content Include="fonts\font-awesome\css\all.min.css" />
     <Content Include="fonts\font-awesome\css\brands.css" />
@@ -1023,6 +1027,7 @@
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff" />
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff2" />
     <Content Include="Images\mapa\marker.psd" />
+    <Content Include="manifest.json" />
     <None Include="packages.config" />
     <Content Include="Content\landing\avatar_all.png" />
     <Content Include="Content\landing\header_one.jpg" />
@@ -1119,6 +1124,7 @@
     <Content Include="Scripts\plugins\sweetalert\sweetalert.min.js" />
     <Content Include="Scripts\plugins\validate\jquery.validate.min.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\sw.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

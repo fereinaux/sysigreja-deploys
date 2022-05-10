@@ -11,7 +11,7 @@
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="SysIgreja">
-    <link rel="icon" type="image/png" sizes="16x16"/>
+    <link rel="icon" type="image/png" sizes="16x16" />
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -88,9 +88,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js" integrity="sha512-Gs+PsXsGkmr+15rqObPJbenQ2wB3qYvTHuJO6YJzPe/dTLvhy0fmae2BcnaozxDo5iaF8emzmCZWbQ1XXiX2Ig==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+
     <script>
         const { jsPDF } = window.jspdf;
         var config = {}
+        let logoRelatorio;
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
         $.ajax({
@@ -105,7 +108,11 @@
                     $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
                     $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
                 }
-                    $('#home-button-logo').css('display', 'block')
+                $('#home-button-logo').css('display', 'block')
+                if (config.LogoRelatorioId) {
+                    logoRelatorio = config.LogoRelatorio
+                }
+
             }
         });
     </script>

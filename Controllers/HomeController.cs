@@ -141,6 +141,7 @@ namespace SysIgreja.Controllers
             var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipanteEvento.Equipe);
             ViewBag.Equipante = equipanteEvento.Equipante;
             ViewBag.Equipe = equipanteEvento.Equipe.GetDescription();
+            ViewBag.EquipeEnum = equipanteEvento.Equipe;
             ViewBag.QtdMembros = membrosEquipe.Count();
             ViewBag.Reunioes = reunioesBusiness.GetReunioes(eventoId)
                 .ToList()

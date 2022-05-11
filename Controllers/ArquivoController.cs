@@ -10,7 +10,7 @@ using Utils.Enums;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class ArquivoController : Controller
     {
         private readonly IEventosBusiness eventosBusiness;

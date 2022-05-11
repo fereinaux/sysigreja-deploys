@@ -110,6 +110,8 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Participantes";
             GetEventos();
+            GetConfiguracao();
+            GetCampos();
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
             ViewBag.Valor = (int)ValoresPadraoEnum.Inscricoes;
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()

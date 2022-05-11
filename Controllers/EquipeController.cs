@@ -1,6 +1,7 @@
 ﻿using Arquitetura.Controller;
 using Arquitetura.ViewModels;
 using Core.Business.Account;
+using Core.Business.Arquivos;
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
@@ -25,12 +26,14 @@ namespace SysIgreja.Controllers
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IReunioesBusiness reunioesBusiness;
         private readonly IEventosBusiness eventosBusiness;
+        private readonly IArquivosBusiness arquivosBusiness;
 
-        public EquipeController(IEquipesBusiness equipesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EquipeController(IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.equipesBusiness = equipesBusiness;
             this.reunioesBusiness = reunioesBusiness;
             this.eventosBusiness = eventosBusiness;
+            this.arquivosBusiness = arquivosBusiness;
         }
 
         public ActionResult Index()
@@ -97,7 +100,8 @@ namespace SysIgreja.Controllers
             {
                 Id = x.Id,
                 Equipe = x.Description,
-                QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count()
+                QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count(),
+                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id).Count()
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

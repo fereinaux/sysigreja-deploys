@@ -5,6 +5,7 @@ using SysIgreja.ViewModels;
 using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
+using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
@@ -64,6 +65,14 @@ namespace SysIgreja.Controllers
         public ActionResult GetArquivosEvento(int Id)
         {
             var query = arquivosBusiness.GetArquivosByEvento(Id);
+
+            return MapAqruivos(query);
+        }
+
+        [HttpPost]
+        public ActionResult GetArquivosEquipe(EquipesEnum Equipe)
+        {
+            var query = arquivosBusiness.GetArquivosByEquipe(Equipe);
 
             return MapAqruivos(query);
         }

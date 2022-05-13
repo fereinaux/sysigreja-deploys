@@ -307,15 +307,15 @@ ${campos.map(p => `<option value=${p.Id}>${p.Description}</option>`)}
             postArquivo(`Logo`, id, idConfig )
         }
 
-        function Background(id) {
+        function Background(id, idConfig) {
             postArquivo(`Background`, id, idConfig)
         }
 
-        function LogoRelatorio(id) {
+        function LogoRelatorio(id, idConfig) {
             postArquivo(`logorelatorio`, id, idConfig)
         }
 
-        function BackgroundCelular(id) {
+        function BackgroundCelular(id, idConfig) {
             postArquivo(`backgroundcelular`, id, idConfig)
         }
     </script>

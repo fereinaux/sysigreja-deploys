@@ -31,6 +31,19 @@ if ($('#map').length > 0) {
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
+                timeout: 7000,
+                error: function () {
+                    $(`#participante-cep`).val('')
+                    $(`#participante-logradouro`).val('')
+                    $(`#participante-bairro`).val('')
+                    $(`#participante-cidade`).val('')
+                    $(`#participante-estado`).val('')
+                    $(`#participante-latitude`).val('')
+                    $(`#participante-longitude`).val('')
+                    ErrorMessage(`A consulta de CEP não retornou resultados`);
+                    markerLayer.getLayers().forEach(mark => mark.remove())
+                    $.unblockUI();
+                },
                 success: function (data) {
                     $(`#participante-logradouro`).val(data.logradouro)
                     $(`#participante-bairro`).val(data.bairro)

@@ -48,6 +48,12 @@ h2:after {
 
 /*INSCRICOES*/
 
+@media only screen and (min-width: 300px) {
+    .inscricoes.middle-box {
+        width: 100%;
+    }
+}
+
 @media only screen and (min-width: 500px) {
     .inscricoes.middle-box {
         width: 80%;

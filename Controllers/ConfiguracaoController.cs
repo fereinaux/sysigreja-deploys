@@ -101,9 +101,9 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostCampos(List<CamposModel> campos)
+        public ActionResult PostCampos(List<CamposModel> campos, int? id = null)
         {
-            configuracaoBusiness.PostCampos(campos);
+            configuracaoBusiness.PostCampos(campos, id);
 
             return new HttpStatusCodeResult(200);
         }

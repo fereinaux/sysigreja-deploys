@@ -30,8 +30,6 @@
     <script>
 
         function PostConfig(id, tipoEvento) {
-            console.log(id);
-            console.log($(`#config-titulo${id}`).val());
             if (ValidateForm(`#form-config`)) {
                 $.ajax({
                     url: "/Configuracao/PostConfiguracao/",
@@ -61,7 +59,7 @@
                     contentType: `application/json; charset=utf-8`,
                     data: JSON.stringify(
                         {
-                            Id: id,
+                            id: id,
                             campos: $(`#config-campos${tipoEvento}`).val().map(campo => { return { CampoId: campo } })
 
                         }),

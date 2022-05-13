@@ -328,8 +328,10 @@
 <script src="~/Scripts/app/Util/mapa.js"></script>
 
 <script src="~/Scripts/app/Inscricoes/inscricoes.js?@ViewBag.Numero"></script>
+<script src="https://malsup.github.io/jquery.blockUI.js"></script>
 
 <script>
+    let corBotao = '@ViewBag.Configuracao.CorBotao'
     $(document).ready(function () {
          if (isMobile) {
             @if (ViewBag.Configuracao.BackgroundCelularId != null)

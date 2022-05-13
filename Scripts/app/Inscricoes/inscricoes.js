@@ -8,6 +8,24 @@ if ($('#map').length > 0) {
     function verificaCep(input) {
         let cep = $(input).val()
         if (cep.length == 9) {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+                baseZ: 1500,
+                overlayCSS: {
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
             $.ajax({
                 url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
                 datatype: "json",
@@ -21,9 +39,30 @@ if ($('#map').length > 0) {
                     $(`#participante-latitude`).val(data.lat)
                     $(`#participante-longitude`).val(data.lon)
                     markerLayer.getLayers().forEach(mark => mark.remove())
-                    var marker = L.marker([data.lat, data.lon], { icon: getIcon('vermelho') }).addTo(markerLayer);
+                    var marker = L.marker([data.lat, data.lon], {
+                        icon: getIcon('vermelho'), draggable: true,
+                        autoPan: true
+                    }).addTo(markerLayer);
+                    marker.on('moveend', function (event) {
+                        $(`#participante-latitude`).val(event.target._latlng.lat)
+                        $(`#participante-longitude`).val(event.target._latlng.lng)
+
+                    });
                     $('#map').css('display', 'block')
                     map.setView([data.lat, data.lon], 18);
+                    map.on('click', function (event) {
+                        markerLayer.getLayers().forEach(mark => mark.remove())
+                        var marker = L.marker([event.latlng.lat, event.latlng.lng], {
+                            icon: getIcon('vermelho'), draggable: true,
+                            autoPan: true
+                        }).addTo(markerLayer);
+                        marker.on('moveend', function (event) {
+                            $(`#participante-latitude`).val(event.latlng.lat)
+                            $(`#participante-longitude`).val(event.latlng.lng)
+
+                        });
+                    })
+                    $.unblockUI();
                 }
             })
         }

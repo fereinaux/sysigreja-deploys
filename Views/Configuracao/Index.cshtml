@@ -62,7 +62,7 @@
                     data: JSON.stringify(
                         {
                             Id: id,
-                            campos: $(`#config-campos${id}`).val().map(campo => { return { CampoId: campo } })
+                            campos: $(`#config-campos${tipoEvento}`).val().map(campo => { return { CampoId: campo } })
 
                         }),
                     success: function () {

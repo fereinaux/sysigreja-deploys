@@ -74,6 +74,7 @@ function VerificaCadastro() {
                 $(".pnl-cadastro").show();
                 $(".pnl-verifica").hide();
                 $('.inscricoes.middle-box').height('80%');
+                $('.inscricoes.middle-box').css('overflow-y', 'auto');
                 $('.float').css("bottom", "40px")
 
             }
@@ -194,5 +195,6 @@ $('#not-restricaoalimentar').on('ifChecked', function (event) {
 });
 
 $(".pnl-cadastro").hide();
-$('.inscricoes.middle-box').height('25%');
+$('.inscricoes.middle-box').height('30%');
+$('.inscricoes.middle-box').css('overflow', 'hidden');
 $('.float').css("bottom", "34%")

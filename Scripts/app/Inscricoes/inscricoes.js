@@ -38,6 +38,7 @@ if ($('#map').length > 0) {
                     $(`#participante-estado`).val(data.uf)
                     $(`#participante-latitude`).val(data.lat)
                     $(`#participante-longitude`).val(data.lon)
+                    $.unblockUI();
                     markerLayer.getLayers().forEach(mark => mark.remove())
                     var marker = L.marker([data.lat, data.lon], {
                         icon: getIcon('vermelho'),  draggable: true,
@@ -61,7 +62,6 @@ if ($('#map').length > 0) {
 
                         });
                     })
-                    $.unblockUI();
                 }
             })
         }

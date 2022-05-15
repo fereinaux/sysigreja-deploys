@@ -1194,6 +1194,7 @@
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
     <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
     <None Include="Properties\PublishProfiles\SysIgreja Deploy.pubxml" />
+    <Content Include="Views\Shared\_Inscricoes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -21,6 +21,23 @@ function GetAnexosButton(functionClick, functionParameter, qtd) {
     
 }
 
+function getWhatsAppButton(contact) {
+    return GetButton('openWhatsApp', contact, 'verde', 'fab fa-whatsapp', contact.Fone)
+}
+
+
+function openWhatsApp(contact) {
+
+    var popup = window.open(GetLinkWhatsApp(contact.Fone, contact.Text), "event", "width=900,height=900,scrollbars=no,resizable=yes");
+    popup.focus();
+    setTimeout(() => {
+        popup.close()
+        window.focus();
+    }, 2000)
+
+
+}
+
 function GetIconWhatsApp(tel,text) {  
     
     return `<a target="_blank" href='${GetLinkWhatsApp(tel, text)}' style="font-size:18px; color:green; " class="pointer p-l-xs"><i class="fab fa-whatsapp" aria-hidden="true" title="${tel}"></i></a>`;
@@ -32,10 +49,11 @@ function GetConvidar(tel, nome) {
 }
 
 function GetLinkWhatsApp(tel, text) {
-    if (!tel || !text)
+    
+    if (!tel)
         return ""
     tel = tel.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '');
-    text = typeof text !== "undefined" ? `&text=${EncodeUrl(text)}` : "";
+    text = typeof text !== "undefined" ? `&text=${EncodeUrl(text)}` : "";    
     return `https://api.whatsapp.com/send?phone=${tel}${text}&source=&data=`;
 }
 

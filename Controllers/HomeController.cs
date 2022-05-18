@@ -32,7 +32,7 @@ namespace SysIgreja.Controllers
         private readonly IArquivosBusiness arquivosBusiness;
         private readonly IAccountBusiness accountBusiness;
 
-        public HomeController(IEquipesBusiness equipesBusiness, IParticipantesBusiness participantesBusiness, IArquivosBusiness arquivosBusiness,ILancamentoBusiness lancamentoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness,configuracaoBusiness)
+        public HomeController(IEquipesBusiness equipesBusiness, IParticipantesBusiness participantesBusiness, IArquivosBusiness arquivosBusiness, ILancamentoBusiness lancamentoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.lancamentoBusiness = lancamentoBusiness;
             this.participantesBusiness = participantesBusiness;
@@ -55,16 +55,8 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetResultadosAdmin(int EventoId)
         {
-            var ReceberPix = lancamentoBusiness.GetPagamentosEvento(EventoId).Where(x => x.Tipo == TiposLancamentoEnum.Receber && x.MeioPagamento.Descricao == "PIX").Select(x => x.Valor).DefaultIfEmpty(0).Sum();
-            var PagarPix = lancamentoBusiness.GetPagamentosEvento(EventoId).Where(x => x.Tipo == TiposLancamentoEnum.Pagar && x.MeioPagamento.Descricao == "PIX").Select(x => x.Valor).DefaultIfEmpty(0).Sum();
-            var SaldoPix = ReceberPix - PagarPix;
-            var ReceberDinheiro = lancamentoBusiness.GetPagamentosEvento(EventoId).Where(x => x.Tipo == TiposLancamentoEnum.Receber && x.MeioPagamento.Descricao == "Dinheiro").Select(x => x.Valor).DefaultIfEmpty(0).Sum();
-            var PagarDinheiro = lancamentoBusiness.GetPagamentosEvento(EventoId).Where(x => x.Tipo == TiposLancamentoEnum.Pagar && x.MeioPagamento.Descricao == "Dinheiro").Select(x => x.Valor).DefaultIfEmpty(0).Sum();
-            var SaldoDinheiro = ReceberDinheiro - PagarDinheiro;
-            var TotalReceber = lancamentoBusiness.GetPagamentosEvento(EventoId).Where(x => x.Tipo == TiposLancamentoEnum.Receber).Select(x => x.Valor).DefaultIfEmpty(0).Sum();
-            var TotalPagar = lancamentoBusiness.GetPagamentosEvento(EventoId).Where(x => x.Tipo == TiposLancamentoEnum.Pagar).Select(x => x.Valor).DefaultIfEmpty(0).Sum();
-            var SaldoGeral = TotalReceber - TotalPagar;
-            var result = new 
+
+            var result = new
             {
                 Evento = eventosBusiness.GetEventoById(EventoId).Status.GetDescription(),
                 Confirmados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Confirmado).Count(),
@@ -77,11 +69,31 @@ namespace SysIgreja.Controllers
                 Contatos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => !x.PendenciaContato).Count(),
                 Meninos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Sexo == SexoEnum.Masculino && x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
                 Meninas = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Sexo == SexoEnum.Feminino && x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
-                SaldoGeral = UtilServices.DecimalToMoeda(SaldoGeral),
-                SaldoPix = UtilServices.DecimalToMoeda(SaldoPix),
-                SaldoDinheir = UtilServices.DecimalToMoeda(SaldoDinheiro),
-                TotalPagar = UtilServices.DecimalToMoeda(TotalPagar),
-                TotalReceber = UtilServices.DecimalToMoeda(TotalReceber),
+                MeiosPagamento = lancamentoBusiness.GetLancamentos().Where(x => x.EventoId == EventoId && x.Valor > 0).Select(x => x.MeioPagamento.Descricao).Distinct(),
+                Financeiro = lancamentoBusiness.GetLancamentos().Where(x => x.EventoId == EventoId && x.Valor > 0).Select(x => new
+                {
+                    MeioPagamento = x.MeioPagamento.Descricao,
+                    Valor = x.Valor,
+                    Tipo = x.Tipo
+                }).GroupBy(x => new
+                {
+                    x.Tipo,
+                    x.MeioPagamento
+                })
+                .Select(x => new
+                {
+                    Tipo = x.Key.Tipo,
+                    MeioPagamento = x.Key.MeioPagamento,
+                    Valor = x.Sum(y => y.Valor)
+                })
+                .ToList()
+                .Select(x => new
+                {
+                    Tipo = x.Tipo.GetDescription(),
+                    MeioPagamento = x.MeioPagamento,
+                    Valor = x.Valor
+                })
+                .OrderByDescending(x => x.Tipo),
                 UltimosInscritos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status != StatusEnum.Cancelado)
                 .OrderByDescending(x => x.DataCadastro).Take(5).ToList().Select(x => new ParticipanteViewModel
                 {
@@ -105,7 +117,10 @@ namespace SysIgreja.Controllers
                 }).ToList()
             };
 
-            return Json(new { result }, JsonRequestBehavior.AllowGet);
+            return Json(new
+            {
+                result
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

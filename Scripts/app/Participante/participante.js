@@ -941,19 +941,20 @@ function Opcoes(row) {
             $('.convitetext').text(realista.NomeConvite)
             $('.contatotext').text(realista.NomeContato)
 
-            $.ajax({
-                url: "/Mensagem/GetMensagens/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                success: function (dataMsg) {
-                    $("#msg-list").html(`
+            if ($('#modal-opcoes').is(":hidden")) {
+                $.ajax({
+                    url: "/Mensagem/GetMensagens/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (dataMsg) {
+                        $("#msg-list").html(`
 ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
 
-                }
-            })
-
+                    }
+                })
+            }
             $('#participante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
                 }`)
             $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))

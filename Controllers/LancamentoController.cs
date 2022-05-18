@@ -179,6 +179,7 @@ namespace SysIgreja.Controllers
                 result.CentroCustoId,
                 result.Descricao,
                 result.Valor,
+                DataLancamento = result.DataCadastro,
                 result.MeioPagamentoId,
                 result.Observacao,
                 result.ContaBancariaId

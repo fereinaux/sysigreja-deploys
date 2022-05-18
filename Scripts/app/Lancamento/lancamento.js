@@ -85,13 +85,16 @@ function GetLancamento(id) {
                 $("#lancamento-descricao").val(data.Lancamento.Descricao);
                 $("#lancamento-observacao").val(data.Lancamento.Observacao);
                 $("#lancamento-meiopagamento").val(data.Lancamento.MeioPagamentoId);
+                $("#lancamento-data").val(moment(data.Lancamento.DataLancamento).format('DD/MM/YYYY'));
                 ChangeMeioPagamento();
                 $("#lancamento-contabancaria").val(data.Lancamento.ContaBancariaId > 0 ? data.Lancamento.ContaBancariaId : 0);
                 $("#lancamento-valor").val(data.Lancamento.Valor);
+                $(".lancamento-data").css('display', 'block')
             }
         });
     }
     else {
+        $(".lancamento-data").css('display','none')
         $("#lancamento-id").val(0);
         $("#lancamento-centcusto").val($("#lancamento-centcusto option:first").val());
         $("#lancamento-descricao").val("");
@@ -160,6 +163,7 @@ function PostLancamento() {
                     Descricao: $("#lancamento-descricao").val(),
                     Observacao: $("#lancamento-observacao").val(),
                     Tipo: $("#lancamento-tipo").val(),
+                    Data: moment($("#lancamento-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#lancamento-meiopagamento").val(),
                     EventoId: $('#lancamento-eventoid').val(),
                     CentCustoId: $("#lancamento-centcusto").val(),

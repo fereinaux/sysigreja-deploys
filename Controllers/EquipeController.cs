@@ -169,6 +169,28 @@ namespace SysIgreja.Controllers
             return json;
         }
 
+
+        [HttpPost]
+        public ActionResult GetMembrosEquipeDatatable(int EventoId, EquipesEnum EquipeId)
+        {
+            var query = equipesBusiness
+                .GetMembrosEquipeDatatable(EventoId, EquipeId)
+                .ToList();
+
+            var result = query
+            .Select(x => new
+            {
+                Id = x.Id,
+                Nome = x.Equipante.Nome,
+                Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
+                Tipo = x.Tipo.GetDescription(),
+            });
+
+            var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
+        }
+
         [HttpPost]
         public ActionResult GetMembrosEquipe(int EventoId, EquipesEnum EquipeId)
         {

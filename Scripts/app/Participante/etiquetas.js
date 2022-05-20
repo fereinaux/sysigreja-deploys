@@ -276,13 +276,14 @@ function MontarCrachaParticipantes(result) {
             img.src = `/Images/circulos/${equipante.Circulo}.png`;
             printDoc.addImage(img, 'PNG', xFoto, yFoto, widthFoto, heightFoto);
 
-            printDoc.setFontSize(10);
-            printDoc.setFont('Montserrat', 'normal');
+            printDoc.setFontSize(12);
+            printDoc.setFont('Helvetica', 'normal');
             printDoc.setTextColor(0, 0, 0)
-            printDoc.text(xFoto + widthFoto / 2, yFoto + 11, equipante.Nome, 'center');
-            printDoc.setFontSize(18);
+            printDoc.text(xFoto + 0.5, yFoto + 10.7, equipante.Nome, 'left');
+            printDoc.setFontSize(22);
             printDoc.setFont('mont', 'normal');
-            printDoc.text(xFoto + widthFoto / 2, yFoto + 10.5, equipante.Apelido.toUpperCase(), 'center');
+            printDoc.setTextColor(255, 255, 255)
+            printDoc.text(xFoto + 0.5, yFoto + 10, equipante.Apelido, 'left');
             indice++
         }
     });

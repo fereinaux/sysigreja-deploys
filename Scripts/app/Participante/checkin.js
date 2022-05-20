@@ -196,7 +196,9 @@ function GetParticipante() {
 
                 $(`#participante-latitude`).val((data.Participante.Latitude || '').replaceAll(',', '.'));
                 $(`#participante-longitude`).val((data.Participante.Longitude || '').replaceAll(',', '.'));
-                montarMapa()
+                if ($('#map').length > 0) {
+                    montarMapa()
+                }
                 $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
                 $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
                 $(`#participante-nome-contato`).val(data.Participante.NomeContato);

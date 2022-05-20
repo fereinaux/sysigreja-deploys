@@ -859,12 +859,9 @@
     <Content Include="Images\background-login.png" />
     <Content Include="Images\calibri-bold.js" />
     <Content Include="Images\calibri-normal.js" />
-    <Content Include="Images\circulos\Amarelo.png" />
-    <Content Include="Images\circulos\Azul Claro.png" />
     <Content Include="Images\circulos\Laranja.png" />
     <Content Include="Images\circulos\Lilás.png" />
     <Content Include="Images\circulos\Rosa.png" />
-    <Content Include="Images\circulos\Verde Claro.png" />
     <Content Include="Images\circulos\Verde Escuro.png" />
     <Content Include="Images\circulos\Vermelho.png" />
     <Content Include="Images\equipes\Bomboniere.png" />

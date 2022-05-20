@@ -168,7 +168,7 @@ function header(doc, evento, page) {
 
 function PrintEquipe() {
     $.ajax({
-        url: '/Equipe/GetMembrosEquipe',
+        url: '/Equipe/GetMembrosEquipeDatatable',
         data: { EventoId: $("#equipe-eventoid").val(), EquipeId: EquipeId },
         datatype: "json",
         type: "POST",
@@ -244,7 +244,7 @@ function CarregarTabelaMembrosEquipe(equipeId, titulo) {
             [0, "asc"]
         ],
         ajax: {
-            url: '/Equipe/GetMembrosEquipe',
+            url: '/Equipe/GetMembrosEquipeDatatable',
             data: { EventoId: $("#equipe-eventoid").val(), EquipeId: equipeId },
             datatype: "json",
             type: "POST"

@@ -145,7 +145,7 @@ namespace SysIgreja.Controllers
                 {
 
                     result = result.Where(x => x.Equipes.Any(y => y.EventoId == model.EventoId));
-                    
+
                     filteredResultsCount = result.Count();
                 }
 
@@ -212,6 +212,19 @@ namespace SysIgreja.Controllers
                             {
                                 Order = qtdReunioes - x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Presencas.Count()
                             });
+                        }
+
+                    }
+                    else if (model.columns[model.order[0].column].name == "Idade")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.DataNascimento);
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.DataNascimento);
                         }
 
                     }

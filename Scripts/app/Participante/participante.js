@@ -211,7 +211,6 @@ function dataURLtoFile(dataurl, filename) {
 function Foto(row) {
 
     realista = row
-    console.log(realista)
 
     var input = $(`#foto${realista.Id}`)[0]
 

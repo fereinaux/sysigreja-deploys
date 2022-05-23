@@ -153,8 +153,7 @@ namespace SysIgreja.Controllers
                 Nome = x.Equipante.Nome,
                 Vacina = x.Equipante.HasVacina,
                 Faltas = reunioesBusiness.GetFaltasByEquipanteId(x.EquipanteId, eventoId),
-                Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId).Any(),
-                Foto = x.Equipante.Arquivos.Any(y => y.IsFoto)
+                Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId).Any()
             });
 
             return View();

@@ -398,10 +398,12 @@ namespace SysIgreja.Controllers
                 try
                 {
                     model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
+                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
                     result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
                 }
                 catch (Exception)
                 {
+                    result = result.OrderBy(x => x.Id);
                 }
 
                 result = result.Skip(model.Start)

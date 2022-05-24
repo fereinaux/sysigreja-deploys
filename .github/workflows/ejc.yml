@@ -9,19 +9,23 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test_commentary:
+  deploy-ejc:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
-    - name: Webhook EJC
+    - name: Webhook
       uses: zzzze/webhook-trigger@v1.0.0
       with:
         webhook_url: "https://pleskw.nspmanaged.com:8443/modules/git/public/web-hook.php?uuid=a8e259f5-1ae2-d503-460a-9944055833c3"
-        json: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }',
-    - name: Webhook EJC Recon
+        json: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
+  deploy-ejc-recon:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Webhook
       uses: zzzze/webhook-trigger@v1.0.0
       with:
         webhook_url: "https://pleskw.nspmanaged.com:8443/modules/git/public/web-hook.php?uuid=c99ad24f-2a81-c33a-8b75-1912ae597c0b"

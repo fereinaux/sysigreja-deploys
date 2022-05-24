@@ -486,7 +486,7 @@ namespace SysIgreja.Controllers
                    Checkin = x.Checkin,
                    Idade = UtilServices.GetAge(x.DataNascimento),
                    Foto = x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : "",
-                   Circulo = x.Circulos.LastOrDefault().Circulo.Cor.GetDescription()
+                   Circulo = x.Circulos?.LastOrDefault()?.Circulo?.Cor.GetDescription() ?? ""
                });
 
 

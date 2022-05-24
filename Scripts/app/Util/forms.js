@@ -24,6 +24,7 @@ function ValidateForm(form) {
     formResult = ValidateMaxLength(form, formResult);
     formResult = ValidateEmail(form, formResult);
     formResult = ValidateFone(form, formResult);
+    formResult = ValidateData(form, formResult);
 
     var camposObrigatorios = "";
 
@@ -40,10 +41,14 @@ function ValidateForm(form) {
         if (formResult.ErrorsFormatacao != "") {
             camposFormatacao = `Erros de Formatação:${formResult.ErrorsFormatacao}`;
         }
+        if (formResult.ErrorsValidacao != "") {
+            camposValidacao = `Erros de Validação:${formResult.ErrorsValidacao}`;
+        }
         formResult.MessageError = `${typeof camposObrigatorios === "undefined" ? "" : camposObrigatorios}  
                                    ${typeof camposMinLength === "undefined" ? "" : camposMinLength} 
                                    ${typeof camposMaxLength === "undefined" ? "" : camposMaxLength} 
-                                   ${typeof camposFormatacao === "undefined" ? "" : camposFormatacao}`;
+                                   ${typeof camposFormatacao === "undefined" ? "" : camposFormatacao}
+                                   ${typeof camposValidacao === "undefined" ? "" : camposValidacao}`;
 
         ErrorMessage(formResult.MessageError);
 
@@ -112,6 +117,21 @@ function ValidateFone(form, formResult) {
     return formResult;
 }
 
+function ValidateData(form, formResult) {
+    $(`${form} input.full-date`).each(function () {
+        var input = $(this);
+        AplicarCssPadrao(input);
+
+        if ((input.data("idade")) && (moment().year() - moment(input.val(), 'DD/MM/YYYY', 'pt-br').year() < input.data("idade"))) {
+            formResult.IsValid = false;
+            AplicarCssErro(input);
+            formResult.ErrorsValidacao += AddErro(`O Participante deve ter mais de ${input.data("idade")} anos `);
+        }
+    });
+
+    return formResult;
+}
+
 function ValidateCPF(form, formResult) {
     $(`${form} input.cpf`).each(function () {
         var input = $(this);
@@ -149,6 +169,7 @@ function IniciarFormResult() {
         ErrorsMinLength: "",
         ErrorsMaxLength: "",
         ErrorsFormatacao: "",
+        ErrorsValidacao: "",
         MessageError: ""
     };
 }

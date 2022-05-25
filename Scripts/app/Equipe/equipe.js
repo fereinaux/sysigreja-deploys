@@ -21,7 +21,8 @@ function CarregarTabelaEquipe() {
             {
                 data: "Id", name: "Id", orderable: false, width: "15%",
                 "render": function (data, type, row) {
-                    return `${GetButton('ListarEquipe', JSON.stringify(row), 'blue', 'fa-list-alt', 'Listar membros da Equipe')}`;
+                    return `${GetButton('ListarEquipe', JSON.stringify(row), 'blue', 'fa-list-alt', 'Listar membros da Equipe')}
+  ${GetAnexosButton('Anexos', data, row.QtdAnexos)}`;
                 }
             }
         ],
@@ -38,15 +39,114 @@ function CarregarTabelaEquipe() {
     $("#table-equipe").DataTable(tableEquipeConfig);
 }
 
+
+function GetAnexos(id) {
+    const tableArquivoConfig = {
+        language: languageConfig,
+        lengthMenu: [200, 500, 1000],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true,
+        destroy: true,
+        dom: domConfigNoButtons,
+        columns: [
+            { data: "Nome", name: "Nome", autoWidth: true },
+            { data: "Extensao", name: "Extensao", autoWidth: true },
+            {
+                data: "Id", name: "Id", orderable: false, width: "15%",
+                "render": function (data, type, row) {
+                    return `${GetButton('GetArquivo', data, 'blue', 'fa-download', 'Download')}
+                            ${GetButton('DeleteArquivo', data, 'red', 'fa-trash', 'Excluir')}`;
+                }
+            }
+        ],
+        order: [
+            [0, "asc"]
+        ],
+        ajax: {
+            url: '/Arquivo/GetArquivosEquipe',
+            data: { Equipe: id ? id : $("#Equipe").val() },
+            datatype: "json",
+            type: "POST"
+        }
+    };
+
+    $("#table-anexos").DataTable(tableArquivoConfig);
+}
+
+function GetArquivo(id) {
+    window.open(`/Arquivo/GetArquivo/${id}`)
+}
+
+$("#arquivo-modal").change(function () {
+    PostArquivo();
+});
+
+$("#modal-anexos").on('hidden.bs.modal', function () {
+    CarregarTabelaEquipe()
+});
+
+
+function PostArquivo() {
+
+    var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
+    dataToPost.set('Arquivo', dataToPost.get('arquivo-modal'))
+    dataToPost.set('Equipe', dataToPost.get('Equipe'))
+    $.ajax(
+        {
+            processData: false,
+            contentType: false,
+            type: "POST",
+            data: dataToPost,
+            url: "Arquivo/PostArquivo",
+            success: function () {
+
+                GetAnexos();
+
+
+            }
+        });
+}
+
+function Anexos(id) {
+    $("#Equipe").val(id);
+    GetAnexos(id);
+    $("#modal-anexos").modal();
+}
+
+
+function DeleteArquivo(id) {
+    ConfirmMessageDelete().then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Arquivo/DeleteArquivo/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: id
+                    }),
+                success: function () {
+                    SuccessMesageDelete();
+                    GetAnexos();
+                }
+            });
+        }
+    });
+}
+
 function header(doc, evento, page) {
-
-
     if (logoRelatorio) {
         var img = new Image();
         img.src = `data:image/png;base64,${logoRelatorio}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
-
     doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.text(64, 14, evento);
@@ -68,7 +168,7 @@ function header(doc, evento, page) {
 
 function PrintEquipe() {
     $.ajax({
-        url: '/Equipe/GetMembrosEquipe',
+        url: '/Equipe/GetMembrosEquipeDatatable',
         data: { EventoId: $("#equipe-eventoid").val(), EquipeId: EquipeId },
         datatype: "json",
         type: "POST",
@@ -144,7 +244,7 @@ function CarregarTabelaMembrosEquipe(equipeId, titulo) {
             [0, "asc"]
         ],
         ajax: {
-            url: '/Equipe/GetMembrosEquipe',
+            url: '/Equipe/GetMembrosEquipeDatatable',
             data: { EventoId: $("#equipe-eventoid").val(), EquipeId: equipeId },
             datatype: "json",
             type: "POST"

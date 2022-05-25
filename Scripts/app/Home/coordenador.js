@@ -5,8 +5,37 @@
     });
 
     CarregarTabelaPresenca();
+    CarregarTabelaArquivos();
 });
 
+function CarregarTabelaArquivos() {
+    $.ajax({
+        url: '/Arquivo/GetArquivosEquipe',
+        datatype: "json",
+        data: { Equipe: $("#table-arquivos").data('equipe') },
+        type: "POST",
+        success: (data) => {
+            html = '';
+            $('.qtd-arquivos').text(`Quantidade: ${data.data.length}`)
+            $(data.data).each((i, element) => {
+                html += `<tr>                        
+                        <td>${element.Nome}</td>
+                        <td>${GetButton('GetArquivo', element.Id, 'blue', 'fa-download', 'Download')}</td>
+                    </tr>`;
+            });
+            console.log(html);
+            $('.tbarquivos').html(html);
+
+            $("td.fa").css("font-size", "25px");
+            $("td").css("font-size", "15px");
+            $("th").css("font-size", "15px");
+        }
+    });
+}
+
+function GetArquivo(id) {
+    window.open(`/Arquivo/GetArquivo/${id}`)
+}
 
 function CarregarTabelaPresenca() {
     $.ajax({

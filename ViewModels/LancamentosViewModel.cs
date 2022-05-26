@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Descricao { get; set; }
+        public string Origem { get; set; }
         public string Observacao { get; set; }
         public string CentroCusto { get; set; }
         public string DataLancamento { get; set; }

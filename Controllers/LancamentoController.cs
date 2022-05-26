@@ -107,6 +107,7 @@ namespace SysIgreja.Controllers
                 CentroCusto = x.CentroCusto.Descricao,
                 Observacao = x.Observacao,
                 Descricao = UtilServices.CapitalizarNome(x.Descricao),
+                Origem = UtilServices.CapitalizarNome(x.Origem),
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),
                 FormaPagamento = $"{(x.ContaBancariaId != null ? "Transferência/" + x.ContaBancaria.Banco.GetDescription() : x.MeioPagamento.Descricao)}",
                 Valor = UtilServices.DecimalToMoeda(x.Valor),
@@ -178,6 +179,7 @@ namespace SysIgreja.Controllers
                 result.Id,
                 result.CentroCustoId,
                 result.Descricao,
+                result.Origem,
                 result.Valor,
                 DataLancamento = result.DataCadastro,
                 result.MeioPagamentoId,
@@ -228,6 +230,7 @@ namespace SysIgreja.Controllers
                     Valor = x.Valor, 
                     CentroCusto = x.CentroCusto.Descricao,
                     Descricao = UtilServices.CapitalizarNome(x.Descricao),
+                    Origem = UtilServices.CapitalizarNome(x.Origem),
                     Data = x.DataCadastro.Value.ToString("dd/MM/yyyy")
                 })
                 .OrderByDescending(x => x.Tipo)

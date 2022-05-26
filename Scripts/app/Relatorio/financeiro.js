@@ -121,11 +121,19 @@
 
                             var splitDescricao = doc.splitTextToSize(lancamento.Descricao, 120);
                             doc.text(12, height, splitDescricao);
+                       
                             doc.text(142, height, lancamento.Data);
                             doc.text(172, height, lancamento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
                             totalCentroCusto += lancamento.Valor;
                             totalReceber += lancamento.Valor;
                             height += 6 * splitDescricao.length;
+                            if (lancamento.Origem) {
+                                doc.setFont('helvetica', "bold")
+                                doc.text(16, height, "Origem:");
+                                doc.setFont('helvetica', "normal")
+                                doc.text(34, height, lancamento.Origem);
+                                height += 6
+                            }
                             height = SetHeight(height,doc);
                         }
                     });

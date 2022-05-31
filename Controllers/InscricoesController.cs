@@ -79,8 +79,8 @@ namespace SysIgreja.Controllers
          .Replace("${Evento}", $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.TipoEvento.GetDescription()}")
          .Replace("${ValorEvento}", participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
          .Replace("${DataEvento}", participante.Evento.DataEvento.ToString("dd/MM/yyyy"))
-         .Replace("${FonePadrinho}", participante.Padrinho.Fone)
-         .Replace("${NomePadrinho}", participante.Padrinho.Nome);
+         .Replace("${FonePadrinho}", participante.Padrinho?.Fone)
+         .Replace("${NomePadrinho}", participante.Padrinho?.Nome);
 
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {

@@ -90,8 +90,8 @@ namespace SysIgreja.Controllers
                 Evento = $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.TipoEvento.GetDescription()}",
                 Valor = participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
                 DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy"),
-                PadrinhoFone = participante.Padrinho.Fone,
-                PadrinhoNome = participante.Padrinho.Nome
+                PadrinhoFone = participante.Padrinho?.Fone,
+                PadrinhoNome = participante.Padrinho?.Nome
             };
 
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()

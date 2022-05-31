@@ -195,7 +195,9 @@ function GetParticipante() {
 
                 $(`#participante-latitude`).val((data.Participante.Latitude || '').replaceAll(',', '.'));
                 $(`#participante-longitude`).val((data.Participante.Longitude || '').replaceAll(',', '.'));
-                montarMapa()
+                if ($('#map').length > 0) {
+                    montarMapa()
+                }
                 $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
                 $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
                 $(`#participante-nome-contato`).val(data.Participante.NomeContato);
@@ -479,6 +481,8 @@ function PostPagamento() {
             data: JSON.stringify(
                 {
                     EventoId: $("#eventoid").val(),
+                    Origem: $("#pagamentos-origem").val(),
+                    Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     ParticipanteId: $("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : null,
                     EquipanteId: $("#pagamentos-equipanteid").val() > 0 ? $("#pagamentos-equipanteid").val() : null,
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
@@ -486,6 +490,8 @@ function PostPagamento() {
                     Valor: Number($("#pagamentos-valor").val())
                 }),
             success: function () {
+                $("#pagamentos-origem").val('')
+                $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
                 Pagamentos($("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : $("#pagamentos-equipanteid").val());
                 SuccessMesageOperation();
                 GetParticipante();
@@ -536,6 +542,8 @@ function CarregarValorTaxa() {
 function Pagamentos(id) {
     $('.contabancaria').addClass('d-none');
     $("#pagamentos-valor").val($("#pagamentos-valor").data($("#equipante-id").val() > 0 ? "valor-equipante" : "valor-realista"));
+    $("#pagamentos-origem").val('')
+    $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
     $("#pagamentos-participanteid").val($("#participante-id").val());
     $("#pagamentos-equipanteid").val($("#equipante-id").val());
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());

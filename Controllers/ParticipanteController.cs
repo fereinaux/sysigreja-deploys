@@ -61,12 +61,6 @@ namespace SysIgreja.Controllers
             mapper = new MapperRealidade().mapper;
         }
 
-        public ActionResult ListaTelefonica()
-        {
-            ViewBag.Title = "Lista Telefônica";
-            GetEventos();
-            return View();
-        }
 
         public ActionResult Checkin()
         {
@@ -97,18 +91,12 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-        public ActionResult Boletos()
-        {
-            ViewBag.Title = "Boletos Solicitados";
-            GetEventos();
-
-            return View();
-        }
-
         public ActionResult Index()
         {
             ViewBag.Title = "Participantes";
             GetEventos();
+            GetConfiguracao();
+            GetCampos();
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
             ViewBag.Valor =  eventosBusiness.GetEventoAtivo()?.Valor ?? 0;
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()

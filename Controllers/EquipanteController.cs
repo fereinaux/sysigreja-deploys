@@ -325,7 +325,14 @@ namespace SysIgreja.Controllers
         {
             Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
             var eventoAtual = eventosBusiness.GetEventoAtivo();
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao();
+            var config = configuracaoBusiness.GetConfiguracao();
+            ViewBag.Configuracao = config;
+            ViewBag.MsgConclusao = config.MsgConclusaoEquipe
+         .Replace("${Apelido}", equipante.Apelido)
+         .Replace("${Evento}", $"{eventoAtual.TipoEvento.GetDescription()}")
+         .Replace("${ValorEvento}", eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
+         .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
+
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {
                 Id = equipante.Id,

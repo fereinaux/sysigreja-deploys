@@ -21,12 +21,13 @@
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true,stateSave: true,
+        responsive: true, stateSave: true,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('A Receber'),
         columns: [
             { data: "Descricao", name: "Descricao", autoWidth: true },
+            { data: "Origem", name: "Origem", autoWidth: true },
             { data: "CentroCusto", name: "CentroCusto", autoWidth: true },
             { data: "FormaPagamento", name: "FormaPagamento", autoWidth: true },
             { data: "Valor", name: "Valor", autoWidth: true },
@@ -55,14 +56,14 @@
             };
 
             total = api
-                .column(3, { selected: true, search: 'applied' })
+                .column(4, { selected: true, search: 'applied' })
                 .data()
                 .reduce(function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0);
 
 
-            $(api.column(3).footer()).html(
+            $(api.column(4).footer()).html(
                 total.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })
             );
         }
@@ -83,18 +84,23 @@ function GetLancamento(id) {
                 $("#lancamento-id").val(data.Lancamento.Id);
                 $("#lancamento-centcusto").val(data.Lancamento.CentroCustoId);
                 $("#lancamento-descricao").val(data.Lancamento.Descricao);
+                $("#lancamento-origem").val(data.Lancamento.Origem);
                 $("#lancamento-observacao").val(data.Lancamento.Observacao);
                 $("#lancamento-meiopagamento").val(data.Lancamento.MeioPagamentoId);
+                $("#lancamento-data").val(moment(data.Lancamento.DataLancamento).format('DD/MM/YYYY'));
                 ChangeMeioPagamento();
                 $("#lancamento-contabancaria").val(data.Lancamento.ContaBancariaId > 0 ? data.Lancamento.ContaBancariaId : 0);
                 $("#lancamento-valor").val(data.Lancamento.Valor);
+                $(".lancamento-data").css('display', 'block')
             }
         });
     }
     else {
+        $(".lancamento-data").css('display', 'none')
         $("#lancamento-id").val(0);
         $("#lancamento-centcusto").val($("#lancamento-centcusto option:first").val());
         $("#lancamento-descricao").val("");
+        $("#lancamento-origem").val("");
         $("#lancamento-observacao").val("");
         $("#lancamento-meiopagamento").val($("#lancamento-meiopagamento option:first").val());
         $("#lancamento-contabancaria").val($("#lancamento-contabancaria option:first").val());
@@ -113,7 +119,7 @@ function ChangeMeioPagamento() {
         $('.contabancaria').addClass('d-none');
 }
 
-function EditLancamento(params) {    
+function EditLancamento(params) {
     GetLancamento(params.Id);
     $("#lancamento-tipo").val(params.Tipo == "Receber" ? 1 : 2);
     if (params.Tipo == 'Receber') {
@@ -158,8 +164,10 @@ function PostLancamento() {
                 {
                     Id: $("#lancamento-id").val(),
                     Descricao: $("#lancamento-descricao").val(),
+                    Origem: $("#lancamento-origem").val(),
                     Observacao: $("#lancamento-observacao").val(),
                     Tipo: $("#lancamento-tipo").val(),
+                    Data: moment($("#lancamento-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#lancamento-meiopagamento").val(),
                     EventoId: $('#lancamento-eventoid').val(),
                     CentCustoId: $("#lancamento-centcusto").val(),
@@ -204,7 +212,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true,stateSave: true,
+        responsive: true, stateSave: true,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -297,20 +305,20 @@ function PrintRecibo(id) {
             var text = `Recebi do ${$("#lancamento-eventoid option:selected").text()}, a importância de ${data.Lancamento.Valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} referente a ${data.Lancamento.Descricao}.`;
             var valor = data.Lancamento.Valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             moment.locale("pt-br");
-            var dataExtenso = `${moment().format('D')} de ${moment().format('MMMM')} de ${moment().format('YYYY')}`; 
+            var dataExtenso = `${moment().format('D')} de ${moment().format('MMMM')} de ${moment().format('YYYY')}`;
 
-            doc.setFont('helvetica',"bold")
+            doc.setFont('helvetica', "bold")
             doc.text(94, 20, "RECIBO");
             doc.text(150, 30, `Valor: ${valor}`);
 
-            doc.setFont('helvetica',"normal")
+            doc.setFont('helvetica', "normal")
             splitText = doc.splitTextToSize(text, 160);
             doc.text(20, 50, splitText);
             doc.text(110, 83, `Recife, ${dataExtenso}`);
 
             doc.line(20, 98, 100, 98);
             doc.text(20, 105, data.Lancamento.Observacao);
-                       
+
             printDoc(doc);
         }
     });

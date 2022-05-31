@@ -200,3 +200,99 @@ function IsFone(fone) {
 function IsCPF(cpf) {
     return cpf.length == 14;
 }
+
+var EventoButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'Evento',
+        tooltip: 'evento',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${Evento}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var DataButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'DataEvento',
+        tooltip: 'data evento',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${DataEvento}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var ValorButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'ValorEvento',
+        tooltip: 'valor evento',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${ValorEvento}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var ApelidoButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'Apelido',
+        tooltip: 'apelido',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${Apelido}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var PadrinhoNomeButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'NomePadrinho',
+        tooltip: 'padrinho',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${NomePadrinho}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var PadrinhoFoneButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'FonePadrinho',
+        tooltip: 'padrinho',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${FonePadrinho}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}

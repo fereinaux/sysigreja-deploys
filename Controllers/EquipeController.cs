@@ -181,7 +181,9 @@ namespace SysIgreja.Controllers
             .Select(x => new
             {
                 Id = x.Id,
-                Nome = x.Equipante.Nome,
+                Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
+                Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
+                Fone = x.Equipante.Fone,
                 Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                 Tipo = x.Tipo.GetDescription(),
             });

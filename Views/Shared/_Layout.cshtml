@@ -91,6 +91,7 @@
     <script>
         const { jsPDF } = window.jspdf;
         let logo;
+        let logoRelatorio;
         var config = {}
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
@@ -103,11 +104,14 @@
                 config = data.Configuracao
                 $('title').text(`${config.Titulo} | ${$('#title').text()}`)
                 if (config.LogoId) {
-                    logo = config.Logo
                     $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
                     $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
                 }
-                    $('#home-button-logo').css('display', 'block')
+                $('#home-button-logo').css('display', 'block')
+                if (config.LogoRelatorioId) {
+                    logoRelatorio = config.LogoRelatorio
+                }
+
             }
         });
     </script>

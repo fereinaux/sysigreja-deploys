@@ -84,21 +84,16 @@ function PrintCirculo(row) {
         success: (result) => {
             var doc = CriarPDFA4();
 
-            var evento = $("#circulo-eventoid option:selected").text()
 
-            if (evento.includes("SVES"))
-                logo = "sves";
-            else if (evento.includes("SOZO"))
-                logo = "sozo";
-            else
-                logo = "scc";
+            if (logoRelatorio) {
+                var img = new Image();
+                img.src = `data:image/png;base64,${logoRelatorio}`;
+                doc.addImage(img, 'PNG', 10, 10, 50, 21);
+            }
 
-            var img = new Image();
-            img.src = `/Images/logo-${logo}.png`;
 
-            doc.setFontType("normal");
+            doc.setFont('helvetica', "normal")
             doc.setFontSize(12);
-            doc.addImage(img, 'PNG', 10, 10, 64, 21);
             doc.text(77, 15, $("#circulo-eventoid option:selected").text());
 
 
@@ -110,13 +105,13 @@ function PrintCirculo(row) {
             doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
             doc.line(10, 38, 195, 38);
 
-            doc.setFontStyle("bold");
+            doc.setFont('helvetica', "bold")
             doc.text(12, 43, "Nome");
             doc.text(117, 43, "Apelido");
             doc.text(152, 43, "Whatsapp");
 
             doc.line(10, 45, 195, 45);
-            doc.setFontType("normal");
+            doc.setFont('helvetica', "normal")
             height = 50;
 
             $(result.data).each((index, participante) => {
@@ -128,7 +123,7 @@ function PrintCirculo(row) {
 
             AddCount(doc, result.data, height);
 
-            PrintDoc(doc);
+            printDoc(doc);
         }
     });
 }

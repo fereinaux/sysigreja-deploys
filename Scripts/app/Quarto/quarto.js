@@ -55,24 +55,24 @@ $(document).ready(function () {
     GetQuartosComParticipantes();
 });
 
-async function PrintQuarto(row) {
+function PrintQuarto(row) {
     $.ajax({
         url: window.location.href.includes('QuartoEquipe') ? '/Quarto/GetEquipantesByQuarto' : '/Participante/GetParticipantesByQuarto',
         data: { QuartoId: row.Id },
         datatype: "json",
         type: "GET",
-        success: async (result) => {
+        success: (result) => {
             var doc = CriarPDFA4();
             var titulo = `Quarto - ${row.Titulo}`;
-            doc = await AddCabecalhoEvento(doc, titulo, $("#quarto-eventoid option:selected").text());
+            doc = AddCabecalhoEvento(doc, titulo, $("#quarto-eventoid option:selected").text());
             doc.line(10, 38, 195, 38);
 
-            doc.setFontStyle("bold");
+            doc.setFont('helvetica', "bold")
             doc.text(12, 43, "Nome");
             doc.text(95, 43, window.location.href.includes('QuartoEquipe') ? "Apelido" : "Medicamento/Alergia");
 
             doc.line(10, 45, 195, 45);
-            doc.setFontType("normal");
+            doc.setFont('helvetica', "normal")
             height = 50;
 
             $(result.data).each((index, participante) => {
@@ -84,7 +84,7 @@ async function PrintQuarto(row) {
 
             AddCount(doc, result.data, height);
 
-            PrintDoc(doc);
+            printDoc(doc);
         }
     });
 }

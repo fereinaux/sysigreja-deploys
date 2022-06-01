@@ -940,7 +940,7 @@ function Opcoes(row) {
             $('.paitext').text(realista.NomePai)
             $('.convitetext').text(realista.NomeConvite)
             $('.contatotext').text(realista.NomeContato)
-
+            $('#participante-obs').val(realista.Observacao)
             if ($('#modal-opcoes').is(":hidden")) {
                 $.ajax({
                     url: "/Mensagem/GetMensagens/",

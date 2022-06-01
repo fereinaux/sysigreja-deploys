@@ -91,12 +91,10 @@ function GetLancamento(id) {
                 ChangeMeioPagamento();
                 $("#lancamento-contabancaria").val(data.Lancamento.ContaBancariaId > 0 ? data.Lancamento.ContaBancariaId : 0);
                 $("#lancamento-valor").val(data.Lancamento.Valor);
-                $(".lancamento-data").css('display', 'block')
             }
         });
     }
     else {
-        $(".lancamento-data").css('display', 'none')
         $("#lancamento-id").val(0);
         $("#lancamento-centcusto").val($("#lancamento-centcusto option:first").val());
         $("#lancamento-descricao").val("");

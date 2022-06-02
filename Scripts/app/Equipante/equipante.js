@@ -89,7 +89,8 @@ ${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
 ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
                             ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
-                            ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}                            
+                            ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
+${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 
 `;
@@ -613,6 +614,60 @@ function DeleteEquipante(id) {
     });
 }
 
+
+function Opcoes(row) {
+    equipante = row;
+    $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
+    $.ajax({
+        url: "/Equipante/GetEquipante/",
+        data: { Id: row.Id },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            equipante = data.Equipante
+            $.ajax({
+                url: "/Mensagem/GetMensagens/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                success: function (dataMsg) {
+                    $("#msg-list").html(`
+${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+`)
+
+                }
+            })
+            $('.realista-nome').text(equipante.Nome)
+            $('#equipante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
+                }`)
+            $('#equipante-etiquetas').val(data.Equipante.Etiquetas.map(etiqueta => etiqueta.Id))
+            $('#equipante-obs').val(data.Equipante.Observacao)
+            $("#modal-opcoes").modal();
+        }
+    });
+
+
+}
+
+$("#modal-opcoes").on('hidden.bs.modal', function () {
+    $.ajax({
+        url: "/Equipante/PostEtiquetas/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                Id: equipante.Id,
+                Etiquetas: $('.equipante-etiquetas').val(),
+                Obs: $('#equipante-obs').val(),
+            }),
+        success: function () {
+            CarregarTabelaEquipante()
+        }
+    });
+});
+
 function PostEquipante() {
     if (ValidateForm(`#form-equipante`)) {
         $.ajax({
@@ -634,8 +689,7 @@ function PostEquipante() {
                     Medicacao: $(`#equipante-medicacao`).val(),
                     HasAlergia: $("input[type=radio][name=equipante-hasalergia]:checked").val(),
                     Alergia: $(`#equipante-alergia`).val(),
-                    Sexo: $("input[type=radio][name=equipante-sexo]:checked").val(),
-                    Etiquetas: $('.equipante-etiquetas').val()
+                    Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
                 }),
             success: function () {
                 SuccessMesageOperation();

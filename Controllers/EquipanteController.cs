@@ -128,6 +128,7 @@ namespace SysIgreja.Controllers
                 var filteredResultsCount = totalResultsCount;
 
 
+
                 if (model.Etiquetas != null && model.Etiquetas.Count > 0)
                 {
                     model.Etiquetas.ForEach(etiqueta =>
@@ -162,6 +163,7 @@ namespace SysIgreja.Controllers
                     }
                     filteredResultsCount = result.Count();
                 }
+
 
                 if (model.Equipe != null)
                 {
@@ -212,19 +214,6 @@ namespace SysIgreja.Controllers
                             {
                                 Order = qtdReunioes - x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Presencas.Count()
                             });
-                        }
-
-                    }
-                    else if (model.columns[model.order[0].column].name == "Idade")
-                    {
-                        if (model.order[0].dir == "asc")
-                        {
-                            result = result.OrderBy(x => x.DataNascimento);
-
-                        }
-                        else
-                        {
-                            result = result.OrderByDescending(x => x.DataNascimento);
                         }
 
                     }
@@ -280,14 +269,8 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipante(int Id)
         {
-            var result = equipantesBusiness.GetEquipanteById(Id);
+            var result = mapper.Map<EquipanteListModel>(equipantesBusiness.GetEquipantes().ToList().FirstOrDefault(x => x.Id == Id));
             int eventoId = (eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().OrderByDescending(x => x.DataEvento).First()).Id;
-
-            result.Nome = UtilServices.CapitalizarNome(result.Nome);
-            result.Apelido = UtilServices.CapitalizarNome(result.Apelido);
-            var equipeAtual = equipesBusiness.GetEquipeAtual(eventoId, result.Id);
-            result.Equipe = equipeAtual?.Equipe.GetDescription() ?? "";
-            result.Checkin = equipeAtual?.Checkin ?? false;
 
             var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
               .Select(x => new
@@ -297,15 +280,13 @@ namespace SysIgreja.Controllers
                   Cor = x.Cor
               });
 
-            var equipante = mapper.Map<PostEquipanteModel>(result);
-
             var dadosAdicionais = new
             {
                 Status = result.Status.GetDescription(),
                 Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? ""
             };
 
-            return Json(new { Equipante = equipante, Etiquetas = etiquetas, }, JsonRequestBehavior.AllowGet);
+            return Json(new { Equipante = result, Etiquetas = etiquetas, }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -387,6 +368,15 @@ namespace SysIgreja.Controllers
             }
 
         }
+
+        [HttpPost]
+        public ActionResult PostEtiquetas(string[] etiquetas, int id, string obs)
+        {
+            equipantesBusiness.PostEtiquetas(etiquetas, id, obs);
+
+            return new HttpStatusCodeResult(200);
+        }
+
 
         [HttpPost]
         public ActionResult DeleteEquipante(int Id)

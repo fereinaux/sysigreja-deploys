@@ -1,4 +1,5 @@
 ï»¿var realista;
+let table
 $.ajax({
     url: '/Etiqueta/GetEtiquetas',
     datatype: "json",
@@ -15,7 +16,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
     }
 });
 
-function CarregarTabelaEquipante() {
+function CarregarTabelaEquipante(callbackFunction) {
 
 
     const tableEquipanteConfig = {
@@ -100,6 +101,11 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'OpÃ§Ã
         order: [
             [2, "asc"]
         ],
+        drawCallback: function () {
+            if (callbackFunction) {
+                callbackFunction()
+            }
+        },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
             
@@ -109,7 +115,7 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'OpÃ§Ã
         }
     };
 
-    $("#table-equipantes").DataTable(tableEquipanteConfig);
+    table = $("#table-equipantes").DataTable(tableEquipanteConfig);
 }
 
 function getEquipes() {
@@ -660,6 +666,21 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }`)
             $('#equipante-etiquetas').val(data.Equipante.Etiquetas.map(etiqueta => etiqueta.Id))
             $('#equipante-obs').val(data.Equipante.Observacao)
+
+            arrayData = table.data().toArray()
+            let index = arrayData.findIndex(r => r.Id == row.Id)
+
+            $('#btn-previous').css('display', 'block')
+            $('#btn-next').css('display', 'block')
+            if (index == 0) {
+
+                $('#btn-previous').css('display', 'none')
+            }
+
+            if (index == arrayData.length - 1) {
+                $('#btn-next').css('display', 'none')
+            }
+
             $("#modal-opcoes").modal();
         }
     });
@@ -668,6 +689,10 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 }
 
 $("#modal-opcoes").on('hidden.bs.modal', function () {
+    PostInfo()
+});
+
+function PostInfo(callback) {
     $.ajax({
         url: "/Equipante/PostEtiquetas/",
         datatype: "json",
@@ -680,10 +705,10 @@ $("#modal-opcoes").on('hidden.bs.modal', function () {
                 Obs: $('#equipante-obs').val(),
             }),
         success: function () {
-            CarregarTabelaEquipante()
+            CarregarTabelaEquipante(callback)
         }
     });
-});
+}
 
 function PostEquipante() {
     if (ValidateForm(`#form-equipante`)) {
@@ -815,3 +840,24 @@ $('#not-restricaoalimentar').on('ifChecked', function (event) {
     $('.restricaoalimentar').addClass('d-none');
     $("#equipante-restricaoalimentar").removeClass('required');
 });
+
+
+function previous() {
+    PostInfo(function () {
+        arrayData = table.data().toArray()
+        let index = arrayData.findIndex(r => r.Id == equipante.Id)
+        if (index > 0) {
+            Opcoes(arrayData[index - 1])
+        }
+    })
+}
+
+function next() {
+    PostInfo(function () {
+        arrayData = table.data().toArray()
+        let index = arrayData.findIndex(r => r.Id == equipante.Id)
+        if (index + 1 < arrayData.length) {
+            Opcoes(arrayData[index + 1])
+        }
+    })
+}

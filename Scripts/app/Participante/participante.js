@@ -1,6 +1,7 @@
 ﻿var realista = {}
 eventoId = 0
-function CarregarTabelaParticipante() {
+let table
+function CarregarTabelaParticipante(callbackFunction){
     if ($("#participante-eventoid").val() != eventoId) {
         $.ajax({
             url: '/Participante/GetPadrinhos',
@@ -138,6 +139,11 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
         order: [
             [2, "asc"]
         ],
+        drawCallback: function () {
+            if (callbackFunction) {
+                callbackFunction()
+            }
+        },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
             data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val(), Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
@@ -160,7 +166,7 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
         }
     });
 
-    $("#table-participante").DataTable(tableParticipanteConfig);
+    table = $("#table-participante").DataTable(tableParticipanteConfig);
 }
 
 function ConfirmFoto() {
@@ -909,6 +915,7 @@ function PostPagamento() {
 
 function Opcoes(row) {
     realista = row;
+    console.log(row);
     $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Participante/GetParticipante/",
@@ -924,63 +931,48 @@ function Opcoes(row) {
             $('.paitext').text(realista.NomePai)
             $('.convitetext').text(realista.NomeConvite)
             $('.contatotext').text(realista.NomeContato)
-
-            $('.pagamento').show()
             $('#participante-obs').val(realista.Observacao)
-            $(`#participante-msgcovid`).iCheck(realista.MsgVacina ? 'check' : 'uncheck');
-            $(`#participante-msgpagamento`).iCheck(realista.MsgPagamento ? 'check' : 'uncheck');
-            $(`#participante-msgnoitita`).iCheck(realista.MsgNoitita ? 'check' : 'uncheck');
-            $(`#participante-msggeral`).iCheck(realista.MsgGeral ? 'check' : 'uncheck');
-            $(`#participante-msgfoto`).iCheck(realista.MsgFoto ? 'check' : 'uncheck');
-
-            $.ajax({
-                url: "/Mensagem/GetMensagens/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                success: function (dataMsg) {
-                    $("#msg-list").html(`
+            if ($('#modal-opcoes').is(":hidden")) {
+                $.ajax({
+                    url: "/Mensagem/GetMensagens/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (dataMsg) {
+                        $("#msg-list").html(`
 ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
 
-                }
-            })
-
+                    }
+                })
+            }
             $('#participante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
                 }`)
             $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
             if (realista.Status == "Confirmado") {
                 $('.pagamento').hide()
             }
+
+            arrayData = table.data().toArray()
+            let index = arrayData.findIndex(r => r.Id == row.Id)
+
+            $('#btn-previous').css('display', 'block')
+            $('#btn-next').css('display', 'block')
+            if (index == 0) {
+
+                $('#btn-previous').css('display', 'none')
+            }
+
+            if (index == arrayData.length - 1) {
+                $('#btn-next').css('display', 'none')
+            }
+
             $("#modal-opcoes").modal();
         }
     });
 
 
 }
-
-$("#modal-opcoes").on('hidden.bs.modal', function () {
-    $.ajax({
-        url: "/Participante/PostInfo/",
-        datatype: "json",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(
-            {
-                Id: realista.Id,
-                Observacao: $('#participante-obs').val(),
-                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
-                MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
-                MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
-                MsgGeral: $(`#participante-msggeral`).prop("checked"),
-                MsgFoto: $(`#participante-msgfoto`).prop("checked"),
-                Etiquetas: $('.participante-etiquetas').val()
-            }),
-        success: function () {
-            CarregarTabelaParticipante()
-        }
-    });
-});
 
 function GetParticipanteContato(id) {
     $.ajax({
@@ -1155,3 +1147,53 @@ $('#not-restricaoalimentar').on('ifChecked', function (event) {
     $('.restricaoalimentar').addClass('d-none');
     $("#participante-restricaoalimentar").removeClass('required');
 });
+
+
+
+function previous() {
+    PostInfo(function () {
+        arrayData = table.data().toArray()
+        let index = arrayData.findIndex(r => r.Id == realista.Id)
+        if (index > 0) {
+            Opcoes(arrayData[index - 1])
+        }
+    })
+}
+
+function next() {
+    PostInfo(function () {
+        arrayData = table.data().toArray()
+        let index = arrayData.findIndex(r => r.Id == realista.Id)
+        if (index + 1 < arrayData.length) {
+            Opcoes(arrayData[index + 1])
+        }
+    })
+}
+
+
+$("#modal-opcoes").on('hidden.bs.modal', function () {
+    PostInfo()
+});
+
+function PostInfo(callback) {
+    $.ajax({
+        url: "/Participante/PostInfo/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                Id: realista.Id,
+                Observacao: $('#participante-obs').val(),
+                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
+                MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
+                MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
+                MsgGeral: $(`#participante-msggeral`).prop("checked"),
+                MsgFoto: $(`#participante-msgfoto`).prop("checked"),
+                Etiquetas: $('.participante-etiquetas').val()
+            }),
+        success: function () {
+            CarregarTabelaParticipante(callback)
+        }
+    });
+}

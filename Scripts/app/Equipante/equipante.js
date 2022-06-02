@@ -615,6 +615,23 @@ function DeleteEquipante(id) {
 }
 
 
+
+function enviar() {
+    var windowReference = window.open('_blank');
+    $.ajax({
+        url: "/Mensagem/GetMensagem/",
+        data: { Id: $("#msg-list").val() },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome);
+            windowReference.location = GetLinkWhatsApp(equipante.Fone, text)
+        }
+    });
+
+
+}
 function Opcoes(row) {
     equipante = row;
     $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });

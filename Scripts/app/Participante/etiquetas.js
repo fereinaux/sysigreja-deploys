@@ -178,31 +178,31 @@ function MontarEtiquetasParticipantes(result) {
 }
 
 function MontarEtiquetasEquipantes(result) {
-    var printDoc = new jsPDF('p', 'mm', 'a3');
+    var printDoc = new jsPDF('p', 'mm', 'letter');
     printDoc.setFont('helvetica', "normal")
     printDoc.setFontSize(18);
     $(result.data).each((index, equipante) => {
         if (index % 14 == 0 || index == 0) {
-            heightNome = 42;
-            heightApelido = 57;
-            heightEquipe = 68;
-            width = 73;
+            heightNome = 30;
+            heightApelido = 37;
+            heightEquipe = 43;
+            width = 55;
             if (index > 0) {
                 printDoc.addPage();
             }
         }
         printDoc.setFont('helvetica', "normal")
-        printDoc.setFontSize(18);
+        printDoc.setFontSize(15);
         printDoc.text(width, heightEquipe, "  (" + equipante.Equipe + ")", 'center');
         var splitNome = printDoc.splitTextToSize(equipante.Nome, 100);
         printDoc.text(width, heightNome, splitNome, 'center');
         printDoc.setFont('helvetica', "bold")
-        printDoc.setFontSize(30);
+        printDoc.setFontSize(18);
         printDoc.text(width, splitNome.length > 1 ? heightApelido + 4 : heightApelido, equipante.Apelido, 'center');
-        width = index % 2 == 0 ? 212 : 73;
-        heightNome = index % 2 == 0 ? heightNome : heightNome + 45;
-        heightApelido = index % 2 == 0 ? heightApelido : heightApelido + 45;
-        heightEquipe = index % 2 == 0 ? heightEquipe : heightEquipe + 45;
+        width = index % 2 == 0 ? 162 : 55;
+        heightNome = index % 2 == 0 ? heightNome : heightNome + 33.9;
+        heightApelido = index % 2 == 0 ? heightApelido : heightApelido + 33.9;
+        heightEquipe = index % 2 == 0 ? heightEquipe : heightEquipe + 33.9;
     });
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');

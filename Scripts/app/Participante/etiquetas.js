@@ -412,7 +412,7 @@ function ImprimirIndividual(data, position) {
     var printDoc = new jsPDF('p', 'mm', 'letter');
     printDoc.setFont('helvetica', "normal")
     printDoc.setFontSize(18);
-    width = position % 2 == 0 ? 212 : 73;
+    width = position % 2 == 0 ? 162 : 55;
     multiplicador = 0;
 
     switch (position) {

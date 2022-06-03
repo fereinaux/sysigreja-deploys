@@ -108,7 +108,7 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'OpÃ§Ã
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
-            
+
             data: { EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : null, Status: $("#equipante-status").val(), Etiquetas: $("#equipante-marcadores").val(), NaoEtiquetas: $("#equipante-nao-marcadores").val(), Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null },
             datatype: "json",
             type: "POST"
@@ -317,7 +317,7 @@ function Foto(row) {
 
     new Compressor(file, {
         quality: 0.6,
-        convertSize: 1000000 ,
+        convertSize: 1000000,
         // The compression process is asynchronous,
         // which means you have to access the `result` in the `success` hook function.
         success(result) {
@@ -332,7 +332,7 @@ function Foto(row) {
             };
 
             reader.readAsDataURL(result);
-   
+
 
             $("#modal-fotos").modal();
             var boundaryWidth = $("#fotocontent").width();
@@ -385,7 +385,7 @@ function toggleFoto(id) {
     )
 }
 
-function PostVacina(id,realista) {
+function PostVacina(id, realista) {
     var dataToPost = new FormData($(`#frm-vacina${id}`)[0]);
     dataToPost.set('EquipanteId', id)
     var filename = dataToPost.get(`arquivo${id}`).name
@@ -548,7 +548,7 @@ function Pagamentos(row) {
 }
 
 function GetEquipante(id) {
-                $('.equipante-etiquetas').select2({ dropdownParent: $("#form-equipante") });
+    $('.equipante-etiquetas').select2({ dropdownParent: $("#form-equipante") });
     if (id > 0) {
         $.ajax({
             url: "/Equipante/GetEquipante/",
@@ -649,18 +649,20 @@ function Opcoes(row) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             equipante = data.Equipante
-            $.ajax({
-                url: "/Mensagem/GetMensagens/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                success: function (dataMsg) {
-                    $("#msg-list").html(`
+            if ($('#modal-opcoes').is(":hidden")) {
+                $.ajax({
+                    url: "/Mensagem/GetMensagens/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (dataMsg) {
+                        $("#msg-list").html(`
 ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
 
-                }
-            })
+                    }
+                })
+            }
             $('.realista-nome').text(equipante.Nome)
             $('#equipante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
                 }`)

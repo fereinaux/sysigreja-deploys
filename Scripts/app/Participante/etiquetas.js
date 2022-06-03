@@ -409,7 +409,7 @@ function CarregarEtiquetaIndividual(position) {
 }
 
 function ImprimirIndividual(data, position) {
-    var printDoc = new jsPDF('p', 'mm', 'a3');
+    var printDoc = new jsPDF('p', 'mm', 'letter');
     printDoc.setFont('helvetica', "normal")
     printDoc.setFontSize(18);
     width = position % 2 == 0 ? 212 : 73;

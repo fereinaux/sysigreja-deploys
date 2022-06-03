@@ -364,7 +364,7 @@ function GetEquipante() {
 
                 $(".participante-info").removeClass('d-none');
 
-                $(".quarto-info").addClass('d-none');
+                $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
 
 
                 if (data.Equipante.Checkin) {

@@ -98,10 +98,10 @@ function PrintCirculo(row) {
 
 
 
-     
-                doc.text(77, 20, `Círculo ${row.Cor}`);
-                doc.text(77, 25, `${row.Dirigente1} / ${row.Dirigente2}`);
-       
+
+            doc.text(77, 20, `Círculo ${row.Cor}`);
+            doc.text(77, 25, `${row.Dirigente1} / ${row.Dirigente2}`);
+
             doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
             doc.line(10, 38, 195, 38);
 
@@ -142,13 +142,10 @@ function GetCirculo(id, cor) {
                 $('#circulo-cores').append($(`<option value="${data.Circulo.Cor}">${cor}</option>`));
                 $("#circulo-cores").val(data.Circulo.Cor).trigger("chosen:updated");
 
-                
-                    $('#circulo-dirigente1').append($(`<option value="${data.Circulo.Dirigente1.Id}">${data.Circulo.Dirigente1.Equipante.Nome}</option>`));
-                    $("#circulo-dirigente1").val(data.Circulo.Dirigente1Id).trigger("chosen:updated");
+                $("#circulo-dirigente1").val(data.Circulo.Dirigente1Id).trigger("chosen:updated");
 
-                    $('#circulo-dirigente2').append($(`<option value="${data.Circulo.Dirigente2.Id}">${data.Circulo.Dirigente2.Equipante.Nome}</option>`));
-                    $("#circulo-dirigente2").val(data.Circulo.Dirigente2Id).trigger("chosen:updated");
-                
+                $("#circulo-dirigente2").val(data.Circulo.Dirigente2Id).trigger("chosen:updated");
+
 
             }
         });
@@ -159,9 +156,9 @@ function GetCirculo(id, cor) {
 }
 
 function EditCirculo(row) {
-    GetEquipantes();
+    GetEquipantes(row)
     GetCores();
-    GetCirculo(row.Id, row.Cor);
+ 
     $("#modal-circulo").modal();
 }
 
@@ -233,7 +230,7 @@ function DistribuirCirculos() {
 }
 
 
-function GetEquipantes(id) {
+function GetEquipantes(row) {
     $("#circulo-equipantes").empty();
 
     $.ajax({
@@ -248,11 +245,8 @@ function GetEquipantes(id) {
                 $('#circulo-dirigente2').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
             });
             $("#circulo-dirigente1").val($("#circulo-dirigente1 option:first").val()).trigger("chosen:updated");
-            $("#circulo-dirigente2").val($("#circulo-dirigente2 option:eq(1)").val()).trigger("chosen:updated");
-            if ($("#circulo-equipantes option").length === 0 && id == 0) {
-                ErrorMessage("Não existem Equipantes disponíveis");
-                $("#modal-circulo").modal("hide");
-            }
+            $("#circulo-dirigente2").val($("#circulo-dirigente2 option:eq(1)").val()).trigger("chosen:updated");   
+            GetCirculo(row.Id, row.Cor);
         }
     });
 }
@@ -288,10 +282,10 @@ function GetCirculosComParticipantes() {
         type: "POST",
         success: function (data) {
             data.data.forEach(function (circulo, index, array) {
-      
-                    htmlCaecalhoCirculo = `<h4 style="padding-top:5px">${circulo.Dirigente1}</h4>
+
+                htmlCaecalhoCirculo = `<h4 style="padding-top:5px">${circulo.Dirigente1}</h4>
                         <h4 style="padding-bottom:5px">${circulo.Dirigente2}</h4>`
-           
+
 
                 $("#circulos").append($(`<div data-id="${circulo.Id}" style="margin-bottom:25px;background-color:${GetCor(circulo.Cor)};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
                        ${htmlCaecalhoCirculo}                        

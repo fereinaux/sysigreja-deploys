@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_Inscricoes.cshtml";
+}
+
+<div class="middle-box inscricoes animated fadeInDown " style="height:300px;display:flex;margin:auto">
+    <div style="margin:auto">
+
+        @if (ViewBag.Configuracao.LogoId != null)
+        {
+            <div class="row justify-content-center">
+                <div class="col-sm-offset-3 col-sm-6" style="display:flex">
+                    <img style="max-width:100%;max-height:200px;margin:auto" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" alt="Igreja Episcopal Carismática do Brasil" />
+                </div>
+
+            </div>
+        }
+        <div class="row justify-content-center m-l-lg m-r-lg m-t-lg m-b-sm text-white text-center">
+            <h4>As inscrições para o @ViewBag.Configuracao.Titulo estão encerradas</h4>
+
+        </div>
+    </div>
+
+</div>

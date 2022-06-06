@@ -1,4 +1,4 @@
-name: Deploy
+name: Sves
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI or API.
 on:
@@ -19,5 +19,5 @@ jobs:
     - name: Webhook
       uses: zzzze/webhook-trigger@v1.0.0
       with:
-        webhook_url: "https://pleskw.nspmanaged.com:8443/modules/git/public/web-hook.php?uuid=4b444369-d9d4-df0b-51f7-5666ab1780aa"
+        webhook_url: "https://pleskw.nspmanaged.com:8443/modules/git/public/web-hook.php?uuid=e23217b0-a6d9-0207-b07b-8ccc459dbe7b"
         json: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'

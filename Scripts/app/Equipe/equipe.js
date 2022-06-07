@@ -22,6 +22,7 @@ function CarregarTabelaEquipe() {
                 data: "Id", name: "Id", orderable: false, width: "15%",
                 "render": function (data, type, row) {
                     return `${GetButton('ListarEquipe', JSON.stringify(row), 'blue', 'fa-list-alt', 'Listar membros da Equipe')}
+${GetButton('PrintEquipe', data, 'green', 'fa-print', 'Imprimir Equipe')}
   ${GetAnexosButton('Anexos', data, row.QtdAnexos)}`;
                 }
             }
@@ -166,10 +167,10 @@ function header(doc, evento, page) {
     doc.setFont('helvetica', "normal")
 }
 
-function PrintEquipe() {
+function PrintEquipe(id) {
     $.ajax({
         url: '/Equipe/GetMembrosEquipeDatatable',
-        data: { EventoId: $("#equipe-eventoid").val(), EquipeId: EquipeId },
+        data: { EventoId: $("#equipe-eventoid").val(), EquipeId: id },
         datatype: "json",
         type: "POST",
         success: (result) => {

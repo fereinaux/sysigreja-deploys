@@ -87,7 +87,7 @@ ${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
                                 <input onchange='PostVacina(${data},${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="arquivo${data}" name="arquivo${data}" type="file" value="">
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleVacina(${data})"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>`}
                            
-${GetIconWhatsApp(row.Fone)}
+          ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
                             ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                             ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}

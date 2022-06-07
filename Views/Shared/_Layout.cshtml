@@ -91,6 +91,7 @@
     <script>
         const { jsPDF } = window.jspdf;
         var config = {}
+        let corBotao
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
         $.ajax({
@@ -100,6 +101,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 config = data.Configuracao
+                corBotao = config.CorBotao;
                 $('title').text(`${config.Titulo} | ${$('#title').text()}`)
                 if (config.LogoId) {
                     $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)

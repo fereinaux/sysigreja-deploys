@@ -62,14 +62,6 @@ namespace SysIgreja.Controllers
             this.datatableService = datatableService;
             mapper = new MapperRealidade().mapper;
         }
-
-        public ActionResult ListaTelefonica()
-        {
-            ViewBag.Title = "Lista Telefônica";
-            GetEventos();
-            return View();
-        }
-
         public ActionResult Checkin()
         {
             ViewBag.Title = "Check-in";
@@ -93,14 +85,6 @@ namespace SysIgreja.Controllers
         public ActionResult Etiquetas()
         {
             ViewBag.Title = "Impressão de Etiquetas";
-            GetEventos();
-
-            return View();
-        }
-
-        public ActionResult Boletos()
-        {
-            ViewBag.Title = "Boletos Solicitados";
             GetEventos();
 
             return View();

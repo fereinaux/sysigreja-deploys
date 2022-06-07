@@ -17,6 +17,7 @@ using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
@@ -334,7 +335,7 @@ namespace SysIgreja.Controllers
             result.Checkin = equipeAtual.Checkin;
 
             var equipante = mapper.Map<PostEquipanteModel>(result);
-
+            equipante.Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == result.Id).Include(x => x.Quarto).FirstOrDefault()?.Quarto?.Titulo;
             var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
             .Select(x => new
             {

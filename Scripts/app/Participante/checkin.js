@@ -322,6 +322,7 @@ function GetEquipante() {
                 $('.dados-participante-contato').addClass('d-none');
                 $('#form-info').addClass('d-none');
                 $('.dados-equipante').removeClass('d-none');
+                $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
                 $('.dados-participante-contato input').removeClass('required');
                 $('.dados-participante-contato input[id*="fone"]').removeClass('fone');
                 if (data.Equipante.Foto) {

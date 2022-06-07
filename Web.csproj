@@ -1021,6 +1021,7 @@
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff" />
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff2" />
     <Content Include="Images\mapa\marker.psd" />
+    <Content Include="Content\loader.css" />
     <None Include="packages.config" />
     <Content Include="Content\landing\avatar_all.png" />
     <Content Include="Content\landing\header_one.jpg" />

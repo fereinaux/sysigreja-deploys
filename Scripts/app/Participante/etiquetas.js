@@ -1,4 +1,24 @@
-﻿function CarregarEtiquetas() {
+﻿let cores = []
+
+function CarregarEtiquetas() {
+    $.blockUI({
+        css: {
+            backgroundColor: 'transparent',
+            border: 'none'
+        },
+        message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+        baseZ: 1500,
+        overlayCSS: {
+            opacity: 0.7,
+            cursor: 'wait'
+        }
+    });
     if ($('.tipo:checked').val() == 1) {
         if ($("#etiquetas-participantes").val() != "Pesquisar") {
             $("#etiquetas-participantes").val("Pesquisar").trigger("chosen:updated");
@@ -147,6 +167,7 @@ function MontarTagsParticipantes(result) {
     });
     //printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function MontarEtiquetasParticipantes(result) {
@@ -175,6 +196,7 @@ function MontarEtiquetasParticipantes(result) {
     });
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function MontarEtiquetasEquipantes(result) {
@@ -206,6 +228,7 @@ function MontarEtiquetasEquipantes(result) {
     });
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 
@@ -224,6 +247,9 @@ function MontarCrachaParticipantes(result) {
 
 
     $(result.data).each((index, equipante) => {
+        let imgs = {}
+        cores.forEach(cor => (imgs[cor] = new Image()).src = `/Images/circulos/${cor}.png`)
+   
         if (equipante.Foto) {
             if (index % 10 == 0 || index == 0) {
                 indice = 0
@@ -270,11 +296,8 @@ function MontarCrachaParticipantes(result) {
                 yFoto = heightFoto + 2.5
             }
 
-            console.log(xFoto, yFoto, widthFoto, heightFoto)
             printDoc.addImage('data:image/jpeg;base64,' + equipante.Foto, 'JPEG', xFoto, yFoto, widthFoto, heightFoto);
-            var img = new Image();
-            img.src = `/Images/circulos/${equipante.Circulo}.png`;
-            printDoc.addImage(img, 'PNG', xFoto, yFoto, widthFoto, heightFoto);
+            printDoc.addImage(imgs[equipante.Circulo], 'PNG', xFoto, yFoto, widthFoto, heightFoto);
 
             printDoc.setFontSize(12);
             printDoc.setFont('Helvetica', 'normal');
@@ -287,7 +310,9 @@ function MontarCrachaParticipantes(result) {
             indice++
         }
     });
+
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function MontarCrachaEquipantes(result) {
@@ -373,6 +398,7 @@ function MontarCrachaEquipantes(result) {
         }
     });
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function CarregarEtiquetaIndividual(position) {
@@ -494,13 +520,14 @@ function ImprimirIndividual(data, position) {
     }
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function GetParticipantes() {
     $("#etiquetas-participantes").empty();
     $('#etiquetas-participantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Participante/GetParticipantes',
+        url: '/Participante/GetParticipantesSelect',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "POST",
@@ -518,7 +545,7 @@ function GetEquipantes() {
     $("#etiquetas-equipantes").empty();
     $('#etiquetas-equipantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Equipe/GetEquipantesByEvento',
+        url: '/Equipe/GetEquipantesByEventoSelect',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "GET",
@@ -540,7 +567,9 @@ function GetCirculos() {
         datatype: "json",
         type: "POST",
         success: (result) => {
+            cores = []
             result.data.forEach(function (circulo, index, array) {
+                cores.push(circulo.Cor)
                 $('#etiquetas-circulos').append($(`<option value="${circulo.Id}">${circulo.Cor}</option>`));
             });
             $("#etiquetas-circulos").val("Pesquisar").trigger("chosen:updated");

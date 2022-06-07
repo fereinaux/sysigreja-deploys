@@ -22,7 +22,7 @@ function CarregarTabelaEquipe() {
                 data: "Id", name: "Id", orderable: false, width: "15%",
                 "render": function (data, type, row) {
                     return `${GetButton('ListarEquipe', JSON.stringify(row), 'blue', 'fa-list-alt', 'Listar membros da Equipe')}
-${GetButton('PrintEquipe', data, 'green', 'fa-print', 'Imprimir Equipe')}
+${GetButton('PrintEquipe', JSON.stringify(row), 'green', 'fa-print', 'Imprimir Equipe')}
   ${GetAnexosButton('Anexos', data, row.QtdAnexos)}`;
                 }
             }
@@ -167,10 +167,11 @@ function header(doc, evento, page) {
     doc.setFont('helvetica', "normal")
 }
 
-function PrintEquipe(id) {
+function PrintEquipe(row) {
+    Titulo = `${row.Equipe} - ${$("#equipe-eventoid option:selected").text()}`;
     $.ajax({
         url: '/Equipe/GetMembrosEquipeDatatable',
-        data: { EventoId: $("#equipe-eventoid").val(), EquipeId: id },
+        data: { EventoId: $("#equipe-eventoid").val(), EquipeId: row.Id },
         datatype: "json",
         type: "POST",
         success: (result) => {

@@ -55,6 +55,7 @@ function GetReuniao(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $("#reuniao-id").val(data.Reuniao.Id);
+                $("#reuniao-titulo").val(data.Reuniao.Titulo),
                 $("#reuniao-data").val(moment(data.Reuniao.DataReuniao).format('DD/MM/YYYY'));
             }
         });

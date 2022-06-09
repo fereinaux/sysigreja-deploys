@@ -59,7 +59,7 @@
 
             }
 
-            @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master) || User.IsInRole(Usuario.Secretaria))
+            @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master))
             {
                 <li class="@Html.IsSelected(action: "Index", controller: "Relatorio")"><a href="@Url.Action("Index", "Relatorio")"><i class="fa fa-chart-area"></i><span class="nav-label">Relatórios</span></a></li>
             }

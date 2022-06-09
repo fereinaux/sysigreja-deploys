@@ -1,7 +1,7 @@
 ﻿function CarregarTabelaReuniao() {
     const tableReuniaoConfig = {
         language: languageConfig,
-        lengthMenu: [200,500,1000],
+        lengthMenu: [200, 500, 1000],
         colReorder: false,
         serverSide: false,
         deferloading: 0,
@@ -9,21 +9,22 @@
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true,stateSave: true,
+        responsive: true, stateSave: true,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('Reuniões'),
         columns: [
+            { data: "Titulo", name: "Titulo", autoWidth: true },
             {
                 data: "DataReuniao", name: "DataReuniao", autoWidth: true,
                 "render": function (data, type, row) {
-                    return `${moment(data).format('DD/MM/YYYY')} `;
+                    return `${moment(data).format('DD/MM/YYYY HH:mm')} `;
                 }
             },
             { data: "Presenca", name: "Presenca", autoWidth: true },
             {
                 data: "Id", name: "Id", orderable: false, width: "10%",
-                "render": function (data, type, row) {         
+                "render": function (data, type, row) {
                     return `${GetButton('EditReuniao', data, 'blue', 'fa-edit', 'Editar')}
 ${GetButton('PresencaReuniao', JSON.stringify(row.Equipes), 'green', 'fa-info-circle', 'Presenca')}
                                ${GetButton('DeleteReuniao', data, 'red', 'fa-trash', 'Excluir')}`;
@@ -83,7 +84,7 @@ function PresencaReuniao(equipes) {
             { data: "PresencaOrder", name: "PresencaOrder", visible: false },
             { data: "Equipe", name: "Equipe", autoWidth: true },
             { data: "Presenca", name: "Presenca", autoWidth: true, orderData: 0 },
-           
+
         ],
         order: [
             [1, "asc"]
@@ -129,7 +130,9 @@ function PostReuniao() {
                 {
                     Id: $("#reuniao-id").val(),
                     EventoId: $("#reuniao-eventoid-consulta").val(),
-                    DataReuniao: moment($("#reuniao-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON()
+                    Titulo: $("#reuniao-titulo").val(),
+                    //Pauta: pauta.summernote('code'),
+                    DataReuniao: moment($("#reuniao-data").val(), 'DD/MM/YYYY HH:mm', 'pt-br').toJSON()
                 }),
             success: function () {
                 SuccessMesageOperation();
@@ -142,6 +145,7 @@ function PostReuniao() {
 
 $(document).ready(function () {
     CarregarTabelaReuniao();
+   
 });
 
 

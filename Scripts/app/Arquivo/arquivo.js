@@ -1,7 +1,7 @@
 ﻿function CarregarTabelaArquivo() {
     const tableArquivoConfig = {
         language: languageConfig,
-        lengthMenu: [200,500,1000],
+        lengthMenu: [200, 500, 1000],
         colReorder: false,
         serverSide: false,
         deferloading: 0,
@@ -9,7 +9,7 @@
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true,stateSave: true,
+        responsive: true, stateSave: true,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -27,13 +27,18 @@
             [0, "asc"]
         ],
         ajax: {
-            url: '/Arquivo/GetArquivos',
+            url: $("#table-arquivos").length > 0 ? '/Arquivo/GetArquivos' : '/Arquivo/GetArquivosComunEquipe',
             datatype: "json",
             type: "POST"
         }
     };
 
-    $("#table-arquivos").DataTable(tableArquivoConfig);
+    if ($("#table-arquivos").length > 0) {
+
+        $("#table-arquivos").DataTable(tableArquivoConfig);
+    } else {
+        $("#table-arquivos-comuns").DataTable(tableArquivoConfig);
+    }
 }
 
 function GetArquivo(id) {
@@ -63,6 +68,7 @@ function DeleteArquivo(id) {
 
 function PostArquivo() {
     var dataToPost = new FormData($('#frm-upload-arquivos')[0]);
+    dataToPost.set('IsComunEquipe', $("#table-arquivos-comuns").length > 0)
     $.ajax(
         {
             processData: false,

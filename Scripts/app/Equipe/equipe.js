@@ -70,7 +70,7 @@ function GetAnexos(id) {
         ],
         ajax: {
             url: '/Arquivo/GetArquivosEquipe',
-            data: { Equipe: id ? id : $("#Equipe").val() },
+            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false },
             datatype: "json",
             type: "POST"
         }

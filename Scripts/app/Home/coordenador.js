@@ -12,7 +12,7 @@ function CarregarTabelaArquivos() {
     $.ajax({
         url: '/Arquivo/GetArquivosEquipe',
         datatype: "json",
-        data: { Equipe: $("#table-arquivos").data('equipe') },
+        data: { Equipe: $("#table-arquivos").data('equipe'),  IsComunEquipe: true },
         type: "POST",
         success: (data) => {
             html = '';

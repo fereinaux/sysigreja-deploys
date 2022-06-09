@@ -45,6 +45,8 @@ namespace SysIgreja.Controllers
                     Id = x.Id,
                     DataReuniao = x.DataReuniao,
                     Presenca = x.Presenca.Count(),
+                    Pauta = x.Pauta,
+                    Titulo = x.Titulo,
                     Equipes = x.Presenca.GroupBy(y => y.EquipanteEvento.Equipe).Select(z => new EquipesModel
                     {
                         Equipe = z.Key.GetDescription(),

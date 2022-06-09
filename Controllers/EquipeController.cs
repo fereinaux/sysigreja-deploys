@@ -101,7 +101,7 @@ namespace SysIgreja.Controllers
                 Id = x.Id,
                 Equipe = x.Description,
                 QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count(),
-                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id).Count()
+                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id, false).Count()
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

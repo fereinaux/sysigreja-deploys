@@ -226,8 +226,9 @@ function GetResultadosAdmin() {
 
             htmlReunioes = '';
             $(result.Reunioes).each((i, element) => {
-                htmlReunioes += `<tr>                        
-                        <td>${moment(element.DataReuniao).format('DD/MM/YYYY')}</td>                        
+                htmlReunioes += `<tr>
+                        <td>${element.Titulo}</td>
+                        <td>${moment(element.DataReuniao).format('DD/MM/YYYY HH:mm')}</td>                        
                         <td>${element.Presenca}</td>                                                
                     </tr>`;
             });

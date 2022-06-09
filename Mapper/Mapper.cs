@@ -48,6 +48,7 @@ namespace SysIgreja.Controllers
                 cfg.CreateMap<Participante, ParticipanteSelectModel>();
                 cfg.CreateMap<Etiqueta, PostEtiquetaModel>();
                 cfg.CreateMap<Participante, ParticipanteExcelViewModel>()
+                          .ForMember(dest => dest.HasVacina, opt => opt.MapFrom(x => x.HasVacina ? "Sim" : "Não"))
            .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
           .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)))
             .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))

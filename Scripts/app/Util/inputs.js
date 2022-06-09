@@ -3,16 +3,17 @@
 
     $('.full-date').datepicker({
         format: "dd/mm/yyyy",
-        language: "pt-BR",        
+        language: "pt-BR",
         autoclose: true
     });
 
+    $('.full-date-time').bootstrapMaterialDatePicker({ time: true, format: "DD/MM/YYYY HH:mm", shortTime: false, clearButton: false, nowButton: false })
 
     $('.full-date').each((i) => {
         IMask($('.full-date')[i], {
             mask: '00/00/0000'
         });
-    });   
+    });
 
     $('.i-checks-green').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -28,7 +29,7 @@
         IMask($('.fone')[i], {
             mask: '+{55}(00)0.0000-0000'
         });
-    });  
+    });
 
     $('.cpf').each((i) => {
         IMask($('.cpf')[i], {

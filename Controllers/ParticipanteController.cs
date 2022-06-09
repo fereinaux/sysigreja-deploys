@@ -408,49 +408,6 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetParticipantes(int EventoId)
-        {
-            var list = participantesBusiness
-                .GetParticipantesByEvento(EventoId)
-                .ToList();
-
-            var extract = Request.QueryString["extract"];
-            if (extract == "excel")
-            {
-                Guid g = Guid.NewGuid();
-
-                Session[g.ToString()] = datatableService.GenerateExcel(participantesBusiness
-                .GetParticipantesByEvento(EventoId).Select(x => new ParticipanteExcelViewModel
-                {
-                    Nome = UtilServices.CapitalizarNome(x.Nome),
-                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                    DataNascimento = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd/MM/yyyy") : "",
-                    Idade = UtilServices.GetAge(x.DataNascimento),
-                    Sexo = x.Sexo.GetDescription(),
-                    Fone = x.Fone,
-                    NomeParente = x.HasParente.HasValue && x.HasParente.Value ? UtilServices.CapitalizarNome(x.Parente) : "",
-                    NomeConvite = UtilServices.CapitalizarNome(x.NomeConvite),
-                    FoneConvite = x.FoneConvite,
-                    Alergia = x.Alergia,
-                    Medicacao = x.Medicacao,
-                    RestricaoAlimentar = x.RestricaoAlimentar,
-                    Situacao = x.Status.GetDescription()
-
-                }).ToList());
-
-                return Content(g.ToString());
-            }
-            else
-            {
-                var result = participantesBusiness
-                .GetParticipantesByEvento(EventoId)
-                   .OrderBy(x => x.Nome);
-
-                return Json(new { data = mapper.Map<IEnumerable<ParticipanteListModel>>(result) }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        [HttpPost]
         public ActionResult GetParticipantesConfirmados(int EventoId)
         {
             var list = participantesBusiness

@@ -113,6 +113,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     DataReuniao = x.DataReuniao,
+                    Titulo = x.Titulo,
                     Presenca = x.Presenca.Count()
                 }).ToList()
             };
@@ -149,6 +150,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Coordenador()
         {
+            GetConfiguracao();
             ViewBag.Title = "Sistema de Gestão";
             int eventoId = (eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().OrderByDescending(x => x.DataEvento).First()).Id;
             var user = GetApplicationUser();

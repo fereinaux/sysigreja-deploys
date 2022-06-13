@@ -40,6 +40,69 @@
                                 <label for="participante-data-nascimento" class="text-white">Data de Nascimento</label>
                                 <input type="text" class="form-control full-date required" id="participante-data-nascimento" data-field="Data de Nascimento" />
                             </div>
+                            <div class="row justify-content-center">
+                                <div class="col col-md-3 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-cep" class="text-white">CEP</label>
+                                        <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                        <input type="hidden" id="participante-latitude" />
+                                        <input type="hidden" id="participante-longitude" />
+                                    </div>
+                                </div>
+                                <div class="col col-md-9 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-logradouro" class="text-white">Logradouro</label>
+                                        <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col col-md-5 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-bairro" class="text-white">Bairro</label>
+                                        <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
+                                    </div>
+                                </div>
+                                <div class="col col-md-5 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-cidade" class="text-white">Cidade</label>
+                                        <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
+                                    </div>
+                                </div>
+                                <div class="col col-md-2 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-estado" class="text-white">Estado</label>
+                                        <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col col-md-4 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-numero" class="text-white">Número</label>
+                                        <input type="text" class="form-control" id="participante-numero" data-field="Número" />
+                                    </div>
+                                </div>
+                                <div class="col col-md-8 col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-complemento" class="text-white">Complemento</label>
+                                        <input type="text" class="form-control" id="participante-complemento" data-field="Complemento" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col col-sm-12">
+                                    <div class="form-group">
+                                        <label for="participante-referencia" class="text-white">Ponto de Referência</label>
+                                        <input type="text" class="form-control" id="participante-referencia" data-field="Ponto de Referência" />
+                                    </div>
+                                    <div class="form-group">
+                                        <div id="map" style="height:300px;display:none">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label for="participante-hasmedicacao" class="text-white block">Toma alguma medicação?</label>
@@ -86,6 +149,76 @@
 @section scripts {
     <script>
 
+        var lat, lon;
+
+        if ($('#map').length > 0) {
+
+            const map = initMap('map')
+            const markerLayer = createMarkerLayer(map)
+
+            function verificaCep(input) {
+                let cep = $(input).val()
+                if (cep.length == 9) {
+                    $.blockUI({
+                        css: {
+                            backgroundColor: 'transparent',
+                            border: 'none'
+                        },
+                        message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+                        baseZ: 1500,
+                        overlayCSS: {
+                            opacity: 0.7,
+                            cursor: 'wait'
+                        }
+                    });
+                    $.ajax({
+                        url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+                        datatype: "json",
+                        type: "GET",
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            $(`#participante-logradouro`).val(data.logradouro)
+                            $(`#participante-bairro`).val(data.bairro)
+                            $(`#participante-cidade`).val(data.localidade)
+                            $(`#participante-estado`).val(data.uf)
+                            $(`#participante-latitude`).val(data.lat)
+                            $(`#participante-longitude`).val(data.lon)
+                            $.unblockUI();
+                            markerLayer.getLayers().forEach(mark => mark.remove())
+                            var marker = L.marker([data.lat, data.lon], {
+                                icon: getIcon('vermelho'), draggable: true,
+                                autoPan: true
+                            }).addTo(markerLayer);
+                            marker.on('moveend', function (event) {
+                                $(`#participante-latitude`).val(event.target._latlng.lat)
+                                $(`#participante-longitude`).val(event.target._latlng.lng)
+
+                            });
+                            $('#map').css('display', 'block')
+                            map.setView([data.lat, data.lon], 18);
+                            map.on('click', function (event) {
+                                markerLayer.getLayers().forEach(mark => mark.remove())
+                                var marker = L.marker([event.latlng.lat, event.latlng.lng], {
+                                    icon: getIcon('vermelho'), draggable: true,
+                                    autoPan: true
+                                }).addTo(markerLayer);
+                                marker.on('moveend', function (event) {
+                                    $(`#participante-latitude`).val(event.latlng.lat)
+                                    $(`#participante-longitude`).val(event.latlng.lng)
+
+                                });
+                            })
+                        }
+                    })
+                }
+            }
+        }
 
         function VerificaCadastro() {
             $.ajax({
@@ -130,7 +263,18 @@
                             Medicacao: $(`#participante-medicacao`).val(),
                             HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
                             Alergia: $(`#participante-alergia`).val(),
+                            CEP: $(`#participante-cep`).val(),
+                            Logradouro: $(`#participante-logradouro`).val(),
+                            Bairro: $(`#participante-bairro`).val(),
+                            Cidade: $(`#participante-cidade`).val(),
+                            Estado: $(`#participante-estado`).val(),
+                            Numero: $(`#participante-numero`).val(),
+                            Complemento: $(`#participante-complemento`).val(),
+                            Referencia: $(`#participante-referencia`).val(),
+                            Latitude: $(`#participante-latitude`).val(),
+                            Longitude: $(`#participante-longitude`).val(),
                             Inscricao: true,
+
                             Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         }),
                     success: function (url) {

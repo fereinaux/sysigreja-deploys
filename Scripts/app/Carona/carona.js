@@ -1,9 +1,15 @@
-﻿const map = initMap('map')
+﻿arrayCaronas = []
+arrayCaroneiros = []
+const map = initMap('map')
 const markerLayer = createMarkerLayer(map)
-map.setView([-8.050000, -34.900002], 10);
+map.setView([-8.050000, -34.900002], 15);
 setInterval(function () {
     map.invalidateSize();
 }, 100);
+
+setTimeout(() => {
+    getChangeCarona()
+}, 3000)
 
 function CarregarTabelaCarona() {
 
@@ -41,6 +47,20 @@ function CarregarTabelaCarona() {
         order: [
             [0, "asc"]
         ],
+        drawCallback: function (settings) {
+            var api = this.api();
+            var dataArray = api.rows().data().toArray()
+            if (dataArray.length > 0) {
+
+                $('#carona-motoristas').html('')
+                arrayCaroneiros = []
+                dataArray.forEach(function (carona, index, array) {
+                    arrayCaroneiros.push(carona);
+                    $('#carona-motoristas').append($(`<option value="${carona.Id}">${carona.Motorista}</option>`));
+                });
+                $("#carona-motoristas").val($("#carona-motoristas option:first").val()).trigger("chosen:updated");
+            }
+        },
         ajax: {
             url: '/Carona/GetCaronas',
             datatype: "json",
@@ -95,8 +115,8 @@ function PrintCarona(row) {
 
 
 
-            doc.text(77, 20, `Carona ${row.Cor}`);
-            doc.text(77, 25, `${row.Dirigente1}`);
+            doc.text(77, 20, `Relação de Carona`);
+            doc.text(77, 25, `${row.Motorista}`);
 
             doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
             doc.line(10, 38, 195, 38);
@@ -113,8 +133,13 @@ function PrintCarona(row) {
             $(result.data).each((index, participante) => {
                 doc.text(12, height, participante.Nome);
                 doc.text(117, height, participante.Apelido);
-                //doc.text(152, height, participante.Fone);
+                doc.text(152, height, participante.Fone);
                 height += 6;
+                doc.setFont('helvetica', "bold")
+                doc.text(12, height, "Endereço:");
+                doc.setFont('helvetica', "normal")
+                doc.text(34, height, participante.Endereco);
+                height += 8;
             });
 
             AddCount(doc, result.data, height);
@@ -124,7 +149,7 @@ function PrintCarona(row) {
     });
 }
 
-function GetCarona(id, cor) {
+function GetCarona(id) {
     if (id > 0) {
         $.ajax({
             url: "/Carona/GetCarona/",
@@ -136,7 +161,7 @@ function GetCarona(id, cor) {
                 $("#carona-id").val(data.Carona.Id);
                 $('#carona-motorista').append($(`<option value="${data.Carona.MotoristaId}">${data.Carona.Motorista}</option>`));
                 $("#carona-motorista").val(data.Carona.MotoristaId).trigger("chosen:updated");
-
+                $("#carona-capacidade").val(data.Carona.Capacidade)
 
 
             }
@@ -147,9 +172,27 @@ function GetCarona(id, cor) {
     }
 }
 
+function getChangeCarona() {
+    if (arrayCaronas != undefined && arrayCaroneiros != undefined) {
+
+        let caroneiro = arrayCaroneiros.find(x => x.Id == $("#carona-motoristas").val())
+        let caronistas = arrayCaronas.filter(x => x.CaronaId == $("#carona-motoristas").val())
+        markerLayer.getLayers().forEach(mark => mark.remove())
+        if (caroneiro) {
+
+
+            addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Nome, 'carpng', caroneiro.MotoristaId)
+            map.setView([caroneiro.Latitude, caroneiro.Longitude], 16);
+
+        }
+        caronistas.forEach(carona => addMapa(carona.Latitude, carona.Longitude, carona.Nome, 'userlocation', carona.ParticipanteId))
+        $('.div-map').css('display', 'block')
+    }
+}
+
 function EditCarona(row) {
     GetEquipantes();
-    GetCarona(row.Id, row.Cor);
+    GetCarona(row.Id);
     $("#modal-carona").modal();
 }
 
@@ -187,7 +230,7 @@ function PostCarona() {
                     Id: $("#carona-id").val(),
                     EventoId: $("#carona-eventoid").val(),
                     MotoristaId: $("#carona-motorista").val(),
-                    Capacidade: $("#carona-capacidade").val()                    
+                    Capacidade: $("#carona-capacidade").val()
                 }),
             success: function () {
                 SuccessMesageOperation();
@@ -225,7 +268,7 @@ function GetEquipantes(id) {
 
     $.ajax({
         url: "/Carona/GetEquipantes/",
-        data: { EventoId: $("#carona-eventoid").val(),  },
+        data: { EventoId: $("#carona-eventoid").val(), },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -264,7 +307,7 @@ function GetParticipantesSemCarona() {
 
 
 
-function addMapa(lat, long, nome, cor,id) {
+function addMapa(lat, long, nome, cor, id) {
     var marker = L.marker([lat, long], { icon: getIcon(cor.toLowerCase().replaceAll(' ', '-')) }).on('click', function (e) { clickMarker(id) }).addTo(markerLayer);
 
 
@@ -286,12 +329,13 @@ function clickMarker(id) {
         }
     })
 
-   
+
 }
 
 $("#modal-cores").on('hidden.bs.modal', function () {
     ChangeCarona($("#participante-id").val(), $('#participante-cor').val())
 });
+
 
 
 function GetCaronasComParticipantes() {
@@ -304,8 +348,8 @@ function GetCaronasComParticipantes() {
         type: "POST",
         success: function (data) {
             data.data.forEach(function (carona, index, array) {
-                $("#caronas").append($(`<div data-id="${carona.Id}" style="margin-bottom:25px;background-color:${GetCor(carona.Cor)};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
-                  <h4 style="padding-top:5px">${carona.Dirigente1}</h4>                    
+                $("#caronas").append($(`<div data-id="${carona.Id}" style="margin-bottom:25px;background-color:#424242;background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">
+                  <h4 style="padding-top:5px">${carona.Motorista}</h4>
                                     <table class="table">
                                         <tbody id="pg-${carona.Id}">
                                             
@@ -321,17 +365,13 @@ function GetCaronasComParticipantes() {
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
-                success: function (data) {                   
-                    markerLayer.getLayers().forEach(mark => mark.remove())
+                success: function (data) {
+
+                    arrayCaronas = []
                     data.Caronas.forEach(function (carona, index, array) {
-                        if (carona.Latitude && carona.Longitude) {
-                            addMapa(carona.Latitude, carona.Longitude, carona.Nome, carona.Cor, carona.ParticipanteId)
-
-                        }
-
+                        arrayCaronas.push({ CaronaId: carona.CaronaId, ParticipanteId: carona.ParticipanteId, Latitude: carona.Latitude, Longitude: carona.Longitude, Nome: carona.Nome })
                         $(`#pg-${carona.CaronaId}`).append($(`<tr><td class="participante" data-id="${carona.ParticipanteId}">${carona.Nome}</td></tr>`));
                     });
-                    $('.div-map').css('display', 'block')
                     DragDropg();
                 }
             });

@@ -124,7 +124,6 @@ function getEquipes() {
         datatype: "json",
         type: "POST",
         success: (result) => {
-            console.log(result);
             $("#equipe-select").html(`
 <option value=999>Selecione</option>
 ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
@@ -304,7 +303,6 @@ function dataURLtoFile(dataurl, filename) {
 function Foto(row) {
 
     realista = row
-    console.log(realista)
 
     var input = $(`#foto${realista.Id}`)[0]
 
@@ -342,7 +340,6 @@ function Foto(row) {
             var viewportWidth = boundaryWidth - (boundaryWidth / 100 * 25);
 
             var viewportHeight = boundaryHeight - (boundaryHeight / 100 * 25);
-            console.log(boundaryWidth, boundaryHeight, viewportHeight, viewportWidth)
 
             $("#main-cropper").croppie({
 
@@ -572,8 +569,20 @@ function GetEquipante(id) {
                 $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
                 $('#equipante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
                     }`)
-                $('#equipante-etiquetas').val(data.Equipante.EtiquetasList.map(etiqueta => etiqueta.Id))
                 $("#equipante-numeracao").val(data.Equipante.Numeracao);
+                $(`#equipante-cep`).val(data.Equipante.CEP);
+                $(`#equipante-logradouro`).val(data.Equipante.Logradouro);
+                $(`#equipante-bairro`).val(data.Equipante.Bairro);
+                $(`#equipante-cidade`).val(data.Equipante.Cidade);
+                $(`#equipante-estado`).val(data.Equipante.Estado);
+                $(`#equipante-numero`).val(data.Equipante.Numero);
+                $(`#equipante-complemento`).val(data.Equipante.Complemento);
+                $(`#equipante-referencia`).val(data.Equipante.Referencia);
+                $(`#equipante-latitude`).val((data.Equipante.Latitude || '').replaceAll(',', '.'));
+                $(`#equipante-longitude`).val((data.Equipante.Longitude || '').replaceAll(',', '.'));
+                if ($('#map').length > 0) {
+                    montarMapa()
+                }
             }
         });
     }
@@ -587,6 +596,14 @@ function GetEquipante(id) {
         $(`#equipante-restricaoalimentar`).val("");
         $(`#equipante-medicacao`).val("");
         $(`#equipante-alergia`).val("");
+        $(`#equipante-cep`).val("");
+        $(`#equipante-logradouro`).val("");
+        $(`#equipante-bairro`).val('');
+        $(`#equipante-cidade`).val('');
+        $(`#equipante-estado`).val('');
+        $(`#equipante-numero`).val('');
+        $(`#equipante-complemento`).val('');
+        $(`#equipante-referencia`).val('');
         $(`input[type=radio][name=equipante-sexo][value=1]`).iCheck('check');
         $(`input[type=radio][name=equipante-hasalergia][value=false]`).iCheck('check');
         $(`input[type=radio][name=equipante-hasmedicacao][value=false]`).iCheck('check');
@@ -733,6 +750,16 @@ function PostEquipante() {
                     Medicacao: $(`#equipante-medicacao`).val(),
                     HasAlergia: $("input[type=radio][name=equipante-hasalergia]:checked").val(),
                     Alergia: $(`#equipante-alergia`).val(),
+                    CEP: $(`#equipante-cep`).val(),
+                    Logradouro: $(`#equipante-logradouro`).val(),
+                    Bairro: $(`#equipante-bairro`).val(),
+                    Cidade: $(`#equipante-cidade`).val(),
+                    Estado: $(`#equipante-estado`).val(),
+                    Numero: $(`#equipante-numero`).val(),
+                    Complemento: $(`#equipante-complemento`).val(),
+                    Referencia: $(`#equipante-referencia`).val(),
+                    Latitude: $(`#equipante-latitude`).val(),
+                    Longitude: $(`#equipante-longitude`).val(),
                     Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
                 }),
             success: function () {
@@ -862,4 +889,38 @@ function next() {
             Opcoes(arrayData[index + 1])
         }
     })
+}
+
+
+if ($('#map').length > 0) {
+
+    const map = initMap('map')
+    const markerLayer = createMarkerLayer(map)
+    function montarMapa() {
+        markerLayer.getLayers().forEach(mark => mark.remove())
+        var marker = L.marker([$(`#equipante-latitude`).val().toString(), $(`#equipante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
+        marker.bindPopup(`<h4>${$(`#equipante-nome`).val()}</h4>`).openPopup();
+        $('.div-map').css('display', 'block')
+        map.setView([$(`#equipante-latitude`).val(), $(`#equipante-longitude`).val()], 18);
+    }
+    function verificaCep(input) {
+        let cep = $(input).val()
+        if (cep.length == 9) {
+            $.ajax({
+                url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $(`#equipante-logradouro`).val(data.logradouro)
+                    $(`#equipante-bairro`).val(data.bairro)
+                    $(`#equipante-cidade`).val(data.localidade)
+                    $(`#equipante-estado`).val(data.uf)
+                    $(`#equipante-latitude`).val(data.lat)
+                    $(`#equipante-longitude`).val(data.lon)
+                    montarMapa()
+                }
+            })
+        }
+    }
 }

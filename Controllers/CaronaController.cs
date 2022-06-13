@@ -61,6 +61,8 @@ namespace SysIgreja.Controllers
                     Id = x.Id,
                     Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.Id).Count().ToString()}/{x.Capacidade.ToString()}",
                     Motorista = x.Motorista.Nome,
+                    Latitude = x.Motorista.Latitude,
+                    Longitude = x.Motorista.Longitude,
                     MotoristaId = x.MotoristaId.Value
                 }).OrderByDescending(x => x.Id);
 
@@ -120,6 +122,8 @@ namespace SysIgreja.Controllers
                 Caronas = caronasBusiness.GetCaronasComParticipantes(EventoId).ToList().Select(x => new
                 {
                     Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                    Latitude = x.Participante.Latitude,
+                    Longitude = x.Participante.Longitude,
                     ParticipanteId = x.ParticipanteId,
                     CaronaId = x.CaronaId,
                     Motorista = x.Carona.Motorista.Nome,
@@ -147,6 +151,8 @@ namespace SysIgreja.Controllers
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
+                Fone = x.Participante.Fone,
+                Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}"
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

@@ -303,6 +303,76 @@
                                 <input type="text" class="form-control required" id="participante-instagram" data-field="Apelido" />
                             </div>
                         }
+
+                        @if (ViewBag.Campos.Contains(CamposEnum.Endereco.GetDescription()))
+                        {
+                            <div class="col-sm-3 p-w-md m-t-md text-center">
+                                <h5>CEP</h5>
+
+                                <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                <input type="hidden" id="participante-latitude" />
+                                <input type="hidden" id="participante-longitude" />
+                            </div>
+
+                            <div class="col-sm-9 p-w-md m-t-md text-center">
+                                <h5>Logradouro</h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>Bairro</h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>
+                                    Cidade
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
+                            </div>
+
+                            <div class="col-sm-2 p-w-md m-t-md text-center">
+                                <h5>
+                                    Estado
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
+                            </div>
+
+                            <div class="col-sm-4 p-w-md m-t-md text-center">
+                                <h5>
+                                    Número
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-numero" data-field="Número" />
+                            </div>
+
+
+                            <div class="col-sm-8 p-w-md m-t-md text-center">
+                                <h5>
+                                    Complemento
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-complemento" data-field="Complemento" />
+                            </div>
+
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>
+                                    Ponto de Referência
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-referencia" data-field="Ponto de Referência" />
+                            </div>
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
+                                <div id="map" style="height:300px;">
+                                </div>
+                            </div>
+                        }
                         @if (ViewBag.Campos.Contains(CamposEnum.Mae.GetDescription()))
                         {
                             <div class="col-sm-12 p-w-md m-t-md text-center">
@@ -522,7 +592,6 @@
 @section Scripts {
 
     <script src="~/Scripts/app/Participante/participante.js?@ViewBag.Numero"></script>
-
     <script>
 
     </script>

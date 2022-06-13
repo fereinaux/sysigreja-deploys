@@ -57,11 +57,15 @@
         <div class="ibox" id="ibox-mapa" style="margin-top:25px;">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
                 <h4>Mapa</h4>
+                <div class="ibox-tools pull-right" style="width:200px">
+                    <select onchange="getChangeCarona()" class="form-control chosen-select" id="carona-motoristas"></select>
+                </div>
+             
             </div>
-            <div class="ibox-content" style="height:400px">
+            <div class="ibox-content" style="height:650px">
 
                 <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
-                    <div id="map" style="height:300px;">
+                    <div id="map" style="height:600px;">
                     </div>
                 </div>
 
@@ -70,12 +74,12 @@
 
         <div class="ibox">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
-                <h4 id="gerenciar">Gerenciar Círculos</h4>
+                <h4 id="gerenciar">Gerenciar Caronas</h4>
             </div>
             <div class="ibox-content">
                 <div class="row p-m">
                     <div class="col-xs-12 col-lg-3 sem-carona pg text-center">
-                        <h4 class="p-h-xs" id="participantes-sem">Participantes sem Círculos</h4>
+                        <h4 class="p-h-xs" id="participantes-sem">Participantes sem Carona</h4>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -98,32 +102,6 @@
     </div>
 </div>
 
-
-<div class="modal inmodal" id="modal-cores" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content animated bounceInRight">
-            <div class="modal-header">
-                <h5 class="modal-title" id="participante-nome"></h5>
-            </div>
-            <div class="modal-body">
-                <div class="moldura-modal p-h-xs">
-                    <div class="row p-h-xs">
-                        <input type="hidden" id="participante-id" />
-
-                        <div class="col-sm-12 p-w-md m-b-sm">
-                            <h5>Cor</h5>
-                            <select class="form-control chosen-select" id="participante-cor"></select>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="modal inmodal" id="modal-carona" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -160,16 +138,13 @@
 </div>
 
 @section Styles {
-    <link rel="stylesheet"
-          href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
-          type="text/css" />
+
     <style>
     </style>
 }
 
 @section Scripts {
-    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
-    <script src="~/Scripts/app/Util/mapa.js"></script>
+
     <script src="~/Scripts/app/Carona/carona.js?@ViewBag.Numero"></script>
 
 }

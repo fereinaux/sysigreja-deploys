@@ -890,6 +890,7 @@
     <Content Include="Images\mapa\azul-claro.png" />
     <Content Include="Images\mapa\azul-escuro-crown.png" />
     <Content Include="Images\mapa\azul-escuro.png" />
+    <Content Include="Images\mapa\carpng.png" />
     <Content Include="Images\mapa\cinza-crown.png" />
     <Content Include="Images\mapa\cinza.png" />
     <Content Include="Images\mapa\laranja-crown.png" />
@@ -898,6 +899,7 @@
     <Content Include="Images\mapa\rosa-crown.png" />
     <Content Include="Images\mapa\rosa.png" />
     <Content Include="Images\mapa\roxo-crown.png" />
+    <Content Include="Images\mapa\userlocation.png" />
     <Content Include="Images\mapa\verde-claro-crown.png" />
     <Content Include="Images\mapa\verde-claro.png" />
     <Content Include="Images\mapa\verde-escuro-crown.png" />
@@ -1220,6 +1222,9 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -254,7 +254,6 @@ function Foto(row) {
             var viewportWidth = boundaryWidth - (boundaryWidth / 100 * 25);
 
             var viewportHeight = boundaryHeight - (boundaryHeight / 100 * 25);
-            console.log(boundaryWidth, boundaryHeight, viewportHeight, viewportWidth)
 
             $("#main-cropper").croppie({
 
@@ -915,7 +914,6 @@ function PostPagamento() {
 
 function Opcoes(row) {
     realista = row;
-    console.log(row);
     $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Participante/GetParticipante/",
@@ -1039,7 +1037,20 @@ function GetParticipante(id) {
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
+                $(`#participante-cep`).val(data.Participante.CEP);
+                $(`#participante-logradouro`).val(data.Participante.Logradouro);
+                $(`#participante-bairro`).val(data.Participante.Bairro);
+                $(`#participante-cidade`).val(data.Participante.Cidade);
+                $(`#participante-estado`).val(data.Participante.Estado);
+                $(`#participante-numero`).val(data.Participante.Numero);
+                $(`#participante-complemento`).val(data.Participante.Complemento);
+                $(`#participante-referencia`).val(data.Participante.Referencia);
 
+                $(`#participante-latitude`).val((data.Participante.Latitude || '').replaceAll(',', '.'));
+                $(`#participante-longitude`).val((data.Participante.Longitude || '').replaceAll(',', '.'));
+                if ($('#map').length > 0) {
+                    montarMapa()
+                }
                 $("#participante-numeracao").val(data.Participante.Numeracao);
             }
         });
@@ -1062,6 +1073,14 @@ function GetParticipante(id) {
         $(`#participante-foneconvite`).val("");
         $(`#participante-nomecontato`).val("");
         $(`#participante-fonecontato`).val("");
+        $(`#participante-cep`).val("");
+        $(`#participante-logradouro`).val("");
+        $(`#participante-bairro`).val('');
+        $(`#participante-cidade`).val('');
+        $(`#participante-estado`).val('');
+        $(`#participante-numero`).val('');
+        $(`#participante-complemento`).val('');
+        $(`#participante-referencia`).val('');
         $(`input[type=radio][name=participante-sexo][value=1]`).iCheck('check');
         $(`input[type=radio][name=participante-hasalergia][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasmedicacao][value=false]`).iCheck('check');
@@ -1099,6 +1118,16 @@ function PostParticipante() {
                     FoneConvite: $(`#participante-foneconvite`).val(),
                     NomeContato: $(`#participante-nomecontato`).val(),
                     FoneContato: $(`#participante-fonecontato`).val(),
+                    CEP: $(`#participante-cep`).val(),
+                    Logradouro: $(`#participante-logradouro`).val(),
+                    Bairro: $(`#participante-bairro`).val(),
+                    Cidade: $(`#participante-cidade`).val(),
+                    Estado: $(`#participante-estado`).val(),
+                    Numero: $(`#participante-numero`).val(),
+                    Complemento: $(`#participante-complemento`).val(),
+                    Referencia: $(`#participante-referencia`).val(),
+                    Latitude: $(`#participante-latitude`).val(),
+                    Longitude: $(`#participante-longitude`).val(),
                     HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
                     RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
                     HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
@@ -1196,4 +1225,38 @@ function PostInfo(callback) {
             CarregarTabelaParticipante(callback)
         }
     });
+}
+
+
+if ($('#map').length > 0) {
+
+    const map = initMap('map')
+    const markerLayer = createMarkerLayer(map)
+    function montarMapa() {
+        markerLayer.getLayers().forEach(mark => mark.remove())
+        var marker = L.marker([$(`#participante-latitude`).val().toString(), $(`#participante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
+        marker.bindPopup(`<h4>${$(`#participante-nome`).val()}</h4>`).openPopup();
+        $('.div-map').css('display', 'block')
+        map.setView([$(`#participante-latitude`).val(), $(`#participante-longitude`).val()], 18);
+    }
+    function verificaCep(input) {
+        let cep = $(input).val()
+        if (cep.length == 9) {
+            $.ajax({
+                url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $(`#participante-logradouro`).val(data.logradouro)
+                    $(`#participante-bairro`).val(data.bairro)
+                    $(`#participante-cidade`).val(data.localidade)
+                    $(`#participante-estado`).val(data.uf)
+                    $(`#participante-latitude`).val(data.lat)
+                    $(`#participante-longitude`).val(data.lon)
+                    montarMapa()
+                }
+            })
+        }
+    }
 }

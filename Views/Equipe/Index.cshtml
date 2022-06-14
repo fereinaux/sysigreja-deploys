@@ -20,13 +20,20 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right">
-                <select class="form-control" id="equipe-eventoid" onchange="CarregarTabelaEquipe()">
-                    @foreach (var evento in ViewBag.Eventos)
-                    {
-                        <option value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
-                    }
-                </select>
+            <div class="ibox-tools pull-right" style="width:250px">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-6">
+                        <select class="form-control" id="equipe-eventoid" onchange=" CarregarTabelaEquipe()">
+                            @foreach (var evento in ViewBag.Eventos)
+                            {
+                                <option value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-xs-12 col-lg-6">
+                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="ibox-content">
@@ -104,7 +111,6 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-white pull-right m-l-sm" onclick="PrintEquipe()">Imprimir</button>
                 </div>
             </div>
         </div>

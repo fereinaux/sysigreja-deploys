@@ -84,48 +84,49 @@ function PrintCirculo(row) {
         success: (result) => {
             var doc = CriarPDFA4();
 
-
-            if (logoRelatorio) {
-                var img = new Image();
-                img.src = `data:image/png;base64,${logoRelatorio}`;
-                doc.addImage(img, 'PNG', 10, 10, 50, 21);
-            }
-
-
-            doc.setFont('helvetica', "normal")
-            doc.setFontSize(12);
-            doc.text(77, 15, $("#circulo-eventoid option:selected").text());
-
-
-
-
-            doc.text(77, 20, `Círculo ${row.Cor}`);
-            doc.text(77, 25, `${row.Dirigente1} / ${row.Dirigente2}`);
-
-            doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
-            doc.line(10, 38, 195, 38);
-
-            doc.setFont('helvetica', "bold")
-            doc.text(12, 43, "Nome");
-            doc.text(117, 43, "Apelido");
-            doc.text(152, 43, "Whatsapp");
-
-            doc.line(10, 45, 195, 45);
-            doc.setFont('helvetica', "normal")
-            height = 50;
-
-            $(result.data).each((index, participante) => {
-                doc.text(12, height, participante.Nome);
-                doc.text(117, height, participante.Apelido);
-                doc.text(152, height, participante.Fone);
-                height += 6;
-            });
-
-            AddCount(doc, result.data, height);
+            FillDoc(doc, result)
+            
 
             printDoc(doc);
         }
     });
+}
+
+function FillDoc(doc,result) {
+    if (logoRelatorio) {
+        var img = new Image();
+        img.src = `data:image/png;base64,${logoRelatorio}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
+
+
+    doc.setFont('helvetica', "normal")
+    doc.setFontSize(12);
+    doc.text(77, 15, $("#circulo-eventoid option:selected").text());
+
+    doc.text(77, 20, `Círculo ${result.data[0].Cor}`);
+    doc.text(77, 25, `${result.data[0].Dirigente1} / ${result.data[0].Dirigente2}`);
+
+    doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
+    doc.line(10, 38, 195, 38);
+
+    doc.setFont('helvetica', "bold")
+    doc.text(12, 43, "Nome");
+    doc.text(117, 43, "Apelido");
+    doc.text(152, 43, "Whatsapp");
+
+    doc.line(10, 45, 195, 45);
+    doc.setFont('helvetica', "normal")
+    height = 50;
+
+    $(result.data).each((index, participante) => {
+        doc.text(12, height, participante.Nome);
+        doc.text(117, height, participante.Apelido);
+        doc.text(152, height, participante.Fone);
+        height += 6;
+    });
+
+    AddCount(doc, result.data, height);
 }
 
 function GetCirculo(id, cor) {
@@ -386,4 +387,41 @@ function GetCores(id) {
             }
         }
     });
+}
+
+
+function PrintAll() {
+    var doc = CriarPDFA4()
+    $.ajax({
+        url: '/Circulo/GetCirculos',
+        datatype: "json",
+        data: { EventoId: $("#circulo-eventoid").val() },
+        type: "POST",
+        success: function (data) {
+            var arrPromises = []
+            data.data.forEach(element => {
+                if (element.QtdParticipantes > 0) {
+                    arrPromises.push($.ajax({
+                        url: '/Participante/GetParticipantesByCirculo',
+                        data: { CirculoId: element.Id },
+                        datatype: "json",
+                        type: "GET"
+
+                    }))
+                }
+            })
+            Promise.all(arrPromises).then(result => {
+                result.forEach((data, index) => {
+                    if (data.data.length > 0) {
+                        if (index > 0) {
+                            doc.addPage()
+                        } FillDoc(doc, data)
+                    }
+                })
+                printDoc(doc);
+            })
+
+        }
+    })
+
 }

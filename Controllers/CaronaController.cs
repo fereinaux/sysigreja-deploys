@@ -60,6 +60,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.Id).Count().ToString()}/{x.Capacidade.ToString()}",
+                    Quantidade = caronasBusiness.GetParticipantesByCaronas(x.Id).Count(),
                     Motorista = x.Motorista.Nome,
                     Latitude = x.Motorista.Latitude,
                     Longitude = x.Motorista.Longitude,
@@ -127,6 +128,8 @@ namespace SysIgreja.Controllers
                     ParticipanteId = x.ParticipanteId,
                     CaronaId = x.CaronaId,
                     Motorista = x.Carona.Motorista.Nome,
+                    Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}",
+                    Quantidade = caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count(),
                     Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count().ToString()}/{x.Carona.Capacidade.ToString()}",
                 }).ToList()
             }, JsonRequestBehavior.AllowGet);
@@ -151,6 +154,7 @@ namespace SysIgreja.Controllers
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
+                Motorista = UtilServices.CapitalizarNome(x.Carona.Motorista.Nome),
                 Fone = x.Participante.Fone,
                 Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}"
             });

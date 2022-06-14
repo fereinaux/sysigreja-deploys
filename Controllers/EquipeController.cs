@@ -184,6 +184,7 @@ namespace SysIgreja.Controllers
                 Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
                 Fone = x.Equipante.Fone,
+                Equipe = x.Equipe.GetDescription(),
                 Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                 Tipo = x.Tipo.GetDescription(),
             });

@@ -218,8 +218,10 @@ namespace SysIgreja.Controllers
                 Circulo = x.Circulo.Cor.GetDescription(),
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                Fone = x.Participante.Fone,
-                Foto = x.Participante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Participante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
+                Cor = x.Circulo.Cor.GetDescription(),
+                Dirigente1 = UtilServices.CapitalizarNome(x.Circulo.Dirigente1.Equipante.Nome),
+                Dirigente2 = UtilServices.CapitalizarNome(x.Circulo.Dirigente2.Equipante.Nome),
+                Fone = x.Participante.Fone
             });
 
             var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -233,7 +235,10 @@ namespace SysIgreja.Controllers
             var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-")
+                Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-"),
+                Titulo = x.Quarto.Titulo,
+                Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
+
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

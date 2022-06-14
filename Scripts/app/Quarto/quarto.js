@@ -63,30 +63,34 @@ function PrintQuarto(row) {
         type: "GET",
         success: (result) => {
             var doc = CriarPDFA4();
-            var titulo = `Quarto - ${row.Titulo}`;
-            doc = AddCabecalhoEvento(doc, titulo, $("#quarto-eventoid option:selected").text());
-            doc.line(10, 38, 195, 38);
 
-            doc.setFont('helvetica', "bold")
-            doc.text(12, 43, "Nome");
-            doc.text(95, 43, window.location.href.includes('QuartoEquipe') ? "Apelido" : "Medicamento/Alergia");
-
-            doc.line(10, 45, 195, 45);
-            doc.setFont('helvetica', "normal")
-            height = 50;
-
-            $(result.data).each((index, participante) => {
-                doc.text(12, height, participante.Nome);
-                var splitMedicacao = doc.splitTextToSize(window.location.href.includes('QuartoEquipe') ? participante.Apelido : participante.Medicacao, 80);
-                doc.text(95, height, splitMedicacao);
-                height += 6 * splitMedicacao.length;
-            });
-
-            AddCount(doc, result.data, height);
-
+            FillDoc(doc, result)
             printDoc(doc);
         }
     });
+}
+
+function FillDoc(doc, result) {
+    var titulo = `Quarto - ${result.data[0].Titulo}`;
+    doc = AddCabecalhoEvento(doc, titulo, $("#quarto-eventoid option:selected").text());
+    doc.line(10, 38, 195, 38);
+
+    doc.setFont('helvetica', "bold")
+    doc.text(12, 43, "Nome");
+    doc.text(115, 43, window.location.href.includes('QuartoEquipe') ? "Apelido" : "Medicamento/Alergia");
+
+    doc.line(10, 45, 195, 45);
+    doc.setFont('helvetica', "normal")
+    height = 50;
+
+    $(result.data).each((index, participante) => {
+        doc.text(12, height, participante.Nome);
+        var splitMedicacao = doc.splitTextToSize(window.location.href.includes('QuartoEquipe') ? participante.Apelido : participante.Medicacao, 80);
+        doc.text(115, height, splitMedicacao);
+        height += 6 * splitMedicacao.length;
+    });
+
+    AddCount(doc, result.data, height);
 }
 
 function GetQuarto(id) {
@@ -333,4 +337,41 @@ function ChangeQuarto(participanteId, destinoId) {
             GetQuartosComParticipantes();
         }
     });
+}
+
+
+function PrintAll() {
+    var doc = CriarPDFA4()
+    $.ajax({
+        url: '/Quarto/GetQuartos',
+        datatype: "json",
+        data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('QuartoEquipe') ? 0 : 1},
+        type: "POST",
+        success: function (data) {
+            var arrPromises = []
+            data.data.forEach(element => {
+                if (element.Quantidade > 0) {
+                    arrPromises.push($.ajax({
+                        url: window.location.href.includes('QuartoEquipe') ? '/Quarto/GetEquipantesByQuarto' : '/Participante/GetParticipantesByQuarto',
+                        data: { QuartoId: element.Id },
+                        datatype: "json",
+                        type: "GET"
+
+                    }))
+                }
+            })
+            Promise.all(arrPromises).then(result => {
+                result.forEach((data, index) => {
+                    if (data.data.length > 0) {
+                        if (index > 0) {
+                            doc.addPage()
+                        } FillDoc(doc, data)
+                    }
+                })
+                printDoc(doc);
+            })
+
+        }
+    })
+
 }

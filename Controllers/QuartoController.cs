@@ -58,9 +58,10 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count().ToString()}/{x.Capacidade.ToString()}",
+                    Quantidade = quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count(),
                     Titulo = x.Titulo,
                     Sexo = x.Sexo.GetDescription()
-                });
+                }); ;
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -126,6 +127,8 @@ namespace SysIgreja.Controllers
                     Quartos = quartosBusiness.GetQuartosComParticipantes(EventoId, TipoPessoaEnum.Equipante).ToList().Select(x => new
                     {
                         Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
+                        Titulo = x.Quarto.Titulo,
+                        Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count(),
                         ParticipanteId = x.EquipanteId,
                         QuartoId = x.QuartoId,
                         Sexo = x.Quarto.Sexo.GetDescription(),
@@ -141,6 +144,8 @@ namespace SysIgreja.Controllers
                     Quartos = quartosBusiness.GetQuartosComParticipantes(EventoId, TipoPessoaEnum.Participante).ToList().Select(x => new
                     {
                         Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                        Titulo = x.Quarto.Titulo,
+                        Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
                         ParticipanteId = x.ParticipanteId,
                         QuartoId = x.QuartoId,
                         Sexo = x.Quarto.Sexo.GetDescription(),
@@ -169,6 +174,8 @@ namespace SysIgreja.Controllers
             {
                 Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
+                Titulo = x.Quarto.Titulo,
+                Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count(),
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

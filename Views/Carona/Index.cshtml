@@ -23,9 +23,9 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4 class="title-carona">@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:400px">
+            <div class="ibox-tools pull-right" style="width:550px">
                 <div class="row">
-                    <div class="col-xs-12 col-lg-6">
+                    <div class="col-xs-12 col-lg-5">
                         <select class="form-control" id="carona-eventoid" onchange=" CaronaRefresh()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
@@ -33,9 +33,10 @@
                             }
                         </select>
                     </div>
-                    <div class="col-xs-12 col-lg-6">
+                    <div class="col-xs-12 col-lg-7">
                         <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirCaronas()">Distribuir</button>
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditCarona(0)">Adicionar</button>
+                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
                     </div>
                 </div>
             </div>

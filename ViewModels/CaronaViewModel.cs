@@ -8,5 +8,6 @@
         public string Longitude { get; set; }
         public string Latitude { get; set; }
         public int MotoristaId { get; set; }
+        public int Quantidade { get; set; }
     }
 }

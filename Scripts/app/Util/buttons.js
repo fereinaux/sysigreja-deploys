@@ -32,7 +32,7 @@ function GetConvidar(tel, nome) {
 }
 
 function GetLinkWhatsApp(tel, text) {
-    if (!tel || !text)
+    if (!tel)
         return ""
     tel = tel.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '');
     text = typeof text !== "undefined" ? `&text=${EncodeUrl(text)}` : "";

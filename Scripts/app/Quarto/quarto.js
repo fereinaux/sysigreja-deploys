@@ -70,20 +70,42 @@ function PrintQuarto(row) {
     });
 }
 
-function FillDoc(doc, result) {
-    var titulo = `Quarto - ${result.data[0].Titulo}`;
-    doc = AddCabecalhoEvento(doc, titulo, $("#quarto-eventoid option:selected").text());
-    doc.line(10, 38, 195, 38);
+
+function header(doc, evento, page, quarto) {
+    if (logoRelatorio) {
+        var img = new Image();
+        img.src = `data:image/png;base64,${logoRelatorio}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(64, 14, evento);
+    doc.text(64, 22, quarto);
+    doc.text(64, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')} - Página ${page}`);
+
+    var widthP = 285
+    doc.line(10, 38, widthP, 38);
 
     doc.setFont('helvetica', "bold")
     doc.text(12, 43, "Nome");
     doc.text(115, 43, window.location.href.includes('QuartoEquipe') ? "Apelido" : "Medicamento/Alergia");
 
-    doc.line(10, 45, 195, 45);
+    doc.line(10, 45, widthP, 45);
     doc.setFont('helvetica', "normal")
+}
+
+function FillDoc(doc, result) {
+    var evento = $("#quarto-eventoid option:selected").text();
+    header(doc, evento, 1, `Quarto - ${result.data[0].Titulo}`)
     height = 50;
 
     $(result.data).each((index, participante) => {
+        if (index == 19) {
+            doc.addPage()
+            header(doc, evento, 2, `Quarto - ${result.data[0].Titulo}`)
+            height = 50;
+        }
+
         doc.text(12, height, participante.Nome);
         var splitMedicacao = doc.splitTextToSize(window.location.href.includes('QuartoEquipe') ? participante.Apelido : participante.Medicacao, 80);
         doc.text(115, height, splitMedicacao);

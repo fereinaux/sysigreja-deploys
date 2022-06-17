@@ -170,7 +170,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantesByQuarto(int QuartoId)
         {
-            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Equipante).ToList().Select(x => new
+            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Equipante).OrderBy(x => x.Equipante.Nome).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),

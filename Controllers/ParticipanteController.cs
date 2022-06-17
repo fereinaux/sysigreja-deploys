@@ -232,7 +232,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByQuarto(int QuartoId)
         {
-            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante).ToList().Select(x => new
+            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante).OrderBy(x => x.Participante.Nome).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-"),

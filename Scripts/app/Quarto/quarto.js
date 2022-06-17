@@ -100,7 +100,7 @@ function FillDoc(doc, result) {
     height = 50;
 
     $(result.data).each((index, participante) => {
-        if (index == 30) {
+        if (index == 36) {
             doc.addPage()
             header(doc, evento, 2, `Quarto - ${result.data[0].Titulo}`)
             height = 50;

@@ -32,8 +32,7 @@ if ($('#map').length > 0) {
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 timeout: 7000,
-                error: function () {
-                    $(`#participante-cep`).val('')
+                error: function () {          
                     $(`#participante-logradouro`).val('')
                     $(`#participante-bairro`).val('')
                     $(`#participante-cidade`).val('')

@@ -531,6 +531,8 @@ function CarregarTabelaPagamentos(id) {
 function Pagamentos(row) {
     $("#pagamentos-whatsapp").val(row.Fone);
     $("#pagamentos-valor").val($("#pagamentos-valor").data("valor"));
+    $("#pagamentos-origem").val('')
+    $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
     $("#pagamentos-equipanteid").val(row.Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
     CarregarTabelaPagamentos(row.Id);
@@ -691,12 +693,16 @@ function PostPagamento() {
             data: JSON.stringify(
                 {
                     EquipanteId: $("#pagamentos-equipanteid").val(),
+                    Origem: $("#pagamentos-origem").val(),
+                    Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
                     ContaBancariaId: $('.contabancaria').hasClass('d-none') ? 0 : $("#pagamentos-contabancaria").val(),
                     Valor: Number($("#pagamentos-valor").val())
                 }),
             success: function () {
                 SuccessMesageOperation();
+                $("#pagamentos-origem").val('')
+                $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
                 CarregarTabelaPagamentos($("#pagamentos-equipanteid").val());
             }
         });

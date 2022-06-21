@@ -777,16 +777,18 @@ $(document).ready(function () {
     CarregarTabelaParticipante();
 });
 
-
 function Pagamentos(row) {
     realista = row;
     $("#pagamentos-whatsapp").val(row.Fone);
     $("#pagamentos-valor").val($("#pagamentos-valor").data("valor"));
+    $("#pagamentos-origem").val('')
+    $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
     $("#pagamentos-participanteid").val(row.Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
     CarregarTabelaPagamentos(row.Id);
     $("#modal-pagamentos").modal();
 }
+
 
 $("#modal-pagamentos").on('hidden.bs.modal', function () {
     if (!$('#LancamentoIdModal').val()) {
@@ -872,6 +874,7 @@ function CancelarInscricao(row) {
     });
 }
 
+
 function PostPagamento() {
     if (ValidateForm(`#form-pagamento`)) {
         $.ajax({
@@ -881,19 +884,24 @@ function PostPagamento() {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(
                 {
+                    Origem: $("#pagamentos-origem").val(),
                     EventoId: $("#participante-eventoid").val(),
                     ParticipanteId: $("#pagamentos-participanteid").val(),
+                    Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
                     ContaBancariaId: $('.contabancaria').hasClass('d-none') ? 0 : $("#pagamentos-contabancaria").val(),
                     Valor: Number($("#pagamentos-valor").val())
                 }),
             success: function () {
+                $("#pagamentos-origem").val('')
+                $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
                 CarregarTabelaPagamentos($("#pagamentos-participanteid").val());
                 SuccessMesageOperation();
             }
         });
     }
 }
+
 
 
 function Opcoes(row) {

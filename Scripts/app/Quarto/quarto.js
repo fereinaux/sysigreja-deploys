@@ -1,4 +1,5 @@
-﻿function CarregarTabelaQuarto() {
+﻿let table
+function CarregarTabelaQuarto() {
     const tableQuartoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],
@@ -29,6 +30,14 @@
         order: [
             [0, "asc"]
         ],
+        drawCallback: function (settings) {
+            let column = settings.aoColumns[settings.aaSorting[0][0]].data
+            let dir = settings.aaSorting[0][1]
+            let search = settings.oPreviousSearch.sSearch
+
+            GetQuartosComParticipantes(column, dir, search);
+
+        },
         ajax: {
             url: '/Quarto/GetQuartos',
             datatype: "json",
@@ -36,7 +45,7 @@
             type: "POST"
         }
     };
-    $("#table-quarto").DataTable(tableQuartoConfig);
+    table = $("#table-quarto").DataTable(tableQuartoConfig);
 }
 
 
@@ -52,7 +61,6 @@ $(document).ready(function () {
 
     CarregarTabelaQuarto();
     GetParticipantesSemQuarto();
-    GetQuartosComParticipantes();
 });
 
 function PrintQuarto(row) {
@@ -162,7 +170,6 @@ function DeleteQuarto(id) {
                     SuccessMesageDelete();
                     CarregarTabelaQuarto();
                     GetParticipantesSemQuarto();
-                    GetQuartosComParticipantes();
                 }
             });
         }
@@ -187,7 +194,6 @@ function PostQuarto() {
             success: function () {
                 SuccessMesageOperation();
                 CarregarTabelaQuarto();
-                GetQuartosComParticipantes();
                 $("#modal-quarto").modal("hide");
             }
         });
@@ -213,7 +219,6 @@ function PostQuartoEquipe() {
             success: function () {
                 SuccessMesageOperation();
                 CarregarTabelaQuarto();
-                GetQuartosComParticipantes();
                 $("#modal-quarto").modal("hide");
             }
         });
@@ -234,7 +239,6 @@ function DistribuirQuartos() {
             SuccessMesageOperation();
             CarregarTabelaQuarto();
             GetParticipantesSemQuarto();
-            GetQuartosComParticipantes();
             $("#modal-quarto").modal("hide");
         }
     });
@@ -260,13 +264,16 @@ function GetParticipantesSemQuarto() {
 }
 
 
-function GetQuartosComParticipantes() {
+function GetQuartosComParticipantes(column, dir, search) {
     $("#quartos").empty();
 
     $.ajax({
         url: '/Quarto/GetQuartos',
         datatype: "json",
-        data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('QuartoEquipe') ? 0 : 1 },
+        data: {
+            EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('QuartoEquipe') ? 0 : 1,
+            columnName: column, columnDir: dir, search
+        },
         type: "POST",
         success: function (data) {
             data.data.forEach(function (quarto, index, array) {
@@ -367,7 +374,7 @@ function PrintAll() {
     $.ajax({
         url: '/Quarto/GetQuartos',
         datatype: "json",
-        data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('QuartoEquipe') ? 0 : 1},
+        data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('QuartoEquipe') ? 0 : 1 },
         type: "POST",
         success: function (data) {
             var arrPromises = []

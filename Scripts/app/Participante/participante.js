@@ -1,7 +1,7 @@
 ﻿var realista = {}
 eventoId = 0
 let table
-function CarregarTabelaParticipante(callbackFunction){
+function CarregarTabelaParticipante(callbackFunction) {
     if ($("#participante-eventoid").val() != eventoId) {
         $.ajax({
             url: '/Participante/GetPadrinhos',
@@ -132,7 +132,10 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
 
                             ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
-                        : ''
+                        : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
+${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'red', 'Deletar Inscrição') : ''}` : ''}`
+
+
                 }
             }
         ],
@@ -868,6 +871,49 @@ function CancelarInscricao(row) {
         if (result) {
             $.ajax({
                 url: "/Participante/CancelarInscricao/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: row.Id
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaParticipante();
+                }
+            });
+        }
+    });
+}
+
+
+function DeletarInscricao(row) {
+    ConfirmMessage(`Deseja deletar permanentemente a inscrição de ${row.Nome}?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Participante/DeletarInscricao/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: row.Id
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaParticipante();
+                }
+            });
+        }
+    });
+}
+
+function AtivarInscricao(row) {
+    ConfirmMessage(`Deseja ativar a inscrição de ${row.Nome}?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Participante/AtivarInscricao/",
                 datatype: "json",
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',

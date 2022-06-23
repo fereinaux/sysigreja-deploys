@@ -370,9 +370,21 @@ namespace SysIgreja.Controllers
                  result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
                 }
 
-                if (model.Status != null)
+                if (model.Status.HasValue)
                 {
-                    result = result.Where(x => (x.Status == model.Status));
+                    if ((int)model.Status.Value == 12)
+                    {
+                        result = result.Where(x => (x.Checkin));
+                    }
+                    else if (model.Status == StatusEnum.Confirmado)
+                    {
+                        result = result.Where(x => (x.Status == StatusEnum.Confirmado && !x.Checkin));
+                    }
+                    else
+                    {
+                        result = result.Where(x => (x.Status == model.Status));
+
+                    }
                     filteredResultsCount = result.Count();
                 }
 
@@ -516,6 +528,23 @@ namespace SysIgreja.Controllers
         public ActionResult CancelarInscricao(int Id)
         {
             participantesBusiness.CancelarInscricao(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult AtivarInscricao(int Id)
+        {
+            participantesBusiness.AtivarInscricao(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult DeletarInscricao(int Id)
+        {
+            participantesBusiness.DeletarInscricao(Id);
 
             return new HttpStatusCodeResult(200);
         }

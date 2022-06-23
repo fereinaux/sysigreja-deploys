@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+@using Utils.Constants;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -100,6 +103,7 @@
     <script>
         const { jsPDF } = window.jspdf;
         var config = {}
+        let isAdm = @User.IsInRole(Usuario.Admin).ToString().ToLower();
         let logoRelatorio;
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };

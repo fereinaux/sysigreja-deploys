@@ -120,7 +120,7 @@ function GetArquivo(id) {
 }
 
 $("#arquivo-modal").change(function () {
-    PostArquivo();
+    PostArquivoEquipe();
 });
 
 $("#modal-anexos").on('hidden.bs.modal', function () {
@@ -128,9 +128,9 @@ $("#modal-anexos").on('hidden.bs.modal', function () {
 });
 
 
-function PostArquivo() {
+function PostArquivoEquipe() {
 
-    var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
+    var dataToPost = new FormData($('#frm-upload-arquivo-normal-modal')[0]);
     dataToPost.set('Arquivo', dataToPost.get('arquivo-modal'))
     dataToPost.set('Equipe', dataToPost.get('Equipe'))
     $.ajax(

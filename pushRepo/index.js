@@ -3,7 +3,7 @@ const git = require('simple-git');
 async function deploy() {   
    await git().checkout('ejc')
    await git().add('../.')
-   await git().commit("Controle de Padrinhos")
+   await git().commit("Ajuste no filtros dos participantes sem padrinho")
    await git().push('origin','ejc');
 }
 

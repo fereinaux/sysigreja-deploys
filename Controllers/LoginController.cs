@@ -51,7 +51,7 @@ namespace SysIgreja.Controllers
                 var user = await UserManager.FindAsync(model.UserName.ToLower(), model.Password.ToLower());
                 if ((user != null) && (user.Status == StatusEnum.Ativo))
                 {
-                    await SignInAsync(user, model.RememberMe);
+                    await SignInAsync(user, true);
 
                     return RedirectToAction("Index", "Home");
                 }

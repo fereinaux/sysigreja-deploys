@@ -117,7 +117,7 @@ namespace SysIgreja.Controllers
                 Apelido = x.Apelido,
                 CancelarCheckin = false,
                 Checkin = x.Checkin,
-                Padrinho = x.Padrinho?.Nome,
+                Padrinho = x.Padrinho?.EquipanteEvento.Equipante.Nome,
                 Congregacao = x.Congregacao,
                 DataNascimento = x.DataNascimento,
                 Email = x.Email,
@@ -388,15 +388,22 @@ namespace SysIgreja.Controllers
                     filteredResultsCount = result.Count();
                 }
 
-                if (model.PadrinhoId > 0)
+                if (model.PadrinhoId > 0 && model.PadrinhoId != 999)
                 {
                     result = result.Where(x => (x.PadrinhoId == model.PadrinhoId));
                     filteredResultsCount = result.Count();
                 }
+                else if (model.PadrinhoId == 0)
+                {
+                    result = result.Where(x => (!x.PadrinhoId.HasValue));
+                    filteredResultsCount = result.Count();
+                }
+
+
 
                 if (model.search.value != null)
                 {
-                    result = result.Where(x => (x.Nome.Contains(model.search.value) || x.Padrinho.Nome.Contains(model.search.value)));
+                    result = result.Where(x => (x.Nome.Contains(model.search.value)));
                     filteredResultsCount = result.Count();
                 }
 
@@ -518,7 +525,7 @@ namespace SysIgreja.Controllers
                     x.NomeConvite,
                     x.FoneConvite,
                     PendenciaContato = x.PendenciaContato,
-                    Padrinho = x.Padrinho?.Nome
+                    Padrinho = x.Padrinho?.EquipanteEvento.Equipante.Nome
                 }); ;
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -585,7 +592,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetPadrinhos(int eventoId)
         {
-            return Json(new { Padrinhos = participantesBusiness.GetParticipantesByEvento(eventoId).Select(x => new { Id = x.PadrinhoId, Nome = x.Padrinho.Nome }).Distinct().ToList() }, JsonRequestBehavior.AllowGet);
+            return Json(new { Padrinhos = participantesBusiness.GetParticipantesByEvento(eventoId).Select(x => new { Id = x.PadrinhoId, Nome = x.PadrinhoId.HasValue ? x.Padrinho.EquipanteEvento.Equipante.Nome : "Sem Padrinho" }).Distinct().ToList() }, JsonRequestBehavior.AllowGet);
 
         }
 

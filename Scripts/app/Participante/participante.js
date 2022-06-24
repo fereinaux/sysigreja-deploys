@@ -11,7 +11,7 @@ function CarregarTabelaParticipante(callbackFunction) {
             success: (result) => {
                 eventoId = $("#participante-eventoid").val()
                 $("#participante-padrinhoid").html(`
-<option value=0>Selecione</option>
+<option value=999>Selecione</option>
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
             }
@@ -149,7 +149,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
         },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
-            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val(), Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
+            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val() || 999, Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
             datatype: "json",
             type: "POST"
         }

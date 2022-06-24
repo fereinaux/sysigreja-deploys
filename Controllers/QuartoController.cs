@@ -68,7 +68,10 @@ namespace SysIgreja.Controllers
                 }
                 if (columnName == "Capacidade")
                 {
-                    query = query.OrderBy(x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count());
+                    if (columndir == "asc")
+                        query = query.OrderBy(x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count());
+                    else
+                        query = query.OrderByDescending(x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count());
                 }
                 else
                 {

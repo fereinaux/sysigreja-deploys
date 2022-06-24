@@ -33,9 +33,9 @@
                         </select>
                     </div>
                     <div class="col-xs-12 col-lg-7">
-                        <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirQuartos()">Distribuir</button>
+                        <button class="btn btn-primary" id="btn_Distribuir" onclick="DistribuirQuartos()">Distribuir</button>
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditQuarto(0)">Adicionar</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
+                        <button class="btn btn-default" id="btn_PrintAll" onclick="PrintAll()">Imprimir Tudo</button>
                     </div>
                 </div>
             </div>
@@ -45,6 +45,7 @@
                 <thead>
                     <tr>
                         <th>Título</th>
+                        <th>Responsável</th>
                         <th>Tipo</th>
                         <th>Participantes</th>
                         <th>Ações</th>
@@ -107,6 +108,11 @@
 
                             <div class="radio i-checks-green inline"><label> <input type="radio" id="quarto-sexo" checked="" value="1" name="quarto-sexo"> <i></i> Masculino </label></div>
                             <div class="radio i-checks-green inline"><label> <input type="radio" id="quarto-sexo" value="2" name="quarto-sexo"> <i></i> Feminino </label></div>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md m-t-md text-center">
+                            <h5>Responsável</h5>
+                            <select class="form-control chosen-select" id="quarto-equipante"></select>
                         </div>
 
                     </div>

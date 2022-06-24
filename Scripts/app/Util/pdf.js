@@ -5,6 +5,10 @@ function CriarPDFA4() {
     return new jsPDF('p', 'mm', "a4");
 }
 
+function CriarPDFA4Landscape() {
+    return new jsPDF('l', 'mm', "a4");
+}
+
 function AddCabecalhoEvento(doc, titulo, evento) {
 
 

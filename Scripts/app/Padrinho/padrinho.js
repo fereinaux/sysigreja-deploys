@@ -1,4 +1,4 @@
-﻿let start = true
+﻿
 function CarregarTabelaPadrinho() {
 
     $('#gerenciar').text("Gerenciar Padrinhos");
@@ -35,12 +35,12 @@ function CarregarTabelaPadrinho() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
-            let column = settings.aoColumns[settings.aaSorting[0][0]].data
-            let dir = settings.aaSorting[0][1]
-            let search = settings.oPreviousSearch.sSearch
-            if (start) {
+            if (settings.aoData.length > 0) {
+                let column = settings.aoColumns[settings.aaSorting[0][0]].data
+                let dir = settings.aaSorting[0][1]
+                let search = settings.oPreviousSearch.sSearch
 
-            GetPadrinhosComParticipantes(column, dir, search);
+                GetPadrinhosComParticipantes(column, dir, search);
             }
 
         },
@@ -127,7 +127,7 @@ function FillDoc(doc, result) {
 
 function GetPadrinho(id) {
 
-        $("#padrinho-id").val(0);
+    $("#padrinho-id").val(0);
 
 }
 
@@ -242,7 +242,6 @@ function GetParticipantesSemPadrinho() {
 
 
 function GetPadrinhosComParticipantes(column, dir, search) {
-    start = false
     $("#padrinhos").empty();
     $.ajax({
         url: '/Padrinho/GetPadrinhos',
@@ -274,7 +273,6 @@ function GetPadrinhosComParticipantes(column, dir, search) {
                         $(`#pg-${padrinho.PadrinhoId}`).append($(`<tr><td class="participante" data-id="${padrinho.ParticipanteId}">${padrinho.Nome}</td></tr>`));
                     });
                     DragDropg();
-                    start = true
                 }
             });
         }

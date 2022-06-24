@@ -237,6 +237,8 @@ namespace SysIgreja.Controllers
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-"),
                 Titulo = x.Quarto.Titulo,
+                Equipante = x.Quarto.Equipante != null ? UtilServices.CapitalizarNome(x.Quarto.Equipante.Nome) : "",
+                Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor.GetDescription() ?? "",
                 Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
 
             });
@@ -344,7 +346,7 @@ namespace SysIgreja.Controllers
                 .GetParticipantesByEvento(model.EventoId);
                 var data = mapper.Map<IEnumerable<ParticipanteExcelViewModel>>(result);
 
-                Session[g.ToString()] = datatableService.GenerateExcel(data.ToList());
+                Session[g.ToString()] = datatableService.GenerateExcel(data.ToList(), model.Campos);
 
                 return Content(g.ToString());
             }

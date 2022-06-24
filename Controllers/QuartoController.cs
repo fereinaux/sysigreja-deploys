@@ -48,6 +48,15 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult GetEquipantes(int EventoId)
+        {
+            var responsaveisList = quartosBusiness.GetQuartos().Where(x => x.EventoId == EventoId && x.EquipanteId.HasValue).Select(x => x.EquipanteId).ToList();
+            var equipantesList = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => !responsaveisList.Contains(x.EquipanteId)).Select(x => new { x.EquipanteId, Nome = x.Equipante.Nome }).OrderBy(x => x.Nome).ToList();
+
+            return Json(new { Equipantes = equipantesList }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult GetQuartos(int EventoId, TipoPessoaEnum? tipo, string columnName, string columndir, string search)
         {
@@ -57,7 +66,7 @@ namespace SysIgreja.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.Titulo.ToLower().Contains(search.ToLower()));
+                query = query.Where(x => x.Titulo.ToLower().Contains(search.ToLower()) || (x.Equipante != null && x.Equipante.Nome.ToLower().Contains(search.ToLower())));
             }
 
             if (!string.IsNullOrEmpty(columnName))
@@ -72,6 +81,13 @@ namespace SysIgreja.Controllers
                         query = query.OrderBy(x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count());
                     else
                         query = query.OrderByDescending(x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count());
+                }
+                if (columnName == "Equipante")
+                {
+                    if (columndir == "asc")
+                        query = query.OrderBy(x => x.Equipante.Nome);
+                    else
+                        query = query.OrderByDescending(x => x.Equipante.Nome);
                 }
                 else
                 {
@@ -90,6 +106,8 @@ namespace SysIgreja.Controllers
                 Id = x.Id,
                 Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count().ToString()}/{x.Capacidade.ToString()}",
                 Quantidade = quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count(),
+                EquipanteId = x.EquipanteId,
+                Equipante = UtilServices.CapitalizarNome(x.Equipante?.Nome),
                 Titulo = x.Titulo,
                 Sexo = x.Sexo.GetDescription()
             }); ;

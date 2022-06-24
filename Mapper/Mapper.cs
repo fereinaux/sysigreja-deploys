@@ -43,7 +43,7 @@ namespace SysIgreja.Controllers
                 .ForMember(dest => dest.EtiquetasList, opt => opt.MapFrom(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta)))
                 .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""));
                 cfg.CreateMap<Carona, PostCaronaModel>().ForMember(dest => dest.Motorista, opt => opt.MapFrom(x => x.Motorista.Nome));
-                cfg.CreateMap<Quarto, PostQuartoModel>();
+                cfg.CreateMap<Quarto, PostQuartoModel>().ForMember(dest => dest.Equipante, opt => opt.MapFrom(x => x.Equipante != null ? x.Equipante.Nome : ""));
                 cfg.CreateMap<Evento, PostEventoModel>();
                 cfg.CreateMap<Participante, ParticipanteSelectModel>();
                 cfg.CreateMap<Etiqueta, PostEtiquetaModel>();

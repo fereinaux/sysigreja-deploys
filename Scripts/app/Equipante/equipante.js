@@ -425,7 +425,10 @@ function PostArquivo() {
 
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
     var filename = dataToPost.get('arquivo-modal').name
-    var arquivo = new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Nome + filename.substr(filename.indexOf('.')));
+    if (dataToPost.get('LancamentoIdModal') > 0) {
+
+        var arquivo = new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Nome + filename.substr(filename.indexOf('.')));
+    }
     dataToPost.set('Arquivo', arquivo)
     dataToPost.set('EventoId', $("#equipante-eventoid").val())
     dataToPost.set('EquipanteId', dataToPost.get('EquipanteIdModal'))

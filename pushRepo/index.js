@@ -1,10 +1,10 @@
 const git = require('simple-git');
 
-async function deploy() {   
+async function deploy() {
    await git().checkout('ejc')
    await git().add('../.')
-   await git().commit("Ajuste FirstOrDefault")
-   await git().push('origin','ejc');
+   await git().commit("ajuste anexo")
+   await git().push('origin', 'ejc');
 }
 
 

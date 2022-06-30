@@ -101,7 +101,7 @@ namespace SysIgreja.Controllers
                 Id = x.Id,
                 Equipe = x.Description,
                 QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count(),
-                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id).Count()
+                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id, false).Count()
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -184,6 +184,7 @@ namespace SysIgreja.Controllers
                 Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
                 Fone = x.Equipante.Fone,
+                Equipe = x.Equipe.GetDescription(),
                 Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                 Tipo = x.Tipo.GetDescription(),
             });

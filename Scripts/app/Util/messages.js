@@ -34,6 +34,11 @@ async function ConfirmMessage(message) {
     });
 }
 
+
+async function CustomSwal(options) {
+    return await swal(options);
+}
+
 async function ConfirmMessageDelete() {
     return await ConfirmMessage("Essa ação excluirá permanentemente o registro, deseja continuar?");
 }
@@ -55,7 +60,7 @@ function RodapeEvento(evento) {
 function Convidar(nome) {
     return `Olá *${nome}*,
 
-Você gostaria de trabalhar no próximo Realidade de 01 a 03 de Julho? Nossa primeira reunião será na quarta feira (08/06) às 19h30 na *Catedral da Trindade*.
+Você gostaria de trabalhar no próximo Realidade de 25 a 27 de Março nossa primeira reunião será na quarta feira (16/02) às 19h30 na *Catedral da Trindade*.
 
 Esse convite é pessoal e *intransferível*.
 

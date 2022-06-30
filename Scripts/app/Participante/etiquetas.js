@@ -183,9 +183,9 @@ function MontarEtiquetasEquipantes(result) {
     printDoc.setFontSize(18);
     $(result.data).each((index, equipante) => {
         if (index % 14 == 0 || index == 0) {
-            heightNome = 30;
-            heightApelido = 37;
-            heightEquipe = 43;
+            heightNome = 31;
+            heightApelido = 38;
+            heightEquipe = 44;
             width = 55;
             if (index > 0) {
                 printDoc.addPage();

@@ -1,4 +1,5 @@
 ﻿using Arquitetura.Controller;
+using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
@@ -13,12 +14,15 @@ using Core.Business.MeioPagamento;
 using Core.Business.Participantes;
 using Core.Business.Quartos;
 using Core.Models.Etiquetas;
+using Core.Models.Lancamento;
 using Core.Models.Participantes;
 using Core.Models.Quartos;
+using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Web.Mvc;
@@ -41,7 +45,6 @@ namespace SysIgreja.Controllers
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
         private readonly IContaBancariaBusiness contaBancariaBusiness;
-        private readonly IEventosBusiness eventosBusiness;
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
 
@@ -49,7 +52,6 @@ namespace SysIgreja.Controllers
         {
             this.participantesBusiness = participantesBusiness;
             this.arquivoBusiness = arquivoBusiness;
-            this.eventosBusiness = eventosBusiness;
             this.quartosBusiness = quartosBusiness;
             this.equipesBusiness = equipesBusiness;
             this.circulosBusiness = circulosBusiness;
@@ -60,8 +62,6 @@ namespace SysIgreja.Controllers
             this.datatableService = datatableService;
             mapper = new MapperRealidade().mapper;
         }
-
-
         public ActionResult Checkin()
         {
             ViewBag.Title = "Check-in";
@@ -69,9 +69,8 @@ namespace SysIgreja.Controllers
             GetConfiguracao();
             GetCampos();
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
-            var evento = eventosBusiness.GetEventoAtivo();
-            ViewBag.ValorRealista = evento?.Valor ?? 0;
-            ViewBag.ValorEquipante =  evento?.ValorTaxa ?? 0;
+            ViewBag.ValorRealista = (int)ValoresPadraoEnum.Inscricoes;
+            ViewBag.ValorEquipante = (int)ValoresPadraoEnum.TaxaEquipante;
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
                 .Select(x => new ContaBancariaViewModel
                 {
@@ -98,7 +97,7 @@ namespace SysIgreja.Controllers
             GetConfiguracao();
             GetCampos();
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
-            ViewBag.Valor =  eventosBusiness.GetEventoAtivo()?.Valor ?? 0;
+            ViewBag.Valor = (int)ValoresPadraoEnum.Inscricoes;
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
                 .Select(x => new ContaBancariaViewModel
                 {
@@ -143,6 +142,7 @@ namespace SysIgreja.Controllers
                 Numero = x.Numero,
                 Complemento = x.Complemento,
                 Logradouro = x.Logradouro,
+                Camisa = x.Camisa,
                 Referencia = x.Referencia,
                 Medicacao = x.Medicacao,
                 Nome = x.Nome,
@@ -218,10 +218,8 @@ namespace SysIgreja.Controllers
                 Circulo = x.Circulo.Cor.GetDescription(),
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                Cor = x.Circulo.Cor.GetDescription(),
-                Dirigente1 = UtilServices.CapitalizarNome(x.Circulo.Dirigente1.Equipante.Nome),
-                Dirigente2 = UtilServices.CapitalizarNome(x.Circulo.Dirigente2?.Equipante?.Nome ?? ""),
-                Fone = x.Participante.Fone
+                Fone = x.Participante.Fone,
+                Foto = x.Participante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Participante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
             });
 
             var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -232,15 +230,10 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByQuarto(int QuartoId)
         {
-            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante).OrderBy(x => x.Participante.Nome).ToList().Select(x => new
+            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-"),
-                Titulo = x.Quarto.Titulo,
-                Equipante = x.Quarto.Equipante != null ? UtilServices.CapitalizarNome(x.Quarto.Equipante.Nome) : "",
-                Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor.GetDescription() ?? "",
-                Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
-
+                Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-")
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -253,7 +246,7 @@ namespace SysIgreja.Controllers
             {
                 Nome = UtilServices.CapitalizarNome(x.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                Dia = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd") : "",
+                Dia = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd") : "", 
                 Idade = UtilServices.GetAge(x.DataNascimento).ToString()
             }).ToList();
 
@@ -346,7 +339,7 @@ namespace SysIgreja.Controllers
                 .GetParticipantesByEvento(model.EventoId);
                 var data = mapper.Map<IEnumerable<ParticipanteExcelViewModel>>(result);
 
-                Session[g.ToString()] = datatableService.GenerateExcel(data.ToList());
+                Session[g.ToString()] = datatableService.GenerateExcel(data.ToList()); 
 
                 return Content(g.ToString());
             }
@@ -393,12 +386,10 @@ namespace SysIgreja.Controllers
                 try
                 {
                     model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
-                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
                     result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
                 }
                 catch (Exception)
                 {
-                    result = result.OrderBy(x => x.Id);
                 }
 
                 result = result.Skip(model.Start)
@@ -479,7 +470,7 @@ namespace SysIgreja.Controllers
                    Checkin = x.Checkin,
                    Idade = UtilServices.GetAge(x.DataNascimento),
                    Foto = x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : "",
-                   Circulo = x.Circulos.LastOrDefault().Circulo.Cor.GetDescription()
+                   Circulo = x.Circulos?.LastOrDefault()?.Circulo?.Cor.GetDescription() ?? ""
                });
 
 

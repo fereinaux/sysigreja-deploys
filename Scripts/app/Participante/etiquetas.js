@@ -1,4 +1,24 @@
-﻿function CarregarEtiquetas() {
+﻿let cores = []
+
+function CarregarEtiquetas() {
+    $.blockUI({
+        css: {
+            backgroundColor: 'transparent',
+            border: 'none'
+        },
+        message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+        baseZ: 1500,
+        overlayCSS: {
+            opacity: 0.7,
+            cursor: 'wait'
+        }
+    });
     if ($('.tipo:checked').val() == 1) {
         if ($("#etiquetas-participantes").val() != "Pesquisar") {
             $("#etiquetas-participantes").val("Pesquisar").trigger("chosen:updated");
@@ -147,6 +167,7 @@ function MontarTagsParticipantes(result) {
     });
     //printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function MontarEtiquetasParticipantes(result) {
@@ -175,37 +196,39 @@ function MontarEtiquetasParticipantes(result) {
     });
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function MontarEtiquetasEquipantes(result) {
-    var printDoc = new jsPDF('p', 'mm', 'letter');
+    var printDoc = new jsPDF('p', 'mm', 'a3');
     printDoc.setFont('helvetica', "normal")
     printDoc.setFontSize(18);
     $(result.data).each((index, equipante) => {
         if (index % 14 == 0 || index == 0) {
-            heightNome = 31;
-            heightApelido = 38;
-            heightEquipe = 44;
-            width = 55;
+            heightNome = 42;
+            heightApelido = 57;
+            heightEquipe = 68;
+            width = 73;
             if (index > 0) {
                 printDoc.addPage();
             }
         }
         printDoc.setFont('helvetica', "normal")
-        printDoc.setFontSize(15);
+        printDoc.setFontSize(18);
         printDoc.text(width, heightEquipe, "  (" + equipante.Equipe + ")", 'center');
         var splitNome = printDoc.splitTextToSize(equipante.Nome, 100);
         printDoc.text(width, heightNome, splitNome, 'center');
         printDoc.setFont('helvetica', "bold")
-        printDoc.setFontSize(18);
+        printDoc.setFontSize(30);
         printDoc.text(width, splitNome.length > 1 ? heightApelido + 4 : heightApelido, equipante.Apelido, 'center');
-        width = index % 2 == 0 ? 162 : 55;
-        heightNome = index % 2 == 0 ? heightNome : heightNome + 33.9;
-        heightApelido = index % 2 == 0 ? heightApelido : heightApelido + 33.9;
-        heightEquipe = index % 2 == 0 ? heightEquipe : heightEquipe + 33.9;
+        width = index % 2 == 0 ? 212 : 73;
+        heightNome = index % 2 == 0 ? heightNome : heightNome + 45;
+        heightApelido = index % 2 == 0 ? heightApelido : heightApelido + 45;
+        heightEquipe = index % 2 == 0 ? heightEquipe : heightEquipe + 45;
     });
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 
@@ -224,6 +247,9 @@ function MontarCrachaParticipantes(result) {
 
 
     $(result.data).each((index, equipante) => {
+        let imgs = {}
+        cores.forEach(cor => (imgs[cor] = new Image()).src = `/Images/circulos/${cor}.png`)
+   
         if (equipante.Foto) {
             if (index % 10 == 0 || index == 0) {
                 indice = 0
@@ -270,23 +296,23 @@ function MontarCrachaParticipantes(result) {
                 yFoto = heightFoto + 2.5
             }
 
-            console.log(xFoto, yFoto, widthFoto, heightFoto)
             printDoc.addImage('data:image/jpeg;base64,' + equipante.Foto, 'JPEG', xFoto, yFoto, widthFoto, heightFoto);
-            var img = new Image();
-            img.src = `/Images/circulos/${equipante.Circulo}.png`;
-            printDoc.addImage(img, 'PNG', xFoto, yFoto, widthFoto, heightFoto);
+            printDoc.addImage(imgs[equipante.Circulo], 'PNG', xFoto, yFoto, widthFoto, heightFoto);
 
-            printDoc.setFontSize(10);
-            printDoc.setFont('Montserrat', 'normal');
+            printDoc.setFontSize(12);
+            printDoc.setFont('Helvetica', 'normal');
             printDoc.setTextColor(0, 0, 0)
-            printDoc.text(xFoto + widthFoto / 2, yFoto + 11, equipante.Nome, 'center');
-            printDoc.setFontSize(18);
+            printDoc.text(xFoto + 0.5, yFoto + 10.7, equipante.Nome, 'left');
+            printDoc.setFontSize(22);
             printDoc.setFont('mont', 'normal');
-            printDoc.text(xFoto + widthFoto / 2, yFoto + 10.5, equipante.Apelido.toUpperCase(), 'center');
+            printDoc.setTextColor(255, 255, 255)
+            printDoc.text(xFoto + 0.5, yFoto + 10, equipante.Apelido, 'left');
             indice++
         }
     });
+
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function MontarCrachaEquipantes(result) {
@@ -372,6 +398,7 @@ function MontarCrachaEquipantes(result) {
         }
     });
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function CarregarEtiquetaIndividual(position) {
@@ -409,10 +436,10 @@ function CarregarEtiquetaIndividual(position) {
 }
 
 function ImprimirIndividual(data, position) {
-    var printDoc = new jsPDF('p', 'mm', 'letter');
+    var printDoc = new jsPDF('p', 'mm', 'a3');
     printDoc.setFont('helvetica', "normal")
     printDoc.setFontSize(18);
-    width = position % 2 == 0 ? 162 : 55;
+    width = position % 2 == 0 ? 212 : 73;
     multiplicador = 0;
 
     switch (position) {
@@ -461,17 +488,16 @@ function ImprimirIndividual(data, position) {
         default:
     }
     if ($('.tipo:checked').val() == 1) {
-
         var participante = data.Participante;
-        heightNome = multiplicador * 33.9;
-        heightApelido = multiplicador * 33.9;
-        heightNome += 42;
-        heightApelido += 32;
+        heightNome = multiplicador * 45;
+        heightApelido = multiplicador * 45;
+        heightNome += 60;
+        heightApelido += 50;
         printDoc.setFont('helvetica', "bold")
-        printDoc.setFontSize(18);
+        printDoc.setFontSize(30);
         printDoc.text(width, heightApelido, participante.Apelido, 'center');
         printDoc.setFont('helvetica', "normal")
-        printDoc.setFontSize(15);
+        printDoc.setFontSize(18);
         var splitNome = printDoc.splitTextToSize(participante.Nome, 100);
         printDoc.text(width, heightNome, splitNome, 'center');
 
@@ -494,13 +520,14 @@ function ImprimirIndividual(data, position) {
     }
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
+    $.unblockUI();
 }
 
 function GetParticipantes() {
     $("#etiquetas-participantes").empty();
     $('#etiquetas-participantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Participante/GetParticipantes',
+        url: '/Participante/GetParticipantesSelect',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "POST",
@@ -518,7 +545,7 @@ function GetEquipantes() {
     $("#etiquetas-equipantes").empty();
     $('#etiquetas-equipantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Equipe/GetEquipantesByEvento',
+        url: '/Equipe/GetEquipantesByEventoSelect',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "GET",
@@ -540,7 +567,9 @@ function GetCirculos() {
         datatype: "json",
         type: "POST",
         success: (result) => {
+            cores = []
             result.data.forEach(function (circulo, index, array) {
+                cores.push(circulo.Cor)
                 $('#etiquetas-circulos').append($(`<option value="${circulo.Id}">${circulo.Cor}</option>`));
             });
             $("#etiquetas-circulos").val("Pesquisar").trigger("chosen:updated");

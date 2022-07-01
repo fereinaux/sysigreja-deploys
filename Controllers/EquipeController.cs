@@ -101,7 +101,7 @@ namespace SysIgreja.Controllers
                 Id = x.Id,
                 Equipe = x.Description,
                 QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count(),
-                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id, false).Count()
+                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id).Count()
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -162,7 +162,7 @@ namespace SysIgreja.Controllers
                     Nome = UtilServices.CapitalizarNome(x.Nome),
                     Apelido = UtilServices.CapitalizarNome(x.Apelido),
                     Foto = x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
-                }).ToList().OrderBy(x => x.Equipe).ThenBy(x => x.Nome);
+                }).ToList().OrderBy(x => x.Equipe ).ThenBy(x => x.Nome);
 
             var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
             json.MaxJsonLength = Int32.MaxValue;
@@ -181,10 +181,7 @@ namespace SysIgreja.Controllers
             .Select(x => new
             {
                 Id = x.Id,
-                Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
-                Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
-                Fone = x.Equipante.Fone,
-                Equipe = x.Equipe.GetDescription(),
+                Nome = x.Equipante.Nome,
                 Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                 Tipo = x.Tipo.GetDescription(),
             });

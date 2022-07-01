@@ -12,10 +12,12 @@ using Core.Business.MeioPagamento;
 using Core.Business.Quartos;
 using Core.Business.Reunioes;
 using Core.Models.Equipantes;
+using Core.Models.Lancamento;
 using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
@@ -50,7 +52,6 @@ namespace SysIgreja.Controllers
         public EquipanteController(IEquipantesBusiness equipantesBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IContaBancariaBusiness contaBancariaBusiness, IArquivosBusiness arquivoBusiness)
         {
             this.quartosBusiness = quartosBusiness;
-            this.etiquetasBusiness = etiquetasBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
             this.equipantesBusiness = equipantesBusiness;
             this.eventosBusiness = eventosBusiness;
@@ -59,6 +60,7 @@ namespace SysIgreja.Controllers
             this.lancamentoBusiness = lancamentoBusiness;
             this.contaBancariaBusiness = contaBancariaBusiness;
             this.meioPagamentoBusiness = meioPagamentoBusiness;
+            this.etiquetasBusiness = etiquetasBusiness;
             this.reunioesBusiness = reunioesBusiness;
             this.datatableService = datatableService;
             var eventoAtivo = eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().ToList().LastOrDefault();
@@ -84,7 +86,7 @@ namespace SysIgreja.Controllers
                    Status = x.Status.GetDescription()
                });
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
-            ViewBag.Valor = eventosBusiness.GetEventoAtivo()?.ValorTaxa ?? 0;
+            ViewBag.Valor = (int)ValoresPadraoEnum.TaxaEquipante;
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
                 .Select(x => new ContaBancariaViewModel
                 {
@@ -306,14 +308,7 @@ namespace SysIgreja.Controllers
         {
             Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
             var eventoAtual = eventosBusiness.GetEventoAtivo();
-            var config = configuracaoBusiness.GetConfiguracao();
-            ViewBag.Configuracao = config;
-            ViewBag.MsgConclusao = config.MsgConclusaoEquipe
-         .Replace("${Apelido}", equipante.Apelido)
-         .Replace("${Evento}", $"{eventoAtual.TipoEvento.GetDescription()}")
-         .Replace("${ValorEvento}", eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
-         .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
-
+            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao();
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {
                 Id = equipante.Id,
@@ -340,14 +335,14 @@ namespace SysIgreja.Controllers
             result.Checkin = equipeAtual.Checkin;
 
             var equipante = mapper.Map<PostEquipanteModel>(result);
-
+            equipante.Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == result.Id).Include(x => x.Quarto).FirstOrDefault()?.Quarto?.Titulo;
             var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
-           .Select(x => new
-           {
-               Nome = x.Nome,
-               Id = x.Id,
-               Cor = x.Cor
-           });
+            .Select(x => new
+            {
+                Nome = x.Nome,
+                Id = x.Id,
+                Cor = x.Cor
+            });
 
             return Json(new { Equipante = equipante, Etiquetas = etiquetas }, JsonRequestBehavior.AllowGet);
         }
@@ -370,13 +365,12 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostEtiquetas(string[] etiquetas, int id, string obs)
+        public ActionResult PostEtiquetas(string[] etiquetas, int id)
         {
-            equipantesBusiness.PostEtiquetas(etiquetas, id, obs);
+            equipantesBusiness.PostEtiquetas(etiquetas, id);
 
             return new HttpStatusCodeResult(200);
         }
-
 
         [HttpPost]
         public ActionResult DeleteEquipante(int Id)

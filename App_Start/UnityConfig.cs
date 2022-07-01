@@ -19,8 +19,10 @@ using Core.Business.Reunioes;
 using Data.Context;
 using Data.Entities;
 using Data.Repository;
+using SysIgreja.Controllers;
 using System.Web.Mvc;
 using Unity;
+using Unity.Injection;
 using Unity.Mvc5;
 using Utils.Services;
 
@@ -30,8 +32,8 @@ namespace Web
     {
         public static void RegisterComponents()
         {
-            var container = new UnityContainer();
-
+			var container = new UnityContainer();           
+            
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
 
             container.RegisterType<IGenericRepositoryConsulta<ParticipanteConsulta>, GenericRepositoryConsulta<ParticipanteConsulta>>();

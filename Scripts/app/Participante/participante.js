@@ -1,7 +1,6 @@
 ﻿var realista = {}
 eventoId = 0
-let table
-function CarregarTabelaParticipante(callbackFunction){
+function CarregarTabelaParticipante() {
     if ($("#participante-eventoid").val() != eventoId) {
         $.ajax({
             url: '/Participante/GetPadrinhos',
@@ -115,14 +114,14 @@ ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt',
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
                         }
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
-                            ${GetIconWhatsApp(row.Fone)}
+                            <a target="_blank" href='https://api.whatsapp.com/send?phone=${row.Fone}' style="font-size:18px; color:green; " class="pointer p-l-xs"><i class="fab fa-whatsapp" aria-hidden="true" title="${row.Fone}"></i></a>
                             ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}      
                          
                             ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
                             
                             ${$("#participante-eventoid option:selected").data('status') == 'Encerrado' ? `<a target="_blank" href='${GetLinkWhatsApp(row.Fone, `Olá *${row.Nome}*,
 
-Você gostaria de trabalhar no próximo Realidade de 01 a 03 de Julho? Nossa primeira reunião será na quarta feira (08/06) às 19h30 na *Catedral da Trindade*.
+Você gostaria de trabalhar no próximo Realidade de 25 a 27 de Março nossa primeira reunião será na quarta feira (16/02) às 19h30 na *Catedral da Trindade*.
 
 Esse convite é pessoal e *intransferível*.
 
@@ -139,11 +138,6 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
         order: [
             [2, "asc"]
         ],
-        drawCallback: function () {
-            if (callbackFunction) {
-                callbackFunction()
-            }
-        },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
             data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val(), Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
@@ -166,7 +160,7 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
         }
     });
 
-    table = $("#table-participante").DataTable(tableParticipanteConfig);
+    $("#table-participante").DataTable(tableParticipanteConfig);
 }
 
 function ConfirmFoto() {
@@ -217,6 +211,7 @@ function dataURLtoFile(dataurl, filename) {
 function Foto(row) {
 
     realista = row
+    console.log(realista)
 
     var input = $(`#foto${realista.Id}`)[0]
 
@@ -536,29 +531,23 @@ $("#modal-anexos").on('hidden.bs.modal', function () {
 
 var tipoGlobal = 'pagamento'
 $(`.${tipoGlobal}`).addClass('moldura-modal')
-var destinatarioGlobal = 'realista'
+var destinatarioGlobal = 'mae'
 $(`.${destinatarioGlobal}`).addClass('moldura-modal')
 
 function enviar() {
-    if (getNome(destinatarioGlobal)) {
+    var windowReference = window.open('_blank');
+    $.ajax({
+        url: "/Mensagem/GetMensagem/",
+        data: { Id: $("#msg-list").val() },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome Contato}', getNome(destinatarioGlobal)).replaceAll('${Nome Participante}', getNome('realista'));
+            windowReference.location = GetLinkWhatsApp(getTelefone(destinatarioGlobal), text)
 
-        var windowReference = window.open('_blank');
-        $.ajax({
-            url: "/Mensagem/GetMensagem/",
-            data: { Id: $("#msg-list").val() },
-            datatype: "json",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                var text = data.Mensagem.Conteudo.replaceAll('${Nome Contato}', getNome(destinatarioGlobal)).replaceAll('${Nome Participante}', getNome('realista'));
-                windowReference.location = GetLinkWhatsApp(getTelefone(destinatarioGlobal), text)
-
-            }
-        });
-    } else {
-        ErrorMessage('Você deve escolher o destinatário da mensagem')
-
-    }
+        }
+    });
 
 
 }
@@ -915,7 +904,6 @@ function PostPagamento() {
 
 function Opcoes(row) {
     realista = row;
-    console.log(row);
     $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Participante/GetParticipante/",
@@ -931,48 +919,63 @@ function Opcoes(row) {
             $('.paitext').text(realista.NomePai)
             $('.convitetext').text(realista.NomeConvite)
             $('.contatotext').text(realista.NomeContato)
+
+            $('.pagamento').show()
             $('#participante-obs').val(realista.Observacao)
-            if ($('#modal-opcoes').is(":hidden")) {
-                $.ajax({
-                    url: "/Mensagem/GetMensagens/",
-                    datatype: "json",
-                    type: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (dataMsg) {
-                        $("#msg-list").html(`
+            $(`#participante-msgcovid`).iCheck(realista.MsgVacina ? 'check' : 'uncheck');
+            $(`#participante-msgpagamento`).iCheck(realista.MsgPagamento ? 'check' : 'uncheck');
+            $(`#participante-msgnoitita`).iCheck(realista.MsgNoitita ? 'check' : 'uncheck');
+            $(`#participante-msggeral`).iCheck(realista.MsgGeral ? 'check' : 'uncheck');
+            $(`#participante-msgfoto`).iCheck(realista.MsgFoto ? 'check' : 'uncheck');
+
+            $.ajax({
+                url: "/Mensagem/GetMensagens/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                success: function (dataMsg) {
+                    $("#msg-list").html(`
 ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
 
-                    }
-                })
-            }
+                }
+            })
+
             $('#participante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
                 }`)
             $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
             if (realista.Status == "Confirmado") {
                 $('.pagamento').hide()
             }
-
-            arrayData = table.data().toArray()
-            let index = arrayData.findIndex(r => r.Id == row.Id)
-
-            $('#btn-previous').css('display', 'block')
-            $('#btn-next').css('display', 'block')
-            if (index == 0) {
-
-                $('#btn-previous').css('display', 'none')
-            }
-
-            if (index == arrayData.length - 1) {
-                $('#btn-next').css('display', 'none')
-            }
-
             $("#modal-opcoes").modal();
         }
     });
 
 
 }
+
+$("#modal-opcoes").on('hidden.bs.modal', function () {
+    $.ajax({
+        url: "/Participante/PostInfo/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                Id: realista.Id,
+                Observacao: $('#participante-obs').val(),
+                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
+                MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
+                MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
+                MsgGeral: $(`#participante-msggeral`).prop("checked"),
+                MsgFoto: $(`#participante-msgfoto`).prop("checked"),
+                Etiquetas: $('.participante-etiquetas').val()
+            }),
+        success: function () {
+            CarregarTabelaParticipante()
+        }
+    });
+});
 
 function GetParticipanteContato(id) {
     $.ajax({
@@ -1091,6 +1094,7 @@ function PostParticipante() {
                     DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#participante-email`).val(),
                     Fone: $(`#participante-fone`).val(),
+                    Camisa: $(`#participante-camisa`).val(),
                     NomePai: $(`#participante-nomepai`).val(),
                     FonePai: $(`#participante-fonepai`).val(),
                     NomeMae: $(`#participante-nomemae`).val(),
@@ -1147,53 +1151,3 @@ $('#not-restricaoalimentar').on('ifChecked', function (event) {
     $('.restricaoalimentar').addClass('d-none');
     $("#participante-restricaoalimentar").removeClass('required');
 });
-
-
-
-function previous() {
-    PostInfo(function () {
-        arrayData = table.data().toArray()
-        let index = arrayData.findIndex(r => r.Id == realista.Id)
-        if (index > 0) {
-            Opcoes(arrayData[index - 1])
-        }
-    })
-}
-
-function next() {
-    PostInfo(function () {
-        arrayData = table.data().toArray()
-        let index = arrayData.findIndex(r => r.Id == realista.Id)
-        if (index + 1 < arrayData.length) {
-            Opcoes(arrayData[index + 1])
-        }
-    })
-}
-
-
-$("#modal-opcoes").on('hidden.bs.modal', function () {
-    PostInfo()
-});
-
-function PostInfo(callback) {
-    $.ajax({
-        url: "/Participante/PostInfo/",
-        datatype: "json",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(
-            {
-                Id: realista.Id,
-                Observacao: $('#participante-obs').val(),
-                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
-                MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
-                MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
-                MsgGeral: $(`#participante-msggeral`).prop("checked"),
-                MsgFoto: $(`#participante-msgfoto`).prop("checked"),
-                Etiquetas: $('.participante-etiquetas').val()
-            }),
-        success: function () {
-            CarregarTabelaParticipante(callback)
-        }
-    });
-}

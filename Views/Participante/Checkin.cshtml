@@ -176,7 +176,7 @@
                         <i class="far fa-circle fa-3x"></i>
                         <h5 class="text-center circulo"></h5>
                     </div>
-                    <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
+                    <div class="col-xs-4 col-md-2 p-w-md text-center">
                         <i class="fa fa-home fa-3x"></i>
                         <h5 class="text-center quarto"></h5>
                     </div>
@@ -197,7 +197,7 @@
                         <h5 class="text-center padrinho">Padrinho</h5>
                     </div>
                 </div>
-                <div class="row p-h-xs">
+                <div class="row p-h-xs  dados-participante-contato">
                     <div class="col-xs-12 col-md-12 p-w-md text-center ">
                         <div id="marcadores">
 
@@ -277,7 +277,22 @@
 
                             <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
                         </div>
-                    }                   
+                    }
+                    @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))
+                    {
+                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                            <h5>Tamanho da Camisa</h5>
+
+                            <select class="form-control" id="participante-camisa">
+                                <option value="PP">PP</option>
+                                <option value="P">P</option>
+                                <option value="M">M</option>
+                                <option value="G">G</option>
+                                <option value="GG">GG</option>
+                                <option value="XGG">XGG</option>
+                            </select>
+                        </div>
+                    }
                     @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
                     {
                         <div class="col-sm-6 p-w-md m-t-md text-center">

@@ -1,4 +1,5 @@
 ﻿@using Utils.Constants;
+@using Utils.Enums;
 @{
     ViewBag.Numero = new Random().Next();
 }
@@ -22,20 +23,19 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4 class="title-circulo">@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:550px">
+            <div class="ibox-tools pull-right" style="width:400px">
                 <div class="row">
-                    <div class="col-xs-12 col-lg-5">
-                        <select class="form-control" id="circulo-eventoid" onchange="CarregarTabelaCirculo()">
+                    <div class="col-xs-12 col-lg-6">
+                        <select class="form-control" id="circulo-eventoid" onchange=" CirculoRefresh()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
                                 <option value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                             }
                         </select>
                     </div>
-                    <div class="col-xs-12 col-lg-7">
+                    <div class="col-xs-12 col-lg-6">
                         <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirCirculos()">Distribuir</button>
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditCirculo(0)">Adicionar</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
                     </div>
                 </div>
             </div>
@@ -53,6 +53,22 @@
                 <tbody></tbody>
             </table>
         </div>
+
+
+        <div class="ibox" id="ibox-mapa" style="margin-top:25px;">
+            <div class="ibox-title" style="display: flex;justify-content: space-between;">
+                <h4>Mapa</h4>
+            </div>
+            <div class="ibox-content" style="height:400px">
+
+                <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
+                    <div id="map" style="height:300px;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <div class="ibox">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
                 <h4 id="gerenciar">Gerenciar Círculos</h4>
@@ -83,6 +99,33 @@
     </div>
 </div>
 
+
+<div class="modal inmodal" id="modal-cores" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <h5 class="modal-title" id="participante-nome"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs">
+                    <div class="row p-h-xs">
+                        <input type="hidden" id="participante-id" />
+
+                        <div class="col-sm-12 p-w-md m-b-sm">
+                            <h5>Cor</h5>
+                            <select class="form-control chosen-select" id="participante-cor"></select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal inmodal" id="modal-circulo" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content animated bounceInRight">
@@ -97,7 +140,7 @@
                             <div class="col-sm-6 p-w-md m-b-sm">
                                 <h5>Equipante</h5>
                                 <select class="form-control chosen-select" id="circulo-dirigente1"></select>
-                            </div>                          
+                            </div>
                         </div>
                         <div class="col-sm-6 p-w-md m-b-sm">
                             <h5>Cor</h5>
@@ -117,15 +160,21 @@
 </div>
 
 @section Styles {
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
+          type="text/css" />
     <style>
     </style>
 }
 
 @section Scripts {
-
+    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
+    <script src="~/Scripts/app/Util/mapa.js"></script>
     <script src="~/Scripts/app/Circulo/circulo.js?@ViewBag.Numero"></script>
 
     <script>
-
+        if ('@ViewBag.Configuracao.TipoCirculoId' != '@TipoCirculoEnum.Endereco') {
+            $('#ibox-mapa').hide()
+        }
     </script>
 }

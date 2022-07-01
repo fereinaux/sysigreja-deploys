@@ -108,16 +108,7 @@
                         </label>
                     </form>
                 </div>
-                <div class="col-sm-12 p-w-md m-t-md text-center">
-                    <h5>Mensagem Conclusão</h5>
 
-                    <textarea id="config-msg" name="editordata"></textarea>
-                </div>
-                <div class="col-sm-12 p-w-md m-t-md text-center">
-                    <h5>Mensagem Conclusão para a Equipe</h5>
-
-                    <textarea id="config-msgequipe" name="editordata"></textarea>
-                </div>
                 <div class="col-sm-12 p-w-md m-t-md text-center">
                     <button type="button" class="btn btn-primary" onclick="PostConfig()">Salvar</button>
                 </div>
@@ -138,7 +129,7 @@
 @section Scripts {
 
     <script>
-        let configMsg, configMsgEquipe
+
         function PostConfig() {
             if (ValidateForm(`#form-config`)) {
                 $.ajax({
@@ -154,8 +145,6 @@
                             CorLoginBox: $('#config-corloginbox').val(),
                             CorScroll: $('#config-corscroll').val(),
                             CorHoverScroll: $('#config-corhoverscroll').val(),
-                            MsgConclusao: configMsg.summernote('code'),
-                            MsgConclusaoEquipe: configMsgEquipe.summernote('code'),
                         }),
                     success: function () {
                         SuccessMesageOperation()
@@ -195,8 +184,6 @@
                     $('#config-corloginbox').val(config.CorLoginBox)
                     $('#config-corscroll').val(config.CorScroll)
                     $('#config-corhoverscroll').val(config.CorHoverScroll)
-                    configMsg.summernote('code', config.MsgConclusao)
-                    configMsgEquipe.summernote('code', config.MsgConclusaoEquipe)
                     if (config.LogoId) {
                         $('#img-logo').css('display', 'block')
                         $('#img-logo').attr("src", 'data:image/jpeg;base64,' + config.Logo)
@@ -255,43 +242,6 @@ ${campos.map(p => `<option value=${p.Id}>${p.Description}</option>`)}
 
         $(document).ready(function () {
             carregarConfiguracoes()
-            configMsg = $('#config-msg').summernote({
-                height: 300,
-                lang: 'pt-BR',
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic']],
-                    ['fontname', ['fontname']],
-                    ['view', ['codeview']],
-                    ['mybutton', ['Apelido', 'Evento', 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
-                ],
-                buttons: {
-                    Apelido: ApelidoButton,
-                    Evento: EventoButton,
-                    Data: DataButton,
-                    Valor: ValorButton,
-                    NomePadrinho: PadrinhoNomeButton,
-                    FonePadrinho: PadrinhoFoneButton,
-
-                }
-            });
-            configMsgEquipe = $('#config-msgequipe').summernote({
-                height: 300,
-                lang: 'pt-BR',
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic']],
-                    ['fontname', ['fontname']],
-                    ['view', ['codeview']],
-                    ['mybutton', ['Apelido', 'Evento', 'Data', 'Valor']]
-                ],
-                buttons: {
-                    Apelido: ApelidoButton,
-                    Evento: EventoButton,
-                    Data: DataButton,
-                    Valor: ValorButton
-                }
-            });
         })
 
         function postArquivo(tipo) {

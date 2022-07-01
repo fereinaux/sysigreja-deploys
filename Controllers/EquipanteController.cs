@@ -338,6 +338,7 @@ namespace SysIgreja.Controllers
             var equipeAtual = equipesBusiness.GetEquipeAtual(eventoId, result.Id);
             result.Equipe = equipeAtual.Equipe.GetDescription() ?? "";
             result.Checkin = equipeAtual.Checkin;
+ result.Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "";
 
             var equipante = mapper.Map<PostEquipanteModel>(result);
 

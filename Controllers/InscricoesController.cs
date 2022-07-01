@@ -6,13 +6,22 @@ using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
 using Core.Business.Newsletter;
 using Core.Business.Participantes;
+using Core.Models.Lancamento;
 using Core.Models.Participantes;
 using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Xml;
 using Utils.Enums;
 using Utils.Extensions;
 
@@ -72,16 +81,7 @@ namespace SysIgreja.Controllers
         public ActionResult InscricaoConcluida(int Id)
         {
             Participante participante = participantesBusiness.GetParticipanteById(Id);
-            var config = configuracaoBusiness.GetConfiguracao();
-            ViewBag.Configuracao = config;
-            ViewBag.MsgConclusao = config.MsgConclusao
-         .Replace("${Apelido}", participante.Apelido)
-         .Replace("${Evento}", $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.TipoEvento.GetDescription()}")
-         .Replace("${ValorEvento}", participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
-         .Replace("${DataEvento}", participante.Evento.DataEvento.ToString("dd/MM/yyyy"))
-         .Replace("${FonePadrinho}", participante.Padrinho?.Fone)
-         .Replace("${NomePadrinho}", participante.Padrinho?.Nome);
-
+            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao();
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {
                 Id = participante.Id,
@@ -90,8 +90,8 @@ namespace SysIgreja.Controllers
                 Evento = $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.TipoEvento.GetDescription()}",
                 Valor = participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
                 DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy"),
-                PadrinhoFone = participante.Padrinho?.Fone,
-                PadrinhoNome = participante.Padrinho?.Nome
+                PadrinhoFone = participante.Padrinho.Fone,
+                PadrinhoNome = participante.Padrinho.Nome
             };
 
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
@@ -106,7 +106,7 @@ namespace SysIgreja.Controllers
                    Operacao = x.Operacao
                });
 
-            ViewBag.teste = "<h3>'@ViewBag.Participante.Apelido'</h3>";
+
             if (participante.Status == StatusEnum.Inscrito)
             {
 

@@ -38,7 +38,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetTipos()
         {
-            return Json(new { Tipos = EnumExtensions.GetDescriptions<TiposEventoEnum>().ToList() }, JsonRequestBehavior.AllowGet);
+            return Json(new { Tipos = EnumExtensions.GetDescriptions<TiposEventoEnum>().ToList() }, JsonRequestBehavior.AllowGet);            
         }
 
         [HttpPost]
@@ -55,7 +55,6 @@ namespace SysIgreja.Controllers
                     TipoEvento = x.TipoEvento.GetDescription(),
                     Status = x.Status.GetDescription(),
                     Valor = x.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
-                    ValorTaxa = x.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
                     QtdAnexos = arquivosBusiness.GetArquivosByEvento(x.Id).Count()
                 });
 

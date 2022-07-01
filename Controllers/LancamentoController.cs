@@ -33,7 +33,7 @@ namespace SysIgreja.Controllers
         private readonly IContaBancariaBusiness contaBancariaBusiness;
         private readonly IDatatableService datatableService;
 
-        public LancamentoController(ILancamentoBusiness lancamentoBusiness, IArquivosBusiness arquivosBusiness, ICentroCustoBusiness centroCustoBusiness, IParticipantesBusiness participantesBusiness, IContaBancariaBusiness contaBancariaBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public LancamentoController(ILancamentoBusiness lancamentoBusiness, IArquivosBusiness arquivosBusiness, ICentroCustoBusiness centroCustoBusiness, IParticipantesBusiness participantesBusiness, IContaBancariaBusiness contaBancariaBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness,configuracaoBusiness)
         {
             this.centroCustoBusiness = centroCustoBusiness;
             this.arquivosBusiness = arquivosBusiness;
@@ -51,7 +51,7 @@ namespace SysIgreja.Controllers
 
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
             ViewBag.CentroCustoPagar = centroCustoBusiness.GetCentroCustos().Where(x => x.Tipo == TiposCentroCustoEnum.Despesa).ToList();
-            ViewBag.CentroCustoReceber = centroCustoBusiness.GetCentroCustos().Where(x => x.Tipo == TiposCentroCustoEnum.Receita).ToList();
+            ViewBag.CentroCustoReceber = centroCustoBusiness.GetCentroCustos().Where(x => x.Tipo == TiposCentroCustoEnum.Receita).ToList();            
             ViewBag.CentroCustos = centroCustoBusiness.GetCentroCustos().ToList();
             ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
                 .Select(x => new ContaBancariaViewModel
@@ -175,21 +175,18 @@ namespace SysIgreja.Controllers
         {
             var result = lancamentoBusiness.GetLancamentoById(Id);
 
-            return Json(new
-            {
-                Lancamento = new
-                {
-                    result.Id,
-                    result.CentroCustoId,
-                    result.Descricao,
-                    result.Origem,
-                    result.Valor,
-                    DataLancamento = result.DataCadastro,
-                    result.MeioPagamentoId,
-                    result.Observacao,
-                    result.ContaBancariaId
+            return Json(new { Lancamento = new { 
+                result.Id,
+                result.CentroCustoId,
+                result.Descricao,
+                result.Origem,
+                result.Valor,
+                DataLancamento = result.DataCadastro,
+                result.MeioPagamentoId,
+                result.Observacao,
+                result.ContaBancariaId
 
-                }
+            } 
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -203,12 +200,12 @@ namespace SysIgreja.Controllers
                 {
                     x.Tipo,
                     MeioPagamento = x.MeioPagamento.Descricao.Contains("Cartão") ? "Cartão" : x.MeioPagamento.Descricao
-                })
+                })                
                 .Select(x => new {
                     Tipo = x.Key.Tipo,
                     MeioPagamento = x.Key.MeioPagamento,
                     Valor = x.Sum(y => y.Valor)
-                })
+                })                
                 .ToList()
                 .Select(x => new {
                     Tipo = x.Tipo.GetDescription(),
@@ -225,12 +222,12 @@ namespace SysIgreja.Controllers
         {
             var result = lancamentoBusiness
                 .GetLancamentos()
-                .Where(x => x.EventoId == EventoId)
+                .Where(x => x.EventoId == EventoId)                
                 .ToList()
                 .Select(x => new {
                     Tipo = x.Tipo.GetDescription(),
                     MeioPagamento = x.MeioPagamento.Descricao,
-                    Valor = x.Valor,
+                    Valor = x.Valor, 
                     CentroCusto = x.CentroCusto.Descricao,
                     Descricao = UtilServices.CapitalizarNome(x.Descricao),
                     Origem = UtilServices.CapitalizarNome(x.Origem),

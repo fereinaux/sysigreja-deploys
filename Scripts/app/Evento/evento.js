@@ -1,7 +1,7 @@
 ﻿function CarregarTabelaEvento() {
     const tableEventoConfig = {
         language: languageConfig,
-        lengthMenu: [200, 500, 1000],
+        lengthMenu: [200,500,1000],
         colReorder: false,
         serverSide: false,
         deferloading: 0,
@@ -9,7 +9,7 @@
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true,stateSave: true,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('Eventos'),
@@ -20,9 +20,8 @@
                     return `${row.TipoEvento} ${row.Numeracao}`;
                 }
             },
-            { data: "Capacidade", name: "Capacidade", autoWidth: true },
-            { data: "Valor", name: "Valor", autoWidth: true },
-            { data: "ValorTaxa", name: "ValorTaxa", autoWidth: true },
+            { data: "Capacidade", name: "Capacidade", autoWidth: true},
+            { data: "Valor", name: "Valor", autoWidth: true},
             {
                 data: "DataEvento", name: "DataEvento", autoWidth: true,
                 "render": function (data, type, row) {
@@ -67,7 +66,6 @@ function GetEvento(id) {
                 $("#evento-numeracao").val(data.Evento.Numeracao);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
                 $("#evento-valor").val(data.Evento.Valor);
-                $("#evento-taxa").val(data.Evento.ValorTaxa);
                 $("#evento-data").val(moment(data.Evento.DataEvento).format('DD/MM/YYYY'));
                 $("#evento-tipo").val(data.Evento.TipoEvento).trigger("chosen:updated");
             }
@@ -79,7 +77,6 @@ function GetEvento(id) {
         $("#evento-capacidade").val("");
         $("#evento-data").val("");
         $("#evento-valor").val("");
-        $("#evento-taxa").val("");
     }
 }
 
@@ -138,12 +135,11 @@ function PostEvento() {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(
                 {
-                    Id: $("#evento-id").val(),
+                    Id: $("#evento-id").val(),        
                     TipoEvento: $("#evento-tipo").val(),
                     Numeracao: $("#evento-numeracao").val(),
                     Capacidade: $("#evento-capacidade").val(),
                     Valor: $("#evento-valor").val(),
-                    ValorTaxa: $("#evento-taxa").val(),
                     DataEvento: moment($("#evento-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON()
                 }),
             success: function () {
@@ -152,7 +148,7 @@ function PostEvento() {
                 $("#modal-eventos").modal("hide");
             }
         });
-    }
+    } 
 }
 
 $(document).ready(function () {
@@ -177,7 +173,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true,stateSave: true,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -267,7 +263,7 @@ function GetTipos(id) {
             data.Tipos.forEach(function (tipo, index, array) {
                 $('#evento-tipo').append($(`<option value="${tipo.Id}">${tipo.Description}</option>`));
             });
-            $("#evento-tipo").val($("#evento-tipo option:first").val()).trigger("chosen:updated");
+            $("#evento-tipo").val($("#evento-tipo option:first").val()).trigger("chosen:updated");            
         }
     });
 }

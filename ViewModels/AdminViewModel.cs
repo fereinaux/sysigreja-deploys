@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Data.Entities;
+using System.Collections.Generic;
 
 namespace SysIgreja.ViewModels
 {
@@ -21,5 +22,5 @@ namespace SysIgreja.ViewModels
         public List<ReuniaoViewModel> Reunioes { get; set; }
     }
 
-
+    
 }

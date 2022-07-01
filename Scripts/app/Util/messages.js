@@ -34,11 +34,6 @@ async function ConfirmMessage(message) {
     });
 }
 
-
-async function CustomSwal(options) {
-    return await swal(options);
-}
-
 async function ConfirmMessageDelete() {
     return await ConfirmMessage("Essa ação excluirá permanentemente o registro, deseja continuar?");
 }

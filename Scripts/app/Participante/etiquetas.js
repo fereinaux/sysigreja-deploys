@@ -518,7 +518,7 @@ function GetEquipantes() {
     $("#etiquetas-equipantes").empty();
     $('#etiquetas-equipantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Equipe/GetEquipantesByEvento',
+        url: '/Equipe/GetEquipantesByEventoSelect',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "GET",

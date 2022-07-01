@@ -477,19 +477,19 @@ function ImprimirIndividual(data, position) {
 
     } else {
         var equipante = data.Equipante;
-        heightNome = multiplicador * 45;
-        heightApelido = multiplicador * 45;
-        heightEquipe = multiplicador * 45;
-        heightNome += 42;
-        heightApelido += 57;
-        heightEquipe += 68;
+        heightNome = multiplicador *  33.9;
+        heightApelido = multiplicador *  33.9;
+        heightEquipe = multiplicador *  33.9;
+        heightNome += 31;
+        heightApelido += 38;
+        heightEquipe += 44;
         printDoc.setFont('helvetica', "normal")
-        printDoc.setFontSize(18);
+        printDoc.setFontSize(15);
         printDoc.text(width, heightEquipe, "  (" + equipante.Equipe + ")", 'center');
         var splitNome = printDoc.splitTextToSize(equipante.Nome, 100);
         printDoc.text(width, heightNome, splitNome, 'center');
         printDoc.setFont('helvetica', "bold")
-        printDoc.setFontSize(30);
+        printDoc.setFontSize(18);
         printDoc.text(width, splitNome.length > 1 ? heightApelido + 4 : heightApelido, equipante.Apelido, 'center');
     }
     printDoc.autoPrint();

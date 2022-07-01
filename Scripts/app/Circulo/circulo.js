@@ -1,11 +1,4 @@
-﻿const map = initMap('map')
-const markerLayer = createMarkerLayer(map)
-map.setView([-8.050000, -34.900002], 10);
-setInterval(function () {
-    map.invalidateSize();
-}, 100);
-
-function CarregarTabelaCirculo() {
+﻿function CarregarTabelaCirculo() {
 
     $('#gerenciar').text("Gerenciar Círculos");
     $('#participantes-sem').text("Participantes sem Círculo");
@@ -14,7 +7,7 @@ function CarregarTabelaCirculo() {
         { data: "Cor", name: "Cor", autoWidth: true },
         { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
         {
-            data: "Id", name: "Id", orderable: false, width: "15%",
+            data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
             "render": function (data, type, row) {
                 return `
                             ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
@@ -23,6 +16,20 @@ function CarregarTabelaCirculo() {
             }
         }
     ]
+
+    $("#circulo-dirigentes").html(` <div class="col-sm-6 p-w-md m-b-sm">
+                                <h5>Dirigente 1</h5>
+                                <select class="form-control chosen-select" id="circulo-dirigente1"></select>
+                            </div>
+                            <div class="col-sm-6 p-w-md m-b-sm">
+                                <h5>Dirigente 2</h5>
+                                <select class="form-control chosen-select" id="circulo-dirigente2"></select>
+                            </div>`)
+
+    $("#circulo-cabecalho").html(`<th>Equipante</th>
+                        <th>Cor</th>
+                        <th>Membros </th>
+                        <th>Ações</th>`)
 
 
     const tableCirculoConfig = {
@@ -61,17 +68,10 @@ $(document).ready(function () {
         });
     });
 
-    CirculoRefresh()
-});
-
-
-function CirculoRefresh() {
-
     CarregarTabelaCirculo();
     GetParticipantesSemCirculo();
     GetCirculosComParticipantes();
-    GetCoresAtivas()
-}
+});
 
 function PrintCirculo(row) {
     $.ajax({
@@ -82,47 +82,49 @@ function PrintCirculo(row) {
         success: (result) => {
             var doc = CriarPDFA4();
 
-            var evento = $("#circulo-eventoid option:selected").text()
+            FillDoc(doc, result)
 
-            if (logoRelatorio) {
-                var img = new Image();
-                img.src = `data:image/png;base64,${logoRelatorio}`;
-                doc.addImage(img, 'PNG', 10, 10, 50, 21);
-            }
-
-            doc.setFont('helvetica', "normal")
-            doc.setFontSize(12);
-            doc.text(77, 15, $("#circulo-eventoid option:selected").text());
-
-
-
-            doc.text(77, 20, `Círculo ${row.Cor}`);
-            doc.text(77, 25, `${row.Dirigente1}`);
-
-            doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
-            doc.line(10, 38, 195, 38);
-
-            doc.setFont('helvetica', "bold")
-            doc.text(12, 43, "Nome");
-            doc.text(117, 43, "Apelido");
-            doc.text(152, 43, "Whatsapp");
-
-            doc.line(10, 45, 195, 45);
-            doc.setFont('helvetica', "normal")
-            height = 50;
-
-            $(result.data).each((index, participante) => {
-                doc.text(12, height, participante.Nome);
-                doc.text(117, height, participante.Apelido);
-                doc.text(152, height, participante.Fone);
-                height += 6;
-            });
-
-            AddCount(doc, result.data, height);
 
             printDoc(doc);
         }
     });
+}
+
+function FillDoc(doc, result) {
+    if (logoRelatorio) {
+        var img = new Image();
+        img.src = `data:image/png;base64,${logoRelatorio}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
+
+
+    doc.setFont('helvetica', "normal")
+    doc.setFontSize(12);
+    doc.text(77, 15, $("#circulo-eventoid option:selected").text());
+
+    doc.text(77, 20, `Círculo ${result.data[0].Cor}`);
+    doc.text(77, 25, `${result.data[0].Dirigente1}`);
+
+    doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
+    doc.line(10, 38, 195, 38);
+
+    doc.setFont('helvetica', "bold")
+    doc.text(12, 43, "Nome");
+    doc.text(117, 43, "Apelido");
+    doc.text(152, 43, "Whatsapp");
+
+    doc.line(10, 45, 195, 45);
+    doc.setFont('helvetica', "normal")
+    height = 50;
+
+    $(result.data).each((index, participante) => {
+        doc.text(12, height, participante.Nome);
+        doc.text(117, height, participante.Apelido);
+        doc.text(152, height, participante.Fone);
+        height += 6;
+    });
+
+    AddCount(doc, result.data, height);
 }
 
 function GetCirculo(id, cor) {
@@ -139,9 +141,9 @@ function GetCirculo(id, cor) {
                 $('#circulo-cores').append($(`<option value="${data.Circulo.Cor}">${cor}</option>`));
                 $("#circulo-cores").val(data.Circulo.Cor).trigger("chosen:updated");
 
-                $('#circulo-dirigente1').append($(`<option value="${data.Circulo.Dirigente1.Id}">${data.Circulo.Dirigente1.Equipante.Nome}</option>`));
                 $("#circulo-dirigente1").val(data.Circulo.Dirigente1Id).trigger("chosen:updated");
 
+                $("#circulo-dirigente2").val(data.Circulo.Dirigente2Id).trigger("chosen:updated");
 
 
             }
@@ -153,9 +155,9 @@ function GetCirculo(id, cor) {
 }
 
 function EditCirculo(row) {
-    GetEquipantes();
+    GetEquipantes(row)
     GetCores();
-    GetCirculo(row.Id, row.Cor);
+
     $("#modal-circulo").modal();
 }
 
@@ -193,6 +195,7 @@ function PostCirculo() {
                     Id: $("#circulo-id").val(),
                     EventoId: $("#circulo-eventoid").val(),
                     Dirigente1Id: $("#circulo-dirigente1").val(),
+                    Dirigente2Id: $("#circulo-dirigente2").val(),
                     Cor: $("#circulo-cores").val()
                 }),
             success: function () {
@@ -226,8 +229,8 @@ function DistribuirCirculos() {
 }
 
 
-function GetEquipantes(id) {
-    $("#circulo-dirigente1").empty();
+function GetEquipantes(row) {
+    $("#circulo-equipantes").empty();
 
     $.ajax({
         url: "/Circulo/GetEquipantes/",
@@ -242,10 +245,7 @@ function GetEquipantes(id) {
             });
             $("#circulo-dirigente1").val($("#circulo-dirigente1 option:first").val()).trigger("chosen:updated");
             $("#circulo-dirigente2").val($("#circulo-dirigente2 option:eq(1)").val()).trigger("chosen:updated");
-            if ($("#circulo-equipantes option").length === 0 && id == 0) {
-                ErrorMessage("Não existem Equipantes disponíveis");
-                $("#modal-circulo").modal("hide");
-            }
+            GetCirculo(row.Id, row.Cor);
         }
     });
 }
@@ -271,37 +271,6 @@ function GetParticipantesSemCirculo() {
 }
 
 
-
-function addMapa(lat, long, nome, cor,id) {
-    var marker = L.marker([lat, long], { icon: getIcon(cor.toLowerCase().replaceAll(' ', '-')) }).on('click', function (e) { clickMarker(id) }).addTo(markerLayer);
-
-
-}
-
-function clickMarker(id) {
-    $.ajax({
-        url: "/Participante/GetParticipante/",
-        data: { Id: id },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            $("#participante-nome").text(data.Participante.Nome)
-            $("#participante-id").val(data.Participante.Id)
-
-            $('#participante-cor').val($(`#participante-cor option:contains(${data.DadosAdicionais.Circulo})`).val()).trigger("chosen:updated");
-            $("#modal-cores").modal();
-        }
-    })
-
-   
-}
-
-$("#modal-cores").on('hidden.bs.modal', function () {
-    ChangeCirculo($("#participante-id").val(), $('#participante-cor').val())
-});
-
-
 function GetCirculosComParticipantes() {
     $("#circulos").empty();
 
@@ -312,8 +281,13 @@ function GetCirculosComParticipantes() {
         type: "POST",
         success: function (data) {
             data.data.forEach(function (circulo, index, array) {
+
+                htmlCaecalhoCirculo = `<h4 style="padding-top:5px">${circulo.Dirigente1}</h4>
+                        <h4 style="padding-bottom:5px">${circulo.Dirigente2}</h4>`
+
+
                 $("#circulos").append($(`<div data-id="${circulo.Id}" style="margin-bottom:25px;background-color:${GetCor(circulo.Cor)};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
-                  <h4 style="padding-top:5px">${circulo.Dirigente1}</h4>                    
+                       ${htmlCaecalhoCirculo}                        
                                     <table class="table">
                                         <tbody id="pg-${circulo.Id}">
                                             
@@ -330,16 +304,10 @@ function GetCirculosComParticipantes() {
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
-                    markerLayer.getLayers().forEach(mark => mark.remove())
                     data.Circulos.forEach(function (circulo, index, array) {
-                        if (circulo.Latitude && circulo.Longitude) {
-                            addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId)
-
-                        }
-
                         $(`#pg-${circulo.CirculoId}`).append($(`<tr><td class="participante" data-id="${circulo.ParticipanteId}">${circulo.Nome}</td></tr>`));
                     });
-                    $('.div-map').css('display', 'block')
+
                     DragDropg();
                 }
             });
@@ -387,29 +355,7 @@ function ChangeCirculo(participanteId, destinoId) {
                 DestinoId: destinoId
             }),
         success: function () {
-            CirculoRefresh();
-        }
-    });
-}
-
-function GetCoresAtivas() {
-    $("#participante-cor").empty();
-    $.ajax({
-        url: "/Circulo/GetCoresAtivas/",
-        data: { EventoId: $("#circulo-eventoid").val() },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {            
-            data.Cores.forEach(function (cor, index, array) {                
-                $('#participante-cor').append($(`<option value="${cor.Id}">${cor.Cor}</option>`));
-                $("#participante-cor").trigger("chosen:updated");
-            });
-
-            if ($("#participante-cor option").length === 0 && id == 0) {
-                ErrorMessage("Não existem Cores disponíveis");
-                $("#modal-cores").modal("hide");
-            }
+            CarregarTabelaCirculo();
         }
     });
 }
@@ -425,7 +371,6 @@ function GetCores(id) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             data.Cores.forEach(function (cor, index, array) {
-
                 $('#circulo-cores').append($(`<option value="${cor.Id}">${cor.Description}</option>`));
             });
             if (id == 0) {
@@ -440,4 +385,41 @@ function GetCores(id) {
             }
         }
     });
+}
+
+
+function PrintAll() {
+    var doc = CriarPDFA4()
+    $.ajax({
+        url: '/Circulo/GetCirculos',
+        datatype: "json",
+        data: { EventoId: $("#circulo-eventoid").val() },
+        type: "POST",
+        success: function (data) {
+            var arrPromises = []
+            data.data.forEach(element => {
+                if (element.QtdParticipantes > 0) {
+                    arrPromises.push($.ajax({
+                        url: '/Participante/GetParticipantesByCirculo',
+                        data: { CirculoId: element.Id },
+                        datatype: "json",
+                        type: "GET"
+
+                    }))
+                }
+            })
+            Promise.all(arrPromises).then(result => {
+                result.forEach((data, index) => {
+                    if (data.data.length > 0) {
+                        if (index > 0) {
+                            doc.addPage()
+                        } FillDoc(doc, data)
+                    }
+                })
+                printDoc(doc);
+            })
+
+        }
+    })
+
 }

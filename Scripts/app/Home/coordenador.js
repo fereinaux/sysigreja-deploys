@@ -24,7 +24,7 @@ function CarregarTabelaArquivos() {
                     </tr>`;
             });
             console.log(html);
-            $('.tbarquivos').html(html);            
+            $('.tbarquivos').html(html);
 
             $("td.fa").css("font-size", "25px");
             $("td").css("font-size", "15px");

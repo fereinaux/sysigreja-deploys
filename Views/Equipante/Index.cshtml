@@ -101,36 +101,6 @@
     </div>
 </div>
 
-<div class="modal inmodal" id="modal-opcoes" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content animated bounceInRight">
-            <div class="modal-body">
-                <div class="moldura-modal p-h-xs" id="form-opcoes">
-                    <h2 class="text-center realista-nome">Nome</h2>
-                    <div class="row m-md">
-                        <h3 class="text-center">Mensagem</h3>
-                        <select class="form-control m-b-lg" id="msg-list">
-                        </select>
-
-                        <h3 class="text-center">Marcadores</h3>
-                        <select class="form-control equipante-etiquetas" id="equipante-etiquetas" multiple="multiple" style="width: 100%">
-                        </select>
-                    </div>
-
-                    <div style="display:flex; width:100%">
-
-                        <button type="button" class="btn btn-primary" style="margin-left:auto;margin-right:10px" onclick="enviar()">Enviar</button>
-                        <a target="_blank" href="#" class="btn btn-info btn-ligar" style="margin-right:auto">Ligar</a>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal inmodal" id="modal-equipantes" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content animated bounceInRight">
@@ -138,7 +108,7 @@
                 <div class="moldura-modal p-h-xs" id="form-equipante">
                     <div class="row p-h-xs">
                         <input type="hidden" id="equipante-id" />
-
+       
                         <div class="col-sm-12 p-w-md m-t-md text-center">
                             <h5>Nome</h5>
 
@@ -283,6 +253,46 @@
     </div>
 </div>
 
+
+<div class="modal inmodal" id="modal-opcoes" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal" style="position:relative;background-color:white;padding:20px">
+                    <button type="button" class="btn btn-primary" id="btn-previous" onclick="previous()" style="position:absolute;top:20px;left:20px">Anterior</button>
+                    <h2 class="text-center realista-nome" style="width:100%;margin:0">Nome</h2>
+                    <button type="button" class="btn btn-primary" id="btn-next" onclick="next()" style="position:absolute;top:20px;right:20px">Próximo</button>
+                </div>
+                <div class="moldura-modal p-h-xs" id="form-opcoes">
+                    <div class="row m-md">
+                        <h3 class="text-center">Mensagem</h3>
+                        <select class="form-control m-b-lg" id="msg-list">
+                        </select>
+
+                        <h3 class="text-center">Marcadores</h3>
+                        <select class="form-control equipante-etiquetas" id="equipante-etiquetas" multiple="multiple" style="width: 100%">
+                        </select>
+                    </div>
+
+                    <h3 class="text-center">Observações</h3>
+                    <div class="row m-md">
+                        <textarea style="height: 200px" class="form-control required" id="equipante-obs"></textarea>
+                    </div>
+
+
+                    <div style="display:flex; width:100%">
+
+                        <button type="button" class="btn btn-primary" style="margin-left:auto;margin-right:10px" onclick="enviar()">Enviar</button>
+                        <a target="_blank" href="#" class="btn btn-info btn-ligar" style="margin-right:auto">Ligar</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal inmodal" id="modal-pagamentos" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">

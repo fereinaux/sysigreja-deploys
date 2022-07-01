@@ -14,7 +14,7 @@
         dom: domConfig,
         buttons: getButtonsConfig('Centros de Custo'),
         columns: [
-            { data: "Descricao", name: "Descricao", autoWidth: true },
+            { data: "Descricao", name: "Descricao", autoWidth: true },   
             { data: "Tipo", name: "Tipo", autoWidth: true },   
             {
                 data: "Id", name: "Id", orderable: false, width: "25%",

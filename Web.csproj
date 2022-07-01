@@ -79,6 +79,9 @@
     <Reference Include="EvernoteSDK, Version=1.0.12.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\evernote-cloud-sdk-windows.1.0.8\lib\net40\EvernoteSDK.dll</HintPath>
     </Reference>
+    <Reference Include="Firebase.Auth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Firebase.Auth.1.0.0\lib\netstandard1.1\Firebase.Auth.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -753,8 +756,6 @@
   <ItemGroup>
     <Folder Include="App_Data\uploads\" />
     <Folder Include="Content\app\" />
-    <Folder Include="Images\Icons\" />
-    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -840,6 +841,7 @@
     <Content Include="Content\Images\login_Patrimonio.png" />
     <Content Include="Content\Images\logo-bradesco-.png" />
     <Content Include="Content\plugins\dataTables\responsive.dataTables.min.css" />
+    <Content Include="firebase-messaging-sw.js" />
     <Content Include="fonts\font-awesome\css\all.css" />
     <Content Include="fonts\font-awesome\css\all.min.css" />
     <Content Include="fonts\font-awesome\css\brands.css" />
@@ -860,9 +862,12 @@
     <Content Include="Images\background-login.png" />
     <Content Include="Images\calibri-bold.js" />
     <Content Include="Images\calibri-normal.js" />
+    <Content Include="Images\circulos\Amarelo.png" />
+    <Content Include="Images\circulos\Azul Claro.png" />
     <Content Include="Images\circulos\Laranja.png" />
     <Content Include="Images\circulos\Lilás.png" />
     <Content Include="Images\circulos\Rosa.png" />
+    <Content Include="Images\circulos\Verde Claro.png" />
     <Content Include="Images\circulos\Verde Escuro.png" />
     <Content Include="Images\circulos\Vermelho.png" />
     <Content Include="Images\equipes\Bomboniere.png" />
@@ -998,6 +1003,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Images\background-login.jpg" />
     <Content Include="Images\crown.png" />
+    <Content Include="Images\Icons\128x128.png" />
+    <Content Include="Images\Icons\144x144.png" />
+    <Content Include="Images\Icons\152x152.png" />
+    <Content Include="Images\Icons\192x192.png" />
+    <Content Include="Images\Icons\384x384.png" />
+    <Content Include="Images\Icons\512x512.png" />
+    <Content Include="Images\Icons\72x72.png" />
+    <Content Include="Images\Icons\96x96.png" />
     <Content Include="Images\logo-branco.png" />
     <Content Include="Images\logo-preto.png" />
     <Content Include="Images\pagSeguro.png" />
@@ -1014,7 +1027,7 @@
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff" />
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff2" />
     <Content Include="Images\mapa\marker.psd" />
-    <Content Include="Content\loader.css" />
+    <Content Include="manifest.json" />
     <None Include="packages.config" />
     <Content Include="Content\landing\avatar_all.png" />
     <Content Include="Content\landing\header_one.jpg" />
@@ -1111,6 +1124,7 @@
     <Content Include="Scripts\plugins\sweetalert\sweetalert.min.js" />
     <Content Include="Scripts\plugins\validate\jquery.validate.min.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\sw.js" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1179,6 +1193,8 @@
     <Content Include="Views\Quarto\QuartoEquipe.cshtml" />
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
     <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
+    <None Include="Properties\PublishProfiles\SysIgreja Deploy.pubxml" />
+    <Content Include="Views\Shared\_Inscricoes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

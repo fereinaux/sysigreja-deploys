@@ -1,7 +1,7 @@
 ﻿function CarregarTabelaEtiquetas() {
     const tableEtiquetasConfig = {
         language: languageConfig,
-        lengthMenu: [200,500,1000],
+        lengthMenu: [200, 500, 1000],
         colReorder: false,
         serverSide: false,
         deferloading: 0,
@@ -9,17 +9,18 @@
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true,stateSave: true,
+        responsive: true, stateSave: true,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('Marcadores'),
         columns: [
             { data: "Nome", name: "Nome", autoWidth: true },
             {
-                data: "Cor", className:"pos-relative", name: "Cor", autoWidth: true, render: function (data, type, row) {
+                data: "Cor", className: "pos-relative", name: "Cor", autoWidth: true, render: function (data, type, row) {
 
                     return `<span style="background-color:${data};position:absolute;top:0;left:0;right:0;bottom:0"></span>`;
-                } },
+                }
+            },
             {
                 data: "Id", name: "Id", orderable: false, width: "25%",
                 "render": function (data, type, row) {
@@ -109,7 +110,7 @@ function PostEtiqueta() {
                 $("#modal-etiqueta").modal("hide");
             }
         });
-    } 
+    }
 }
 
 $(document).ready(function () {

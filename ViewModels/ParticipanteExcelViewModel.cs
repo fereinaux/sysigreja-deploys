@@ -12,12 +12,10 @@ namespace SysIgreja.ViewModels
         public string Sexo { get; set; }
         public string Email { get; set; }
         public string Fone { get; set; }
-        [DisplayName("Tamanho da Camisa")]
-        public string Camisa { get; set; }
         [DisplayName("Nome da Mãe")]
         public string NomeMae { get; set; }
         [DisplayName("Fone da Mãe")]
-        public string FoneMae{ get; set; }
+        public string FoneMae { get; set; }
         [DisplayName("Nome do Pai")]
         public string NomePai { get; set; }
         [DisplayName("Fone do Pai")]

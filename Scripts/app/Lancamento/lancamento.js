@@ -21,7 +21,7 @@
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true,stateSave: true,
+        responsive: true, stateSave: true,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('A Receber'),
@@ -117,7 +117,7 @@ function ChangeMeioPagamento() {
         $('.contabancaria').addClass('d-none');
 }
 
-function EditLancamento(params) {    
+function EditLancamento(params) {
     GetLancamento(params.Id);
     $("#lancamento-tipo").val(params.Tipo == "Receber" ? 1 : 2);
     if (params.Tipo == 'Receber') {
@@ -210,7 +210,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true,stateSave: true,
+        responsive: true, stateSave: true,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -303,20 +303,20 @@ function PrintRecibo(id) {
             var text = `Recebi do ${$("#lancamento-eventoid option:selected").text()}, a importância de ${data.Lancamento.Valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} referente a ${data.Lancamento.Descricao}.`;
             var valor = data.Lancamento.Valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             moment.locale("pt-br");
-            var dataExtenso = `${moment().format('D')} de ${moment().format('MMMM')} de ${moment().format('YYYY')}`; 
+            var dataExtenso = `${moment().format('D')} de ${moment().format('MMMM')} de ${moment().format('YYYY')}`;
 
-            doc.setFont('helvetica',"bold")
+            doc.setFont('helvetica', "bold")
             doc.text(94, 20, "RECIBO");
             doc.text(150, 30, `Valor: ${valor}`);
 
-            doc.setFont('helvetica',"normal")
+            doc.setFont('helvetica', "normal")
             splitText = doc.splitTextToSize(text, 160);
             doc.text(20, 50, splitText);
             doc.text(110, 83, `Recife, ${dataExtenso}`);
 
             doc.line(20, 98, 100, 98);
             doc.text(20, 105, data.Lancamento.Observacao);
-                       
+
             printDoc(doc);
         }
     });

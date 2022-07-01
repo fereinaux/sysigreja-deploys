@@ -8,6 +8,24 @@ if ($('#map').length > 0) {
     function verificaCep(input) {
         let cep = $(input).val()
         if (cep.length == 9) {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+                baseZ: 1500,
+                overlayCSS: {
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
             $.ajax({
                 url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
                 datatype: "json",
@@ -20,10 +38,30 @@ if ($('#map').length > 0) {
                     $(`#participante-estado`).val(data.uf)
                     $(`#participante-latitude`).val(data.lat)
                     $(`#participante-longitude`).val(data.lon)
+                    $.unblockUI();
                     markerLayer.getLayers().forEach(mark => mark.remove())
-                    var marker = L.marker([data.lat, data.lon], { icon: getIcon('vermelho') }).addTo(markerLayer);
+                    var marker = L.marker([data.lat, data.lon], {
+                        icon: getIcon('vermelho'),  draggable: true,
+                        autoPan: true}).addTo(markerLayer);
+                    marker.on('moveend', function (event) {
+                        $(`#participante-latitude`).val(event.target._latlng.lat)
+                        $(`#participante-longitude`).val(event.target._latlng.lng)
+                       
+                    });
                     $('#map').css('display', 'block')
                     map.setView([data.lat, data.lon], 18);
+                    map.on('click', function (event) {
+                        markerLayer.getLayers().forEach(mark => mark.remove())
+                        var marker = L.marker([event.latlng.lat, event.latlng.lng], {
+                            icon: getIcon('vermelho'), draggable: true,
+                            autoPan: true
+                        }).addTo(markerLayer);
+                        marker.on('moveend', function (event) {
+                            $(`#participante-latitude`).val(event.latlng.lat)
+                            $(`#participante-longitude`).val(event.latlng.lng)
+
+                        });
+                    })
                 }
             })
         }
@@ -74,6 +112,7 @@ function VerificaCadastro() {
                 $(".pnl-cadastro").show();
                 $(".pnl-verifica").hide();
                 $('.inscricoes.middle-box').height('80%');
+                $('.inscricoes.middle-box').css('overflow-y','auto');
                 $('.float').css("bottom", "40px")
 
             }
@@ -88,51 +127,50 @@ Email: exemplo@provedor.com.br`);
 
 function PostInscricao() {
     if (ValidateForm(`#form-inscricao`)) {
-        $.ajax({
-            url: "/Inscricoes/PostInscricao/",
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                {
-                    Nome: $(`#participante-nome`).val(),
-                    Apelido: $(`#participante-apelido`).val(),
-                    DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
-                    Email: $(`#participante-email`).val(),
-                    Fone: $(`#participante-fone`).val(),
-                    Instagram: $(`#participante-instagram`).val(),
-                    Profissao: $(`#participante-profissao`).val(),
-                    Camisa: $(`#participante-camisa`).val(),
-                    CEP: $(`#participante-cep`).val(),
-                    Logradouro: $(`#participante-logradouro`).val(),
-                    Bairro: $(`#participante-bairro`).val(),
-                    Cidade: $(`#participante-cidade`).val(),
-                    Estado: $(`#participante-estado`).val(),
-                    Numero: $(`#participante-numero`).val(),
-                    Complemento: $(`#participante-complemento`).val(),
-                    Referencia: $(`#participante-referencia`).val(),
-                    Latitude: $(`#participante-latitude`).val(),
-                    Longitude: $(`#participante-longitude`).val(),
-                    HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
-                    RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
-                    HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
-                    Medicacao: $(`#participante-medicacao`).val(),
-                    HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
-                    Alergia: $(`#participante-alergia`).val(),
-                    Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
-                    NomePai: $(`#participante-nome-pai`).val(),
-                    FonePai: $(`#participante-fone-pai`).val(),
-                    NomeMae: $(`#participante-nome-mae`).val(),
-                    FoneMae: $(`#participante-fone-mae`).val(),
-                    NomeConvite: $(`#participante-nome-convite`).val(),
-                    FoneConvite: $(`#participante-fone-convite`).val(),
-                    NomeContato: $(`#participante-nome-contato`).val(),
-                    FoneContato: $(`#participante-fone-contato`).val(),
-                }),
-            success: function (url) {
-                window.location.href = url;
-            }
-        });
+            $.ajax({
+                url: "/Inscricoes/PostInscricao/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Nome: $(`#participante-nome`).val(),
+                        Apelido: $(`#participante-apelido`).val(),
+                        DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                        Email: $(`#participante-email`).val(),
+                        Fone: $(`#participante-fone`).val(),
+                        Instagram: $(`#participante-instagram`).val(),
+                        Profissao: $(`#participante-profissao`).val(),
+                        CEP: $(`#participante-cep`).val(),
+                        Logradouro: $(`#participante-logradouro`).val(),
+                        Bairro: $(`#participante-bairro`).val(),
+                        Cidade: $(`#participante-cidade`).val(),
+                        Estado: $(`#participante-estado`).val(),
+                        Numero: $(`#participante-numero`).val(),
+                        Complemento: $(`#participante-complemento`).val(),
+                        Referencia: $(`#participante-referencia`).val(),
+                        Latitude: $(`#participante-latitude`).val(),
+                        Longitude: $(`#participante-longitude`).val(),
+                        HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
+                        RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
+                        HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
+                        Medicacao: $(`#participante-medicacao`).val(),
+                        HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
+                        Alergia: $(`#participante-alergia`).val(),
+                        Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
+                        NomePai: $(`#participante-nome-pai`).val(),
+                        FonePai: $(`#participante-fone-pai`).val(),
+                        NomeMae: $(`#participante-nome-mae`).val(),
+                        FoneMae: $(`#participante-fone-mae`).val(),
+                        NomeConvite: $(`#participante-nome-convite`).val(),
+                        FoneConvite: $(`#participante-fone-convite`).val(),
+                        NomeContato: $(`#participante-nome-contato`).val(),
+                        FoneContato: $(`#participante-fone-contato`).val(),
+                    }),
+                success: function (url) {
+                    window.location.href = url;
+                }
+            });        
     }
 }
 
@@ -194,5 +232,6 @@ $('#not-restricaoalimentar').on('ifChecked', function (event) {
 });
 
 $(".pnl-cadastro").hide();
-$('.inscricoes.middle-box').height('25%');
+$('.inscricoes.middle-box').height('30%');
+$('.inscricoes.middle-box').css('overflow', 'hidden');
 $('.float').css("bottom", "34%")

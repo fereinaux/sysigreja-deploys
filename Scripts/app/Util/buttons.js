@@ -16,40 +16,23 @@
 
 function GetAnexosButton(functionClick, functionParameter, qtd) {
 
-    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:18px;position:relative" class="text-success  has-badge pointer p-l-xs"  ${qtd > 0 ? 'data-count="' + qtd + '"' : ''}> <i class="fa fa-paperclip data-counter" aria-hidden="true" title="Anexos"></i></span>`
+   return `<span onclick='${functionClick}(${functionParameter})' style="font-size:18px;position:relative" class="text-success  has-badge pointer p-l-xs"  ${qtd > 0 ? 'data-count="' + qtd + '"' : ''}> <i class="fa fa-paperclip data-counter" aria-hidden="true" title="Anexos"></i></span>`
 
-
+    
 }
 
-function openWhatsApp(contact) {
-
-    var popup = window.open(GetLinkWhatsApp(contact.Fone, contact.Text), "event", "width=900,height=900,scrollbars=no,resizable=yes");
-    popup.focus();
-    setTimeout(() => {
-        popup.close()
-        window.focus();
-    }, 2000)
-
-
-}
-
-function getWhatsAppButton(contact) {
-    return GetButton('openWhatsApp', contact, 'verde', 'fab fa-whatsapp', contact.Fone)
-}
-
-
-function GetIconWhatsApp(tel, text) {
-
+function GetIconWhatsApp(tel,text) {  
+    
     return `<a target="_blank" href='${GetLinkWhatsApp(tel, text)}' style="font-size:18px; color:green; " class="pointer p-l-xs"><i class="fab fa-whatsapp" aria-hidden="true" title="${tel}"></i></a>`;
 }
 
 function GetConvidar(tel, nome) {
-
+   
     return `<a target="_blank" href='${GetLinkWhatsApp(tel, Convidar(nome))}' style="font-size:13px" class="text-center label label-primary">Convidar</span>`
 }
 
 function GetLinkWhatsApp(tel, text) {
-    if (!tel || text == undefined)
+    if (!tel)
         return ""
     tel = tel.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '');
     text = typeof text !== "undefined" ? `&text=${EncodeUrl(text)}` : "";

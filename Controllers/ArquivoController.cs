@@ -46,9 +46,9 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetArquivosEquipanteEvento(int eventoid,int equipanteid)
+        public ActionResult GetArquivosEquipanteEvento(int eventoid, int equipanteid)
         {
-            var query = arquivosBusiness.GetArquivosByEquipanteEvento(equipanteid,eventoid );
+            var query = arquivosBusiness.GetArquivosByEquipanteEvento(equipanteid, eventoid);
 
             return MapAqruivos(query);
         }
@@ -70,9 +70,17 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetArquivosEquipe(EquipesEnum Equipe)
+        public ActionResult GetArquivosEquipe(EquipesEnum Equipe, bool IsComunEquipe)
         {
-            var query = arquivosBusiness.GetArquivosByEquipe(Equipe);
+            var query = arquivosBusiness.GetArquivosByEquipe(Equipe, IsComunEquipe);
+
+            return MapAqruivos(query);
+        }
+
+        [HttpPost]
+        public ActionResult GetArquivosComunEquipe()
+        {
+            var query = arquivosBusiness.GetArquivosComunEquipe();
 
             return MapAqruivos(query);
         }
@@ -96,7 +104,7 @@ namespace SysIgreja.Controllers
             var arquivo = arquivosBusiness.GetArquivoById(Id);
 
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
-        }       
+        }
 
         [HttpPost]
         public int PostArquivo(PostArquivoModel model)

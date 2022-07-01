@@ -64,7 +64,6 @@ function PostParticipante() {
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
                         Fone: $(`#participante-fone`).val(),
-                        Camisa: $(`#participante-camisa`).val(),
                         CEP: $(`#participante-cep`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),
                         Bairro: $(`#participante-bairro`).val(),
@@ -181,7 +180,6 @@ function GetParticipante() {
                 $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
                 $(`#participante-email`).val(data.Participante.Email);
                 $(`#participante-fone`).val(data.Participante.Fone);
-                $(`#participante-camisa`).val(data.Participante.Camisa);
                 $(`#participante-nome-pai`).val(data.Participante.NomePai);
                 $(`#participante-fone-pai`).val(data.Participante.FonePai);
                 $(`#participante-nome-mae`).val(data.Participante.NomeMae);
@@ -323,7 +321,6 @@ function GetEquipante() {
                 $('.dados-participante-contato').addClass('d-none');
                 $('#form-info').addClass('d-none');
                 $('.dados-equipante').removeClass('d-none');
-                $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
                 $('.dados-participante-contato input').removeClass('required');
                 $('.dados-participante-contato input[id*="fone"]').removeClass('fone');
                 $('#marcadores').html(data.Equipante.EtiquetasList.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
@@ -358,8 +355,8 @@ function GetEquipante() {
 
                 $(".participante-info").removeClass('d-none');
 
+                $(".quarto-info").addClass('d-none');
 
-                $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
 
                 if (data.Equipante.Checkin) {
                     $('.status').text("Presente");

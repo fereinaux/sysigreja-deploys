@@ -5,10 +5,14 @@ function CriarPDFA4() {
     return new jsPDF('p', 'mm', "a4");
 }
 
-function AddCabecalhoEvento(doc, titulo, evento) {
-   
+function CriarPDFA4Landscape() {
+    return new jsPDF('l', 'mm', "a4");
+}
 
-    doc.setFont('helvetica',"normal")
+function AddCabecalhoEvento(doc, titulo, evento) {
+
+
+    doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
     if (logoRelatorio) {
         var img = new Image();
@@ -25,7 +29,7 @@ function AddCabecalhoEvento(doc, titulo, evento) {
 function AddCount(doc, data, height, width) {
     height += -3;
     doc.line(10, height, width ? width : 195, height);
-    doc.setFont('helvetica',"bold")
+    doc.setFont('helvetica', "bold")
     doc.text(12, height + 5, "Total:");
     doc.text(24, height + 5, data.length.toString());
 }

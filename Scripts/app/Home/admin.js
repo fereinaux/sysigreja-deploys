@@ -160,7 +160,7 @@ function GetResultadosAdmin() {
 
             htmlResumoFinanc = ''
             receberTotal = 0
-            pagarTotal = 0            
+            pagarTotal = 0
             result.MeiosPagamento.map(mp => {
                 receber = result.Financeiro.find(f => f.Tipo == 'Receber' && f.MeioPagamento == mp)
                 pagar = result.Financeiro.find(f => f.Tipo == 'Pagar' && f.MeioPagamento == mp)

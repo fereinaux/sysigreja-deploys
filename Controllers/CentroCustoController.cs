@@ -47,7 +47,10 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetCentroCusto(int Id)
         {
-            var result = centroCustoBusiness.GetCentroCustoById(Id);
+            var result = centroCustoBusiness.GetCentroCustos().Where(x => x.Id == Id).Select(x => new
+            {
+                x.Descricao,x.Id,x.Tipo
+            }).FirstOrDefault();
 
             return Json(new { CentroCusto = result }, JsonRequestBehavior.AllowGet);
         }

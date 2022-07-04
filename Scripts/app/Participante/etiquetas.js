@@ -477,19 +477,19 @@ function ImprimirIndividual(data, position) {
 
     } else {
         var equipante = data.Equipante;
-        heightNome = multiplicador *  33.9;
-        heightApelido = multiplicador *  33.9;
-        heightEquipe = multiplicador *  33.9;
-        heightNome += 31;
-        heightApelido += 38;
-        heightEquipe += 44;
+        heightNome = multiplicador * 45;
+        heightApelido = multiplicador * 45;
+        heightEquipe = multiplicador * 45;
+        heightNome += 42;
+        heightApelido += 57;
+        heightEquipe += 68;
         printDoc.setFont('helvetica', "normal")
-        printDoc.setFontSize(15);
+        printDoc.setFontSize(18);
         printDoc.text(width, heightEquipe, "  (" + equipante.Equipe + ")", 'center');
         var splitNome = printDoc.splitTextToSize(equipante.Nome, 100);
         printDoc.text(width, heightNome, splitNome, 'center');
         printDoc.setFont('helvetica', "bold")
-        printDoc.setFontSize(18);
+        printDoc.setFontSize(30);
         printDoc.text(width, splitNome.length > 1 ? heightApelido + 4 : heightApelido, equipante.Apelido, 'center');
     }
     printDoc.autoPrint();
@@ -518,7 +518,7 @@ function GetEquipantes() {
     $("#etiquetas-equipantes").empty();
     $('#etiquetas-equipantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Equipe/GetEquipantesByEventoSelect',
+        url: '/Equipe/GetEquipantesByEvento',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "GET",

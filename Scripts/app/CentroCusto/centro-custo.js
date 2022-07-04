@@ -50,6 +50,8 @@ function GetCentroCusto(id) {
                 $("#centro-custo-id").val(data.CentroCusto.Id);
                 $("#centro-custo-descricao").val(data.CentroCusto.Descricao);
                 $("#centro-custo-tipo").val(data.CentroCusto.Tipo).trigger("chosen:updated");
+                console.log(`input[type=radio][name=centro-custo-relatorio][value=${data.CentroCusto.Relatorio}]`);
+                $(`input[type=radio][name=centro-custo-relatorio][value=${data.CentroCusto.Relatorio}]`).iCheck('check');
             }
         });
     }
@@ -57,6 +59,7 @@ function GetCentroCusto(id) {
         $("#centro-custo-id").val(0);
         $("#centro-custo-descricao").val("");
         $("#centro-custo-tipo").val($("#centro-custo-tipo option:first").val()).trigger("chosen:updated");
+        $(`input[type=radio][name=centro-custo-relatorio][value=true]`).iCheck('check');
     }
 }
 
@@ -97,6 +100,7 @@ function PostCentroCusto() {
                 {
                     Id: $("#centro-custo-id").val(),                                        
                     Descricao: $("#centro-custo-descricao").val(),
+                    Relatorio: $("input[type=radio][name=centro-custo-relatorio]:checked").val(),
                     Tipo: $("#centro-custo-tipo").val()
                 }),
             success: function () {

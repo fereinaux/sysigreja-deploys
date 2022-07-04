@@ -12,6 +12,7 @@ using Core.Business.Participantes;
 using Core.Models.Lancamento;
 using SysIgreja.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -194,11 +195,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetConsolidado(int EventoId)
+        public ActionResult GetConsolidado(int EventoId, string Relatorio)
         {
+
+            var arrRel = Relatorio.Split(',');
             var result = lancamentoBusiness
                 .GetLancamentos()
-                .Where(x => x.EventoId == EventoId)
+                .Where(x => x.EventoId == EventoId && x.CentroCustoId.HasValue && arrRel.Contains(x.CentroCustoId.Value.ToString()))
+                .ToList()
                 .GroupBy(x => new
                 {
                     x.Tipo,
@@ -221,11 +225,12 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetDetalhado(int EventoId)
+        public ActionResult GetDetalhado(int EventoId, string Relatorio)
         {
+            var arrRel = Relatorio.Split(',');
             var result = lancamentoBusiness
                 .GetLancamentos()
-                .Where(x => x.EventoId == EventoId)
+                .Where(x => x.EventoId == EventoId && x.CentroCustoId.HasValue && arrRel.Contains(x.CentroCustoId.Value.ToString()))
                 .ToList()
                 .Select(x => new {
                     Tipo = x.Tipo.GetDescription(),

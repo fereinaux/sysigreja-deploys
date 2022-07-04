@@ -1,14 +1,16 @@
 ﻿using Core.Business.Arquivos;
 using Core.Business.Eventos;
 using Core.Models.Arquivos;
+using SysIgreja.ViewModels;
 using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
+using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class ArquivoController : Controller
     {
         private readonly IEventosBusiness eventosBusiness;
@@ -63,6 +65,22 @@ namespace SysIgreja.Controllers
         public ActionResult GetArquivosEvento(int Id)
         {
             var query = arquivosBusiness.GetArquivosByEvento(Id);
+
+            return MapAqruivos(query);
+        }
+
+        [HttpPost]
+        public ActionResult GetArquivosEquipe(EquipesEnum Equipe, bool IsComunEquipe)
+        {
+            var query = arquivosBusiness.GetArquivosByEquipe(Equipe, IsComunEquipe);
+
+            return MapAqruivos(query);
+        }
+
+        [HttpPost]
+        public ActionResult GetArquivosComunEquipe()
+        {
+            var query = arquivosBusiness.GetArquivosComunEquipe();
 
             return MapAqruivos(query);
         }

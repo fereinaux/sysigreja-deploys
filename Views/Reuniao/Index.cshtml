@@ -27,7 +27,7 @@
                         <select class="form-control" id="reuniao-eventoid-consulta" onchange="CarregarTabelaReuniao()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
-                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                             }
                         </select>
                     </div>
@@ -41,6 +41,7 @@
             <table id="table-reunioes" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
                 <thead>
                     <tr>
+                        <th>Título</th>
                         <th>Data da Reunião</th>
                         <th>Presente</th>
                         <th>Ações</th>
@@ -60,9 +61,14 @@
                     <div class="row p-h-xs">
                         <input type="hidden" id="reuniao-id" />
                         <div class="col-sm-6 p-w-md text-center">
-                            <h5>Data da Reunião</h5>
+                            <h5>Data</h5>
 
-                            <input type="text" class="form-control full-date required" id="reuniao-data" data-field="Data da Reunião" />
+                            <input type="text" class="form-control full-date-time required" id="reuniao-data" data-field="Data da Reunião" />
+                        </div>
+                        <div class="col-sm-6 p-w-md text-center">
+                            <h5>Título</h5>
+
+                            <input type="text" class="form-control required" id="reuniao-titulo" data-field="Título da Reunião" />
                         </div>
                     </div>
                 </div>
@@ -101,11 +107,17 @@
 
 
 @section Styles {
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        .dtp {
+            z-index: 2051 !important;
+        }
+    </style>
 }
 
 @section Scripts {
-
+    
     <script src="~/Scripts/app/Reuniao/reuniao.js"></script>
 
     <script>

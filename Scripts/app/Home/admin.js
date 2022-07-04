@@ -63,19 +63,19 @@ function GetResultadosAdmin() {
                                                             </div>
                                                             `
 
-                             
+
                                 if (element.Tipo == "Coordenador") {
                                     htmlDetalhamento += `<tr>                        
                                     <td class="font-bold">Coordenador: ${element.Nome}</td>                        
                                     <td class="equipante-fone">${element.Fone}</td>                                                
                                 </tr>`;
-                                  
+
                                 } else {
                                     htmlDetalhamento += `<tr>                        
                                     <td>${element.Nome}</td>                        
                                     <td class="equipante-fone">${element.Fone}</td>                                                
                                 </tr>`;
-                                }                               
+                                }
 
                                 equipe = element.Equipe;
                             } else {
@@ -158,6 +158,30 @@ function GetResultadosAdmin() {
             $("#receita").text(result.TotalReceber);
             $("#despesa").text(result.TotalPagar);
 
+            htmlResumoFinanc = ''
+            receberTotal = 0
+            pagarTotal = 0
+            result.MeiosPagamento.map(mp => {
+                receber = result.Financeiro.find(f => f.Tipo == 'Receber' && f.MeioPagamento == mp)
+                pagar = result.Financeiro.find(f => f.Tipo == 'Pagar' && f.MeioPagamento == mp)
+                receberValor = receber ? receber.Valor : 0
+                receberTotal += receberValor
+                pagarValor = pagar ? pagar.Valor : 0
+                pagarTotal += pagarValor
+                saldo = receberValor - pagarValor
+                htmlResumoFinanc += `<tr>                        
+                        <td>${mp}</td>
+                        <td>R$ ${receberValor.toLocaleString('pt-br', { minimumFractionDigits: 2 })}</td>
+<td>R$ ${pagarValor.toLocaleString('pt-br', { minimumFractionDigits: 2 })}</td>
+<td>R$ ${saldo.toLocaleString('pt-br', { minimumFractionDigits: 2 })}</td>
+                    </tr>$`
+            })
+            $('#resumo-financeiro').html(htmlResumoFinanc);
+            $('#receberTotal').text(`R$ ${receberTotal.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
+            $('#pagarTotal').text(`R$ ${pagarTotal.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
+            $('#saldoTotal').text(`R$ ${(receberTotal - pagarTotal).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
+
+
             htmlInscritos = '';
             $(result.UltimosInscritos).each((i, element) => {
                 htmlInscritos += `<tr>                        
@@ -202,8 +226,9 @@ function GetResultadosAdmin() {
 
             htmlReunioes = '';
             $(result.Reunioes).each((i, element) => {
-                htmlReunioes += `<tr>                        
-                        <td>${moment(element.DataReuniao).format('DD/MM/YYYY')}</td>                        
+                htmlReunioes += `<tr>
+                        <td>${element.Titulo}</td>
+                        <td>${moment(element.DataReuniao).format('DD/MM/YYYY HH:mm')}</td>                        
                         <td>${element.Presenca}</td>                                                
                     </tr>`;
             });

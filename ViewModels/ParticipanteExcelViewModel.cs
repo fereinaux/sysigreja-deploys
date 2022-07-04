@@ -12,29 +12,34 @@ namespace SysIgreja.ViewModels
         public string Sexo { get; set; }
         public string Email { get; set; }
         public string Fone { get; set; }
-        [DisplayName("Nome da Mãe")]
-        public string NomeMae { get; set; }
-        [DisplayName("Fone da Mãe")]
-        public string FoneMae { get; set; }
-        [DisplayName("Nome do Pai")]
-        public string NomePai { get; set; }
-        [DisplayName("Fone do Pai")]
-        public string FonePai { get; set; }
-
+        public string CEP { get; set; }
+        public string Logradouro { get; set; }
+        public string Bairro { get; set; }
+        public string Cidade { get; set; }
+        public string Estado { get; set; }
+        [DisplayName("Número")]
+        public string Numero { get; set; }
+        public string Complemento { get; set; }
+        [DisplayName("Referência")]
+        public string Referencia { get; set; }
         [DisplayName("Nome do Contato")]
-        public string NomeConvite { get; set; }
+        public string NomeContato { get; set; }
         [DisplayName("Fone do Contato")]
+        public string FoneContato { get; set; }
+        [DisplayName("Nome de quem Convidou")]
+        public string NomeConvite { get; set; }
+        [DisplayName("Fone de quem Convidou")]
         public string FoneConvite { get; set; }
         [DisplayName("Restrição Alimentar")]
         public string RestricaoAlimentar { get; set; }
-        [DisplayName("Medicação")]
-        public string Medicacao { get; set; }
-        [DisplayName("Alergia")]
 
-        public string Alergia { get; set; }
-        [DisplayName("Nome do Parente")]
-        public string NomeParente { get; set; }
         [DisplayName("Situação")]
         public string Situacao { get; set; }
+        [DisplayName("Círculo")]
+        public string Circulo { get; set; }
+        public string Motorista { get; set; }
+        [DisplayName("Vacina")]
+        public string HasVacina { get; set; }
+
     }
 }

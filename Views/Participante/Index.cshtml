@@ -1,12 +1,10 @@
 ﻿@{
     ViewBag.Numero = new Random().Next();
 }
-
 @using System.Collections.Generic;
 @using System.Linq;
 @using Utils.Enums;
 @using Utils.Extensions;
-
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -40,7 +38,7 @@
                     <select class="form-control" id="participante-eventoid" onchange="CarregarTabelaParticipante()">
                         @foreach (var evento in ViewBag.Eventos)
                         {
-                            <option data-status="@evento.Status" value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                            <option data-status="@evento.Status" value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                         }
                     </select>
                 </div>
@@ -51,6 +49,7 @@
                         <option value=999>Selecione</option>
                         <option value=8>Inscrito</option>
                         <option value=9>Confirmado</option>
+                        <option value=12>Presente</option>
                         <option value=10>Em Espera</option>
                         <option value=6>Cancelado</option>
 
@@ -139,7 +138,7 @@
                         <select class="form-control m-b-sm" id="equipante-eventoid">
                             @foreach (var evento in ViewBag.Eventos)
                             {
-                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                             }
                         </select>
                         <form enctype="multipart/form-data" id="frm-upload-arquivo-modal" method="post" novalidate="novalidate">
@@ -175,8 +174,12 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated bounceInRight">
             <div class="modal-body">
+                <div class="moldura-modal" style="position:relative;background-color:white;padding:20px">
+                    <button type="button" class="btn btn-primary" id="btn-previous" onclick="previous()" style="position:absolute;top:20px;left:20px">Anterior</button>
+                    <h2 class="text-center realista-nome" style="width:100%;margin:0">Nome</h2>
+                    <button type="button" class="btn btn-primary" id="btn-next" onclick="next()" style="position:absolute;top:20px;right:20px">Próximo</button>
+                </div>
                 <div class="moldura-modal p-h-xs" id="form-opcoes">
-                    <h2 class="text-center realista-nome">Nome</h2>
                     <h3 class="text-center">Mensagem</h3>
                     <div class="row m-md">
                         <div class="col-lg-12">
@@ -204,7 +207,7 @@
                         <div class="col-lg-3 col-sm-6 panel-msg p-w-md text-center pointer realista" onclick="select2('realista')">
                             <div style="margin:auto">
                                 <i class="fa fa-user fa-3x m-t-sm"></i>
-                                <h4 class="text-center m-t-sm">Realista</h4>
+                                <h4 class="text-center m-t-sm">Participante</h4>
                                 <h5 class="text-center realistatext"></h5>
                             </div>
                         </div>
@@ -299,6 +302,76 @@
                                 <h5>Instagram</h5>
 
                                 <input type="text" class="form-control required" id="participante-instagram" data-field="Apelido" />
+                            </div>
+                        }
+
+                        @if (ViewBag.Campos.Contains(CamposEnum.Endereco.GetDescription()))
+                        {
+                            <div class="col-sm-3 p-w-md m-t-md text-center">
+                                <h5>CEP</h5>
+
+                                <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                <input type="hidden" id="participante-latitude" />
+                                <input type="hidden" id="participante-longitude" />
+                            </div>
+
+                            <div class="col-sm-9 p-w-md m-t-md text-center">
+                                <h5>Logradouro</h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>Bairro</h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>
+                                    Cidade
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
+                            </div>
+
+                            <div class="col-sm-2 p-w-md m-t-md text-center">
+                                <h5>
+                                    Estado
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
+                            </div>
+
+                            <div class="col-sm-4 p-w-md m-t-md text-center">
+                                <h5>
+                                    Número
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-numero" data-field="Número" />
+                            </div>
+
+
+                            <div class="col-sm-8 p-w-md m-t-md text-center">
+                                <h5>
+                                    Complemento
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-complemento" data-field="Complemento" />
+                            </div>
+
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>
+                                    Ponto de Referência
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-referencia" data-field="Ponto de Referência" />
+                            </div>
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
+                                <div id="map" style="height:300px;">
+                                </div>
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Mae.GetDescription()))
@@ -464,6 +537,18 @@
 
                             <input type="number" step="any" value="0" class="form-control required" data-valor="@ViewBag.Valor" id="pagamentos-valor" data-field="Valor" />
                         </div>
+                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                            <h5>Origem</h5>
+
+                            <input type="text" class="form-control " id="pagamentos-origem" data-field="Origem" />
+                        </div>
+                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                            <h5>Data</h5>
+
+                            <input type="text" class="form-control full-date required" id="pagamentos-data" data-field="Data do Pagamento" />
+                        </div>
+
+
                         <div class="col-sm-12 p-md text-center">
                             <button type="button" class="btn btn-white" onclick="PostPagamento()">Salvar</button>
                         </div>
@@ -498,7 +583,6 @@
 @section Scripts {
 
     <script src="~/Scripts/app/Participante/participante.js?@ViewBag.Numero"></script>
-
     <script>
 
     </script>

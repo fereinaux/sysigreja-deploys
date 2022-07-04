@@ -10,7 +10,7 @@
             <select class="form-control" id="eventoid" onchange="GetResultadosAdmin()">
                 @foreach (var evento in ViewBag.Eventos)
                 {
-                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                    <option value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                 }
             </select>
         </div>
@@ -88,80 +88,45 @@
                         </div>
                     </div>
                 </div>
-                @*<div class="col-xs-6 col-lg-3 p-w-xs">
-            <div class="width100 bloco widget yellow-bg p-md text-center">
-                <div class="m-b-xs">
-                    <i class="m-b-sm fa fa-barcode fa-3x"></i>
-                    <h1 class="m-xs" id="boletos"></h1>
 
-                    <small>Boletos Pendentes</small>
+            </div>
+            @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master))
+            {
+                <div class="row">
+                    <div class="pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
+                        <div class="col-xs-12 p-w-xs">
+                            <div class="widget-head-color-box navy-bg p-lg text-center">
+                                <div class="m-b-md">
+                                    <h2 class="font-bold no-margins">
+                                        Resumo Financeiro
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="widget-text-box">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Forma de Pagamento</th>
+                                            <th>Receber</th>
+                                            <th>Pagar</th>
+                                            <th>Saldo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resumo-financeiro"></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="row">Totais</th>
+                                            <th id="receberTotal"></th>
+                                            <th id="pagarTotal"></th>
+                                            <th id="saldoTotal"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-xs-6 col-lg-3 p-w-xs">
-            <div class="width100 bloco widget lazur-bg p-md text-center">
-                <div class="m-b-xs">
-                    <i class="m-b-sm fab fa-whatsapp fa-3x"></i>
-                    <h1 class="m-xs" id="contatos"></h1>
-
-                    <small>Contatos Pendentes</small>
-                </div>
-            </div>
-        </div>*@
-                @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master))
-                {
-                    <div class="col-xs-6 col-lg-6 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
-                        <div class="width100 bloco widget red-bg p-md text-center">
-                            <div class="m-b-xs">
-                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
-                                <h2 class="m-xs" id="despesa"></h2>
-
-                                <small>Total Despesas</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-lg-6 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
-                        <div class="width100 bloco widget navy-bg p-md text-center">
-                            <div class="m-b-xs">
-                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
-                                <h2 class="m-xs" id="receita"></h2>
-
-                                <small>Total Receita</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-4 col-lg-4 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
-                        <div class="width100 bloco widget blue-bg p-md text-center">
-                            <div class="m-b-xs">
-                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
-                                <h2 class="m-xs" id="saldopix"></h2>
-
-                                <small>Saldo PIX</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-4 col-lg-4 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
-                        <div class="width100 bloco widget blue-bg p-md text-center">
-                            <div class="m-b-xs">
-                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
-                                <h2 class="m-xs" id="saldodinheiro"></h2>
-
-                                <small>Saldo Dinheiro</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-4 col-lg-4 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
-                        <div class="width100 bloco widget blue-bg p-md text-center">
-                            <div class="m-b-xs">
-                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
-                                <h2 class="m-xs" id="saldo"></h2>
-
-                                <small>Saldo Geral</small>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
+            }
             <div class="row">
                 <div class="pointer" onclick="window.location.href='@Url.Action("Index", "Participante")'">
                     <div class="col-xs-12 p-w-xs">
@@ -244,6 +209,7 @@
                         <thead>
                             <tr>
                                 <th>Reunião</th>
+                                <th>Data/Hora</th>
                                 <th>Presentes</th>
                             </tr>
                         </thead>
@@ -276,7 +242,7 @@
                 <div class="mobile">
                     <div class="row justify-content-center text-center detalhamento-mobile-container">
 
-                        
+
                     </div>
                 </div>
             </div>

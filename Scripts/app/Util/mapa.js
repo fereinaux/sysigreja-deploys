@@ -22,6 +22,7 @@ function initMap(id) {
             zoomControl: true,
             layers: [tileLayer],
             maxZoom: 18,
-            minZoom: 6
+            minZoom: 6,
+            scrollWheelZoom: false
         })
 }

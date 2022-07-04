@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Configuracao.Titulo | Inscrições</title>
+
+    <link href="~/Fonts/font-awesome/css/all.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
+          type="text/css" />
+    @if (ViewBag.Configuracao.LogoId != null)
+    {
+
+        <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+    }
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+    <link href="~/Content/evento.css" rel="stylesheet">
+    <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+    </style>
+</head>
+<body class="background-evento">
+    <div style=" display: flex; flex-direction: column; width: 100vw; height: 100vh;">
+
+        @RenderBody()
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/plugins/imaskjs/imask.js"></script>
+<script src="~/Scripts/app/Util/extensions.js"></script>
+<script src="~/Scripts/app/Util/forms.js"></script>
+<script src="~/Scripts/app/Util/inputs.js"></script>
+<script src="~/Scripts/app/Util/messages.js"></script>
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="~/Scripts/plugins/iCheck/icheck.min.js"></script>
+<script src="~/Scripts/plugins/moment/moment-with-locales.min.js"></script>
+<script src="~/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/plugins/chosen/chosen.jquery.js"></script>
+<script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
+<script src="~/Scripts/app/Util/mapa.js"></script>
+<script src="https://malsup.github.io/jquery.blockUI.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    let corBotao = '@ViewBag.Configuracao.CorBotao'
+    $(document).ready(function () {
+        if (isMobile) {
+            @if (ViewBag.Configuracao.BackgroundCelularId != null)
+            {
+                <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.BackgroundCelular) no-repeat center center fixed`) </text>
+                <text> $('.background-evento').css('background-size', 'cover')</text>
+            }
+        } else {
+
+            @if (ViewBag.Configuracao.BackgroundId != null)
+            {
+                <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`) </text>
+                <text> $('.background-evento').css('background-size', 'cover')</text>
+            }
+        }
+
+        $('.btn-juventude').css('background-color', '@ViewBag.Configuracao.CorBotao')
+        $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
+
+        $('.btn-juventude').hover(function() {
+            $(this).css('background-color', '@ViewBag.Configuracao.CorHoverBotao')
+            $(this).css('border-color', '@ViewBag.Configuracao.CorHoverBotao')
+        }, function() {
+            $(this).css('background-color', '@ViewBag.Configuracao.CorBotao')
+            $(this).css('border-color', '@ViewBag.Configuracao.CorBotao')
+        })
+
+        picker = ".inscricoes.middle-box::-webkit-scrollbar-thumb { background: @ViewBag.Configuracao.CorScroll;}  .inscricoes.middle-box::-webkit-scrollbar-thumb:hover { background: @ViewBag.Configuracao.CorHoverScroll;}  ";
+        new_stylesheet = "<style type='text/css' id='currentCSS'>" + picker + "</style>";
+
+        //check if stylsheet exists
+        existingStylesheet = $("#currentCSS");
+        if (existingStylesheet.length) { $(existingStylesheet).replaceWith(new_stylesheet); }
+        else { $(new_stylesheet).appendTo('head'); }
+        var corLoginBox = '@ViewBag.Configuracao.CorLoginBox';
+        var rgbLoginBox = corLoginBox.convertToRGB()
+        $('.inscricoes.middle-box').css('background-color', `rgba(${rgbLoginBox[0]},${rgbLoginBox[1]},${rgbLoginBox[2]},0.7)`)
+    })
+</script>
+
+@RenderSection("scripts", required: false)

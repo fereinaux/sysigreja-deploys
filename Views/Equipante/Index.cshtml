@@ -38,7 +38,7 @@
                         <option data-status="Selecione" value=999>Selecione</option>
                         @foreach (var evento in ViewBag.Eventos)
                         {
-                            <option data-status="@evento.Status" value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                            <option data-status="@evento.Status" value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                         }
                     </select>
                 </div>
@@ -74,7 +74,11 @@
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
             <div style=" width: 20%;" class="ibox-tools pull-right">
-                <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Adicionar</button>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Adicionar</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="ibox-content">
@@ -106,11 +110,6 @@
                         <input type="hidden" id="equipante-id" />
 
                         <div class="col-sm-12 p-w-md m-t-md text-center">
-                            <h5>Marcadores</h5>
-                            <select class="form-control equipante-etiquetas" id="equipante-etiquetas" multiple="multiple" style="width: 100%">
-                            </select>
-                        </div>
-                        <div class="col-sm-12 p-w-md m-t-md text-center">
                             <h5>Nome</h5>
 
                             <input type="text" class="form-control required" id="equipante-nome" data-field="Nome" />
@@ -135,6 +134,72 @@
                             <h5>WhatsApp</h5>
 
                             <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                        </div>
+                        <div class="col-sm-3 p-w-md m-t-md text-center">
+                            <h5>CEP</h5>
+
+                            <input type="text" class="form-control cep" id="equipante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                            <input type="hidden" id="equipante-latitude" />
+                            <input type="hidden" id="equipante-longitude" />
+                        </div>
+
+                        <div class="col-sm-9 p-w-md m-t-md text-center">
+                            <h5>Logradouro</h5>
+
+                            <input type="text" class="form-control" disabled id="equipante-logradouro" data-field="Logradouro" />
+                        </div>
+
+                        <div class="col-sm-5 p-w-md m-t-md text-center">
+                            <h5>Bairro</h5>
+
+                            <input type="text" class="form-control" disabled id="equipante-bairro" data-field="Bairro" />
+                        </div>
+
+                        <div class="col-sm-5 p-w-md m-t-md text-center">
+                            <h5>
+                                Cidade
+                            </h5>
+
+                            <input type="text" class="form-control" disabled id="equipante-cidade" data-field="Cidade" />
+                        </div>
+
+                        <div class="col-sm-2 p-w-md m-t-md text-center">
+                            <h5>
+                                Estado
+                            </h5>
+
+                            <input type="text" class="form-control" disabled id="equipante-estado" data-field="Estado" />
+                        </div>
+
+                        <div class="col-sm-4 p-w-md m-t-md text-center">
+                            <h5>
+                                Número
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-numero" data-field="Número" />
+                        </div>
+
+
+                        <div class="col-sm-8 p-w-md m-t-md text-center">
+                            <h5>
+                                Complemento
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-complemento" data-field="Complemento" />
+                        </div>
+
+
+                        <div class="col-sm-12 p-w-md m-t-md text-center">
+                            <h5>
+                                Ponto de Referência
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-referencia" data-field="Ponto de Referência" />
+                        </div>
+
+                        <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
+                            <div id="map" style="height:300px;">
+                            </div>
                         </div>
 
                         <div class="col-sm-12 p-w-md m-t-md text-center">
@@ -221,7 +286,7 @@
                         <select class="form-control m-b-sm" id="equipante-eventoid">
                             @foreach (var evento in ViewBag.Eventos)
                             {
-                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                             }
                         </select>
                         <form enctype="multipart/form-data" id="frm-upload-arquivo-modal" method="post" novalidate="novalidate">
@@ -255,6 +320,46 @@
 </div>
 
 
+<div class="modal inmodal" id="modal-opcoes" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal" style="position:relative;background-color:white;padding:20px">
+                    <button type="button" class="btn btn-primary" id="btn-previous" onclick="previous()" style="position:absolute;top:20px;left:20px">Anterior</button>
+                    <h2 class="text-center realista-nome" style="width:100%;margin:0">Nome</h2>
+                    <button type="button" class="btn btn-primary" id="btn-next" onclick="next()" style="position:absolute;top:20px;right:20px">Próximo</button>
+                </div>
+                <div class="moldura-modal p-h-xs" id="form-opcoes">
+                    <div class="row m-md">
+                        <h3 class="text-center">Mensagem</h3>
+                        <select class="form-control m-b-lg" id="msg-list">
+                        </select>
+
+                        <h3 class="text-center">Marcadores</h3>
+                        <select class="form-control equipante-etiquetas" id="equipante-etiquetas" multiple="multiple" style="width: 100%">
+                        </select>
+                    </div>
+
+                    <h3 class="text-center">Observações</h3>
+                    <div class="row m-md">
+                        <textarea style="height: 200px" class="form-control required" id="equipante-obs"></textarea>
+                    </div>
+
+
+                    <div style="display:flex; width:100%">
+
+                        <button type="button" class="btn btn-primary" style="margin-left:auto;margin-right:10px" onclick="enviar()">Enviar</button>
+                        <a target="_blank" href="#" class="btn btn-info btn-ligar" style="margin-right:auto">Ligar</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal inmodal" id="modal-pagamentos" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated bounceInRight">
@@ -273,12 +378,21 @@
                                 }
                             </select>
 
-                        </div>
-
+                        </div>                        
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Valor</h5>
 
                             <input type="number" step="any" value="0" class="form-control required" data-valor="@ViewBag.Valor" id="pagamentos-valor" data-field="Valor" />
+                        </div>
+                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                            <h5>Origem</h5>
+
+                            <input type="text" class="form-control " id="pagamentos-origem" data-field="Origem" />
+                        </div>
+                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                            <h5>Data</h5>
+
+                            <input type="text" class="form-control full-date required" id="pagamentos-data" data-field="Data do Pagamento" />
                         </div>
                         <div class="col-sm-12 p-md text-center">
                             <button type="button" class="btn btn-white" onclick="PostPagamento()">Salvar</button>
@@ -318,7 +432,6 @@
 @section Scripts {
 
     <script src="~/Scripts/app/Equipante/equipante.js?@ViewBag.Numero"></script>
-
     <script>
 
     </script>

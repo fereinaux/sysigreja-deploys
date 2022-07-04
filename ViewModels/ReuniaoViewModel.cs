@@ -8,6 +8,8 @@ namespace SysIgreja.ViewModels
         public int Id { get; set; }
         public DateTime DataReuniao { get; set; }
         public int Presenca { get; set; }
+        public string Pauta { get; set; }
+        public string Titulo { get; set; }
         public ICollection<EquipesModel> Equipes { get; set; }
     }
 

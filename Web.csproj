@@ -763,6 +763,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Controllers\PadrinhoController.cs" />
     <Compile Include="Controllers\MensagemController.cs" />
     <Compile Include="Controllers\ConfiguracaoController.cs" />
     <Compile Include="Controllers\EtiquetaController.cs" />
@@ -790,6 +791,7 @@
     <Compile Include="Mapper\Mapper.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="ViewModels\AdminViewModel.cs" />
+    <Compile Include="ViewModels\PadrinhoViewModel.cs" />
     <Compile Include="ViewModels\CaronaViewModel.cs" />
     <Compile Include="ViewModels\QuartoViewModel.cs" />
     <Compile Include="ViewModels\ContaBancariaViewModel.cs" />
@@ -889,6 +891,7 @@
     <Content Include="Images\mapa\azul-claro.png" />
     <Content Include="Images\mapa\azul-escuro-crown.png" />
     <Content Include="Images\mapa\azul-escuro.png" />
+    <Content Include="Images\mapa\carpng.png" />
     <Content Include="Images\mapa\cinza-crown.png" />
     <Content Include="Images\mapa\cinza.png" />
     <Content Include="Images\mapa\laranja-crown.png" />
@@ -897,6 +900,7 @@
     <Content Include="Images\mapa\rosa-crown.png" />
     <Content Include="Images\mapa\rosa.png" />
     <Content Include="Images\mapa\roxo-crown.png" />
+    <Content Include="Images\mapa\userlocation.png" />
     <Content Include="Images\mapa\verde-claro-crown.png" />
     <Content Include="Images\mapa\verde-claro.png" />
     <Content Include="Images\mapa\verde-escuro-crown.png" />
@@ -1046,6 +1050,7 @@
     <Content Include="Scripts\app\Carona\carona.js" />
     <Content Include="Scripts\app\Etiqueta\etiqueta.js" />
     <Content Include="Scripts\app\Mensagem\mensagem.js" />
+    <Content Include="Scripts\app\Padrinho\padrinho.js" />
     <Content Include="Scripts\app\Participante\checkin.js" />
     <Content Include="Scripts\app\Quarto\quarto.js" />
     <Content Include="Scripts\app\Equipante\equipante.js" />
@@ -1193,6 +1198,8 @@
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
     <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
     <None Include="Properties\PublishProfiles\SysIgreja Deploy.pubxml" />
+    <Content Include="Views\Shared\_Inscricoes.cshtml" />
+    <Content Include="Views\Padrinho\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -1218,6 +1225,9 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

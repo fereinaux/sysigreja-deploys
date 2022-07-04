@@ -1,12 +1,16 @@
 ﻿using Arquitetura.Controller;
+using Arquitetura.ViewModels;
 using Core.Business.Account;
+using Core.Business.Arquivos;
 using Core.Business.Configuracao;
+using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Reunioes;
 using Core.Models.Equipe;
 using SysIgreja.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Utils.Enums;
@@ -22,12 +26,14 @@ namespace SysIgreja.Controllers
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IReunioesBusiness reunioesBusiness;
         private readonly IEventosBusiness eventosBusiness;
+        private readonly IArquivosBusiness arquivosBusiness;
 
-        public EquipeController(IEquipesBusiness equipesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EquipeController(IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.equipesBusiness = equipesBusiness;
             this.reunioesBusiness = reunioesBusiness;
             this.eventosBusiness = eventosBusiness;
+            this.arquivosBusiness = arquivosBusiness;
         }
 
         public ActionResult Index()
@@ -94,7 +100,8 @@ namespace SysIgreja.Controllers
             {
                 Id = x.Id,
                 Equipe = x.Description,
-                QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count()
+                QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count(),
+                QtdAnexos = arquivosBusiness.GetArquivosByEquipe((EquipesEnum)x.Id, false).Count()
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -162,8 +169,33 @@ namespace SysIgreja.Controllers
             return json;
         }
 
+
         [HttpPost]
-        public ActionResult GetMembrosEquipe(int EventoId, EquipesEnum EquipeId, bool Foto = false)
+        public ActionResult GetMembrosEquipeDatatable(int EventoId, EquipesEnum EquipeId)
+        {
+            var query = equipesBusiness
+                .GetMembrosEquipeDatatable(EventoId, EquipeId)
+                .ToList();
+
+            var result = query
+            .Select(x => new
+            {
+                Id = x.Id,
+                Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
+                Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
+                Fone = x.Equipante.Fone,
+                Equipe = x.Equipe.GetDescription(),
+                Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
+                Tipo = x.Tipo.GetDescription(),
+            });
+
+            var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
+        }
+
+        [HttpPost]
+        public ActionResult GetMembrosEquipe(int EventoId, EquipesEnum EquipeId)
         {
             var query = equipesBusiness
                 .GetMembrosEquipe(EventoId, EquipeId)
@@ -179,7 +211,7 @@ namespace SysIgreja.Controllers
                 Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                 Tipo = x.Tipo.GetDescription(),
                 x.Equipante.Fone,
-                Foto = Foto && x.Equipante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Equipante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
+                Foto = x.Equipante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Equipante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
             });
 
             var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);

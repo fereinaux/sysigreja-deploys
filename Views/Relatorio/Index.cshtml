@@ -25,7 +25,7 @@
                 <select class="form-control" id="relatorio-eventoid">
                     @foreach (var evento in ViewBag.Eventos)
                     {
-                        <option value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                        <option value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                     }
                 </select>
             </div>

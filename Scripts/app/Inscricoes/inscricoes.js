@@ -38,6 +38,7 @@ if ($('#map').length > 0) {
                     $(`#participante-estado`).val(data.uf)
                     $(`#participante-latitude`).val(data.lat)
                     $(`#participante-longitude`).val(data.lon)
+                    $.unblockUI();
                     markerLayer.getLayers().forEach(mark => mark.remove())
                     var marker = L.marker([data.lat, data.lon], {
                         icon: getIcon('vermelho'),  draggable: true,
@@ -61,7 +62,6 @@ if ($('#map').length > 0) {
 
                         });
                     })
-                    $.unblockUI();
                 }
             })
         }
@@ -127,51 +127,50 @@ Email: exemplo@provedor.com.br`);
 
 function PostInscricao() {
     if (ValidateForm(`#form-inscricao`)) {
-        $.ajax({
-            url: "/Inscricoes/PostInscricao/",
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                {
-                    Nome: $(`#participante-nome`).val(),
-                    Apelido: $(`#participante-apelido`).val(),
-                    DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
-                    Email: $(`#participante-email`).val(),
-                    Fone: $(`#participante-fone`).val(),
-                    Instagram: $(`#participante-instagram`).val(),
-                    Profissao: $(`#participante-profissao`).val(),
-                    CEP: $(`#participante-cep`).val(),
-                    Logradouro: $(`#participante-logradouro`).val(),
-                    Bairro: $(`#participante-bairro`).val(),
-                    Cidade: $(`#participante-cidade`).val(),
-                    Estado: $(`#participante-estado`).val(),
-                    Numero: $(`#participante-numero`).val(),
-                    Complemento: $(`#participante-complemento`).val(),
-                    Referencia: $(`#participante-referencia`).val(),
-                    Latitude: $(`#participante-latitude`).val(),
-                    Longitude: $(`#participante-longitude`).val(),
-                    HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
-                    RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
-                    HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
-                    Medicacao: $(`#participante-medicacao`).val(),
-                    Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
-                    HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
-                    Alergia: $(`#participante-alergia`).val(),
-                    Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
-                    NomePai: $(`#participante-nome-pai`).val(),
-                    FonePai: $(`#participante-fone-pai`).val(),
-                    NomeMae: $(`#participante-nome-mae`).val(),
-                    FoneMae: $(`#participante-fone-mae`).val(),
-                    NomeConvite: $(`#participante-nome-convite`).val(),
-                    FoneConvite: $(`#participante-fone-convite`).val(),
-                    NomeContato: $(`#participante-nome-contato`).val(),
-                    FoneContato: $(`#participante-fone-contato`).val(),
-                }),
-            success: function (url) {
-                window.location.href = url;
-            }
-        });
+            $.ajax({
+                url: "/Inscricoes/PostInscricao/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Nome: $(`#participante-nome`).val(),
+                        Apelido: $(`#participante-apelido`).val(),
+                        DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                        Email: $(`#participante-email`).val(),
+                        Fone: $(`#participante-fone`).val(),
+                        Instagram: $(`#participante-instagram`).val(),
+                        Profissao: $(`#participante-profissao`).val(),
+                        CEP: $(`#participante-cep`).val(),
+                        Logradouro: $(`#participante-logradouro`).val(),
+                        Bairro: $(`#participante-bairro`).val(),
+                        Cidade: $(`#participante-cidade`).val(),
+                        Estado: $(`#participante-estado`).val(),
+                        Numero: $(`#participante-numero`).val(),
+                        Complemento: $(`#participante-complemento`).val(),
+                        Referencia: $(`#participante-referencia`).val(),
+                        Latitude: $(`#participante-latitude`).val(),
+                        Longitude: $(`#participante-longitude`).val(),
+                        HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
+                        RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
+                        HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
+                        Medicacao: $(`#participante-medicacao`).val(),
+                        HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
+                        Alergia: $(`#participante-alergia`).val(),
+                        Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
+                        NomePai: $(`#participante-nome-pai`).val(),
+                        FonePai: $(`#participante-fone-pai`).val(),
+                        NomeMae: $(`#participante-nome-mae`).val(),
+                        FoneMae: $(`#participante-fone-mae`).val(),
+                        NomeConvite: $(`#participante-nome-convite`).val(),
+                        FoneConvite: $(`#participante-fone-convite`).val(),
+                        NomeContato: $(`#participante-nome-contato`).val(),
+                        FoneContato: $(`#participante-fone-contato`).val(),
+                    }),
+                success: function (url) {
+                    window.location.href = url;
+                }
+            });        
     }
 }
 

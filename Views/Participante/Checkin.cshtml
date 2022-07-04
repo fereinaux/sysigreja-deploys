@@ -1,6 +1,8 @@
 ﻿@{
     ViewBag.Numero = new Random().Next();
 }
+@using System.Collections.Generic;
+@using System.Linq;
 @using Utils.Enums;
 @using Utils.Extensions;
 
@@ -16,7 +18,7 @@
                         <select class="chosen-select" id="eventoid" onchange="Refresh()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
-                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo.ToString()</option>
+                                <option value="@evento.Id">@evento.TipoEvento @evento.Titulo</option>
                             }
                         </select>
                     </div>
@@ -58,11 +60,21 @@
                             }
                         </select>
 
-                    </div>                    
+                    </div>                   
                     <div class="col-sm-6 p-w-md text-center">
                         <h5>Valor</h5>
 
                         <input type="number" step="any" value="0" class="form-control required" data-valor-equipante="@ViewBag.ValorEquipante" data-valor-realista="@ViewBag.ValorRealista" id="pagamentos-valor" data-field="Valor" />
+                    </div>
+                    <div class="col-sm-6 p-w-md m-t-md text-center">
+                        <h5>Origem</h5>
+
+                        <input type="text" class="form-control " id="pagamentos-origem" data-field="Origem" />
+                    </div>
+                    <div class="col-sm-6 p-w-md m-t-md text-center">
+                        <h5>Data</h5>
+
+                        <input type="text" class="form-control full-date required" id="pagamentos-data" data-field="Data do Pagamento" />
                     </div>
                     <div class="col-sm-12 p-md text-center">
                         <button type="button" class="btn btn-white" onclick="PostPagamento()">Salvar</button>
@@ -154,7 +166,7 @@
                         <i class="far fa-circle fa-3x"></i>
                         <h5 class="text-center circulo"></h5>
                     </div>
-                    <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
+                    <div class="col-xs-4 col-md-2 p-w-md text-center">
                         <i class="fa fa-home fa-3x"></i>
                         <h5 class="text-center quarto"></h5>
                     </div>
@@ -203,7 +215,7 @@
                     <div class="col-sm-6" style="display:none" id="div-foto">
                         <img id="foto" style="height:300px;margin:auto" src="" class="m-auto" />
                     </div>
-                    <div class="col-sm-6 p-w-md m-t-md text-center">
+                    <div class="col-sm-6 p-w-md m-t-md text-center dados-participante-contato">
                         <h5>Marcadores</h5>
                         <select class="form-control participante-etiquetas" id="participante-etiquetas" multiple="multiple" style="width: 100%">
                         </select>
@@ -255,7 +267,7 @@
 
                             <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
                         </div>
-                    }
+                    }                   
                     @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
                     {
                         <div class="col-sm-6 p-w-md m-t-md text-center">
@@ -270,7 +282,7 @@
                         <div class="col-sm-3 p-w-md m-t-md text-center">
                             <h5>CEP</h5>
 
-                            <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                            <input type="text" class="form-control required cep dados-participante-contato" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
                             <input type="hidden" id="participante-latitude" />
                             <input type="hidden" id="participante-longitude" />
                         </div>
@@ -278,13 +290,13 @@
                         <div class="col-sm-9 p-w-md m-t-md text-center">
                             <h5>Logradouro</h5>
 
-                            <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
+                            <input type="text" class="form-control required dados-participante-contato" disabled id="participante-logradouro" data-field="Logradouro" />
                         </div>
 
                         <div class="col-sm-5 p-w-md m-t-md text-center">
                             <h5>Bairro</h5>
 
-                            <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
+                            <input type="text" class="form-control required dados-participante-contato" disabled id="participante-bairro" data-field="Bairro" />
                         </div>
 
                         <div class="col-sm-5 p-w-md m-t-md text-center">
@@ -292,7 +304,7 @@
                                 Cidade
                             </h5>
 
-                            <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
+                            <input type="text" class="form-control required dados-participante-contato" disabled id="participante-cidade" data-field="Cidade" />
                         </div>
 
                         <div class="col-sm-2 p-w-md m-t-md text-center">
@@ -300,7 +312,7 @@
                                 Estado
                             </h5>
 
-                            <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
+                            <input type="text" class="form-control required dados-participante-contato" disabled id="participante-estado" data-field="Estado" />
                         </div>
 
                         <div class="col-sm-4 p-w-md m-t-md text-center">
@@ -308,7 +320,7 @@
                                 Número
                             </h5>
 
-                            <input type="text" class="form-control" id="participante-numero" data-field="Número" />
+                            <input type="text" class="form-control dados-participante-contato" id="participante-numero" data-field="Número" />
                         </div>
 
 
@@ -317,7 +329,7 @@
                                 Complemento
                             </h5>
 
-                            <input type="text" class="form-control" id="participante-complemento" data-field="Complemento" />
+                            <input type="text" class="form-control dados-participante-contato" id="participante-complemento" data-field="Complemento" />
                         </div>
 
 
@@ -326,7 +338,7 @@
                                 Ponto de Referência
                             </h5>
 
-                            <input type="text" class="form-control" id="participante-referencia" data-field="Ponto de Referência" />
+                            <input type="text" class="form-control dados-participante-contato" id="participante-referencia" data-field="Ponto de Referência" />
                         </div>
 
                         <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
@@ -389,39 +401,7 @@
                                 <input type="text" class="form-control fone" id="participante-fone-convite" data-field="Fone de quem convidou" placeholder="+55 (81) 9999-9999" />
                             </div>
                         }
-                        @if (ViewBag.Campos.Contains(CamposEnum.Parente.GetDescription()))
-                        {
-
-                            <div class="col-sm-6 p-w-md m-t-md text-center">
-                                <h5>Tem algum Parente fazendo o @ViewBag.Configuracao.Titulo?</h5>
-
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>
-
-                                <div class="parente d-none">
-                                    <h5>Nome do Parente</h5>
-                                    <input type="text" class="form-control" id="participante-parente" data-field="Nome do Parente" />
-                                </div>
-                            </div>
-                        }
-                        @if (ViewBag.Campos.Contains(CamposEnum.Congregacao.GetDescription()))
-                        {
-
-                            <div class="col-sm-6 p-w-md m-t-md text-center">
-                                <h5>Participa de qual Congregação?</h5>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="trindade" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="recon" checked="" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="outra" checked="" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
-
-                                <div class="congregacao d-none">
-                                    <h5>Qual?</h5>
-                                    <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
-                                </div>
-                            </div>
-                        }
                     </div>
-
-
 
                     @if (ViewBag.Campos.Contains(CamposEnum.Medicacao.GetDescription()))
                     {
@@ -508,9 +488,6 @@
 </div>
 
 @section Styles {
-    <link rel="stylesheet"
-          href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
-          type="text/css" />
     <style>
         .d-none {
             display: none;
@@ -520,8 +497,6 @@
 
 @section Scripts {
 
-    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
-    <script src="~/Scripts/app/Util/mapa.js"></script>
     <script src="~/Scripts/app/Participante/checkin.js?@ViewBag.Numero"></script>
 
     <script>

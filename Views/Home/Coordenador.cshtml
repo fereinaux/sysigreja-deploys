@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coordenador</title>
+    <title>@ViewBag.Configuracao.Titulo | Coordenador</title>
     <link href="~/Content/bootstrap.css" rel="stylesheet">
     <link href="~/Fonts/font-awesome/css/all.css" rel="stylesheet">
     <link href="~/Content/animate.css" rel="stylesheet">
@@ -42,7 +42,6 @@
                                 <th scope="col">Idade</th>
                                 <th scope="col">Oferta</th>
                                 <th scope="col">Vacina</th>
-                                <th scope="col">Foto</th>
                                 <th scope="col">Faltas</th>
                                 <th scope="col">Contato</th>
                             </tr>
@@ -50,66 +49,42 @@
                         <tbody>
                             @foreach (var membro in ViewBag.Membros)
                             {
-                            <tr>
-                                <td data-label="Sexo"><span style="font-size:24px;" class="p-l-xs"> <i class="fa @(membro.Sexo == "Masculino" ? "fa-male" : "fa-female") " aria-hidden="true"></i></span></td>
-                                <td data-label="Nome">@membro.Nome</td>
-                                <td data-label="Idade">@membro.Idade</td>
-                                <td data-label="Oferta"> <span style="font-size:24px;"> <i class="fa @(@membro.Oferta ? "fa-check" : "fa-times") " aria-hidden="true"></i></span></td>
-                                <td data-label="Vacina"> <span style="font-size:24px;"> <i class="fa @(@membro.Vacina ? "fa-check" : "fa-times") " aria-hidden="true"></i></span></td>
-                                <td data-label="Foto"> <span style="font-size:24px;"> <i class="fa @(@membro.Foto ? "fa-check" : "fa-times") " aria-hidden="true"></i></span></td>
-                                <td data-label="Faltas">@membro.Faltas</td>
-                                <td data-label="Contato" class="membro-fone">@membro.Fone</td>
-                            </tr>
+                                <tr>
+                                    <td data-label="Sexo"><span style="font-size:24px;" class="p-l-xs"> <i class="fa @(membro.Sexo == "Masculino" ? "fa-male" : "fa-female") " aria-hidden="true"></i></span></td>
+                                    <td data-label="Nome">@membro.Nome</td>
+                                    <td data-label="Idade">@membro.Idade</td>
+                                    <td data-label="Oferta"> <span style="font-size:24px;"> <i class="fa @(@membro.Oferta ? "fa-check" : "fa-times") " aria-hidden="true"></i></span></td>
+                                    <td data-label="Vacina"> <span style="font-size:24px;"> <i class="fa @(@membro.Vacina ? "fa-check" : "fa-times") " aria-hidden="true"></i></span></td>
+                                    <td data-label="Faltas">@membro.Faltas</td>
+                                    <td data-label="Contato" class="membro-fone">@membro.Fone</td>
+                                </tr>
                             }
                         </tbody>
                     </table>
-                    @*<div class="row">
-                            <div class="col-xs-10 col-xs-offset-2">
-                                <h4>Nome</h4>
-                            </div>
+                </div>
+            </div>
 
-                        </div>
-                        @foreach (var membro in ViewBag.Membros)
-                        {
-                            <div class="linha-coordenador">
-                                <div class="row">
-                                    <div class="col-xs-2 text-center">
-                                        <span style="font-size:24px;" class="p-l-xs"> <i class="fa @(membro.Sexo == "Masculino" ? "fa-male" : "fa-female") " aria-hidden="true"></i></span>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <span>@membro.Nome</span>
-                                    </div>
-                                    <div class="col-xs-2 text-center">
-                                        <span>@membro.Idade</span>
-                                    </div>
-                                </div>
-                                <div class="row m-t-sm">
-                                    <div class="col-xs-2 text-center">
-                                        <h4>Idade</h4>
-                                        <span>@membro.Idade</span>
-                                    </div>
-                                    <div class="col-xs-2 text-center">
-                                        <h4>Oferta</h4>
-                                        <span style="font-size:24px;"> <i class="fa @(@membro.Oferta ? "fa-check" : "fa-times") " aria-hidden="true"></i></span>
-                                    </div>
-                                    <div class="col-xs-2 text-center">
-                                        <h4>Vacina</h4>
-                                        <span style="font-size:24px;"> <i class="fa @(@membro.Vacina ? "fa-check" : "fa-times") " aria-hidden="true"></i></span>
-                                    </div>
-                                    <div class="col-xs-2 text-center">
-                                        <h4>Faltas</h4>
-                                        <span>  @membro.Faltas</span>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <h4>Contato</h4>
-                                        <span class="membro-fone">@membro.Faltas</span>
-                                    </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="widget-head-color-box navy-bg p-lg text-center">
+                    <div class="m-b-md">
+                        <h2 class="font-bold no-margins">
+                            Arquivos
+                        </h2>
+                        <small class="qtd-arquivos"></small>
+                    </div>
+                </div>
+                <div class="widget-text-box">
+                    <table id="table-arquivos" data-equipe="@ViewBag.EquipeEnum">
+                        <thead>
+                            <tr>
+                                <th scope="col">Arquivo</th>
+                                <th scope="col"></th>
 
-                                </div>
-                            </div>
-
-                        }*@
-
+                            </tr>
+                        </thead>
+                        <tbody class="tbarquivos">
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="col-md-6 col-xs-12">
@@ -137,8 +112,8 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th style="width:85%">Nome</th>
-                                <th style="width:15%">Compareceu?</th>
+                                <th style="width:80%">Nome</th>
+                                <th style="width:20%">Compareceu?</th>
                             </tr>
                         </thead>
                         <tbody class="tbpresenca"></tbody>
@@ -161,23 +136,7 @@
 </body>
 </html>
 
-<script>
-    $.ajax({
-        url: "/Configuracao/GetConfiguracao/",
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            config = data.Configuracao
-            $('title').text(`${config.Titulo} | ${$('#title').text()}`)
-            if (config.LogoId) {
-                $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
-                $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
-            }
-            $('#home-button-logo').css('display', 'block')
-        }
-    });
-</script>
+
 
 
 <script src="~/Scripts/jquery-3.1.1.min.js"></script>

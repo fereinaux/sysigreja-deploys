@@ -69,19 +69,15 @@ namespace SysIgreja.Controllers
         public ActionResult InscricaoConcluida(int Id)
         {
             Participante participante = participantesBusiness.GetParticipanteById(Id);
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao();
-            ViewBag.Participante = new InscricaoConcluidaViewModel
-            {
-                Id = participante.Id,
-                Apelido = participante.Apelido,
-                Logo = participante.Evento.TipoEvento.GetNickname() + ".png",
-                Evento = $"{participante.Evento.TipoEvento.GetDescription()} {participante.Evento.Titulo.ToString()}",
-                Valor = participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
-                DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy"),
-                PadrinhoFone = participante.Padrinho.Fone,
-                PadrinhoNome = participante.Padrinho.Nome
-            };           
-
+            var config = configuracaoBusiness.GetConfiguracao();
+            ViewBag.Configuracao = config;
+            ViewBag.MsgConclusao = config.MsgConclusao
+         .Replace("${Apelido}", participante.Apelido)
+         .Replace("${Evento}", $"{participante.Evento.TipoEvento.GetDescription()} {participante.Evento.Titulo}")
+         .Replace("${ValorEvento}", participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
+         .Replace("${DataEvento}", participante.Evento.DataEvento.ToString("dd/MM/yyyy"))
+         .Replace("${FonePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "")
+         .Replace("${NomePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? "");
 
             if (participante.Status == StatusEnum.Inscrito)
             {
@@ -101,7 +97,7 @@ namespace SysIgreja.Controllers
                 Id = participante.Id,
                 Apelido = participante.Apelido,
                 Logo = participante.Evento.TipoEvento.GetNickname() + ".png",
-                Evento = $"{participante.Evento.TipoEvento.GetDescription()} {participante.Evento.Titulo.ToString()}",
+                Evento = $"{participante.Evento.TipoEvento.GetDescription()} {participante.Evento.Titulo}",
                 Valor = participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
                 DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy")
             };

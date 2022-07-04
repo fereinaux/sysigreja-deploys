@@ -55,8 +55,7 @@
                 url: '/Equipe/GetMembrosEquipe',
                 data: {
                     EventoId: $("#etiquetas-eventoid").val(),
-                    EquipeId: $("#etiquetas-equipes").val(),
-                    Foto: $('.cracha:checked').val() == 1
+                    EquipeId: $("#etiquetas-equipes").val()
                 },
                 datatype: "json",
                 type: "POST",
@@ -179,31 +178,31 @@ function MontarEtiquetasParticipantes(result) {
 }
 
 function MontarEtiquetasEquipantes(result) {
-    var printDoc = new jsPDF('p', 'mm', 'a3');
+    var printDoc = new jsPDF('p', 'mm', 'letter');
     printDoc.setFont('helvetica', "normal")
     printDoc.setFontSize(18);
     $(result.data).each((index, equipante) => {
         if (index % 14 == 0 || index == 0) {
-            heightNome = 42;
-            heightApelido = 57;
-            heightEquipe = 68;
-            width = 73;
+            heightNome = 31;
+            heightApelido = 38;
+            heightEquipe = 44;
+            width = 55;
             if (index > 0) {
                 printDoc.addPage();
             }
         }
         printDoc.setFont('helvetica', "normal")
-        printDoc.setFontSize(18);
+        printDoc.setFontSize(15);
         printDoc.text(width, heightEquipe, "  (" + equipante.Equipe + ")", 'center');
         var splitNome = printDoc.splitTextToSize(equipante.Nome, 100);
         printDoc.text(width, heightNome, splitNome, 'center');
         printDoc.setFont('helvetica', "bold")
-        printDoc.setFontSize(30);
+        printDoc.setFontSize(18);
         printDoc.text(width, splitNome.length > 1 ? heightApelido + 4 : heightApelido, equipante.Apelido, 'center');
-        width = index % 2 == 0 ? 212 : 73;
-        heightNome = index % 2 == 0 ? heightNome : heightNome + 45;
-        heightApelido = index % 2 == 0 ? heightApelido : heightApelido + 45;
-        heightEquipe = index % 2 == 0 ? heightEquipe : heightEquipe + 45;
+        width = index % 2 == 0 ? 162 : 55;
+        heightNome = index % 2 == 0 ? heightNome : heightNome + 33.9;
+        heightApelido = index % 2 == 0 ? heightApelido : heightApelido + 33.9;
+        heightEquipe = index % 2 == 0 ? heightEquipe : heightEquipe + 33.9;
     });
     printDoc.autoPrint();
     window.open(printDoc.output('bloburl'), '_blank');
@@ -410,10 +409,10 @@ function CarregarEtiquetaIndividual(position) {
 }
 
 function ImprimirIndividual(data, position) {
-    var printDoc = new jsPDF('p', 'mm', 'a3');
+    var printDoc = new jsPDF('p', 'mm', 'letter');
     printDoc.setFont('helvetica', "normal")
     printDoc.setFontSize(18);
-    width = position % 2 == 0 ? 212 : 73;
+    width = position % 2 == 0 ? 162 : 55;
     multiplicador = 0;
 
     switch (position) {
@@ -462,16 +461,17 @@ function ImprimirIndividual(data, position) {
         default:
     }
     if ($('.tipo:checked').val() == 1) {
+
         var participante = data.Participante;
-        heightNome = multiplicador * 45;
-        heightApelido = multiplicador * 45;
-        heightNome += 60;
-        heightApelido += 50;
+        heightNome = multiplicador * 33.9;
+        heightApelido = multiplicador * 33.9;
+        heightNome += 42;
+        heightApelido += 32;
         printDoc.setFont('helvetica', "bold")
-        printDoc.setFontSize(30);
+        printDoc.setFontSize(18);
         printDoc.text(width, heightApelido, participante.Apelido, 'center');
         printDoc.setFont('helvetica', "normal")
-        printDoc.setFontSize(18);
+        printDoc.setFontSize(15);
         var splitNome = printDoc.splitTextToSize(participante.Nome, 100);
         printDoc.text(width, heightNome, splitNome, 'center');
 

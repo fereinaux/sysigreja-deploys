@@ -1,6 +1,8 @@
 ﻿var realista = {}
+var selected = false
 eventoId = 0
-function CarregarTabelaParticipante() {
+let table
+function CarregarTabelaParticipante(callbackFunction) {
     if ($("#participante-eventoid").val() != eventoId) {
         $.ajax({
             url: '/Participante/GetPadrinhos',
@@ -10,7 +12,7 @@ function CarregarTabelaParticipante() {
             success: (result) => {
                 eventoId = $("#participante-eventoid").val()
                 $("#participante-padrinhoid").html(`
-<option value=0>Selecione</option>
+<option value=999>Selecione</option>
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
             }
@@ -131,16 +133,24 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
 
                             ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
-                        : ''
+                        : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
+${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'red', 'Deletar Inscrição') : ''}` : ''}`
+
+
                 }
             }
         ],
         order: [
             [2, "asc"]
         ],
+        drawCallback: function () {
+            if (callbackFunction) {
+                callbackFunction()
+            }
+        },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
-            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val(), Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
+            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val() || 999, Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
             datatype: "json",
             type: "POST"
         }
@@ -148,19 +158,72 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
 
     tableParticipanteConfig.buttons.forEach(function (o) {
         if (o.extend === "excel") {
+
             o.action = function (e, dt, button, config) {
-                $.post(
-                    tableParticipanteConfig.ajax.url + "?extract=excel",
-                    tableParticipanteConfig.ajax.data,
-                    function (o) {
-                        window.location = `/Participante/DownloadTempFile?fileName=Participantes ${$("#participante-eventoid option:selected").text()}.xlsx&g=` + o;
+                var div = document.createElement("div");
+                selected = false
+                first = false
+                div.innerHTML = `<div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
+<label style="display:block"> <input id="select-all" type="checkbox" onChange="selectAll()" value="all"> Selecionar Todos <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Nome"> Nome <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Apelido"> Apelido <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataNascimento"> Data de Nascimento <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Idade"> Idade <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Sexo"> Sexo <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Cidade"> Cidade <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Estado"> Estado <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> Círculo <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Motorista <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="HasVacina"> Vacina <i></i></label>
+    </div>`;
+                CustomSwal({
+                    title: "Excel de Participantes",
+                    icon: "info",
+                    text: "Escolha os campos que deseja exportar",
+                    content: div,
+                    className: "button-center",
+                    dangerMode: true,
+                    buttons: {
+                        export: {
+                            text: "Exportar",
+                            value: "export",
+                            className: "btn-primary w-150 btn-all"
+                        }
                     }
-                );
-            };
+                }).then(res => {
+                    if (res) {
+                        const data = tableParticipanteConfig.ajax.data
+                        data.campos = $('#campos-excel:checked').map(function () {
+                            return $(this).val();
+                        }).get().join();
+                        $.post(
+                            tableParticipanteConfig.ajax.url + "?extract=excel",
+                            data,
+                            function (o) {
+                                window.location = `/Participante/DownloadTempFile?fileName=Participantes ${$("#participante-eventoid option:selected").text()}.xlsx&g=` + o;
+                            }
+                        );
+                    };
+                })
+            }
         }
     });
 
-    $("#table-participante").DataTable(tableParticipanteConfig);
+    table = $("#table-participante").DataTable(tableParticipanteConfig);
 }
 
 function ConfirmFoto() {
@@ -211,7 +274,6 @@ function dataURLtoFile(dataurl, filename) {
 function Foto(row) {
 
     realista = row
-    console.log(realista)
 
     var input = $(`#foto${realista.Id}`)[0]
 
@@ -249,7 +311,6 @@ function Foto(row) {
             var viewportWidth = boundaryWidth - (boundaryWidth / 100 * 25);
 
             var viewportHeight = boundaryHeight - (boundaryHeight / 100 * 25);
-            console.log(boundaryWidth, boundaryHeight, viewportHeight, viewportWidth)
 
             $("#main-cropper").croppie({
 
@@ -531,23 +592,29 @@ $("#modal-anexos").on('hidden.bs.modal', function () {
 
 var tipoGlobal = 'pagamento'
 $(`.${tipoGlobal}`).addClass('moldura-modal')
-var destinatarioGlobal = 'mae'
+var destinatarioGlobal = 'realista'
 $(`.${destinatarioGlobal}`).addClass('moldura-modal')
 
 function enviar() {
-    var windowReference = window.open('_blank');
-    $.ajax({
-        url: "/Mensagem/GetMensagem/",
-        data: { Id: $("#msg-list").val() },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            var text = data.Mensagem.Conteudo.replaceAll('${Nome Contato}', getNome(destinatarioGlobal)).replaceAll('${Nome Participante}', getNome('realista'));
-            windowReference.location = GetLinkWhatsApp(getTelefone(destinatarioGlobal), text)
+    if (getNome(destinatarioGlobal)) {
 
-        }
-    });
+        var windowReference = window.open('_blank');
+        $.ajax({
+            url: "/Mensagem/GetMensagem/",
+            data: { Id: $("#msg-list").val() },
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                var text = data.Mensagem.Conteudo.replaceAll('${Nome Contato}', getNome(destinatarioGlobal)).replaceAll('${Nome Participante}', getNome('realista'));
+                windowReference.location = GetLinkWhatsApp(getTelefone(destinatarioGlobal), text)
+
+            }
+        });
+    } else {
+        ErrorMessage('Você deve escolher o destinatário da mensagem')
+
+    }
 
 
 }
@@ -782,6 +849,8 @@ function Pagamentos(row) {
     realista = row;
     $("#pagamentos-whatsapp").val(row.Fone);
     $("#pagamentos-valor").val($("#pagamentos-valor").data("valor"));
+    $("#pagamentos-origem").val('')
+    $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
     $("#pagamentos-participanteid").val(row.Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
     CarregarTabelaPagamentos(row.Id);
@@ -872,6 +941,49 @@ function CancelarInscricao(row) {
     });
 }
 
+
+function DeletarInscricao(row) {
+    ConfirmMessage(`Deseja deletar permanentemente a inscrição de ${row.Nome}?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Participante/DeletarInscricao/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: row.Id
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaParticipante();
+                }
+            });
+        }
+    });
+}
+
+function AtivarInscricao(row) {
+    ConfirmMessage(`Deseja ativar a inscrição de ${row.Nome}?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Participante/AtivarInscricao/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: row.Id
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaParticipante();
+                }
+            });
+        }
+    });
+}
+
 function PostPagamento() {
     if (ValidateForm(`#form-pagamento`)) {
         $.ajax({
@@ -881,13 +993,17 @@ function PostPagamento() {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(
                 {
+                    Origem: $("#pagamentos-origem").val(),
                     EventoId: $("#participante-eventoid").val(),
                     ParticipanteId: $("#pagamentos-participanteid").val(),
+                    Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
                     ContaBancariaId: $('.contabancaria').hasClass('d-none') ? 0 : $("#pagamentos-contabancaria").val(),
                     Valor: Number($("#pagamentos-valor").val())
                 }),
             success: function () {
+                $("#pagamentos-origem").val('')
+                $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
                 CarregarTabelaPagamentos($("#pagamentos-participanteid").val());
                 SuccessMesageOperation();
             }
@@ -913,63 +1029,48 @@ function Opcoes(row) {
             $('.paitext').text(realista.NomePai)
             $('.convitetext').text(realista.NomeConvite)
             $('.contatotext').text(realista.NomeContato)
-
-            $('.pagamento').show()
             $('#participante-obs').val(realista.Observacao)
-            $(`#participante-msgcovid`).iCheck(realista.MsgVacina ? 'check' : 'uncheck');
-            $(`#participante-msgpagamento`).iCheck(realista.MsgPagamento ? 'check' : 'uncheck');
-            $(`#participante-msgnoitita`).iCheck(realista.MsgNoitita ? 'check' : 'uncheck');
-            $(`#participante-msggeral`).iCheck(realista.MsgGeral ? 'check' : 'uncheck');
-            $(`#participante-msgfoto`).iCheck(realista.MsgFoto ? 'check' : 'uncheck');
-
-            $.ajax({
-                url: "/Mensagem/GetMensagens/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                success: function (dataMsg) {
-                    $("#msg-list").html(`
+            if ($('#modal-opcoes').is(":hidden")) {
+                $.ajax({
+                    url: "/Mensagem/GetMensagens/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (dataMsg) {
+                        $("#msg-list").html(`
 ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
 
-                }
-            })
-
+                    }
+                })
+            }
             $('#participante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
                 }`)
             $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
             if (realista.Status == "Confirmado") {
                 $('.pagamento').hide()
             }
+
+            arrayData = table.data().toArray()
+            let index = arrayData.findIndex(r => r.Id == row.Id)
+
+            $('#btn-previous').css('display', 'block')
+            $('#btn-next').css('display', 'block')
+            if (index == 0) {
+
+                $('#btn-previous').css('display', 'none')
+            }
+
+            if (index == arrayData.length - 1) {
+                $('#btn-next').css('display', 'none')
+            }
+
             $("#modal-opcoes").modal();
         }
     });
 
 
 }
-
-$("#modal-opcoes").on('hidden.bs.modal', function () {
-    $.ajax({
-        url: "/Participante/PostInfo/",
-        datatype: "json",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(
-            {
-                Id: realista.Id,
-                Observacao: $('#participante-obs').val(),
-                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
-                MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
-                MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
-                MsgGeral: $(`#participante-msggeral`).prop("checked"),
-                MsgFoto: $(`#participante-msgfoto`).prop("checked"),
-                Etiquetas: $('.participante-etiquetas').val()
-            }),
-        success: function () {
-            CarregarTabelaParticipante()
-        }
-    });
-});
 
 function GetParticipanteContato(id) {
     $.ajax({
@@ -1032,21 +1133,24 @@ function GetParticipante(id) {
                 $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Participante.Medicacao);
                 $(`#participante-alergia`).val(data.Participante.Alergia);
-                $(`#participante-parente`).val(data.Participante.Parente);
-                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
-                    $('.congregacao').removeClass('d-none');
-                    $("#participante-congregacaodescricao").addClass('required');
-                }
                 $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
-                $(`input[type=radio][name=participante-hasparente][value=${data.Participante.HasParente}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
+                $(`#participante-cep`).val(data.Participante.CEP);
+                $(`#participante-logradouro`).val(data.Participante.Logradouro);
+                $(`#participante-bairro`).val(data.Participante.Bairro);
+                $(`#participante-cidade`).val(data.Participante.Cidade);
+                $(`#participante-estado`).val(data.Participante.Estado);
+                $(`#participante-numero`).val(data.Participante.Numero);
+                $(`#participante-complemento`).val(data.Participante.Complemento);
+                $(`#participante-referencia`).val(data.Participante.Referencia);
 
+                $(`#participante-latitude`).val((data.Participante.Latitude || '').replaceAll(',', '.'));
+                $(`#participante-longitude`).val((data.Participante.Longitude || '').replaceAll(',', '.'));
+                if ($('#map').length > 0) {
+                    montarMapa()
+                }
                 $("#participante-numeracao").val(data.Participante.Numeracao);
             }
         });
@@ -1069,6 +1173,14 @@ function GetParticipante(id) {
         $(`#participante-foneconvite`).val("");
         $(`#participante-nomecontato`).val("");
         $(`#participante-fonecontato`).val("");
+        $(`#participante-cep`).val("");
+        $(`#participante-logradouro`).val("");
+        $(`#participante-bairro`).val('');
+        $(`#participante-cidade`).val('');
+        $(`#participante-estado`).val('');
+        $(`#participante-numero`).val('');
+        $(`#participante-complemento`).val('');
+        $(`#participante-referencia`).val('');
         $(`input[type=radio][name=participante-sexo][value=1]`).iCheck('check');
         $(`input[type=radio][name=participante-hasalergia][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasmedicacao][value=false]`).iCheck('check');
@@ -1106,6 +1218,16 @@ function PostParticipante() {
                     FoneConvite: $(`#participante-foneconvite`).val(),
                     NomeContato: $(`#participante-nomecontato`).val(),
                     FoneContato: $(`#participante-fonecontato`).val(),
+                    CEP: $(`#participante-cep`).val(),
+                    Logradouro: $(`#participante-logradouro`).val(),
+                    Bairro: $(`#participante-bairro`).val(),
+                    Cidade: $(`#participante-cidade`).val(),
+                    Estado: $(`#participante-estado`).val(),
+                    Numero: $(`#participante-numero`).val(),
+                    Complemento: $(`#participante-complemento`).val(),
+                    Referencia: $(`#participante-referencia`).val(),
+                    Latitude: $(`#participante-latitude`).val(),
+                    Longitude: $(`#participante-longitude`).val(),
                     HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
                     RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
                     HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
@@ -1153,4 +1275,103 @@ $('#has-restricaoalimentar').on('ifChecked', function (event) {
 $('#not-restricaoalimentar').on('ifChecked', function (event) {
     $('.restricaoalimentar').addClass('d-none');
     $("#participante-restricaoalimentar").removeClass('required');
+});
+
+
+
+function previous() {
+    PostInfo(function () {
+        arrayData = table.data().toArray()
+        let index = arrayData.findIndex(r => r.Id == realista.Id)
+        if (index > 0) {
+            Opcoes(arrayData[index - 1])
+        }
+    })
+}
+
+function next() {
+    PostInfo(function () {
+        arrayData = table.data().toArray()
+        let index = arrayData.findIndex(r => r.Id == realista.Id)
+        if (index + 1 < arrayData.length) {
+            Opcoes(arrayData[index + 1])
+        }
+    })
+}
+
+
+$("#modal-opcoes").on('hidden.bs.modal', function () {
+    PostInfo()
+});
+
+function PostInfo(callback) {
+    $.ajax({
+        url: "/Participante/PostInfo/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                Id: realista.Id,
+                Observacao: $('#participante-obs').val(),
+                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
+                MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
+                MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
+                MsgGeral: $(`#participante-msggeral`).prop("checked"),
+                MsgFoto: $(`#participante-msgfoto`).prop("checked"),
+                Etiquetas: $('.participante-etiquetas').val()
+            }),
+        success: function () {
+            CarregarTabelaParticipante(callback)
+        }
+    });
+}
+
+
+if ($('#map').length > 0) {
+
+    const map = initMap('map')
+    const markerLayer = createMarkerLayer(map)
+    function montarMapa() {
+        markerLayer.getLayers().forEach(mark => mark.remove())
+        var marker = L.marker([$(`#participante-latitude`).val().toString(), $(`#participante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
+        marker.bindPopup(`<h4>${$(`#participante-nome`).val()}</h4>`).openPopup();
+        $('.div-map').css('display', 'block')
+        map.setView([$(`#participante-latitude`).val(), $(`#participante-longitude`).val()], 18);
+    }
+    function verificaCep(input) {
+        let cep = $(input).val()
+        if (cep.length == 9) {
+            $.ajax({
+                url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $(`#participante-logradouro`).val(data.logradouro)
+                    $(`#participante-bairro`).val(data.bairro)
+                    $(`#participante-cidade`).val(data.localidade)
+                    $(`#participante-estado`).val(data.uf)
+                    $(`#participante-latitude`).val(data.lat)
+                    $(`#participante-longitude`).val(data.lon)
+                    montarMapa()
+                }
+            })
+        }
+    }
+}
+
+function selectAll() {
+    selected = !selected
+    $('.campos-excel').attr('checked', selected)
+}
+
+$('body').on('DOMNodeInserted', '.swal-overlay', function () {
+    tippy('.btn-export', {
+        content: `Exporta os campos selecionados`,
+        interactive: true,
+        allowHTML: true,
+        zIndex: 10005,
+        trigger: 'mouseenter'
+    });
 });

@@ -82,7 +82,8 @@ namespace SysIgreja.Controllers
                });
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
             ViewBag.Valor = eventosBusiness.GetEventoAtivo()?.ValorTaxa ?? 0;
-            
+           
+
             return View();
         }
 
@@ -119,6 +120,7 @@ namespace SysIgreja.Controllers
                 var filteredResultsCount = totalResultsCount;
 
 
+
                 if (model.Etiquetas != null && model.Etiquetas.Count > 0)
                 {
                     model.Etiquetas.ForEach(etiqueta =>
@@ -136,7 +138,7 @@ namespace SysIgreja.Controllers
                 {
 
                     result = result.Where(x => x.Equipes.Any(y => y.EventoId == model.EventoId));
-                    
+
                     filteredResultsCount = result.Count();
                 }
 
@@ -153,6 +155,7 @@ namespace SysIgreja.Controllers
                     }
                     filteredResultsCount = result.Count();
                 }
+
 
                 if (model.Equipe != null)
                 {
@@ -258,14 +261,8 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipante(int Id)
         {
-            var result = equipantesBusiness.GetEquipanteById(Id);
+            var result = mapper.Map<EquipanteListModel>(equipantesBusiness.GetEquipantes().ToList().FirstOrDefault(x => x.Id == Id));
             int eventoId = (eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().OrderByDescending(x => x.DataEvento).First()).Id;
-
-            result.Nome = UtilServices.CapitalizarNome(result.Nome);
-            result.Apelido = UtilServices.CapitalizarNome(result.Apelido);
-            var equipeAtual = equipesBusiness.GetEquipeAtual(eventoId, result.Id);
-            result.Equipe = equipeAtual?.Equipe.GetDescription() ?? "";
-            result.Checkin = equipeAtual?.Checkin ?? false;
 
             var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
               .Select(x => new
@@ -275,15 +272,13 @@ namespace SysIgreja.Controllers
                   Cor = x.Cor
               });
 
-            var equipante = mapper.Map<PostEquipanteModel>(result);
-
             var dadosAdicionais = new
             {
                 Status = result.Status.GetDescription(),
                 Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? ""
             };
 
-            return Json(new { Equipante = equipante, Etiquetas = etiquetas, }, JsonRequestBehavior.AllowGet);
+            return Json(new { Equipante = result, Etiquetas = etiquetas, }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -303,7 +298,14 @@ namespace SysIgreja.Controllers
         {
             Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
             var eventoAtual = eventosBusiness.GetEventoAtivo();
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao();
+            var config = configuracaoBusiness.GetConfiguracao();
+            ViewBag.Configuracao = config;
+            ViewBag.MsgConclusao = config.MsgConclusaoEquipe
+         .Replace("${Apelido}", equipante.Apelido)
+         .Replace("${Evento}", $"{eventoAtual.TipoEvento.GetDescription()}")
+         .Replace("${ValorEvento}", eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
+         .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
+
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {
                 Id = equipante.Id,
@@ -328,6 +330,7 @@ namespace SysIgreja.Controllers
             var equipeAtual = equipesBusiness.GetEquipeAtual(eventoId, result.Id);
             result.Equipe = equipeAtual.Equipe.GetDescription() ?? "";
             result.Checkin = equipeAtual.Checkin;
+            result.Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "";
 
             var equipante = mapper.Map<PostEquipanteModel>(result);
 
@@ -358,6 +361,15 @@ namespace SysIgreja.Controllers
             }
 
         }
+
+        [HttpPost]
+        public ActionResult PostEtiquetas(string[] etiquetas, int id, string obs)
+        {
+            equipantesBusiness.PostEtiquetas(etiquetas, id, obs);
+
+            return new HttpStatusCodeResult(200);
+        }
+
 
         [HttpPost]
         public ActionResult DeleteEquipante(int Id)

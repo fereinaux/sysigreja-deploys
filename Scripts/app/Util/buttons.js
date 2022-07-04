@@ -32,7 +32,7 @@ function GetConvidar(tel, nome) {
 }
 
 function GetLinkWhatsApp(tel, text) {
-    if (!tel || !text)
+    if (!tel)
         return ""
     tel = tel.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '');
     text = typeof text !== "undefined" ? `&text=${EncodeUrl(text)}` : "";
@@ -57,7 +57,7 @@ function GetLabel(functionClick, functionParameter, color, title) {
         default: button = 'info'; break;
     }
 
-    return `<span onclick="${functionClick}(${functionParameter})" style="font-size:13px" class="m-r-sm pointer text-center label label-${button}">${title}</span>`;
+    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:13px" class="m-r-sm pointer text-center label label-${button}">${title}</span>`;
 }
 
 function GetCheckBox(functionClick, functionParameter, id, checked) {

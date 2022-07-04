@@ -1,4 +1,5 @@
 ﻿using Arquitetura.Controller;
+using Arquitetura.ViewModels;
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.CentroCusto;
@@ -9,6 +10,8 @@ using Core.Business.MeioPagamento;
 using Core.Business.Participantes;
 using Core.Models.Lancamento;
 using SysIgreja.ViewModels;
+using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
@@ -46,7 +49,8 @@ namespace SysIgreja.Controllers
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
             ViewBag.CentroCustoPagar = centroCustoBusiness.GetCentroCustos().Where(x => x.Tipo == TiposCentroCustoEnum.Despesa).ToList();
             ViewBag.CentroCustoReceber = centroCustoBusiness.GetCentroCustos().Where(x => x.Tipo == TiposCentroCustoEnum.Receita).ToList();
-            ViewBag.CentroCustos = centroCustoBusiness.GetCentroCustos().ToList();            
+            ViewBag.CentroCustos = centroCustoBusiness.GetCentroCustos().ToList();
+           
             return View();
         }
 
@@ -95,6 +99,7 @@ namespace SysIgreja.Controllers
                 CentroCusto = x.CentroCusto.Descricao,
                 Observacao = x.Observacao,
                 Descricao = UtilServices.CapitalizarNome(x.Descricao),
+                Origem = UtilServices.CapitalizarNome(x.Origem),
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),
                 FormaPagamento = x.MeioPagamento.Descricao,
                 Valor = UtilServices.DecimalToMoeda(x.Valor),
@@ -118,7 +123,8 @@ namespace SysIgreja.Controllers
             if (model.CentroCustoId.HasValue)
             {
                 query = query.Where(x => x.CentroCustoId == model.CentroCustoId);
-            }     
+            }
+
 
             if (model.DataIni.HasValue && model.DataFim.HasValue)
             {
@@ -164,9 +170,11 @@ namespace SysIgreja.Controllers
                     result.Id,
                     result.CentroCustoId,
                     result.Descricao,
+                    result.Origem,
                     result.Valor,
+                    DataLancamento = result.DataCadastro,
                     result.MeioPagamentoId,
-                    result.Observacao
+                    result.Observacao,
 
                 }
             }, JsonRequestBehavior.AllowGet);
@@ -183,15 +191,13 @@ namespace SysIgreja.Controllers
                     x.Tipo,
                     MeioPagamento = x.MeioPagamento.Descricao.Contains("Cartão") ? "Cartão" : x.MeioPagamento.Descricao
                 })
-                .Select(x => new
-                {
+                .Select(x => new {
                     Tipo = x.Key.Tipo,
                     MeioPagamento = x.Key.MeioPagamento,
                     Valor = x.Sum(y => y.Valor)
                 })
                 .ToList()
-                .Select(x => new
-                {
+                .Select(x => new {
                     Tipo = x.Tipo.GetDescription(),
                     MeioPagamento = x.MeioPagamento,
                     Valor = x.Valor
@@ -208,13 +214,13 @@ namespace SysIgreja.Controllers
                 .GetLancamentos()
                 .Where(x => x.EventoId == EventoId)
                 .ToList()
-                .Select(x => new
-                {
+                .Select(x => new {
                     Tipo = x.Tipo.GetDescription(),
                     MeioPagamento = x.MeioPagamento.Descricao,
                     Valor = x.Valor,
                     CentroCusto = x.CentroCusto.Descricao,
                     Descricao = UtilServices.CapitalizarNome(x.Descricao),
+                    Origem = UtilServices.CapitalizarNome(x.Origem),
                     Data = x.DataCadastro.Value.ToString("dd/MM/yyyy")
                 })
                 .OrderByDescending(x => x.Tipo)

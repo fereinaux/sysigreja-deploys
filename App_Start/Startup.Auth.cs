@@ -12,9 +12,12 @@ namespace SysIgreja
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
+              
                 ExpireTimeSpan = new System.TimeSpan(90, 0, 0, 0),
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/login")
+                LoginPath = new PathString("/login"),
+                CookieHttpOnly = false,
+                SlidingExpiration = true,
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
         }

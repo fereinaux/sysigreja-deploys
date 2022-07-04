@@ -4151,8 +4151,8 @@ fieldset[disabled] a.btn {
 
     .btn-warning:hover {
         color: #fff;
-        background-color: #ec971f;
-        border-color: #d58512;
+        background-color: #ec971f !important;
+        border-color: #d58512 !important;
     }
 
     .btn-warning:active,

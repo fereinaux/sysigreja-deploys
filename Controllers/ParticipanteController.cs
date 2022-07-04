@@ -43,7 +43,7 @@ namespace SysIgreja.Controllers
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
 
-        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness,IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
             this.arquivoBusiness = arquivoBusiness;
@@ -58,12 +58,6 @@ namespace SysIgreja.Controllers
             mapper = new MapperRealidade().mapper;
         }
 
-        public ActionResult ListaTelefonica()
-        {
-            ViewBag.Title = "Lista Telefônica";
-            GetEventos();
-            return View();
-        }
 
         public ActionResult Checkin()
         {
@@ -75,21 +69,14 @@ namespace SysIgreja.Controllers
             var evento = eventosBusiness.GetEventoAtivo();
             ViewBag.ValorRealista = evento?.Valor ?? 0;
             ViewBag.ValorEquipante =  evento?.ValorTaxa ?? 0;
-          
+           
+
             return View();
         }
 
         public ActionResult Etiquetas()
         {
             ViewBag.Title = "Impressão de Etiquetas";
-            GetEventos();
-
-            return View();
-        }
-
-        public ActionResult Boletos()
-        {
-            ViewBag.Title = "Boletos Solicitados";
             GetEventos();
 
             return View();
@@ -103,7 +90,8 @@ namespace SysIgreja.Controllers
             GetCampos();
             ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
             ViewBag.Valor =  eventosBusiness.GetEventoAtivo()?.Valor ?? 0;
-          
+           
+
             return View();
         }
 
@@ -115,7 +103,7 @@ namespace SysIgreja.Controllers
                 Apelido = x.Apelido,
                 CancelarCheckin = false,
                 Checkin = x.Checkin,
-                Padrinho = x.Padrinho?.Nome,
+                Padrinho = x.Padrinho?.EquipanteEvento.Equipante.Nome,
                 Congregacao = x.Congregacao,
                 DataNascimento = x.DataNascimento,
                 Email = x.Email,
@@ -216,8 +204,10 @@ namespace SysIgreja.Controllers
                 Circulo = x.Circulo.Cor.GetDescription(),
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                Fone = x.Participante.Fone,
-                Foto = x.Participante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Participante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
+                Cor = x.Circulo.Cor.GetDescription(),
+                Dirigente1 = UtilServices.CapitalizarNome(x.Circulo.Dirigente1.Equipante.Nome),
+                Dirigente2 = UtilServices.CapitalizarNome(x.Circulo.Dirigente2.Equipante.Nome),
+                Fone = x.Participante.Fone
             });
 
             var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -228,10 +218,15 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByQuarto(int QuartoId)
         {
-            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante).ToList().Select(x => new
+            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante).OrderBy(x => x.Participante.Nome).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-")
+                Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-"),
+                Titulo = x.Quarto.Titulo,
+                Equipante = x.Quarto.Equipante != null ? UtilServices.CapitalizarNome(x.Quarto.Equipante.Nome) : "",
+                Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor.GetDescription() ?? "",
+                Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
+
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -363,31 +358,52 @@ namespace SysIgreja.Controllers
                  result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
                 }
 
-                if (model.Status != null)
+                if (model.Status.HasValue)
                 {
-                    result = result.Where(x => (x.Status == model.Status));
+                    if ((int)model.Status.Value == 12)
+                    {
+                        result = result.Where(x => (x.Checkin));
+                    }
+                    else if (model.Status == StatusEnum.Confirmado)
+                    {
+                        result = result.Where(x => (x.Status == StatusEnum.Confirmado && !x.Checkin));
+                    }
+                    else
+                    {
+                        result = result.Where(x => (x.Status == model.Status));
+
+                    }
                     filteredResultsCount = result.Count();
                 }
 
-                if (model.PadrinhoId > 0)
+                if (model.PadrinhoId > 0 && model.PadrinhoId != 999)
                 {
                     result = result.Where(x => (x.PadrinhoId == model.PadrinhoId));
                     filteredResultsCount = result.Count();
                 }
+                else if (model.PadrinhoId == 0)
+                {
+                    result = result.Where(x => (!x.PadrinhoId.HasValue));
+                    filteredResultsCount = result.Count();
+                }
+
+
 
                 if (model.search.value != null)
                 {
-                    result = result.Where(x => (x.Nome.Contains(model.search.value) || x.Padrinho.Nome.Contains(model.search.value)));
+                    result = result.Where(x => (x.Nome.Contains(model.search.value)));
                     filteredResultsCount = result.Count();
                 }
 
                 try
                 {
                     model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
+                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
                     result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
                 }
                 catch (Exception)
                 {
+                    result = result.OrderBy(x => x.Id);
                 }
 
                 result = result.Skip(model.Start)
@@ -400,49 +416,6 @@ namespace SysIgreja.Controllers
                     recordsFiltered = filteredResultsCount,
                 }, JsonRequestBehavior.AllowGet);
 
-            }
-        }
-
-        [HttpPost]
-        public ActionResult GetParticipantes(int EventoId)
-        {
-            var list = participantesBusiness
-                .GetParticipantesByEvento(EventoId)
-                .ToList();
-
-            var extract = Request.QueryString["extract"];
-            if (extract == "excel")
-            {
-                Guid g = Guid.NewGuid();
-
-                Session[g.ToString()] = datatableService.GenerateExcel(participantesBusiness
-                .GetParticipantesByEvento(EventoId).Select(x => new ParticipanteExcelViewModel
-                {
-                    Nome = UtilServices.CapitalizarNome(x.Nome),
-                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                    DataNascimento = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd/MM/yyyy") : "",
-                    Idade = UtilServices.GetAge(x.DataNascimento),
-                    Sexo = x.Sexo.GetDescription(),
-                    Fone = x.Fone,
-                    NomeParente = x.HasParente.HasValue && x.HasParente.Value ? UtilServices.CapitalizarNome(x.Parente) : "",
-                    NomeConvite = UtilServices.CapitalizarNome(x.NomeConvite),
-                    FoneConvite = x.FoneConvite,
-                    Alergia = x.Alergia,
-                    Medicacao = x.Medicacao,
-                    RestricaoAlimentar = x.RestricaoAlimentar,
-                    Situacao = x.Status.GetDescription()
-
-                }).ToList());
-
-                return Content(g.ToString());
-            }
-            else
-            {
-                var result = participantesBusiness
-                .GetParticipantesByEvento(EventoId)
-                   .OrderBy(x => x.Nome);
-
-                return Json(new { data = mapper.Map<IEnumerable<ParticipanteListModel>>(result) }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -530,7 +503,7 @@ namespace SysIgreja.Controllers
                     Id = x.Id,
                     Nome = UtilServices.CapitalizarNome(x.Nome),
                     Status = x.Status.GetDescription(),
-                    Evento = $"{x.Evento.TipoEvento.GetDescription()} {x.Evento.Titulo.ToString()}",
+                    Evento = $"{x.Evento.Titulo.ToString()} {x.Evento.TipoEvento.GetDescription()}",
                     Sexo = x.Sexo.GetDescription(),
                     Fone = x.Fone,
                     x.NomeMae,
@@ -540,7 +513,7 @@ namespace SysIgreja.Controllers
                     x.NomeConvite,
                     x.FoneConvite,
                     PendenciaContato = x.PendenciaContato,
-                    Padrinho = x.Padrinho?.Nome
+                    Padrinho = x.Padrinho?.EquipanteEvento.Equipante.Nome
                 }); ;
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -550,6 +523,23 @@ namespace SysIgreja.Controllers
         public ActionResult CancelarInscricao(int Id)
         {
             participantesBusiness.CancelarInscricao(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult AtivarInscricao(int Id)
+        {
+            participantesBusiness.AtivarInscricao(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult DeletarInscricao(int Id)
+        {
+            participantesBusiness.DeletarInscricao(Id);
 
             return new HttpStatusCodeResult(200);
         }
@@ -590,7 +580,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetPadrinhos(int eventoId)
         {
-            return Json(new { Padrinhos = participantesBusiness.GetParticipantesByEvento(eventoId).Select(x => new { Id = x.PadrinhoId, Nome = x.Padrinho.Nome }).Distinct().ToList() }, JsonRequestBehavior.AllowGet);
+            return Json(new { Padrinhos = participantesBusiness.GetParticipantesByEvento(eventoId).Select(x => new { Id = x.PadrinhoId, Nome = x.PadrinhoId.HasValue ? x.Padrinho.EquipanteEvento.Equipante.Nome : "Sem Padrinho" }).Distinct().ToList() }, JsonRequestBehavior.AllowGet);
 
         }
 

@@ -156,6 +156,7 @@ function NewParticipante() {
     GetParticipante();
 }
 
+
 function GetParticipante() {
     AplicarCssPadrao($('input'));
     id = $("#participantes").val() == "Pesquisar" ? 0 : $("#participantes").val();
@@ -195,10 +196,8 @@ function GetParticipante() {
                 $(`#participante-latitude`).val((data.Participante.Latitude || '').replaceAll(',', '.'));
                 $(`#participante-longitude`).val((data.Participante.Longitude || '').replaceAll(',', '.'));
                 if ($('#map').length > 0) {
-
                     montarMapa()
                 }
-                console.log(data.Participante);
                 $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
                 $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
                 $(`#participante-nome-contato`).val(data.Participante.NomeContato);
@@ -206,17 +205,7 @@ function GetParticipante() {
                 $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Participante.Medicacao);
                 $(`#participante-alergia`).val(data.Participante.Alergia);
-                $(`#participante-parente`).val(data.Participante.Parente);
-                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
-                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                    $('.congregacao').removeClass('d-none');
-                    $("#participante-congregacaodescricao").addClass('required');
-                }
                 $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
-                $(`input[type=radio][name=participante-hasparente][value=${data.Participante.HasParente}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
@@ -298,6 +287,7 @@ function GetParticipante() {
 }
 
 
+
 function GetEquipante() {
     AplicarCssPadrao($('input'));
     id = $("#equipantes").val() == "Pesquisar" ? 0 : $("#equipantes").val();
@@ -365,8 +355,8 @@ function GetEquipante() {
 
                 $(".participante-info").removeClass('d-none');
 
-                $(".quarto-info").addClass('d-none');
 
+                $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
 
                 if (data.Equipante.Checkin) {
                     $('.status').text("Presente");
@@ -491,6 +481,8 @@ function PostPagamento() {
             data: JSON.stringify(
                 {
                     EventoId: $("#eventoid").val(),
+                    Origem: $("#pagamentos-origem").val(),
+                    Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     ParticipanteId: $("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : null,
                     EquipanteId: $("#pagamentos-equipanteid").val() > 0 ? $("#pagamentos-equipanteid").val() : null,
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
@@ -498,6 +490,8 @@ function PostPagamento() {
                     Valor: Number($("#pagamentos-valor").val())
                 }),
             success: function () {
+                $("#pagamentos-origem").val('')
+                $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
                 Pagamentos($("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : $("#pagamentos-equipanteid").val());
                 SuccessMesageOperation();
                 GetParticipante();
@@ -548,6 +542,8 @@ function CarregarValorTaxa() {
 function Pagamentos(id) {
     $('.contabancaria').addClass('d-none');
     $("#pagamentos-valor").val($("#pagamentos-valor").data($("#equipante-id").val() > 0 ? "valor-equipante" : "valor-realista"));
+    $("#pagamentos-origem").val('')
+    $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
     $("#pagamentos-participanteid").val($("#participante-id").val());
     $("#pagamentos-equipanteid").val($("#equipante-id").val());
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
@@ -921,9 +917,7 @@ if ($('#map').length > 0) {
                     $(`#participante-estado`).val(data.uf)
                     $(`#participante-latitude`).val(data.lat)
                     $(`#participante-longitude`).val(data.lon)
-                    if ($('#map').length > 0) {
-                        montarMapa()
-                    }
+                    montarMapa()
                 }
             })
         }

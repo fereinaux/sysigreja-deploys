@@ -27,10 +27,11 @@
                     <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Participantes</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Circulo","Participante","Quarto"}, actions: new List<string> { "Index" }, cssClass: "in")">
                         <li class="@Html.IsSelected(action: "Index", controller:"Participante")"><a href="@Url.Action("Index", "Participante")">Cadastro</a></li>
+                        <li class="@Html.IsSelected(action: "Index", controller:"Padrinho")"><a href="@Url.Action("Index", "Padrinho")">Padrinhos</a></li>
                         <li class="@Html.IsSelected(action: "Index", controller:"Circulo")"><a href="@Url.Action("Index", "Circulo")">Círculos</a></li>
                         <li class="@Html.IsSelected(action: "Index", controller:"Quarto")"><a href="@Url.Action("Index", "Quarto")">Quartos</a></li>
                         <li class="@Html.IsSelected(action: "Index", controller:"Carona")"><a href="@Url.Action("Index", "Carona")">Caronas</a></li>
-          
+
                     </ul>
                 </li>
             }
@@ -59,7 +60,7 @@
 
             }
 
-            @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master) || User.IsInRole(Usuario.Secretaria))
+            @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master))
             {
                 <li class="@Html.IsSelected(action: "Index", controller: "Relatorio")"><a href="@Url.Action("Index", "Relatorio")"><i class="fa fa-chart-area"></i><span class="nav-label">Relatórios</span></a></li>
             }

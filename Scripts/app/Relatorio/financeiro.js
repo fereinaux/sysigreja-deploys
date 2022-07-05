@@ -10,16 +10,19 @@ function PrintFinanceiro() {
         className: "button-center",
         dangerMode: true,
         buttons: {
-            export: {
-                text: "Imprimir",
-                value: "print",
-                className: "btn-primary w-150 btn-all"
+            resmue: {
+                text: "Resumido",
+                value: "resume",
+                className: "btn-info w-150 btn-resume"
+            },
+            full: {
+                text: "Completo",
+                value: "full",
+                className: "btn-primary w-150 btn-full"
             }
         }
-    }).then(res => {
-        if (res) {
-
-
+    }).then(type => {
+        if (type) {
             centroCustos = $('#rel-centro-custos:checked').map(function () {
                 return $(this).val();
             }).get().join();
@@ -102,7 +105,9 @@ function PrintFinanceiro() {
                         success: (result) => {
                             doc.setFont('helvetica', "bold")
                             doc.text(12, 43, "Descrição");
-                            doc.text(142, 43, "Data");
+                            if (type == "full") {
+                                doc.text(142, 43, "Data");
+                            }
                             doc.text(172, 43, "Valor");
                             doc.line(10, 45, 195, 45);
 
@@ -119,11 +124,16 @@ function PrintFinanceiro() {
                                 if (lancamento.Tipo == "Receber") {
                                     if (centrocusto != lancamento.CentroCusto) {
                                         if (totalCentroCusto > 0) {
-                                            doc.setFont('helvetica', "bold")
-                                            height -= 4;
-                                            doc.line(169, height, 187, height);
-                                            height += 4;
-                                            height = SetHeight(height, doc);
+                                                doc.setFont('helvetica', "bold")
+                                            if (type == "full") {
+                                                height -= 4;
+                                                doc.line(169, height, 187, height);
+                                                height += 4;
+                                                height = SetHeight(height, doc);
+                                            }
+                                            else {
+                                                height -= 2;
+                                            }
                                             doc.text(172, height, totalCentroCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
 
                                             doc.setFont('helvetica', "normal")
@@ -137,37 +147,45 @@ function PrintFinanceiro() {
                                         height += 2;
                                         height = SetHeight(height, doc);
                                         doc.line(10, height, 195, height);
-                                        height += 5;
-                                        height = SetHeight(height, doc);
+                                        if (type == "full") {
+                                            height += 5;
+                                            height = SetHeight(height, doc);
+                                        }
                                         doc.setFont('helvetica', "normal")
                                     }
 
-
-                                    var splitDescricao = doc.splitTextToSize(lancamento.Descricao, 120);
-                                    doc.text(12, height, splitDescricao);
-
-                                    doc.text(142, height, lancamento.Data);
-                                    doc.text(172, height, lancamento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
                                     totalCentroCusto += lancamento.Valor;
-                                    totalReceber += lancamento.Valor;
-                                    height += 6 * splitDescricao.length;
-                                    if (lancamento.Origem) {
-                                        doc.setFont('helvetica', "bold")
-                                        doc.text(16, height, "Origem:");
-                                        doc.setFont('helvetica', "normal")
-                                        doc.text(34, height, lancamento.Origem);
-                                        height += 6
+                                        totalReceber += lancamento.Valor;
+                                    if (type == "full") {
+
+                                        var splitDescricao = doc.splitTextToSize(lancamento.Descricao, 120);
+                                        doc.text(12, height, splitDescricao);
+
+                                        doc.text(142, height, lancamento.Data);
+                                        doc.text(172, height, lancamento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                                        height += 6 * splitDescricao.length;
+                                        if (lancamento.Origem) {
+                                            doc.setFont('helvetica', "bold")
+                                            doc.text(16, height, "Origem:");
+                                            doc.setFont('helvetica', "normal")
+                                            doc.text(34, height, lancamento.Origem);
+                                            height += 6
+                                        }
+                                        height = SetHeight(height, doc);
                                     }
-                                    height = SetHeight(height, doc);
                                 }
                             });
 
                             if (totalCentroCusto > 0) {
                                 doc.setFont('helvetica', "bold")
-                                height -= 4;
-                                doc.line(169, height, 187, height);
-                                height += 4;
-                                height = SetHeight(height, doc);
+                                if (type == "full") {
+                                    height -= 4;
+                                    doc.line(169, height, 187, height);
+                                    height += 4;
+                                    height = SetHeight(height, doc);
+                                } else {
+                                    height -= 2;
+                                }
                                 doc.text(172, height, totalCentroCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
 
                                 doc.setFont('helvetica', "normal")
@@ -199,10 +217,14 @@ function PrintFinanceiro() {
                                     if (centrocusto != lancamento.CentroCusto) {
                                         if (totalCentroCusto > 0) {
                                             doc.setFont('helvetica', "bold")
-                                            height -= 4;
-                                            doc.line(169, height, 187, height);
-                                            height += 4;
-                                            height = SetHeight(height, doc);
+                                            if (type == "full") {
+                                                height -= 4;
+                                                doc.line(169, height, 187, height);
+                                                height += 4;
+                                                height = SetHeight(height, doc);
+                                            } else {
+                                                height -= 2;
+                                            }
                                             doc.text(172, height, totalCentroCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
 
                                             doc.setFont('helvetica', "normal")
@@ -216,29 +238,37 @@ function PrintFinanceiro() {
                                         height += 2;
                                         height = SetHeight(height, doc);
                                         doc.line(10, height, 195, height);
-                                        height += 5;
-                                        height = SetHeight(height, doc);
+                                        if (type == "full") {
+                                            height += 5;
+                                            height = SetHeight(height, doc);
+                                        }
                                         doc.setFont('helvetica', "normal")
                                     }
 
 
-                                    var splitDescricao = doc.splitTextToSize(lancamento.Descricao, 120);
-                                    doc.text(12, height, splitDescricao);
-                                    doc.text(142, height, lancamento.Data);
-                                    doc.text(172, height, lancamento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
                                     totalCentroCusto += lancamento.Valor;
                                     totalPagar += lancamento.Valor;
-                                    height += 6 * splitDescricao.length;
-                                    height = SetHeight(height, doc);
+                                    if (type == "full") {
+                                        var splitDescricao = doc.splitTextToSize(lancamento.Descricao, 120);
+                                        doc.text(12, height, splitDescricao);
+                                        doc.text(142, height, lancamento.Data);
+                                        doc.text(172, height, lancamento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                                        height += 6 * splitDescricao.length;
+                                        height = SetHeight(height, doc);
+                                    }
                                 }
                             });
 
                             if (totalCentroCusto > 0) {
                                 doc.setFont('helvetica', "bold")
-                                height -= 4;
-                                doc.line(169, height, 187, height);
-                                height += 4;
-                                height = SetHeight(height, doc);
+                                if (type == "full") {
+                                    height -= 4;
+                                    doc.line(169, height, 187, height);
+                                    height += 4;
+                                    height = SetHeight(height, doc);
+                                } else {
+                                    height -= 2
+                                }
                                 doc.text(172, height, totalCentroCusto.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
 
                                 doc.setFont('helvetica', "normal")

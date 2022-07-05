@@ -127,8 +127,6 @@ const swalQuartos = {
             text: "Completo",
             value: "full",
             className: "btn-primary w-150 btn-full"
-        }, test: {
-            visible: false
         }
     }
 

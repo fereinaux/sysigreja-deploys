@@ -146,7 +146,7 @@ ${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
         },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
-            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val(), Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
+            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val() || 999, Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
             datatype: "json",
             type: "POST"
 

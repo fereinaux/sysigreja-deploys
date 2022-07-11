@@ -768,6 +768,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CentroCustoController.cs" />
     <Compile Include="Controllers\CaronaController.cs" />
+    <Compile Include="Controllers\PadrinhoController.cs" />
     <Compile Include="Controllers\QuartoController.cs" />
     <Compile Include="Controllers\EquipeController.cs" />
     <Compile Include="Controllers\EquipanteController.cs" />
@@ -790,6 +791,7 @@
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="ViewModels\AdminViewModel.cs" />
     <Compile Include="ViewModels\CaronaViewModel.cs" />
+    <Compile Include="ViewModels\PadrinhoViewModel.cs" />
     <Compile Include="ViewModels\QuartoViewModel.cs" />
     <Compile Include="ViewModels\ContaBancariaViewModel.cs" />
     <Compile Include="ViewModels\CentroCustoViewModel.cs" />
@@ -1035,6 +1037,7 @@
     <Content Include="Scripts\app\Carona\carona.js" />
     <Content Include="Scripts\app\Etiqueta\etiqueta.js" />
     <Content Include="Scripts\app\Mensagem\mensagem.js" />
+    <Content Include="Scripts\app\Padrinho\padrinho.js" />
     <Content Include="Scripts\app\Participante\checkin.js" />
     <Content Include="Scripts\app\Quarto\quarto.js" />
     <Content Include="Scripts\app\Equipante\equipante.js" />
@@ -1181,6 +1184,7 @@
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
     <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
     <None Include="Properties\PublishProfiles\SysIgreja-Deploys.pubxml" />
+    <Content Include="Views\Padrinho\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

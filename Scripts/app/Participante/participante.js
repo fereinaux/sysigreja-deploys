@@ -11,7 +11,7 @@ function CarregarTabelaParticipante(callbackFunction) {
             success: (result) => {
                 eventoId = $("#participante-eventoid").val()
                 $("#participante-padrinhoid").html(`
-<option value=0>Selecione</option>
+<option value=999>Selecione</option>
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
             }

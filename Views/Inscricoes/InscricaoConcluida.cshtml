@@ -52,7 +52,10 @@
                 </div>
                 <h3 class="m-t-lg">Enviar comprovante ou dúvidas para:</h3>
                 <h2 style="cursor:pointer;margin-top:0" onclick="window.open(`https://api.whatsapp.com/send?phone=@ViewBag.Participante.PadrinhoFone`)">
-                    @ViewBag.Participante.PadrinhoNome - @ViewBag.Participante.PadrinhoFone.Substring(3)
+                    @ViewBag.Participante.PadrinhoNome - @{ if (!string.IsNullOrEmpty(ViewBag.Participante.PadrinhoFone))
+                        {
+                            @ViewBag.Participante.PadrinhoFone.Substring(3)
+                        }}
                 </h2>
             </div>
 

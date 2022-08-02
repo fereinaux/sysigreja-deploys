@@ -34,6 +34,7 @@ function GetCor(cor) {
         case "Cinza":
             return "#7b787f";
         default:
+            return "#424242";
     }
 }
 

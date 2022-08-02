@@ -57,12 +57,41 @@ function RodapeEvento(evento) {
 `;
 }
 
-function Convidar(nome) {
-    return `Olá *${nome}*,
 
-Você gostaria de trabalhar no próximo Realidade de 25 a 27 de Março nossa primeira reunião será na quarta feira (16/02) às 19h30 na *Catedral da Trindade*.
+function MsgUsuario(user) {
+    return `Olá *${user.Nome}*,
 
-Esse convite é pessoal e *intransferível*.
+Você foi cadastrado(a) como _${getPerfilName(user)}_ para o *${getDestino(user)}*
 
-Carol Bastos.`;
+Para entrar no sistema, acesse: *${window.location.hostname}/login* 
+
+*Dados de Login:*
+
+Usuário: ${user.UserName}
+${!user.hasChangedPassword ? `Senha: ${user.Senha}` : "" }
+`
+}
+
+function getPerfilName(user) {
+    switch (user.Perfil) {
+        case "Financeiro":
+            return "Usuário Financeiro"
+        case "Administrativo":
+            return "Usuário Administrativo"
+        case "Geral": 
+            return "Administrador Geral"
+        case "Admin":
+            return "Administrador"
+     default:
+    return user.Perfil
+    }
+}
+
+function getDestino(user) {
+    switch (user.Perfil) {
+        case "Geral":
+            return `${window.location.hostname}`
+        default:
+            return `${user.Evento.Titulo} ${user.Evento.Numeracao }`
+    }
 }

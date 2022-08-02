@@ -1,17 +1,22 @@
-﻿using Core.Business.MeioPagamento;
+﻿using Arquitetura.Controller;
+using Core.Business.Account;
+using Core.Business.Configuracao;
+using Core.Business.Eventos;
+using Core.Business.MeioPagamento;
 using Core.Models.MeioPagamento;
+using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
 
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin)]
-    public class MeioPagamentoController : Controller
+    [Authorize]
+    public class MeioPagamentoController : SysIgrejaControllerBase
     {
         private readonly IMeioPagamentoBusiness meioPagamentosBusiness;
 
-        public MeioPagamentoController(IMeioPagamentoBusiness meioPagamentosBusiness)
+        public MeioPagamentoController(IMeioPagamentoBusiness meioPagamentosBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.meioPagamentosBusiness = meioPagamentosBusiness;
         }
@@ -19,14 +24,17 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Formas de Pagamento";
-
+            GetConfiguracoes(new string[] {  "Financeiro" });
             return View();
         }
 
         [HttpPost]
-        public ActionResult GetMeioPagamentos()
+        public ActionResult GetMeioPagamentos(int configuracaoId)
         {
-            var result = meioPagamentosBusiness.GetMeioPagamentos();
+            var result = meioPagamentosBusiness.GetMeioPagamentos(configuracaoId).Select(x => new
+            {
+                x.Id, x.Descricao
+            });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

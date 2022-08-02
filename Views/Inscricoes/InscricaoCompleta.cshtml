@@ -21,12 +21,14 @@
                 <h4>Nos vemos no dia @ViewBag.Participante.DataEvento! Até lá!</h4>
             </div>
 
-            <div class="col-sm-12 p-h-sm text-white text-center">
-                <h3>Qualquer dúvida entrar em contato com:</h3>
-                <h3 style="cursor:pointer;margin-top:0" onclick="window.open(`https://api.whatsapp.com/send?phone=@ViewBag.Participante.PadrinhoFone`)">
+            @if (!String.IsNullOrEmpty(ViewBag.Participante.PadrinhoFone))
+            {
+                <div class="col-sm-12 p-h-sm text-white text-center">
+                    <h3>Qualquer dúvida entrar em contato com:</h3>
+
                     @ViewBag.Participante.PadrinhoNome - @ViewBag.Participante.PadrinhoFone.Substring(3)
-                </h3>
-            </div>
+                </div>
+            }
         </div>
 
     </div>

@@ -77,7 +77,8 @@ function VerificaCadastro() {
             type: "POST",
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify({
-                Email: $(`#participante-email`).val()
+                Email: $(`#participante-email`).val(),
+                eventoId: window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
             }),
             success: function (data) {
                 if (data.Participante) {
@@ -134,6 +135,7 @@ function PostInscricao() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
+                        EventoId: window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1),
                         Nome: $(`#participante-nome`).val(),
                         Apelido: $(`#participante-apelido`).val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
@@ -148,6 +150,7 @@ function PostInscricao() {
                         Estado: $(`#participante-estado`).val(),
                         Numero: $(`#participante-numero`).val(),
                         Complemento: $(`#participante-complemento`).val(),
+                        Conjuge: $(`#participante-conjuge`).val(),
                         Referencia: $(`#participante-referencia`).val(),
                         Latitude: $(`#participante-latitude`).val(),
                         Longitude: $(`#participante-longitude`).val(),

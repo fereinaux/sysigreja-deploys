@@ -1,38 +1,23 @@
-﻿function CarregarTabelaCirculo() {
+﻿let circuloId
+function CarregarTabelaCirculo() {
 
-    $('#gerenciar').text("Gerenciar Círculos");
-    $('#participantes-sem').text("Participantes sem Círculo");
     var columnsTb = [
-        { data: "Dirigente1", name: "Dirigente1", autoWidth: true },
-        { data: "Dirigente2", name: "Dirigente2", autoWidth: true },
-        { data: "Cor", name: "Cor", autoWidth: true },
+        {
+            data: "Id", name: "Id", autoWidth: true, "render": function (data, type, row) {
+                return `${row.Titulo || row.Cor}`;
+            }
+        },
         { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
         {
             data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
             "render": function (data, type, row) {
-                return `
+                return `${GetButton('ListarDirigentes', JSON.stringify(row), 'blue', 'fa-list-alt', 'Listar Dirigentes do Círculo')}
                             ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
                             ${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
                             ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}`;
             }
         }
     ]
-
-    $("#circulo-dirigentes").html(` <div class="col-sm-6 p-w-md m-b-sm">
-                                <h5>Dirigente 1</h5>
-                                <select class="form-control chosen-select" id="circulo-dirigente1"></select>
-                            </div>
-                            <div class="col-sm-6 p-w-md m-b-sm">
-                                <h5>Dirigente 2</h5>
-                                <select class="form-control chosen-select" id="circulo-dirigente2"></select>
-                            </div>`)
-
-    $("#circulo-cabecalho").html(`<th>Dirigente 1</th>
-                        <th>Dirigente 2</th>
-                        <th>Cor</th>
-                        <th>Membros </th>
-                        <th>Ações</th>`)
-
 
     const tableCirculoConfig = {
         language: languageConfig,
@@ -70,9 +55,7 @@ $(document).ready(function () {
         });
     });
 
-    CarregarTabelaCirculo();
-    GetParticipantesSemCirculo();
-    GetCirculosComParticipantes();
+    loadCirculo()
 });
 
 function PrintCirculo(row) {
@@ -104,21 +87,35 @@ function FillDoc(doc,result) {
     doc.setFontSize(12);
     doc.text(77, 15, $("#circulo-eventoid option:selected").text());
 
-    doc.text(77, 20, `Círculo ${result.data[0].Cor}`);
-    doc.text(77, 25, `${result.data[0].Dirigente1} / ${result.data[0].Dirigente2}`);
+    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo || result.data[0].Cor}`);
+    //doc.text(77, 25, `${result.data[0].Dirigente1} / ${result.data[0].Dirigente2}`);
 
-    doc.text(77, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
+    doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 195, 38);
 
-    doc.setFont('helvetica', "bold")
-    doc.text(12, 43, "Nome");
-    doc.text(117, 43, "Apelido");
-    doc.text(152, 43, "Whatsapp");
 
-    doc.line(10, 45, 195, 45);
+    height = 43;
+    if (result.data[0].Dirigentes.length > 0) {
+        doc.setFont('helvetica', "bold")
+        doc.text(12, height, "Dirigentes");
+        height += 2
+        doc.line(10, height, 195, height);
+        height += 5
     doc.setFont('helvetica', "normal")
-    height = 50;
+        $(result.data[0].Dirigentes).each((index, dirigente) => {
+            doc.text(12, height, dirigente.Nome);           
+            height += 6;
+        });
+    }
 
+    doc.setFont('helvetica', "bold")
+    doc.text(12, height, "Nome");
+    doc.text(117, height, "Apelido");
+    doc.text(152, height, "Whatsapp");
+    height+=2
+    doc.line(10, height, 195, height);
+    height += 5
+    doc.setFont('helvetica', "normal")
     $(result.data).each((index, participante) => {
         doc.text(12, height, participante.Nome);
         doc.text(117, height, participante.Apelido);
@@ -142,10 +139,8 @@ function GetCirculo(id, cor) {
 
                 $('#circulo-cores').append($(`<option value="${data.Circulo.Cor}">${cor}</option>`));
                 $("#circulo-cores").val(data.Circulo.Cor).trigger("chosen:updated");
+                $("#circulo-titulo").val(data.Circulo.Titulo)
 
-                $("#circulo-dirigente1").val(data.Circulo.Dirigente1Id).trigger("chosen:updated");
-
-                $("#circulo-dirigente2").val(data.Circulo.Dirigente2Id).trigger("chosen:updated");
 
 
             }
@@ -157,9 +152,8 @@ function GetCirculo(id, cor) {
 }
 
 function EditCirculo(row) {
-    GetEquipantes(row)
     GetCores();
-
+    GetCirculo(row.Id,row.Cor)
     $("#modal-circulo").modal();
 }
 
@@ -196,9 +190,8 @@ function PostCirculo() {
                 {
                     Id: $("#circulo-id").val(),
                     EventoId: $("#circulo-eventoid").val(),
-                    Dirigente1Id: $("#circulo-dirigente1").val(),
-                    Dirigente2Id: $("#circulo-dirigente2").val(),
-                    Cor: $("#circulo-cores").val()
+                    Cor: $("#circulo-cores").val(),
+                    Titulo: $("#circulo-titulo").val()
                 }),
             success: function () {
                 SuccessMesageOperation();
@@ -222,36 +215,11 @@ function DistribuirCirculos() {
             }),
         success: function () {
             SuccessMesageOperation();
-            CarregarTabelaCirculo();
-            GetParticipantesSemCirculo();
-            GetCirculosComParticipantes();
+            loadCirculo()
             $("#modal-circulo").modal("hide");
         }
     });
 }
-
-
-function GetEquipantes(row) {
-    $("#circulo-equipantes").empty();
-
-    $.ajax({
-        url: "/Circulo/GetEquipantes/",
-        data: { EventoId: $("#circulo-eventoid").val() },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            data.Equipantes.forEach(function (equipante, index, array) {
-                $('#circulo-dirigente1').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
-                $('#circulo-dirigente2').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
-            });
-            $("#circulo-dirigente1").val($("#circulo-dirigente1 option:first").val()).trigger("chosen:updated");
-            $("#circulo-dirigente2").val($("#circulo-dirigente2 option:eq(1)").val()).trigger("chosen:updated");
-            GetCirculo(row.Id, row.Cor);
-        }
-    });
-}
-
 
 function GetParticipantesSemCirculo() {
     $("#table-participantes").empty();
@@ -284,12 +252,12 @@ function GetCirculosComParticipantes() {
         success: function (data) {
             data.data.forEach(function (circulo, index, array) {
 
-                htmlCaecalhoCirculo = `<h4 style="padding-top:5px">${circulo.Dirigente1}</h4>
-                        <h4 style="padding-bottom:5px">${circulo.Dirigente2}</h4>`
+                htmlCaecalhoCirculo = circulo.Dirigentes.map(dirigente => `<h4 style="padding-top:5px">${dirigente.Nome}</h4>`).join().replace(/,/g, '')
 
 
                 $("#circulos").append($(`<div data-id="${circulo.Id}" style="margin-bottom:25px;background-color:${GetCor(circulo.Cor)};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
-                       ${htmlCaecalhoCirculo}                        
+                       ${htmlCaecalhoCirculo}
+${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                                     <table class="table">
                                         <tbody id="pg-${circulo.Id}">
                                             
@@ -372,6 +340,7 @@ function GetCores(id) {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            $('#circulo-cores').append($(`<option value="null">Selecione</option>`));
             data.Cores.forEach(function (cor, index, array) {
                 $('#circulo-cores').append($(`<option value="${cor.Id}">${cor.Description}</option>`));
             });
@@ -380,11 +349,7 @@ function GetCores(id) {
             } else {
                 $("#circulo-cores").trigger("chosen:updated");
             }
-
-            if ($("#circulo-cores option").length === 0 && id == 0) {
-                ErrorMessage("Não existem Cores disponíveis");
-                $("#modal-circulo").modal("hide");
-            }
+   
         }
     });
 }
@@ -424,4 +389,132 @@ function PrintAll() {
         }
     })
 
+}
+
+
+function AddDirigente() {
+    if ($("#circulo-dirigentes").val() != "Pesquisar") {
+        $.ajax({
+            url: "/Circulo/AddDirigente/",
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                {
+                    EquipanteId: $("#circulo-dirigentes").val(),
+                    CirculoId: circuloId,
+                }),
+            success: function () {
+                SuccessMesageOperation();
+                $("#circulo-dirigentes").val("Pesquisar").trigger("chosen:updated");
+                CarregarTabelaDirigentes(circuloId)
+            }
+        });
+    }
+}
+
+
+function DeleteDirigente(id) {
+    ConfirmMessageDelete().then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Circulo/DeleteDirigente/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: id
+                    }),
+                success: function () {
+                    SuccessMesageDelete();
+                    CarregarTabelaDirigentes(circuloId)
+                }
+            });
+        }
+    });
+}
+
+$("#modal-dirigentes").on('hidden.bs.modal', function () {
+    CarregarTabelaCirculo();
+    GetParticipantesSemCirculo();
+    GetCirculosComParticipantes();
+});
+
+function ListarDirigentes(row) {
+    $("#circulo-dirigentes").val("Pesquisar").trigger("chosen:updated");
+    circuloId = row.Id
+    CarregarTabelaDirigentes(circuloId);
+
+    $("#modal-dirigentes").modal();
+}
+
+
+function CarregarTabelaDirigentes(circuloId) {
+    const tableDirigentesConfig = {
+        language: languageConfig,
+        lengthMenu: [200, 500, 1000],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true,
+        destroy: true,
+        dom: domConfig,
+        buttons: getButtonsConfig('Dirigentes'),
+        columns: [
+            { data: "Nome", name: "Nome", autoWidth: true },           
+            {
+                data: "Id", name: "Id", orderable: false, width: "35%",
+                "render": function (data, type, row) {
+                    var color = !(Coordenador == row.Tipo) ? 'info' : 'yellow';
+
+                    return `
+                            ${GetButton('DeleteDirigente', data, 'red', 'fa-trash', 'Excluir')}`;
+                }
+            }
+        ],
+        order: [
+            [0, "asc"]
+        ],
+        ajax: {
+            url: '/Circulo/GetDirigentes',
+            data: { CirculoId:circuloId },
+            datatype: "json",
+            type: "POST"
+        }
+    };
+    GetDirigentes();
+    $("#table-dirigentes").DataTable(tableDirigentesConfig);
+}
+
+
+function GetDirigentes() {
+
+    $("#circulo-dirigentes").empty();
+    $('#circulo-dirigentes').append($('<option>Pesquisar</option>'));
+
+    $.ajax({
+        url: "/Circulo/GetEquipantes/",
+        data: { EventoId: $("#circulo-eventoid").val() },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            data.Equipantes.forEach(function (equipante, index, array) {
+                $('#circulo-dirigentes').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
+            });
+            $("#circulo-dirigentes").val("Pesquisar").trigger("chosen:updated");
+        }
+    });
+
+}
+
+function loadCirculo() {
+    CarregarTabelaCirculo();
+    GetParticipantesSemCirculo();
+    GetCirculosComParticipantes();
 }

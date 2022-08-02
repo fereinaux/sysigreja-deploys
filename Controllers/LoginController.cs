@@ -13,7 +13,7 @@ using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin)]
+    [Authorize]
     public class LoginController : Controller
     {
         private readonly IAccountBusiness accountBusiness;
@@ -36,7 +36,7 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao();
+            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(null);
             accountBusiness.Seed();
             return View();
         }
@@ -45,7 +45,7 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao();
+            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(null);
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.UserName.ToLower(), model.Password.ToLower());

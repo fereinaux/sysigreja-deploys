@@ -16,6 +16,11 @@
         columns: [
             { data: "Titulo", name: "Titulo", autoWidth: true },
             {
+                data: "Tipos", name: "Tipos", autoWidth: true, "render": function (data, type, row) {
+                    return data.map(tipo => `<span class="badge m-r-xs">${tipo}</span>`).join().replace(/,/g, '')
+                }
+            },
+            {
                 data: "Id", name: "Id", orderable: false, width: "25%",
                 "render": function (data, type, row) {
 
@@ -29,6 +34,7 @@
         ],
         ajax: {
             url: '/Mensagem/GetMensagens',
+            data: { ConfiguracaoId: $('#mensagem-configId').val() },
             datatype: "json",
             type: "POST"
         }
@@ -48,6 +54,12 @@ function GetMensagem(id) {
             success: function (data) {
                 $("#mensagem-id").val(data.Mensagem.Id);
                 $("#mensagem-titulo").val(data.Mensagem.Titulo);
+                $.each($('.mensagem-tipo'), function () {
+                    if (data.Mensagem.Tipos.includes($(this).attr('value'))) {
+
+                        $(this).iCheck('check')
+                    }
+                });
                 $("#mensagem-conteudo").val(data.Mensagem.Conteudo);
             }
         });
@@ -55,6 +67,10 @@ function GetMensagem(id) {
     else {
         $("#mensagem-id").val(0);
         $("#mensagem-titulo").val("");
+        $.each($('.mensagem-tipo'), function () {
+
+                $(this).iCheck('uncheck')
+        });
         $("#mensagem-conteudo").val("");
     }
 }
@@ -96,6 +112,10 @@ function AddText(text) {
 
 function PostMensagem() {
     if (ValidateForm(`#form-mensagem`)) {
+        var tipos = [];
+        $.each($('.mensagem-tipo:checked'), function () {
+            tipos.push($(this).val());
+        });
         $.ajax({
             url: "/Mensagem/PostMensagem/",
             datatype: "json",
@@ -105,6 +125,8 @@ function PostMensagem() {
                 {
                     Id: $("#mensagem-id").val(),
                     Titulo: $("#mensagem-titulo").val(),
+                    Tipos: tipos,
+                    ConfiguracaoId: $('#mensagem-configId').val(),
                     Conteudo: $("#mensagem-conteudo").val()
                 }),
             success: function () {
@@ -118,6 +140,12 @@ function PostMensagem() {
 
 $(document).ready(function () {
     CarregarTabelaMensagem();
+
+
+    $('.i-checks-green').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
 });
 
 

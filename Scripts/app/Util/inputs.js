@@ -1,4 +1,10 @@
 ﻿$(document).ready(function () {
+    initInputs()
+});
+
+
+function initInputs() {
+
     $('.chosen-select').chosen({ width: "100%" });
 
     $('.full-date').datepicker({
@@ -42,4 +48,4 @@
             mask: '00000-000'
         });
     });
-});
+}

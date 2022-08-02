@@ -28,6 +28,9 @@
         ],
         ajax: {
             url: $("#table-arquivos").length > 0 ? '/Arquivo/GetArquivos' : '/Arquivo/GetArquivosComunEquipe',
+            data: {
+                EventoId: $("#table-arquivos").length > 0 ? null : $("[id$='eventoid']").val()
+            }, 
             datatype: "json",
             type: "POST"
         }
@@ -69,6 +72,7 @@ function DeleteArquivo(id) {
 function PostArquivo() {
     var dataToPost = new FormData($('#frm-upload-arquivos')[0]);
     dataToPost.set('IsComunEquipe', $("#table-arquivos-comuns").length > 0)
+    dataToPost.set('ConfiguracaoId', config.Id)
     $.ajax(
         {
             processData: false,

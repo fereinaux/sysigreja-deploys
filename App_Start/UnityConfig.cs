@@ -4,7 +4,6 @@ using Core.Business.Caronas;
 using Core.Business.CentroCusto;
 using Core.Business.Circulos;
 using Core.Business.Configuracao;
-using Core.Business.ContaBancaria;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Etiquetas;
@@ -46,7 +45,8 @@ namespace Web
             container.RegisterType<IGenericRepository<Equipante>, GenericRepository<Equipante>>();
             container.RegisterType<IGenericRepository<EquipanteEvento>, GenericRepository<EquipanteEvento>>();
             container.RegisterType<IGenericRepository<PresencaReuniao>, GenericRepository<PresencaReuniao>>();
-            container.RegisterType<IGenericRepository<ContaBancaria>, GenericRepository<ContaBancaria>>();
+            container.RegisterType<IGenericRepository<Equipe>, GenericRepository<Equipe>>();
+            container.RegisterType<IGenericRepository<ConfiguracaoEquipes>, GenericRepository<ConfiguracaoEquipes>>();
             container.RegisterType<IGenericRepository<CentroCusto>, GenericRepository<CentroCusto>>();
             container.RegisterType<IGenericRepository<Lancamento>, GenericRepository<Lancamento>>();
             container.RegisterType<IGenericRepository<Arquivo>, GenericRepository<Arquivo>>();
@@ -54,6 +54,7 @@ namespace Web
             container.RegisterType<IGenericRepository<Quarto>, GenericRepository<Quarto>>();
             container.RegisterType<IGenericRepository<Etiqueta>, GenericRepository<Etiqueta>>();
             container.RegisterType<IGenericRepository<CirculoParticipante>, GenericRepository<CirculoParticipante>>();
+            container.RegisterType<IGenericRepository<CirculoDirigentes>, GenericRepository<CirculoDirigentes>>();
             container.RegisterType<IGenericRepository<ParticipantesEtiquetas>, GenericRepository<ParticipantesEtiquetas>>();
             container.RegisterType<IGenericRepository<QuartoParticipante>, GenericRepository<QuartoParticipante>>();
             container.RegisterType<IGenericRepository<Mensagem>, GenericRepository<Mensagem>>();
@@ -65,7 +66,6 @@ namespace Web
             container.RegisterType<IEmailSender, EmailSender>();
             container.RegisterType<IDatatableService, DatatableService>();
 
-            container.RegisterType<IContaBancariaBusiness, ContaBancariaBusiness>();
             container.RegisterType<IPadrinhosBusiness, PadrinhosBusiness>();
             container.RegisterType<IArquivosBusiness, ArquivosBusiness>();
             container.RegisterType<ILancamentoBusiness, LancamentoBusiness>();

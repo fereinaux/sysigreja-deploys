@@ -2,6 +2,7 @@
 var selected = false
 eventoId = 0
 let table
+let map, markerLayer
 function CarregarTabelaParticipante(callbackFunction) {
     if ($("#participante-eventoid").val() != eventoId) {
         $.ajax({
@@ -19,7 +20,8 @@ ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
         });
 
         $.ajax({
-            url: '/Etiqueta/GetEtiquetas',
+            url: '/Etiqueta/GetEtiquetasByEventoId',
+            data: { eventoId: $("#participante-eventoid").val() },
             datatype: "json",
             type: "POST",
             success: (result) => {
@@ -172,6 +174,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Sexo"> Sexo <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
@@ -180,6 +183,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Parente"> Parente <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
@@ -751,6 +755,7 @@ function select2(destinatario) {
     destinatarioGlobal = destinatario
     $(`.${destinatario}`).addClass('moldura-modal')
     $('.btn-ligar').attr("href", `tel:${getTelefone(destinatario)}`)
+    getMensagensByTipo(destinatario == 'realista' ? ["Participante"] : ['Contato'])
 }
 
 
@@ -842,6 +847,8 @@ function CarregarTabelaPagamentos(id) {
 $(document).ready(function () {
     HideMenu()
     CarregarTabelaParticipante();
+    loadCampos($("[id$='eventoid']").val());
+
 });
 
 
@@ -1011,6 +1018,21 @@ function PostPagamento() {
     }
 }
 
+function getMensagensByTipo(tipos) {
+    $.ajax({
+        url: "/Mensagem/GetMensagensByTipo/",
+        data: JSON.stringify({ eventoId: $("#participante-eventoid").val(), tipos: tipos }),
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        success: function (dataMsg) {
+            $("#msg-list").html(`
+${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+`)
+
+        }
+    })
+}
 
 function Opcoes(row) {
     realista = row;
@@ -1031,22 +1053,12 @@ function Opcoes(row) {
             $('.contatotext').text(realista.NomeContato)
             $('#participante-obs').val(realista.Observacao)
             if ($('#modal-opcoes').is(":hidden")) {
-                $.ajax({
-                    url: "/Mensagem/GetMensagens/",
-                    datatype: "json",
-                    type: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (dataMsg) {
-                        $("#msg-list").html(`
-${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
-`)
-
-                    }
-                })
+                getMensagensByTipo(["Participante"])
             }
-            $('#participante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
-                }`)
+
             $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
+            console.log($('#participante-etiquetas').val());
+            $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
             if (realista.Status == "Confirmado") {
                 $('.pagamento').hide()
             }
@@ -1097,6 +1109,13 @@ function GetParticipanteContato(id) {
             $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
             $(`#participante-medicacao`).val(data.Participante.Medicacao);
             $(`#participante-alergia`).val(data.Participante.Alergia);
+            $(`#participante-parente`).val(data.Participante.Parente);
+            if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
+                $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
+            } else {
+                $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
+                $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
+            }
             $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
             $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
             $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
@@ -1133,7 +1152,17 @@ function GetParticipante(id) {
                 $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Participante.Medicacao);
                 $(`#participante-alergia`).val(data.Participante.Alergia);
+                $(`#participante-parente`).val(data.Participante.Parente);
+                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
+                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
+                } else {
+                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
+                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
+                    $('.congregacao').removeClass('d-none');
+                    $("#participante-congregacaodescricao").addClass('required');
+                }
                 $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
+                $(`input[type=radio][name=participante-hasparente][value=${data.Participante.HasParente}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
@@ -1144,6 +1173,7 @@ function GetParticipante(id) {
                 $(`#participante-estado`).val(data.Participante.Estado);
                 $(`#participante-numero`).val(data.Participante.Numero);
                 $(`#participante-complemento`).val(data.Participante.Complemento);
+                $(`#participante-conjuge`).val(data.Participante.Conjuge);
                 $(`#participante-referencia`).val(data.Participante.Referencia);
 
                 $(`#participante-latitude`).val((data.Participante.Latitude || '').replaceAll(',', '.'));
@@ -1180,9 +1210,12 @@ function GetParticipante(id) {
         $(`#participante-estado`).val('');
         $(`#participante-numero`).val('');
         $(`#participante-complemento`).val('');
+        $(`#participante-conjuge`).val('');
         $(`#participante-referencia`).val('');
         $(`input[type=radio][name=participante-sexo][value=1]`).iCheck('check');
         $(`input[type=radio][name=participante-hasalergia][value=false]`).iCheck('check');
+        $(`input[type=radio][name=participante-congregacao][value='Trindade']`).iCheck('check');
+        $(`input[type=radio][name=participante-parente][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasmedicacao][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasrestricaoalimentar][value=false]`).iCheck('check');
     }
@@ -1225,6 +1258,7 @@ function PostParticipante() {
                     Estado: $(`#participante-estado`).val(),
                     Numero: $(`#participante-numero`).val(),
                     Complemento: $(`#participante-complemento`).val(),
+                    Conjuge: $(`#participante-conjuge`).val(),
                     Referencia: $(`#participante-referencia`).val(),
                     Latitude: $(`#participante-latitude`).val(),
                     Longitude: $(`#participante-longitude`).val(),
@@ -1234,6 +1268,9 @@ function PostParticipante() {
                     Medicacao: $(`#participante-medicacao`).val(),
                     HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
                     Alergia: $(`#participante-alergia`).val(),
+                    HasParente: $("input[type=radio][name=participante-hasparente]:checked").val(),
+                    Parente: $(`#participante-parente`).val(),
+                    Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
                     Sexo: $("input[type=radio][name=participante-sexo]:checked").val()
                 }),
             success: function () {
@@ -1244,38 +1281,6 @@ function PostParticipante() {
         });
     }
 }
-
-
-$('#has-medicacao').on('ifChecked', function (event) {
-    $('.medicacao').removeClass('d-none');
-    $("#participante-medicacao").addClass('required');
-});
-
-$('#not-medicacao').on('ifChecked', function (event) {
-    $('.medicacao').addClass('d-none');
-    $("#participante-medicacao").removeClass('required');
-});
-
-
-$('#has-alergia').on('ifChecked', function (event) {
-    $('.alergia').removeClass('d-none');
-    $("#participante-alergia").addClass('required');
-});
-
-$('#not-alergia').on('ifChecked', function (event) {
-    $('.alergia').addClass('d-none');
-    $("#participante-alergia").removeClass('required');
-});
-
-$('#has-restricaoalimentar').on('ifChecked', function (event) {
-    $('.restricaoalimentar').removeClass('d-none');
-    $("#participante-restricaoalimentar").addClass('required');
-});
-
-$('#not-restricaoalimentar').on('ifChecked', function (event) {
-    $('.restricaoalimentar').addClass('d-none');
-    $("#participante-restricaoalimentar").removeClass('required');
-});
 
 
 
@@ -1327,37 +1332,32 @@ function PostInfo(callback) {
     });
 }
 
+function montarMapa() {
+    markerLayer.getLayers().forEach(mark => mark.remove())
+    var marker = L.marker([$(`#participante-latitude`).val().toString(), $(`#participante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
+    marker.bindPopup(`<h4>${$(`#participante-nome`).val()}</h4>`).openPopup();
+    $('.div-map').css('display', 'block')
+    map.setView([$(`#participante-latitude`).val(), $(`#participante-longitude`).val()], 18);
+}
 
-if ($('#map').length > 0) {
-
-    const map = initMap('map')
-    const markerLayer = createMarkerLayer(map)
-    function montarMapa() {
-        markerLayer.getLayers().forEach(mark => mark.remove())
-        var marker = L.marker([$(`#participante-latitude`).val().toString(), $(`#participante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
-        marker.bindPopup(`<h4>${$(`#participante-nome`).val()}</h4>`).openPopup();
-        $('.div-map').css('display', 'block')
-        map.setView([$(`#participante-latitude`).val(), $(`#participante-longitude`).val()], 18);
-    }
-    function verificaCep(input) {
-        let cep = $(input).val()
-        if (cep.length == 9) {
-            $.ajax({
-                url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    $(`#participante-logradouro`).val(data.logradouro)
-                    $(`#participante-bairro`).val(data.bairro)
-                    $(`#participante-cidade`).val(data.localidade)
-                    $(`#participante-estado`).val(data.uf)
-                    $(`#participante-latitude`).val(data.lat)
-                    $(`#participante-longitude`).val(data.lon)
-                    montarMapa()
-                }
-            })
-        }
+function verificaCep(input) {
+    let cep = $(input).val()
+    if (cep.length == 9) {
+        $.ajax({
+            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $(`#participante-logradouro`).val(data.logradouro)
+                $(`#participante-bairro`).val(data.bairro)
+                $(`#participante-cidade`).val(data.localidade)
+                $(`#participante-estado`).val(data.uf)
+                $(`#participante-latitude`).val(data.lat)
+                $(`#participante-longitude`).val(data.lon)
+                montarMapa()
+            }
+        })
     }
 }
 
@@ -1375,3 +1375,313 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
         trigger: 'mouseenter'
     });
 });
+
+
+$("[id$='eventoid']").change(function () {
+    loadCampos(this.value)
+})
+
+
+function loadCampos(id) {
+    $.ajax({
+        url: "/Configuracao/GetCamposByEventoId/",
+        data: { Id: id },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            campos = data.Campos
+            $('.campos-cadastro').html(`
+          <input type="hidden" id="participante-id" />
+${campos.find(x => x.Campo == "Nome Completo") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Nome</h5>
+
+                                <input type="text" class="form-control required" id="participante-nome" data-field="Nome" />
+                            </div>` : ""}
+
+${campos.find(x => x.Campo == "Apelido") ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Apelido</h5>
+
+                                <input type="text" class="form-control required" id="participante-apelido" data-field="Apelido" />
+                            </div>` : ""}
+${campos.find(x => x.Campo == 'Data Nascimento') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Data de Nascimento</h5>
+
+                                <input type="text" class="form-control full-date required" id="participante-data-nascimento" data-field="Data de Nascimento" />
+                            </div>` : ''}
+${campos.find(x => x.Campo == 'Gênero') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Sexo</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="participante-sexo" checked="" value="1" name="participante-sexo"> <i></i> Masculino </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="participante-sexo" value="2" name="participante-sexo"> <i></i> Feminino </label></div>
+                            </div>` : ''}
+${campos.find(x => x.Campo == 'Email') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Email</h5>
+
+                                <input type="email" class="form-control" id="participante-email" data-field="Email" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>WhatsApp</h5>
+
+                                <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Cônjuge</h5>
+
+                                <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" />
+                            </div>` : ''}
+
+
+${campos.find(x => x.Campo == 'Instagram') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Instagram</h5>
+
+                                <input type="text" class="form-control required" id="participante-instagram" data-field="Apelido" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Endereço') ? `<div class="col-sm-3 p-w-md m-t-md text-center">
+                                <h5>CEP</h5>
+
+                                <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                <input type="hidden" id="participante-latitude" />
+                                <input type="hidden" id="participante-longitude" />
+                            </div>
+
+                            <div class="col-sm-9 p-w-md m-t-md text-center">
+                                <h5>Logradouro</h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>Bairro</h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>
+                                    Cidade
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
+                            </div>
+
+                            <div class="col-sm-2 p-w-md m-t-md text-center">
+                                <h5>
+                                    Estado
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
+                            </div>
+
+                            <div class="col-sm-4 p-w-md m-t-md text-center">
+                                <h5>
+                                    Número
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-numero" data-field="Número" />
+                            </div>
+
+
+                            <div class="col-sm-8 p-w-md m-t-md text-center">
+                                <h5>
+                                    Complemento
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-complemento" data-field="Complemento" />
+                            </div>
+
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>
+                                    Ponto de Referência
+                                </h5>
+
+                                <input type="text" class="form-control" id="participante-referencia" data-field="Ponto de Referência" />
+                            </div>
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
+                                <div id="map" style="height:300px;">
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados da Mãe') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Nome da Mãe</h5>
+
+                                <input type="text" class="form-control required" id="participante-nomemae" data-field="Nome da Mã" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone da Mãe</h5>
+
+                                <input type="text" class="form-control fone" id="participante-fonemae" data-field="Fone da Mãe" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados do Pai') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Nome do Pai</h5>
+
+                                <input type="text" class="form-control required" id="participante-nomepai" data-field="Nome do Pai" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone do Pai</h5>
+
+                                <input type="text" class="form-control fone" id="participante-fonepai" data-field="Fone do Pai" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados do Contato') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Pessoa de Contato</h5>
+
+                                <input type="text" class="form-control required" id="participante-nomecontato" data-field="Pessoa de Contato" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone do Contato</h5>
+
+                                <input type="text" class="form-control fone" id="participante-fonecontato" data-field="Fone do Contato" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Pessoa que Convidou</h5>
+
+                                <input type="text" class="form-control required" id="participante-nomeconvite" data-field="Pessoa de Convite" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone de quem convidou</h5>
+
+                                <input type="text" class="form-control fone" id="participante-foneconvite" data-field="Fone do Convite" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Parente') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Tem algum Parente fazendo o ${$('#participante-eventoid option:selected').text()}?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>
+
+                                <div class="parente d-none">
+                                    <h5>Nome do Parente</h5>
+                                    <input type="text" class="form-control" id="participante-parente" data-field="Nome do Parente" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Participa de qual Congregação?</h5>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="trindade" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="recon" checked="" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="outra" checked="" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
+
+                                <div class="congregacao d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Medicação') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Toma alguma medicação?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-medicacao" value="true" name="participante-hasmedicacao"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-medicacao" checked="" value="false" name="participante-hasmedicacao"> <i></i> Não </label></div>
+
+                                <div class="medicacao d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="participante-medicacao" data-field="Medicação" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Alergia') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Tem alguma alergia?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-alergia" value="true" name="participante-hasalergia"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-alergia" checked="" value="false" name="participante-hasalergia"> <i></i> Não </label></div>
+
+                                <div class="alergia d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="participante-alergia" data-field="Alergia" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Tem alguma restrição alimentar?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-restricaoalimentar" value="true" name="participante-hasrestricaoalimentar"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-restricaoalimentar" checked="" value="false" name="participante-hasrestricaoalimentar"> <i></i> Não </label></div>
+
+                                <div class="restricaoalimentar d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="participante-restricaoalimentar" data-field="Restrição Alimentar" />
+                                </div>
+                            </div>` : ''}
+`)
+
+
+            initInputs()
+
+
+            if ($('#map').length > 0) {
+
+                map = initMap('map')
+                markerLayer = createMarkerLayer(map)
+
+
+            }
+
+            $('#has-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').removeClass('d-none');
+                $("#participante-medicacao").addClass('required');
+            });
+
+            $('#not-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').addClass('d-none');
+                $("#participante-medicacao").removeClass('required');
+            });
+
+
+            $('#has-alergia').on('ifChecked', function (event) {
+                $('.alergia').removeClass('d-none');
+                $("#participante-alergia").addClass('required');
+            });
+
+            $('#not-alergia').on('ifChecked', function (event) {
+                $('.alergia').addClass('d-none');
+                $("#participante-alergia").removeClass('required');
+            });
+
+            $('#has-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').removeClass('d-none');
+                $("#participante-restricaoalimentar").addClass('required');
+            });
+
+            $('#not-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').addClass('d-none');
+                $("#participante-restricaoalimentar").removeClass('required');
+            });
+
+
+            $('#has-parente').on('ifChecked', function (event) {
+                $('.parente').removeClass('d-none');
+                $("#participante-parente").addClass('required');
+            });
+
+            $('#not-parente').on('ifChecked', function (event) {
+                $('.parente').addClass('d-none');
+                $("#participante-parente").removeClass('required');
+            });
+
+            $('#trindade').on('ifChecked', function (event) {
+                $('.congregacao').addClass('d-none');
+                $("#participante-congregacaodescricao").removeClass('required');
+            });
+
+            $('#recon').on('ifChecked', function (event) {
+                $('.congregacao').addClass('d-none');
+                $("#participante-congregacaodescricao").removeClass('required');
+            });
+
+            $('#outra').on('ifChecked', function (event) {
+                $('.congregacao').removeClass('d-none');
+                $("#participante-congregacaodescricao").addClass('required');
+            });
+
+        }
+    });
+}
+

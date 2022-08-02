@@ -30,6 +30,7 @@
         ],
         ajax: {
             url: '/CentroCusto/GetCentroCustos',
+            data: { ConfiguracaoId: $('#centro-custo-configId').val() },
             datatype: "json",
             type: "POST"
         }
@@ -97,6 +98,7 @@ function PostCentroCusto() {
                 {
                     Id: $("#centro-custo-id").val(),                                        
                     Descricao: $("#centro-custo-descricao").val(),
+                    ConfiguracaoId: $('#centro-custo-configId').val(),
                     Tipo: $("#centro-custo-tipo").val()
                 }),
             success: function () {
@@ -113,3 +115,28 @@ $(document).ready(function () {
 });
 
 
+function getCentroCustoRel() {
+
+    $.ajax({
+        url: '/CentroCusto/GetCentroCustos',
+        datatype: "json",
+        type: "POST",
+        success: (result) => {
+            selected = false
+            div.innerHTML = `
+<div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
+<label style="display:block"> <input id="select-all" type="checkbox" onChange="selectAll()" value="all"> Selecionar Todos <i></i></label>
+</div>
+
+<h4>Receita</h4>
+<div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
+${result.data.filter(cc => cc.Tipo == "Receita").map(cc => `<label style="display:block"> <input id="rel-centro-custos" class="rel-centro-custos" type="checkbox" value="${cc.Id}"> ${cc.Descricao} <i></i></label>`).join('')}
+</div>
+
+<h4>Despesa</h4>
+<div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
+${result.data.filter(cc => cc.Tipo == "Despesa").map(cc => `<label style="display:block"> <input id="rel-centro-custos" class="rel-centro-custos" type="checkbox" value="${cc.Id}"> ${cc.Descricao} <i></i></label>`).join('')}
+</div>`;
+        }
+    })
+}

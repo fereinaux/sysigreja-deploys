@@ -7,10 +7,13 @@ using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.Participantes;
 using Core.Business.Reunioes;
+using Core.Models;
+using Newtonsoft.Json;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
@@ -43,12 +46,12 @@ namespace SysIgreja.Controllers
             this.arquivosBusiness = arquivosBusiness;
         }
 
-        [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+        [Authorize]
         public ActionResult Admin()
         {
             ViewBag.Title = "Sistema de Gestão";
 
-            GetEventos();
+            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo" });
             return View();
         }
 
@@ -58,12 +61,12 @@ namespace SysIgreja.Controllers
 
             var result = new
             {
+
                 Evento = eventosBusiness.GetEventoById(EventoId).Status.GetDescription(),
                 Confirmados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Confirmado).Count(),
                 Cancelados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Cancelado).Count(),
                 Espera = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Espera).Count(),
                 Presentes = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Checkin).Count(),
-                Isencoes = lancamentoBusiness.GetPagamentosEvento(EventoId).ToList().Where(x => x.ParticipanteId != null && x.Tipo == TiposLancamentoEnum.Receber && x.MeioPagamento.Descricao == MeioPagamentoPadraoEnum.Isencao.GetDescription()).Count(),
                 Total = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
                 Boletos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Boleto && !x.PendenciaBoleto).Count(),
                 Contatos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => !x.PendenciaContato).Count(),
@@ -103,11 +106,11 @@ namespace SysIgreja.Controllers
                 }).ToList(),
                 EquipeMeninos = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Masculino).Count(),
                 EquipeMeninas = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Feminino).Count(),
-                Equipes = equipesBusiness.GetEquipes(EventoId).Select(x => new ListaEquipesViewModel
+                Equipes = equipesBusiness.GetEquipes(EventoId).ToList().Select(x => new ListaEquipesViewModel
                 {
                     Id = x.Id,
-                    Equipe = x.Description,
-                    QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, (EquipesEnum)x.Id).Count()
+                    Equipe = x.Nome,
+                    QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Count()
                 }).ToList(),
                 Reunioes = reunioesBusiness.GetReunioes(EventoId).ToList().Select(x => new ReuniaoViewModel
                 {
@@ -131,13 +134,13 @@ namespace SysIgreja.Controllers
             {
                 Equipantes = equipesBusiness
                 .GetEquipantesEvento(EventoId)
-                .OrderBy(x => x.Equipe)
+                .OrderBy(x => x.Equipe.Nome)
                 .ThenBy(x => x.Tipo)
                 .ThenBy(x => x.Equipante.Nome)
                 .ToList()
                 .Select(x => new
                 {
-                    Equipe = x.Equipe.GetDescription(),
+                    Equipe = x.Equipe.Nome,
                     Nome = x.Equipante.Nome,
                     Tipo = x.Tipo.GetDescription(),
                     Fone = x.Equipante.Fone
@@ -148,36 +151,65 @@ namespace SysIgreja.Controllers
             return Json(new { result }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Coordenador()
+        [HttpGet]
+        public ActionResult CoordenadorGet(int eventoId)
         {
-            GetConfiguracao();
-            ViewBag.Title = "Sistema de Gestão";
-            int eventoId = (eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().OrderByDescending(x => x.DataEvento).First()).Id;
+        
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
-            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipanteEvento.Equipe);
-            ViewBag.Equipante = equipanteEvento.Equipante;
-            ViewBag.Equipe = equipanteEvento.Equipe.GetDescription();
-            ViewBag.EquipeEnum = equipanteEvento.Equipe;
-            ViewBag.QtdMembros = membrosEquipe.Count();
-            ViewBag.Reunioes = reunioesBusiness.GetReunioes(eventoId)
+            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipanteEvento.EquipeId.Value);
+            var result = new
+            {
+                Equipe = equipanteEvento.Equipe.Nome,
+                EquipeEnum = equipanteEvento.Equipe,
+                QtdMembros = membrosEquipe.Count(),
+                Configuracao = new
+                {
+                    Titulo = equipanteEvento.Evento.Configuracao.Titulo,
+                    Id =
+                equipanteEvento.Evento.ConfiguracaoId.Value,
+                    Cor = equipanteEvento.Evento.Configuracao.CorBotao,
+                    Logo = equipanteEvento.Evento.Configuracao.Logo != null ? Convert.ToBase64String(equipanteEvento.Evento.Configuracao.Logo.Conteudo) : ""
+                },
+                Reunioes = reunioesBusiness.GetReunioes(eventoId)
                 .ToList()
                 .OrderBy(x => DateTime.Now.AddHours(4).Subtract(x.DataReuniao).TotalDays < 0 ? DateTime.Now.AddHours(4).Subtract(x.DataReuniao).TotalDays * -1 : DateTime.Now.AddHours(4).Subtract(x.DataReuniao).TotalDays)
-                .Select(x => new ReuniaoViewModel { DataReuniao = x.DataReuniao, Id = x.Id });
-            ViewBag.Membros = membrosEquipe.ToList().Select(x => new EquipanteViewModel
-            {
-                Id = x.Equipante.Id,
-                Sexo = x.Equipante.Sexo.GetDescription(),
-                Fone = x.Equipante.Fone,
-                Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
-                Nome = x.Equipante.Nome,
-                Vacina = x.Equipante.HasVacina,
-                Faltas = reunioesBusiness.GetFaltasByEquipanteId(x.EquipanteId, eventoId),
-                Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId).Any(),
-                Foto = x.Equipante.Arquivos.Any(y => y.IsFoto)
-            });
+                .Select(x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }),
+                Membros = membrosEquipe.ToList().Select(x => new EquipanteViewModel
+                {
+                    Id = x.Equipante.Id,
+                    Sexo = x.Equipante.Sexo.GetDescription(),
+                    Fone = x.Equipante.Fone,
+                    Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
+                    Nome = x.Equipante.Nome,
+                    Vacina = x.Equipante.HasVacina,
+                    Faltas = reunioesBusiness.GetFaltasByEquipanteId(x.EquipanteId.Value, eventoId),
+                    Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId.Value, x.EventoId.Value).Any(),
+                    Foto = x.Equipante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Equipante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
+                })
+            };
 
-            return View();
+
+            var jsonRes = Json(new { result }, JsonRequestBehavior.AllowGet);
+            jsonRes.MaxJsonLength = Int32.MaxValue;
+            return jsonRes;            
+        }
+        public ActionResult Coordenador()
+        {
+            ViewBag.Title = "Coordenador";
+            var user = GetApplicationUser();
+            var equipanteEvento = equipesBusiness.GetCoordByUser(user.Id).OrderByDescending(x => x.Evento.DataEvento);
+            if (equipanteEvento.Count() > 0)
+            {
+
+                ViewBag.Eventos = equipanteEvento.Select(x => x.Evento);
+                ViewBag.Equipante = equipanteEvento.Select(x => x.Equipante).FirstOrDefault();
+                return View();
+            }
+            else
+            {
+                return NaoAutorizado();
+            }
         }
 
         [HttpGet]
@@ -186,10 +218,10 @@ namespace SysIgreja.Controllers
             var presenca = equipesBusiness.GetPresenca(ReuniaoId).Select(x => x.EquipanteEventoId).ToList();
 
             var user = GetApplicationUser();
-            var eventoId = (eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().OrderByDescending(x => x.DataEvento).First()).Id;
+            var eventoId = reunioesBusiness.GetReuniaoById(ReuniaoId).EventoId;
 
             var result = equipesBusiness
-                .GetMembrosEquipe(eventoId, equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id).Equipe).ToList().Select(x => new PresencaViewModel
+                .GetMembrosEquipe(eventoId, equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id).EquipeId.Value).ToList().Select(x => new PresencaViewModel
                 {
                     Id = x.Id,
                     Nome = x.Equipante.Nome,
@@ -210,18 +242,16 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             var user = GetApplicationUser();
-
-            switch (user.Perfil)
+            var permissoes = JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue);
+            if (permissoes.Any(x => new string[] { "Admin", "Geral", }.Contains(x.Role) || x.Eventos.Any(y => new string[] { "Admin", "Geral", "Administrativo", "Financeiro" }.Contains(y.Role))))
             {
-                case PerfisUsuarioEnum.Master:
-                case PerfisUsuarioEnum.Admin:
-                case PerfisUsuarioEnum.Secretaria:
-                    return RedirectToAction("Admin", "Home");
-                case PerfisUsuarioEnum.Coordenador:
-                    return RedirectToAction("Coordenador", "Home");
-                default:
-                    return RedirectToAction("Admin", "Home");
+                return RedirectToAction("Admin", "Home");
             }
+            else
+            {
+                return RedirectToAction("Coordenador", "Home");
+            }
+
         }
     }
 }

@@ -15,7 +15,6 @@
         buttons: getButtonsConfig('Formas de Pagamento'),
         columns: [
             { data: "Descricao", name: "Descricao", autoWidth: true },
-            { data: "Taxa", name: "Taxa", autoWidth: true },
             {
                 data: "Id", name: "Id", orderable: false, width: "10%",
                 "render": function (data, type, row) {   
@@ -29,6 +28,7 @@
         ],
         ajax: {
             url: '/MeioPagamento/GetMeioPagamentos',
+            data: { configuracaoId: $('#meiopagamento-configId').val()},
             datatype: "json",
             type: "POST"
         }
@@ -94,9 +94,9 @@ function PostMeioPagamento() {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(
                 {
-                    Id: $("#meio-pagamento-id").val(),                                        
+                    Id: $("#meio-pagamento-id").val(),             
+                    ConfiguracaoId: $('#meiopagamento-configId').val(),
                     Descricao: $("#meio-pagamento-descricao").val(),
-                    Taxa: Number($("#meio-pagamento-taxa").val())
                 }),
             success: function () {
                 SuccessMesageOperation();

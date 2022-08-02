@@ -4,7 +4,6 @@ using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Circulos;
 using Core.Business.Configuracao;
-using Core.Business.ContaBancaria;
 using Core.Business.Equipes;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
@@ -29,7 +28,7 @@ using Utils.Services;
 
 namespace SysIgreja.Controllers
 {
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class ParticipanteController : SysIgrejaControllerBase
     {
         private readonly IParticipantesBusiness participantesBusiness;
@@ -40,12 +39,11 @@ namespace SysIgreja.Controllers
         private readonly IQuartosBusiness quartosBusiness;
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
-        private readonly IContaBancariaBusiness contaBancariaBusiness;
         private readonly IEventosBusiness eventosBusiness;
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
 
-        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IContaBancariaBusiness contaBancariaBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
             this.arquivoBusiness = arquivoBusiness;
@@ -56,7 +54,6 @@ namespace SysIgreja.Controllers
             this.etiquetasBusiness = etiquetasBusiness;
             this.lancamentoBusiness = lancamentoBusiness;
             this.meioPagamentoBusiness = meioPagamentoBusiness;
-            this.contaBancariaBusiness = contaBancariaBusiness;
             this.datatableService = datatableService;
             mapper = new MapperRealidade().mapper;
         }
@@ -67,18 +64,6 @@ namespace SysIgreja.Controllers
             ViewBag.Title = "Check-in";
             GetEventos();
             GetConfiguracao();
-            GetCampos();
-            ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
-            var evento = eventosBusiness.GetEventoAtivo();
-            ViewBag.ValorRealista = evento?.Valor ?? 0;
-            ViewBag.ValorEquipante =  evento?.ValorTaxa ?? 0;
-            ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
-                .Select(x => new ContaBancariaViewModel
-                {
-                    Banco = x.Banco.GetDescription(),
-                    Id = x.Id
-                });
-
 
             return View();
         }
@@ -96,15 +81,6 @@ namespace SysIgreja.Controllers
             ViewBag.Title = "Participantes";
             GetEventos();
             GetConfiguracao();
-            GetCampos();
-            ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
-            ViewBag.Valor =  eventosBusiness.GetEventoAtivo()?.Valor ?? 0;
-            ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
-                .Select(x => new ContaBancariaViewModel
-                {
-                    Banco = x.Banco.GetDescription(),
-                    Id = x.Id
-                });
 
             return View();
         }
@@ -131,7 +107,6 @@ namespace SysIgreja.Controllers
                 HasAlergia = x.HasAlergia,
                 HasMedicacao = x.HasMedicacao,
                 HasTeste = x.HasTeste,
-                HasParente = false,
                 HasRestricaoAlimentar = x.HasRestricaoAlimentar,
                 Id = x.Id,
                 CEP = x.CEP,
@@ -142,6 +117,7 @@ namespace SysIgreja.Controllers
                 Longitude = x.Longitude,
                 Numero = x.Numero,
                 Complemento = x.Complemento,
+                Conjuge = x.Conjuge,
                 Logradouro = x.Logradouro,
                 Referencia = x.Referencia,
                 Medicacao = x.Medicacao,
@@ -149,6 +125,7 @@ namespace SysIgreja.Controllers
                 NomeConvite = x.NomeConvite,
                 NomeMae = x.NomeMae,
                 NomePai = x.NomePai,
+                HasParente = x.HasParente ?? false,
                 Parente = x.Parente,
                 HasVacina = x.HasVacina,
                 RestricaoAlimentar = x.RestricaoAlimentar,
@@ -178,17 +155,9 @@ namespace SysIgreja.Controllers
 
             var quartoAtual = quartosBusiness.GetNextQuarto(result.EventoId, result.Sexo, TipoPessoaEnum.Participante);
 
-            var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
-                .Select(x => new
-                {
-                    Nome = x.Nome,
-                    Id = x.Id,
-                    Cor = x.Cor
-                });
-
             var dadosAdicionais = new
             {
-                Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Cor.GetDescription() ?? "",
+                Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Cor?.GetDescription() ?? "",
                 Status = result.Status.GetDescription(),
                 Quarto = quartosBusiness.GetQuartosComParticipantes(result.EventoId, TipoPessoaEnum.Participante).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "",
                 QuartoAtual = new
@@ -198,7 +167,7 @@ namespace SysIgreja.Controllers
                 }
             };
 
-            return Json(new { Participante = result, DadosAdicionais = dadosAdicionais, Etiquetas = etiquetas, }, JsonRequestBehavior.AllowGet);
+            return Json(new { Participante = result, DadosAdicionais = dadosAdicionais }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -213,14 +182,14 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByCirculo(int CirculoId)
         {
-            var result = circulosBusiness.GetParticipantesByCirculos(CirculoId).ToList().Select(x => new
+            var result = circulosBusiness.GetParticipantesByCirculos(CirculoId).OrderBy(x => x.Participante.Nome).ToList().Select(x => new
             {
-                Circulo = x.Circulo.Cor.GetDescription(),
+                Circulo = x.Circulo.Cor?.GetDescription(),
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                Cor = x.Circulo.Cor.GetDescription(),
-                Dirigente1 = UtilServices.CapitalizarNome(x.Circulo.Dirigente1.Equipante.Nome),
-                Dirigente2 = UtilServices.CapitalizarNome(x.Circulo.Dirigente2.Equipante.Nome),
+                Cor = x.Circulo.Cor?.GetDescription(),
+                Titulo = x.Circulo.Titulo,
+                Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }),
                 Fone = x.Participante.Fone
             });
 
@@ -238,7 +207,7 @@ namespace SysIgreja.Controllers
                 Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-"),
                 Titulo = x.Quarto.Titulo,
                 Equipante = x.Quarto.Equipante != null ? UtilServices.CapitalizarNome(x.Quarto.Equipante.Nome) : "",
-                Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor.GetDescription() ?? "",
+                Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor?.GetDescription() ?? "",
                 Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
 
             });
@@ -274,7 +243,7 @@ namespace SysIgreja.Controllers
             var result = participantesBusiness.GetParentesByEvento(EventoId).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Nome),
-                Circulo = circulosBusiness.GetCirculosComParticipantes(EventoId).FirstOrDefault(y => y.ParticipanteId == x.Id)?.Circulo.Cor.GetDescription(),
+                Circulo = circulosBusiness.GetCirculosComParticipantes(EventoId).FirstOrDefault(y => y.ParticipanteId == x.Id)?.Circulo.Cor?.GetDescription(),
                 Parente = UtilServices.CapitalizarNome(x.Parente)
             }).ToList();
 
@@ -449,13 +418,8 @@ namespace SysIgreja.Controllers
                    Id = x.Id,
                    Nome = UtilServices.CapitalizarNome(x.Nome),
                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                   Sexo = x.Sexo.GetDescription(),
-                   Fone = x.Fone,
-                   Status = x.Status.GetDescription(),
-                   Checkin = x.Checkin,
-                   Idade = UtilServices.GetAge(x.DataNascimento),
                    Foto = x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : "",
-                   Circulo = x.Circulos.LastOrDefault().Circulo.Cor.GetDescription()
+                   Circulo = x.Circulos.LastOrDefault()?.Circulo.Cor?.GetDescription() ?? x.Circulos.LastOrDefault()?.Circulo.Titulo
                });
 
 
@@ -517,7 +481,7 @@ namespace SysIgreja.Controllers
                     Id = x.Id,
                     Nome = UtilServices.CapitalizarNome(x.Nome),
                     Status = x.Status.GetDescription(),
-                    Evento = $"{x.Evento.Numeracao.ToString()}º {x.Evento.TipoEvento.GetDescription()}",
+                    Evento = $"{x.Evento.Numeracao.ToString()}º {x.Evento.Configuracao.Titulo} {x.Evento.Descricao}",
                     Sexo = x.Sexo.GetDescription(),
                     Fone = x.Fone,
                     x.NomeMae,

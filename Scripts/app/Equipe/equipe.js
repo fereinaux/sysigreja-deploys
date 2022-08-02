@@ -59,7 +59,7 @@ function PrintAll() {
 
                     }))
                 }
-            })            
+            })
             Promise.all(arrPromises).then(result => {
                 result.forEach((data, index) => {
                     if (data.data.length > 0) {
@@ -106,7 +106,7 @@ function GetAnexos(id) {
         ],
         ajax: {
             url: '/Arquivo/GetArquivosEquipe',
-            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false },
+            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, ConfiguracaoId: config.Id },
             datatype: "json",
             type: "POST"
         }
@@ -132,7 +132,9 @@ function PostArquivoEquipe() {
 
     var dataToPost = new FormData($('#frm-upload-arquivo-normal-modal')[0]);
     dataToPost.set('Arquivo', dataToPost.get('arquivo-modal'))
-    dataToPost.set('Equipe', dataToPost.get('Equipe'))
+    dataToPost.set('EquipeId', dataToPost.get('Equipe'))
+    dataToPost.set('ConfiguracaoId', config.Id)
+    console.log(config);
     $.ajax(
         {
             processData: false,
@@ -276,7 +278,7 @@ function CarregarTabelaMembrosEquipe(equipeId, titulo) {
                 "render": function (data, type, row) {
                     var color = !(Coordenador == row.Tipo) ? 'info' : 'yellow';
 
-                    return `${GetLabel('ToggleMembroEquipeTipo', data, color, row.Tipo)}
+                    return `${GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo)}
                             ${GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir')}`;
                 }
             }
@@ -324,7 +326,7 @@ function AddMembroEquipe() {
                 {
                     EquipanteId: $("#equipe-equipantes").val(),
                     EventoId: $("#equipe-eventoid").val(),
-                    Equipe: $("#equipe-id").val()
+                    EquipeId: $("#equipe-id").val()
                 }),
             success: function () {
                 SuccessMesageOperation();
@@ -335,7 +337,12 @@ function AddMembroEquipe() {
     }
 }
 
-function ToggleMembroEquipeTipo(id) {
+function ToggleMembroEquipeTipo(row) {
+    console.log(row);
+    if (Membro == row.Tipo) {
+        var windowReference = window.open('_blank');
+
+    }
     $.ajax({
         url: "/Equipe/ToggleMembroEquipeTipo/",
         datatype: "json",
@@ -343,10 +350,15 @@ function ToggleMembroEquipeTipo(id) {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                Id: id
+                Id: row.Id
             }),
-        success: function () {
+        success: function (data) {
             CarregarTabelaMembrosEquipe($("#equipe-id").val(), $('.titulo-equipe').text());
+            if (data) {
+
+                windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
+            }
+
         },
         error: function (error) {
             ErrorMessage(error.statusText);
@@ -369,6 +381,9 @@ function DeleteMembroEquipe(id) {
                 success: function () {
                     SuccessMesageDelete();
                     CarregarTabelaMembrosEquipe($("#equipe-id").val(), $('.titulo-equipe').text());
+                },
+                error: function (data) {
+                    ErrorMessage("O Equipante está vinculado a um registro de Padrinho, não será possível deletá-lo")
                 }
             });
         }
@@ -394,4 +409,9 @@ function GetEquipantes() {
         }
     });
 
+}
+
+function loadEquipe() {
+    CarregarTabelaEquipe()
+    CarregarTabelaArquivo();
 }

@@ -29,7 +29,7 @@
                         <select class="form-control" id="carona-eventoid" onchange=" CaronaRefresh()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
-                                <option value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                                <option value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                             }
                         </select>
                     </div>
@@ -75,12 +75,12 @@
 
         <div class="ibox">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
-                <h4 id="gerenciar">Gerenciar Caronas</h4>
+                <h4>Gerenciar Caronas</h4>
             </div>
             <div class="ibox-content">
                 <div class="row p-m">
                     <div class="col-xs-12 col-lg-3 sem-carona pg text-center">
-                        <h4 class="p-h-xs" id="participantes-sem">Participantes sem Carona</h4>
+                        <h4 class="p-h-xs">Participantes sem Carona</h4>
                         <table class="table">
                             <thead>
                                 <tr>

@@ -1,6 +1,41 @@
 ﻿@using Microsoft.AspNet.Identity
 @using Utils.Services
 
+<style>
+    .menu-user {
+        position: relative;
+        display: inline-block;
+    }
+
+    .img-avatar:hover {
+        opacity: 0.7
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: -25px;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-content ul li.hover-menu {
+            width: 100%;
+            height: 50px;
+        }
+
+            .dropdown-content ul li.hover-menu:hover {
+                background-color: #d3d4d5;
+            }
+
+    .menu-user:hover .dropdown-content {
+        display: block;
+    }
+</style>
+
 <div class="row border-bottom">
     <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
@@ -9,17 +44,48 @@
         </div>
         @if (Request.IsAuthenticated)
         {
-            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "frm-upload-avatar", @class = "navbar-right" }))
             {
                 @Html.AntiForgeryToken()
+                <div class="menu-user" style="margin-right: 40px; display: flex;height:50px">
+                    <img class="img-avatar inputFile" style="margin: auto; width: 40px; height: 40px; border-radius: 50%; margin-left: 10px; cursor: pointer " src="~/Images/profile.jpg" />
+                    <div class="dropdown-content">
+                        <ul class="nav navbar-top-links">
 
-                <ul class="nav navbar-top-links navbar-right">
-                    <li>
-                        Olá @UtilServices.CapitalizarNome(User.Identity.GetUserName()) !
-                    </li>                    
-                    <li><a href="javascript:document.getElementById('logoutForm').submit()">Sair <i class="fa fa-sign-out"></i></a></li>
-                </ul>
+                            <li>
+                                <a href="#">
+
+                                    @UtilServices.CapitalizarNome(User.Identity.GetUserName())
+
+
+                                </a>
+                            </li>
+                            <li class="hover-menu">
+                                <a href="#" >
+                                    <label for="user-avatar-arquivo" style="cursor: pointer;width: 100%; color: #a7b1c2; font-weight: 600 !important; margin-bottom: 0px; font-size: 14px " class="inputFile">
+                                        Mudar Foto
+                                        <input style="display: none;" class="custom-file-input inputFile" id="user-avatar-arquivo" name="user-avatar-arquivo" type="file" value="">
+                                    </label>
+                                </a>
+                            </li>
+                            <li class="hover-menu">
+                                <a href="#" onclick="changePass()">
+
+                                    Trocar Senha
+
+
+                                    <i style="float:right" class="fas fa-key"></i>
+                                </a>
+                            </li>
+                            <li class="hover-menu"><a href="javascript:document.getElementById('frm-upload-avatar').submit()">Sair<i style="float:right" class="fas fa-sign-out-alt"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
             }
         }
     </nav>
 </div>
+
+<script>
+
+</script>

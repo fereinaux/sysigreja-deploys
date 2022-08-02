@@ -26,10 +26,6 @@ function GetIconWhatsApp(tel,text) {
     return `<a target="_blank" href='${GetLinkWhatsApp(tel, text)}' style="font-size:18px; color:green; " class="pointer p-l-xs"><i class="fab fa-whatsapp" aria-hidden="true" title="${tel}"></i></a>`;
 }
 
-function GetConvidar(tel, nome) {
-   
-    return `<a target="_blank" href='${GetLinkWhatsApp(tel, Convidar(nome))}' style="font-size:13px" class="text-center label label-primary">Convidar</span>`
-}
 
 function GetLinkWhatsApp(tel, text) {
     if (!tel)

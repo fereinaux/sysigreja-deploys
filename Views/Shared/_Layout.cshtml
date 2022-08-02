@@ -29,6 +29,31 @@
     @if (IsSectionDefined("Styles"))
     {@RenderSection("Styles", required: false)}
 
+
+
+    <style>
+        .password-click {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            border: none;
+            background: transparent;
+            outline: none;
+            padding-top: 6px;
+            padding-right: 20px;
+        }
+
+        .group-senha {
+            position: relative;
+        }
+
+            .group-senha input {
+                width: 100%;
+            }
+    </style>
+
+
     <!-- Add jQuery Style direct - used for jQGrid plugin -->
     <link href="@Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
 
@@ -106,29 +131,165 @@
     <script>
         const { jsPDF } = window.jspdf;
         var config = {}
+        var campos = []
         let isAdm = @User.IsInRole(Usuario.Admin).ToString().ToLower();
         let logoRelatorio;
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
-        $.ajax({
-            url: "/Configuracao/GetConfiguracao/",
-            datatype: "json",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                config = data.Configuracao
-                $('title').text(`${config.Titulo} | ${$('#title').text()}`)
-                if (config.LogoId) {
-                    $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
-                    $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
-                }
+
+
+        $("*[id*='eventoid']").change(function () {
+            getConfig(this.value)
+
+        })
+
+        $(document).ready(function () {
+            loadAvatar()
+            if ($("*[id*='eventoid']").val()) {
+
+                getConfig($("*[id*='eventoid']").val())
+            } else {
+                $('title').text("SysIgreja")
+                $('link[rel="icon"]').attr('href', `../Images/logo-iecb.png`)
+                $('#home-button-logo img').attr('src', `../Images/logo-iecb.png`)
                 $('#home-button-logo').css('display', 'block')
-                if (config.LogoRelatorioId) {
-                    logoRelatorio = config.LogoRelatorio
+            }
+        })
+
+
+        function getConfig(id) {
+            $.ajax({
+                url: "/Configuracao/GetConfiguracaoByEventoId/",
+                data: { Id: id },
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    config = data.Configuracao
+                    $('title').text(`${config.Titulo} | ${$('#title').text()}`)
+
+                    $('.title-circulo').text(config.EquipeCirculo)
+                    if (config.LogoId) {
+                        $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
+                        $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
+                    }
+                    $('#home-button-logo').css('display', 'block')
+                    if (config.LogoRelatorioId) {
+                        logoRelatorio = config.LogoRelatorio
+                    }
+
+                    if (config.MeioPagamentos.length > 0) {
+                        $("[id$='meiopagamento']").html(`${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
+                            $("#busca-meiopagamento").html(`<option value="0">Selecione</option>${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
+
+                    }
+                    if (config.Etiquetas.length > 0) {
+                        $("[id$='-etiquetas']").html(`${config.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)}`)
+                    }
+                    if (config.CentroCustos.length > 0) {
+                        $("[id$='-centrocusto']").html(`${config.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
+
+                            $("#busca-centrocusto").html(`<option value="0">Selecione</option>${config.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
+
+                    }
+
+                    if ($("#busca-centrocusto").length > 0 && $("#busca-meiopagamento").length > 0) {
+                        Filtrar()
+                    }
+                }
+            });
+        }
+
+
+        let div = document.createElement("div");
+        div.innerHTML = ` <div class="group-senha">
+                                <input type="password" class="form-control required text-lowercase" id="usuario-senha" data-field="Senha" data-min-length="6" />
+                                <button class="password-click" onmousedown='$("#usuario-senha").attr("type", "text");' onmouseup='$("#usuario-senha").attr("type", "password");' type="submit">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>`
+
+        function changePass() {
+            CustomSwal({
+                title: "Mudança de senha",
+                icon: "info",
+                text: "Digite a nova senha",
+                content: div,
+                className: "button-center",
+                buttons: ["Cancelar", "Confirmar"]
+            }).then(result => {
+                if (!$('#usuario-senha').val() || $('#usuario-senha').val().length < 6) {
+                    ErrorMessage("A senha deve ter no mínimo 6 caracteres")
+                } else {
+                    $.ajax({
+                        url: "/Account/ChangePass/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                senha: $('#usuario-senha').val()
+                            }),
+                        success: function () {
+                            SuccessMesageOperation();
+                        }
+                    });
+
                 }
 
-            }
+            })
+        }
+
+        $("#user-avatar-arquivo").change(function () {
+            PostAvarUser();
         });
+
+        function loadAvatar() {
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "/Account/GetAvatar",
+                    success: function (data) {
+                        if (data) {
+                            $('.img-avatar').attr('src', `data:image/png;base64,${data}`)
+                        }
+                    },
+                    error: function () {
+                        $('.img-avatar').attr('src', "../Images/profile.jpg")
+                    }
+                });
+        }
+
+        function PostAvarUser() {
+
+            var dataToPost = new FormData($('#frm-upload-avatar')[0]);
+            dataToPost.set('Arquivo', dataToPost.get('user-avatar-arquivo'))
+
+                console.log(dataToPost);
+            $.ajax(
+                {
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    data: dataToPost,
+                    url: "/Arquivo/PostArquivo",
+                    success: function (data) {
+                        $.ajax(
+                            {
+                                datatype: "json",
+                                type: "POST",
+                                contentType: `application/json; charset=utf-8`,
+                                url: `/Account/setAvatar`,
+                                data: `{  arquivoId: ${data} }`,
+                                success: function () {
+                                    SuccessMesageOperation()
+                                    loadAvatar()
+                                }
+                            });
+                    }
+                });
+        }
+
     </script>
     <!-- Handler for local scripts -->
     @RenderSection("scripts", required: false)

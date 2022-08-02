@@ -1,0 +1,84 @@
+{
+  "sqltools.connections": [
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "iecbeventos.com.br",
+      "port": 1431,
+      "driver": "MSSQL",
+      "name": "Imersão",
+      "group": "Recon",
+      "database": "imersao",
+      "username": "imersao",
+      "password": "Reinaux0)"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "iecbeventos.com.br",
+      "port": 1431,
+      "driver": "MSSQL",
+      "name": "SVES",
+      "group": "Trindade",
+      "database": "sves",
+      "username": "sves",
+      "password": "Reinaux0)"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "iecbeventos.com.br",
+      "port": 1431,
+      "driver": "MSSQL",
+      "name": "Realidade Recon",
+      "group": "Recon",
+      "database": "realidaderecon",
+      "username": "realidaderecon",
+      "password": "Reinaux0)"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "iecbeventos.com.br",
+      "port": 1431,
+      "driver": "MSSQL",
+      "name": "EJC Recon",
+      "group": "Recon",
+      "database": "ejcrecon",
+      "username": "ejcrecon",
+      "password": "Reinaux0)"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "iecbeventos.com.br",
+      "port": 1431,
+      "driver": "MSSQL",
+      "name": "EJC",
+      "group": "Trindade",
+      "database": "ejc",
+      "username": "ejcuser",
+      "password": "Reinaux0)"
+    }
+  ]
+}

@@ -19,13 +19,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
-            <h4>Filtros</h4>
-            <div class="ibox-tools pull-right">
-                <button class="btn btn-primary" id="btn_Filtrar" onclick="Filtrar()">Filtrar</button>
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-            </div>
+            <h4>Filtros</h4>           
         </div>
         <div class="ibox-content">
             <div class="row">
@@ -34,28 +28,21 @@
                     <select class="form-control" id="lancamento-eventoid">
                         @foreach (var evento in ViewBag.Eventos)
                         {
-                            <option value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                            <option value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                         }
                     </select>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5>Forma de Pagamento</h5>
-                    <select class="form-control" id="busca-meiopagamento">
+                    <select class="form-control" id="busca-meiopagamento" onchange="Filtrar()">
                         <option value="0">Selecione</option>
-                        @foreach (var meioPagamento in ViewBag.MeioPagamentos)
-                        {
-                            <option value="@meioPagamento.Id">@meioPagamento.Descricao</option>
-                        }
+                 
                     </select>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5>Centro Custo</h5>
-                    <select class="form-control" id="busca-centrocusto">
-                        <option value="0">Selecione</option>
-                        @foreach (var ctc in ViewBag.CentroCustos)
-                        {
-                            <option value="@ctc.Id">@ctc.Descricao</option>
-                        }
+                    <select class="form-control" id="busca-centrocusto" onchange="Filtrar()">
+                       
                     </select>
                 </div>
             </div>
@@ -143,16 +130,8 @@
                         <input type="hidden" id="lancamento-tipo" />
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Centro de Custo</h5>
-                            <select class="form-control" id="lancamento-centcusto">
-                                @foreach (var centCusto in ViewBag.CentroCustoPagar)
-                                {
-                                    <option class="centCusto-pagar" value="@centCusto.Id">@centCusto.Descricao</option>
-                                }
-
-                                @foreach (var centCusto in ViewBag.CentroCustoReceber)
-                                {
-                                    <option class="centCusto-receber" value="@centCusto.Id">@centCusto.Descricao</option>
-                                }
+                            <select class="form-control" id="lancamento-centrocusto">
+                              
                             </select>
 
                         </div>
@@ -164,24 +143,12 @@
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Forma de Pagamento</h5>
 
-                            <select class="form-control" id="lancamento-meiopagamento" onchange="ChangeMeioPagamento()">
-                                @foreach (var meioPagamento in ViewBag.MeioPagamentos)
-                                {
-                                    <option value="@meioPagamento.Id">@meioPagamento.Descricao</option>
-                                }
+                            <select class="form-control" id="lancamento-meiopagamento">
+                             
                             </select>
 
                         </div>
-                        <div class="col-sm-6 p-w-md text-center d-none contabancaria">
-                            <h5>Banco</h5>
-
-                            <select class="form-control" id="lancamento-contabancaria">
-                                @foreach (var contabancaria in ViewBag.ContasBancarias)
-                                {
-                                    <option value="@contabancaria.Id">@contabancaria.Banco</option>
-                                }
-                            </select>
-                        </div>
+                       
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Valor</h5>
 

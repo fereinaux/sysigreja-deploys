@@ -227,6 +227,7 @@
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify({
+                    EventoId: @ViewBag.EventoId,
                     Fone: $(`#participante-fone`).val()
                 }),
                 success: function (url) {
@@ -257,6 +258,7 @@
                             DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                             Email: $(`#participante-email`).val(),
                             Fone: $(`#participante-fone`).val(),
+                            EventoId: @ViewBag.EventoId,
                             HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
                             RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
                             HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
@@ -278,7 +280,8 @@
                             Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         }),
                     success: function (url) {
-                        window.location.href = url;
+                        console.log(window.location.href);
+                        //window.location.href = url;
                     }
                 });
             }

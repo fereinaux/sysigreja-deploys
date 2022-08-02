@@ -18,7 +18,7 @@ using Utils.Services;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class QuartoController : SysIgrejaControllerBase
     {
         private readonly IQuartosBusiness quartosBusiness;
@@ -32,15 +32,15 @@ namespace SysIgreja.Controllers
             mapper = new MapperRealidade().mapper;
         }
 
-        public ActionResult Index()
+        public ActionResult Participantes()
         {
-            ViewBag.Title = "Quartos";
+            ViewBag.Title = "Quartos dos Participantes";
             GetEventos();
 
             return View();
         }
 
-        public ActionResult QuartoEquipe()
+        public ActionResult Equipe()
         {
             ViewBag.Title = "Quartos da Equipe";
             GetEventos();

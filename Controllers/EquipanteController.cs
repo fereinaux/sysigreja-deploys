@@ -1,8 +1,9 @@
-﻿using Arquitetura.ViewModels;
+﻿using Arquitetura.Controller;
+using Arquitetura.ViewModels;
 using AutoMapper;
+using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Configuracao;
-using Core.Business.ContaBancaria;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Etiquetas;
@@ -16,6 +17,7 @@ using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
@@ -24,12 +26,13 @@ using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
+using Z.EntityFramework.Plus;
 
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
-    public class EquipanteController : Controller
+    [Authorize]
+    public class EquipanteController : SysIgrejaControllerBase
     {
         private readonly IEquipantesBusiness equipantesBusiness;
         private readonly IEtiquetasBusiness etiquetasBusiness;
@@ -40,14 +43,12 @@ namespace SysIgreja.Controllers
         private readonly IReunioesBusiness reunioesBusiness;
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
-        private readonly IContaBancariaBusiness contaBancariaBusiness;
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
-        private readonly int qtdReunioes;
 
 
-        public EquipanteController(IEquipantesBusiness equipantesBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IContaBancariaBusiness contaBancariaBusiness, IArquivosBusiness arquivoBusiness)
+        public EquipanteController(IEquipantesBusiness equipantesBusiness, IAccountBusiness accountBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IArquivosBusiness arquivoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.quartosBusiness = quartosBusiness;
             this.etiquetasBusiness = etiquetasBusiness;
@@ -57,13 +58,10 @@ namespace SysIgreja.Controllers
             this.equipesBusiness = equipesBusiness;
             this.arquivoBusiness = arquivoBusiness;
             this.lancamentoBusiness = lancamentoBusiness;
-            this.contaBancariaBusiness = contaBancariaBusiness;
             this.meioPagamentoBusiness = meioPagamentoBusiness;
             this.reunioesBusiness = reunioesBusiness;
             this.datatableService = datatableService;
-            var eventoAtivo = eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().ToList().LastOrDefault();
-            qtdReunioes = reunioesBusiness.GetReunioes(eventosBusiness.GetEventoAtivo().Id).Where(x => x.DataReuniao < System.DateTime.Today).Count();
-            mapper = new MapperRealidade(qtdReunioes, eventoAtivo.Id).mapper;
+            mapper = new MapperRealidade().mapper;
         }
 
 
@@ -71,26 +69,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Equipantes";
-            ViewBag.Eventos = eventosBusiness
-               .GetEventos()
-               .OrderByDescending(x => x.DataEvento)
-               .ToList()
-               .Select(x => new EventoViewModel
-               {
-                   Id = x.Id,
-                   DataEvento = x.DataEvento,
-                   Numeracao = x.Numeracao,
-                   TipoEvento = x.TipoEvento.GetNickname(),
-                   Status = x.Status.GetDescription()
-               });
-            ViewBag.MeioPagamentos = meioPagamentoBusiness.GetAllMeioPagamentos().ToList();
-            ViewBag.Valor = eventosBusiness.GetEventoAtivo()?.ValorTaxa ?? 0;
-            ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
-                .Select(x => new ContaBancariaViewModel
-                {
-                    Banco = x.Banco.GetDescription(),
-                    Id = x.Id
-                });
+            GetEventos();
 
             return View();
         }
@@ -121,141 +100,196 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                var eventoId = model.EventoId ?? eventosBusiness.GetEventoAtivo().Id;
-                var result = equipantesBusiness.GetEquipantes();
 
-                var totalResultsCount = result.Count();
-                var filteredResultsCount = totalResultsCount;
-
-
-
-                if (model.Etiquetas != null && model.Etiquetas.Count > 0)
-                {
-                    model.Etiquetas.ForEach(etiqueta =>
-                    result = result.Where(x => x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
-
-                }
-
-                if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
-                {
-                    model.NaoEtiquetas.ForEach(etiqueta =>
-                 result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
-                }
-
-                if (model.EventoId != null)
+                if (model.EventoId.HasValue)
                 {
 
-                    result = result.Where(x => x.Equipes.Any(y => y.EventoId == model.EventoId));
+                    var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
+                        .IncludeOptimized(x => x.Equipante)
+                .IncludeOptimized(x => x.Equipante.Arquivos)
+                .IncludeOptimized(x => x.Equipante.Lancamentos)
+                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+                .IncludeOptimized(x => x.Equipe)
+                .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
+                        .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
 
-                    filteredResultsCount = result.Count();
-                }
+                    var totalResultsCount = result.Count();
+                    var filteredResultsCount = totalResultsCount;
 
-                if (model.Status != null)
-                {
-                    if (model.Status == "pendente")
+                    if (model.Etiquetas != null && model.Etiquetas.Count > 0)
                     {
-                        result = result.Where(x => (!x.Lancamentos.Any(y => y.EventoId ==  (x.Equipes.Any() ? x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().EventoId : 0))));
-                    }
-                    else if (model.Status == "pago")
-                    {
-                        result = result.Where(x => (x.Lancamentos.Any(y => y.EventoId == (x.Equipes.Any() ? x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().EventoId : 0))));
+                        model.Etiquetas.ForEach(etiqueta =>
+                        result = result.Where(x => x.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
 
                     }
-                    filteredResultsCount = result.Count();
-                }
 
-
-                if (model.Equipe != null)
-                {
-                    result = result.Where(x => x.Equipes.Any() && x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault(y => y.EventoId == eventoId).Equipe == model.Equipe);
-                    filteredResultsCount = result.Count();
-                }
-
-                if (model.search.value != null)
-                {
-                    result = result.Where(x => (x.Nome.Contains(model.search.value)));
-                    filteredResultsCount = result.Count();
-                }
-
-                try
-                {
-                    if (model.columns[model.order[0].column].name == "HasOferta")
+                    if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
                     {
-                        if (model.order[0].dir == "asc")
+                        model.NaoEtiquetas.ForEach(etiqueta =>
+                     result = result.Where(x => !x.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                    }
+
+                    if (!string.IsNullOrEmpty(model.Status))
+                    {
+                        if (model.Status == "pendente")
                         {
-                            result = result.OrderBy(x => new
+                            result = result.Where(x => (!x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
+                        }
+                        else if (model.Status == "pago")
+                        {
+                            result = result.Where(x => (x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
+
+                        }
+                        filteredResultsCount = result.Count();
+                    }
+
+
+                    if (model.Equipe.HasValue)
+                    {
+                        result = result.Where(x => x.EquipeId == model.Equipe);
+                        filteredResultsCount = result.Count();
+                    }
+
+                    if (!string.IsNullOrEmpty(model.search.value))
+                    {
+                        result = result.Where(x => (x.Equipante.Nome.ToLower().Contains(model.search.value.ToLower())));
+                        filteredResultsCount = result.Count();
+                    }
+
+
+                    filteredResultsCount = result.Count();
+
+                    try
+                    {
+                        if (model.columns[model.order[0].column].name == "HasOferta")
+                        {
+                            if (model.order[0].dir == "asc")
                             {
-                                Order = x.Lancamentos.Where(y => y.EventoId == eventoId).Any()
-                            });
+                                result = result.OrderBy(x => new
+                                {
+                                    Order = x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any()
+                                });
+
+                            }
+                            else
+                            {
+                                result = result.OrderByDescending(x => new
+                                {
+                                    Order = x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any()
+                                });
+                            }
+
+                        }
+                        else if (model.columns[model.order[0].column].name == "Faltas")
+                        {
+                            if (model.order[0].dir == "asc")
+                            {
+                                result = result.OrderBy(x => new
+                                {
+                                    Order = x.Presencas.Count()
+                                });
+
+                            }
+                            else
+                            {
+                                result = result.OrderByDescending(x => new
+                                {
+                                    Order = x.Presencas.Count()
+                                });
+                            }
+
+                        }
+                        else if (model.columns[model.order[0].column].name == "Equipe")
+                        {
+                            if (model.order[0].dir == "asc")
+                            {
+                                result = result.OrderBy(x => new
+                                {
+                                    Order = x.Equipe.Nome
+                                });
+
+                            }
+                            else
+                            {
+                                result = result.OrderByDescending(x => new
+                                {
+                                    Order = x.Equipe.Nome
+                                });
+                            }
 
                         }
                         else
                         {
-                            result = result.OrderByDescending(x => new
+                            if (model.order[0].dir == "asc")
                             {
-                                Order = x.Lancamentos.Where(y => y.EventoId == eventoId).Any()
-                            });
-                        }
+                                result = result.OrderByDynamic(x => "x.Equipante." + model.columns[model.order[0].column].name);
 
+                            }
+                            else
+                            {
+                                result = result.OrderByDescendingDynamic(x => "x.Equipante." + model.columns[model.order[0].column].name);
+                            }
+
+                        }
                     }
-                    else if (model.columns[model.order[0].column].name == "Faltas")
+                    catch (Exception)
                     {
-                        if (model.order[0].dir == "asc")
-                        {
-                            result = result.OrderBy(x => new
-                            {
-                                Order = qtdReunioes - x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Presencas.Count()
-                            });
-
-                        }
-                        else
-                        {
-                            result = result.OrderByDescending(x => new
-                            {
-                                Order = qtdReunioes - x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Presencas.Count()
-                            });
-                        }
-
                     }
-                    else if (model.columns[model.order[0].column].name == "Equipe")
-                    {
-                        if (model.order[0].dir == "asc")
-                        {
-                            result = result.OrderBy(x => new
-                            {
-                                Order = x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Equipe
-                            });
 
-                        }
-                        else
-                        {
-                            result = result.OrderByDescending(x => new
-                            {
-                                Order = x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Equipe
-                            });
-                        }
+                    result = result.Skip(model.Start)
+          .Take(model.Length);
+
+                    return Json(new
+                    {
+                        data = mapper.Map<IEnumerable<EquipanteListModel>>(result),
+                        recordsTotal = totalResultsCount,
+                        recordsFiltered = filteredResultsCount,
+                    }, JsonRequestBehavior.AllowGet);
+
+
+                }
+                else
+                {
+
+                    var result = equipantesBusiness.GetEquipantes();
+
+                    var totalResultsCount = result.Count();
+                    var filteredResultsCount = totalResultsCount;
+
+                    if (model.search.value != null)
+                    {
+                        result = result.Where(x => (x.Nome.Contains(model.search.value)));
+                        filteredResultsCount = result.Count();
+                    }
+
+
+                    if (model.order[0].dir == "asc")
+                    {
+                        result = result.OrderByDynamic(x => "x." + model.columns[model.order[0].column].name);
 
                     }
                     else
                     {
-                        result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+                        result = result.OrderByDescendingDynamic(x => "x." + model.columns[model.order[0].column].name);
                     }
-                }
-                catch (Exception)
-                {
+
+                    result = result.Skip(model.Start)
+          .Take(model.Length);
+
+                    return Json(new
+                    {
+                        data = mapper.Map<IEnumerable<EquipanteListModel>>(result),
+                        recordsTotal = totalResultsCount,
+                        recordsFiltered = filteredResultsCount,
+                    }, JsonRequestBehavior.AllowGet);
+
+
                 }
 
-                result = result.Skip(model.Start)
-                .Take(model.Length);
-
-                return Json(new
-                {
-                    data = mapper.Map<IEnumerable<EquipanteListModel>>(result),
-                    recordsTotal = totalResultsCount,
-                    recordsFiltered = filteredResultsCount,
-                }, JsonRequestBehavior.AllowGet);
             }
         }
+
 
         [HttpPost]
         public ActionResult GetEquipantes()
@@ -267,62 +301,53 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetEquipante(int Id)
+        public ActionResult GetEquipante(int Id, int? eventoId)
         {
-            var result = mapper.Map<EquipanteListModel>(equipantesBusiness.GetEquipantes().ToList().FirstOrDefault(x => x.Id == Id));
-            int eventoId = (eventosBusiness.GetEventoAtivo() ?? eventosBusiness.GetEventos().OrderByDescending(x => x.DataEvento).First()).Id;
+            var query = equipantesBusiness.GetEquipantes();
 
-            var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
-              .Select(x => new
-              {
-                  Nome = x.Nome,
-                  Id = x.Id,
-                  Cor = x.Cor
-              });
+            if (eventoId.HasValue)
+            {
+                query = query.IncludeFilter(x => x.ParticipantesEtiquetas.Where(y => y.EventoId == eventoId))
+                        .IncludeFilter(x => x.ParticipantesEtiquetas.Where(y => y.EventoId == eventoId).Select(y => y.Etiqueta));
+            }
+
+            var result = mapper.Map<EquipanteListModel>(query.FirstOrDefault(x => x.Id == Id));
 
             var dadosAdicionais = new
             {
                 Status = result.Status.GetDescription(),
-                Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? ""
+                Quarto = eventoId.HasValue ? (quartosBusiness.GetQuartosComParticipantes(eventoId.Value, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo) : ""
             };
 
-            return Json(new { Equipante = result, Etiquetas = etiquetas, }, JsonRequestBehavior.AllowGet);
+            return Json(new { Equipante = result }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult VerificaCadastro(string Fone)
+        public ActionResult VerificaCadastro(string Fone, int EventoId)
         {
             var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone.Replace("+", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace("-", "") == Fone.Replace("+", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace("-", ""));
 
             if (equipante != null)
-                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id }));
+                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = EventoId }));
             else
                 return new HttpStatusCodeResult(200);
         }
 
         [AllowAnonymous]
-        public ActionResult InscricaoConcluida(int Id)
+        public ActionResult InscricaoConcluida(int Id, int EventoId)
         {
             Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
-            var eventoAtual = eventosBusiness.GetEventoAtivo();
-            var config = configuracaoBusiness.GetConfiguracao();
+            var eventoAtual = eventosBusiness.GetEventoById(EventoId);
+            var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
             ViewBag.Configuracao = config;
             ViewBag.MsgConclusao = config.MsgConclusaoEquipe
          .Replace("${Apelido}", equipante.Apelido)
-         .Replace("${Evento}", $"{eventoAtual.TipoEvento.GetDescription()}")
+               .Replace("${Evento}", eventoAtual.Configuracao.Titulo)
+                  .Replace("${NumeracaoEvento}", eventoAtual.Numeracao.ToString())
+                   .Replace("${DescricaoEvento}", eventoAtual.Descricao)
          .Replace("${ValorEvento}", eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
          .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
-
-            ViewBag.Participante = new InscricaoConcluidaViewModel
-            {
-                Id = equipante.Id,
-                Apelido = equipante.Nome,
-                Logo = eventoAtual.TipoEvento.GetNickname() + ".png",
-                Evento = $"{eventoAtual.TipoEvento.GetDescription()}",
-                Valor = eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
-                DataEvento = eventoAtual.DataEvento.ToString("dd/MM/yyyy"),
-            };
 
             return View("InscricaoConcluida");
 
@@ -336,21 +361,13 @@ namespace SysIgreja.Controllers
             result.Nome = UtilServices.CapitalizarNome(result.Nome);
             result.Apelido = UtilServices.CapitalizarNome(result.Apelido);
             var equipeAtual = equipesBusiness.GetEquipeAtual(eventoId, result.Id);
-            result.Equipe = equipeAtual.Equipe.GetDescription() ?? "";
+            result.Equipe = equipeAtual.Equipe?.Nome;
             result.Checkin = equipeAtual.Checkin;
             result.Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "";
 
             var equipante = mapper.Map<PostEquipanteModel>(result);
 
-            var etiquetas = etiquetasBusiness.GetEtiquetas().ToList()
-           .Select(x => new
-           {
-               Nome = x.Nome,
-               Id = x.Id,
-               Cor = x.Cor
-           });
-
-            return Json(new { Equipante = equipante, Etiquetas = etiquetas }, JsonRequestBehavior.AllowGet);
+            return Json(new { Equipante = equipante }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -361,7 +378,7 @@ namespace SysIgreja.Controllers
 
             if (model.Inscricao)
             {
-                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id }));
+                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = model.EventoId}));
             }
             else
             {
@@ -371,9 +388,9 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostEtiquetas(string[] etiquetas, int id, string obs)
+        public ActionResult PostEtiquetas(string[] etiquetas, int id, string obs, int eventoId)
         {
-            equipantesBusiness.PostEtiquetas(etiquetas, id, obs);
+            equipantesBusiness.PostEtiquetas(etiquetas, id, obs, eventoId);
 
             return new HttpStatusCodeResult(200);
         }

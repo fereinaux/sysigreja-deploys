@@ -1,18 +1,50 @@
 ﻿$(document).ready(() => {
-    $(".membro-fone").each((i, element) => {
-        $(element).html(`${GetIconWhatsApp($(element).text())}
-                            ${GetIconTel($(element).text())}`);
-    });
+   
 
-    CarregarTabelaPresenca();
-    CarregarTabelaArquivos();
+    CarregarTela()
 });
 
-function CarregarTabelaArquivos() {
+function CarregarTela() {
+    $.ajax({
+        url: '/Home/CoordenadorGet',
+        datatype: "json",
+        data: { eventoId: $('#eventoid').val() },
+        type: "GET",
+        success: (data) => {
+            $('.equipe').text(data.result.Equipe)
+            $('#img-logo').attr('src', `data:image/png;base64,${data.result.Configuracao.Logo}`)
+            $('.qtd-membros').text(data.result.QtdMembros)
+            $('.navy-bg').css('background-color', data.result.Configuracao.Cor)
+            $('.membros').html(`${data.result.Membros.map(membro => `
+<tr>
+    <td data-label="Sexo"><span style="font-size:24px;" class="p-l-xs"> <i class="fa  ${membro.Sexo == "Masculino" ? "fa-male" : "fa-female"} " aria-hidden="true"></i></span></td>
+    <td data-label="Nome">${membro.Nome}</td>
+    <td data-label="Idade">${membro.Idade}</td>
+    <td data-label="Oferta"> <span style="font-size:24px;"> <i class="fa ${membro.Oferta ? "fa-check" : "fa-times"} " aria-hidden="true"></i></span></td>
+    <td data-label="Vacina"> <span style="font-size:24px;"> <i class="fa ${membro.Vacina ? "fa-check" : "fa-times"} " aria-hidden="true"></i></span></td>
+<td data-label="Foto"> ${membro.Foto ? `<img src="data:image/png;base64,${membro.Foto}" class="avatar-membro"/>` : `<span style="font-size:24px;"> <i class="fa   fa-times"} " aria-hidden="true"></i></span>`}</td>
+    <td data-label="Faltas">${membro.Faltas}</td>
+    <td data-label="Contato" class="membro-fone">${membro.Fone}</td>
+</tr>
+`)}`)
+            $(".membro-fone").each((i, element) => {
+                $(element).html(`${GetIconWhatsApp($(element).text())}
+                            ${GetIconTel($(element).text())}`);
+            });
+            $('#reuniaoid').html(`${data.result.Reunioes.map(reuniao => `
+<option value="${reuniao.Id}">${reuniao.DataReuniao}</option>
+`)}`)
+            CarregarTabelaArquivos(data.result.EquipeEnum.Id, data.result.Configuracao.Id)
+            CarregarTabelaPresenca()
+        }
+    });
+}
+
+function CarregarTabelaArquivos(id, configID) {
     $.ajax({
         url: '/Arquivo/GetArquivosEquipe',
         datatype: "json",
-        data: { Equipe: $("#table-arquivos").data('equipe'),  IsComunEquipe: true },
+        data: { Equipe: id, IsComunEquipe: true, ConfiguracaoId: configID },
         type: "POST",
         success: (data) => {
             html = '';
@@ -23,7 +55,6 @@ function CarregarTabelaArquivos() {
                         <td>${GetButton('GetArquivo', element.Id, 'blue', 'fa-download', 'Download')}</td>
                     </tr>`;
             });
-            console.log(html);
             $('.tbarquivos').html(html);
 
             $("td.fa").css("font-size", "25px");

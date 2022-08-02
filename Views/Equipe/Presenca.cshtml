@@ -23,10 +23,10 @@
         <div class="ibox-content">
             <div class="row">
                 <div class="col-xs-12 col-md-4 pull-right">
-                    <select class="form-control" id="presenca-eventoid" onchange="GetReunioes()">
+                    <select class="form-control" id="presenca-eventoid" onchange="loadScreen()">
                         @foreach (var evento in ViewBag.Eventos)
                         {
-                            <option value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                            <option value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                         }
                     </select>
                 </div>

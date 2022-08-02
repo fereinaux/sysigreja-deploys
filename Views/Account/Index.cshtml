@@ -63,15 +63,18 @@
                         </div>
                         <div class="col-sm-8 col-sm-offset-2 p-h-md">
                             <div class="form-group">
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="usuario-perfil" checked="" value="1" name="usuario-perfil"> <i></i> Admin </label></div>
-                                <div class="radio i-checks-green inline p-l-xs"><label> <input type="radio" id="usuario-perfil" value="2" name="usuario-perfil"> <i></i> Coordenador </label></div>
-                                <div class="radio i-checks-green inline p-l-xs"><label> <input type="radio" id="usuario-perfil" value="3" name="usuario-perfil"> <i></i> Secretaria </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="usuario-perfil" checked="" value="Geral" name="usuario-perfil"> <i></i> Administrador Geral </label>
+                                                                         <label> <input type="radio" id="usuario-perfil" value="Admin" name="usuario-perfil"> <i></i> Administrador de Eventos </label></div>
                             </div>
                         </div>
                         <div class="col-sm-12 p-w-md text-center">
                             <h5>Equipante</h5>
 
                             <select class="form-control chosen-select" id="usuario-equipanteid"></select>
+                        </div>
+                        <div class="col-sm-12 p-w-md text-center eventos">
+                            <h5>Eventos</h5>
+                            <select class="form-control" id="usuario-eventos" multiple></select>
                         </div>
                     </div>
                 </div>
@@ -85,29 +88,6 @@
     </div>
 </div>
 
-@section Styles {
-    <style>
-        .password-click {
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 10;
-            border: none;
-            background: transparent;
-            outline: none;
-            padding-top: 6px;
-            padding-right: 20px;
-        }
-
-        .group-senha {
-            position: relative;
-        }
-
-            .group-senha input {
-                width: 100%;
-            }
-    </style>
-}
 
 @section Scripts {
 

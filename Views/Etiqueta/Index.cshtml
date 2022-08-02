@@ -19,9 +19,22 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right">
-                <button class="btn btn-default" id="btn_Adicionar" onclick="EditEtiqueta(0)">Adicionar</button>
+            <div class="ibox-tools pull-right w-300">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <select class="form-control" id="etiquetas-configId" onchange="CarregarTabelaEtiquetas()">
+                            @foreach (var config in ViewBag.Configuracoes)
+                            {
+                                <option value="@config.Id">@config.Titulo</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditEtiqueta(0)">Adicionar</button>
+                    </div>
+                </div>
             </div>
+ 
         </div>
         <div class="ibox-content">
             <table id="table-etiquetas" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">

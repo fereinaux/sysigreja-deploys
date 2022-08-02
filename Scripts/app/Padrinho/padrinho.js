@@ -71,6 +71,7 @@ function PadrinhoRefresh() {
 
     CarregarTabelaPadrinho();
     GetParticipantesSemPadrinho();
+    
 }
 
 function PrintPadrinho(row) {
@@ -153,6 +154,7 @@ function DeletePadrinho(id) {
                 success: function () {
                     SuccessMesageDelete();
                     PadrinhoRefresh();
+                    GetPadrinhosComParticipantes()
                 }
             });
         }
@@ -316,7 +318,7 @@ function ChangePadrinho(participanteId, destinoId) {
         data: JSON.stringify(
             {
                 ParticipanteId: participanteId,
-                DestinoId: destinoId
+                DestinoId: destinoId || null
             }),
         success: function () {
             PadrinhoRefresh(destinoId);

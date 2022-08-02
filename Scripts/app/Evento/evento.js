@@ -1,4 +1,5 @@
-﻿function CarregarTabelaEvento() {
+﻿let eventoId
+function CarregarTabelaEvento() {
     const tableEventoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],
@@ -35,6 +36,7 @@
                     var color = !(InscricoesAbertas == row.Status) ? 'red' : 'green';
 
                     return `${GetLabel('ToggleEventoStatus', data, color, row.Status)}
+${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
                             ${GetAnexosButton('AnexosEvento', data, row.QtdAnexos)}
                             ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}                            
                             ${GetButton('DeleteEvento', data, 'red', 'fa-trash', 'Excluir')}`;
@@ -64,18 +66,20 @@ function GetEvento(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $("#evento-id").val(data.Evento.Id);
+                $("#evento-descricao").val(data.Evento.Descricao);
                 $("#evento-numeracao").val(data.Evento.Numeracao);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
                 $("#evento-valor").val(data.Evento.Valor);
                 $("#evento-taxa").val(data.Evento.ValorTaxa);
                 $("#evento-data").val(moment(data.Evento.DataEvento).format('DD/MM/YYYY'));
-                $("#evento-tipo").val(data.Evento.TipoEvento).trigger("chosen:updated");
+                $("#evento-tipo").val(data.Evento.ConfiguracaoId).trigger("chosen:updated");
             }
         });
     }
     else {
         $("#evento-id").val(0);
         $("#evento-numeracao").val("");
+        $("#evento-descricao").val("");
         $("#evento-capacidade").val("");
         $("#evento-data").val("");
         $("#evento-valor").val("");
@@ -84,7 +88,6 @@ function GetEvento(id) {
 }
 
 function EditEvento(id) {
-    GetTipos();
     GetEvento(id);
     $("#modal-eventos").modal();
 }
@@ -139,8 +142,9 @@ function PostEvento() {
             data: JSON.stringify(
                 {
                     Id: $("#evento-id").val(),
-                    TipoEvento: $("#evento-tipo").val(),
+                    ConfiguracaoId: $("#evento-tipo").val(),
                     Numeracao: $("#evento-numeracao").val(),
+                    Descricao: $("#evento-descricao").val(),
                     Capacidade: $("#evento-capacidade").val(),
                     Valor: $("#evento-valor").val(),
                     ValorTaxa: $("#evento-taxa").val(),
@@ -253,21 +257,118 @@ $("#modal-anexos").on('hidden.bs.modal', function () {
     CarregarTabelaEvento();
 });
 
+function GetUsers(id) {
+    eventoId = id;
+    $("#modal-usuarios").modal();
+    GetUsuarios(id)
+    GetEquipantes(id)
+}
 
-function GetTipos(id) {
-    $("#evento-tipo").empty();
+
+function GetUsuarios(id) {
+    const tableArquivoConfig = {
+        language: languageConfig,
+        lengthMenu: [200, 500, 1000],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true,
+        destroy: true,
+        dom: domConfigNoButtons,
+        columns: [
+            { data: "Nome", name: "Nome", autoWidth: true },
+            { data: "Perfil", name: "Perfil", autoWidth: true },
+            {
+                data: "EquipanteId", name: "EquipanteId", orderable: false, width: "15%",
+                "render": function (data, type, row) {
+                    return `
+                            ${GetButton('DeleteUsuario', JSON.stringify(row), 'red', 'fa-trash', 'Excluir')}`;
+                }
+            }
+        ],
+        order: [
+            [0, "asc"]
+        ],
+        ajax: {
+            url: "/Account/GetUsuariosByEvento/",
+            data: { eventoid: id },
+            datatype: "json",
+            type: "POST"
+        }
+    };
+
+    $("#table-usuarios").DataTable(tableArquivoConfig);
+}
+
+function GetEquipantes(id) {
+    $("#usuario-equipanteid").empty();
+    $('#usuario-equipanteid').append($('<option>Selecione</option>'));
 
     $.ajax({
-        url: "/Evento/GetTipos/",
-        data: { EventoId: $("#circulo-eventoid").val() },
+        url: "/Account/GetEquipantesByEvento/",
+        data: { eventoid: id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            data.Tipos.forEach(function (tipo, index, array) {
-                $('#evento-tipo').append($(`<option value="${tipo.Id}">${tipo.Description}</option>`));
+            data.Equipantes.forEach(function (equipante, index, array) {
+                $('#usuario-equipanteid').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
             });
-            $("#evento-tipo").val($("#evento-tipo option:first").val()).trigger("chosen:updated");
+            $('#usuario-equipanteid').trigger("chosen:updated")
         }
     });
+
+}
+
+
+function saveUser() {
+    var windowReference = window.open('_blank');
+    $.ajax({
+        url: "/Account/AddUsuarioEvento/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                EquipanteId: $('#usuario-equipanteid').val(),
+                EventoId: eventoId,
+                Perfil: $("input[type=radio][name=usuario-perfil]:checked").val(),
+            }),
+        success: function (data) {
+            SuccessMesageOperation()
+            GetUsers(eventoId);
+            if (data) {
+           
+                windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
+            }
+        }
+    });
+}
+
+function DeleteUsuario(row) {
+    ConfirmMessageDelete().then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Account/DelUsuarioEvento/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        EquipanteId: row.EquipanteId,
+                        EventoId: eventoId,
+                        Perfil: row.Perfil,
+                    }),
+                success: function (data) {
+                    SuccessMesageOperation()
+                    GetUsers(eventoId);
+                }
+            });
+        }
+    })
+
 }

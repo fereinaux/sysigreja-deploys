@@ -1,20 +1,40 @@
 ﻿var realista;
 let table
-$.ajax({
-    url: '/Etiqueta/GetEtiquetas',
-    datatype: "json",
-    type: "POST",
-    success: (result) => {
-        $("#equipante-marcadores").html(`
+
+
+function checkEvento() {
+    if ($("#equipante-eventoid-filtro").val() != 999) {
+        $('.hide-tipoevento').removeClass('d-none')
+
+        $.ajax({
+            url: '/Etiqueta/GetEtiquetasByEventoId',
+            data: { eventoId: $("#equipante-eventoid-filtro").val() },
+            datatype: "json",
+            type: "POST",
+            success: (result) => {
+                $("#equipante-marcadores").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
-        $("#equipante-nao-marcadores").html(`
+                $("#equipante-nao-marcadores").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
-        $('#equipante-marcadores').select2();
-        $('#equipante-nao-marcadores').select2();
+                $('#equipante-marcadores').select2();
+                $('#equipante-nao-marcadores').select2();
+            }
+        });
+    } else {
+        $('.hide-tipoevento').addClass('d-none')
     }
-});
+}
+
+function loadEquipes() {
+    checkEvento()
+
+    getEquipes()
+    CarregarTabelaEquipante()
+
+
+}
 
 function CarregarTabelaEquipante(callbackFunction) {
 
@@ -34,6 +54,11 @@ function CarregarTabelaEquipante(callbackFunction) {
         stateSave: true,
         destroy: true,
         dom: domConfig,
+        stateLoadParams: function (settings, data) {
+            for (var i = 0; i < data.columns.length; i++) {
+                data.columns[i].visible = settings.aoColumns[i].visible != undefined ? settings.aoColumns[i].visible : true
+            }
+        },
         buttons: getButtonsConfig('Equipantes'),
         columns: [
             { data: "Sexo", name: "Sexo", visible: false },
@@ -52,18 +77,22 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Nome", name: "Nome", width: "25%", render: function (data, type, row) {
+                data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
                     return `<div>
                         <span>${row.Nome}</br></span>
-                        ${row.Etiquetas.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, '')}
+                        ${$("#equipante-eventoid-filtro").val() != 999 ? row.Etiquetas.map(etiqueta => {
+                        if (etiqueta) {
+                            return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
+                        }
+                    }).join().replace(/,/g, '') : ""}
                     </div>`
                 }
             },
-            { data: "Idade", name: "Idade", autoWidth: true },
-            { data: "Equipe", name: "Equipe", autoWidth: true },
-            { data: "Faltas", name: "Faltas", autoWidth: true },
+            { data: "Idade", name: "Idade", },
+            { data: "Equipe", name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999 },
+            { data: "Faltas", name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999 },
             {
-                data: "HasOferta", name: "HasOferta", autoWidth: true, render: function (data, type, row) {
+                data: "HasOferta", name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
                     if (row.Status == "Em Espera") {
                         return `<span style="font-size:13px" class="text-center label label-default}">Em Espera</span>`;
                     }
@@ -89,9 +118,9 @@ ${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
                            
           ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
-                            ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
+                            ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
                             ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
-${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
+${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 
 `;
@@ -119,17 +148,24 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opç�
 }
 
 function getEquipes() {
-    $.ajax({
-        url: '/Equipe/GetEquipes',
-        datatype: "json",
-        type: "POST",
-        success: (result) => {
-            $("#equipe-select").html(`
+    if ($("#equipante-eventoid-filtro").val() != 999) {
+
+        $.ajax({
+            url: '/Equipe/GetEquipes',
+            datatype: "json",
+            data: { EventoId: $("#equipante-eventoid-filtro").val() },
+            type: "POST",
+            success: (result) => {
+                $("#equipe-select").html(`
 <option value=999>Selecione</option>
 ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
 `)
-        }
-    });
+            }
+        });
+    } else {
+        $("#equipe-select").html(`
+<option value=999>Selecione</option>`)
+    }
 }
 
 function Anexos(id) {
@@ -425,7 +461,7 @@ function PostArquivo() {
 
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
     var filename = dataToPost.get('arquivo-modal').name
- 
+
     var arquivo = dataToPost.get('LancamentoIdModal') > 0 ? new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Nome + filename.substr(filename.indexOf('.'))) : dataToPost.get('arquivo-modal');
 
     dataToPost.set('Arquivo', arquivo)
@@ -526,7 +562,7 @@ function CarregarTabelaPagamentos(id) {
         ],
         ajax: {
             url: '/Lancamento/GetPagamentos',
-            data: { EquipanteId: id },
+            data: { EquipanteId: id, EventoId: $('#equipante-eventoid-filtro').val() },
             datatype: "json",
             type: "POST"
         }
@@ -569,8 +605,7 @@ function GetEquipante(id) {
                 $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
-                $('#equipante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
-                    }`)
+     
                 $("#equipante-numeracao").val(data.Equipante.Numeracao);
                 $(`#equipante-cep`).val(data.Equipante.CEP);
                 $(`#equipante-logradouro`).val(data.Equipante.Logradouro);
@@ -662,7 +697,7 @@ function Opcoes(row) {
     $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Equipante/GetEquipante/",
-        data: { Id: row.Id },
+        data: { Id: row.Id, eventoId: $("#equipante-eventoid-filtro").val() },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -670,8 +705,12 @@ function Opcoes(row) {
             equipante = data.Equipante
             if ($('#modal-opcoes').is(":hidden")) {
                 $.ajax({
-                    url: "/Mensagem/GetMensagens/",
+                    url: "/Mensagem/GetMensagensByTipo/",
                     datatype: "json",
+                    data: JSON.stringify(
+                        {
+                            eventoId: $("#equipante-eventoid-filtro").val(), tipos: ["Equipe"]
+                        }),
                     type: "POST",
                     contentType: 'application/json; charset=utf-8',
                     success: function (dataMsg) {
@@ -683,9 +722,9 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 })
             }
             $('.realista-nome').text(equipante.Nome)
-            $('#equipante-etiquetas').html(`${data.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)
-                }`)
+    
             $('#equipante-etiquetas').val(data.Equipante.Etiquetas.map(etiqueta => etiqueta.Id))
+            $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
             $('#equipante-obs').val(data.Equipante.Observacao)
 
             arrayData = table.data().toArray()
@@ -722,6 +761,7 @@ function PostInfo(callback) {
         data: JSON.stringify(
             {
                 Id: equipante.Id,
+                eventoId: $("#equipante-eventoid-filtro").val(),
                 Etiquetas: $('.equipante-etiquetas').val(),
                 Obs: $('#equipante-obs').val(),
             }),
@@ -820,6 +860,7 @@ function PostPagamento() {
             data: JSON.stringify(
                 {
                     EquipanteId: $("#pagamentos-equipanteid").val(),
+                    EventoId: $("#equipante-eventoid-filtro").val(),
                     Origem: $("#pagamentos-origem").val(),
                     Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
@@ -837,8 +878,8 @@ function PostPagamento() {
 }
 
 $(document).ready(function () {
+    checkEvento()
     CarregarTabelaEquipante();
-    getEquipes()
 });
 
 

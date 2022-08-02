@@ -500,7 +500,7 @@ function GetParticipantes() {
     $("#etiquetas-participantes").empty();
     $('#etiquetas-participantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Participante/GetParticipantes',
+        url: '/Participante/GetParticipantesSelect',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "POST",
@@ -518,7 +518,7 @@ function GetEquipantes() {
     $("#etiquetas-equipantes").empty();
     $('#etiquetas-equipantes').append($('<option>Pesquisar</option>'));
     $.ajax({
-        url: '/Equipe/GetEquipantesByEvento',
+        url: '/Equipe/GetEquipantesByEventoSelect',
         data: { EventoId: $("#etiquetas-eventoid").val() },
         datatype: "json",
         type: "GET",

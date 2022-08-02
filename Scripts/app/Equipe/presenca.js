@@ -1,5 +1,5 @@
 ﻿function CarregarTabelaPresenca() {
-    if ($("#presenca-eventoid").val() && $("#presenca-reuniaoid").val() && $("#presenca-equipeid").val()) {
+    if ($("#presenca-eventoid").val() && $("#presenca-equipeid").val()) {
         const tablePresencaConfig = {
             language: languageConfig,
             lengthMenu: [200,500,1000],
@@ -37,7 +37,11 @@
             ajax: {
                 url: '/Equipe/GetPresenca',
                 datatype: "json",
-                data: { EventoId: $("#presenca-eventoid").val(), EquipeId: $("#presenca-equipeid").val(), ReuniaoId: $("#presenca-reuniaoid").val() },
+                data: {
+                    EventoId: $("#presenca-eventoid").val(),
+                    EquipeId: $("#presenca-equipeid").val(),
+                    ReuniaoId: $("#presenca-reuniaoid").val() || 0
+                },
                 type: "POST"
             }
         };
@@ -46,9 +50,14 @@
 }
 
 
-$(document).ready(function () {
+function loadScreen() {
     getReunioes();
     getPresencas();
+    CarregarTabelaPresenca()
+}
+
+$(document).ready(function () {
+    loadScreen()
 });
 
 function TogglePresenca(id) {
@@ -95,7 +104,7 @@ function getPresencas() {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             data.Equipes.forEach(function (equipe, index, array) {
-                $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Description}</option>`));
+                $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Nome}</option>`));
             });
             $("#presenca-equipeid").val($("#presenca-equipeid option:first").val()).trigger("chosen:updated");
             CarregarTabelaPresenca();

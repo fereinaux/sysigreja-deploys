@@ -1,4 +1,8 @@
-﻿using Core.Business.Mensagem;
+﻿using Arquitetura.Controller;
+using Core.Business.Account;
+using Core.Business.Configuracao;
+using Core.Business.Eventos;
+using Core.Business.Mensagem;
 using Core.Models.Mensagem;
 using System.Linq;
 using System.Web.Mvc;
@@ -7,32 +11,59 @@ using Utils.Constants;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
-    public class MensagemController : Controller
+    [Authorize]
+    public class MensagemController : SysIgrejaControllerBase
     {
         private readonly IMensagemBusiness mensagemBusiness;
+        private readonly IEventosBusiness eventosBusiness;
 
-        public MensagemController(IMensagemBusiness mensagemBusiness)
+        public MensagemController(IMensagemBusiness mensagemBusiness, IEventosBusiness eventosBusiness, IConfiguracaoBusiness configuracaoBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.mensagemBusiness = mensagemBusiness;
+            this.eventosBusiness = eventosBusiness;
         }
 
         public ActionResult Index()
         {
             ViewBag.Title = "Mensagens";
+            GetConfiguracoes();
             return View();
         }
 
         [HttpPost]
-        public ActionResult GetMensagens()
+        public ActionResult GetMensagens(int configuracaoId)
         {
             var result = mensagemBusiness
-                .GetMensagems()
+                .GetMensagems(configuracaoId)
                 .ToList()
                 .Select(x => new PostMessageModel
                 {
                     Titulo = x.Titulo,
-                    Conteudo =x.Conteudo,
+                    Conteudo = x.Conteudo,
+                    Tipos = x.Tipos?.Split(','),
+                    Id = x.Id
+                });
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetMensagensByTipo(int eventoId, string[] tipos)
+        {
+            var query = mensagemBusiness
+                .GetMensagems(eventosBusiness.GetEventoById(eventoId).ConfiguracaoId.Value);
+
+            foreach (var tipo in tipos)
+            {
+                query = query.Where(x => x.Tipos.Contains(tipo));
+            }
+
+            var result = query
+                .ToList()
+                .Select(x => new PostMessageModel
+                {
+                    Titulo = x.Titulo,
+                    Conteudo = x.Conteudo,
                     Id = x.Id
                 });
 

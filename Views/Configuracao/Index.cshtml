@@ -1,4 +1,7 @@
-﻿<div class="row wrapper border-bottom white-bg page-heading">
+﻿@using Microsoft.AspNet.Identity
+@using Utils.Constants;
+
+<div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@ViewBag.Title</h2>
         <ol class="breadcrumb">
@@ -11,119 +14,22 @@
         </ol>
     </div>
 </div>
-
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox">
+<div style="padding-top:10px;padding-bottom:0" class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox" style="margin:0">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-
-        </div>
-        <div class="ibox-content">
-            <div class="row p-h-xs" id="form-config">
-                <div class="col-sm-12 p-w-md m-t-md text-center">
-                    <h5>Título</h5>
-
-                    <input type="text" class="form-control required" id="config-titulo" data-field="Título" />
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Cor Botão</h5>
-
-                    <input type="color" style="padding:0" class="form-control" id="config-corbotao" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Botão">
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Cor Hover Botão</h5>
-
-                    <input type="color" style="padding:0" class="form-control" id="config-corhoverbotao" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Hover Botão">
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Cor Scroll</h5>
-
-                    <input type="color" opacity style="padding:0" class="form-control" id="config-corscroll" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Scroll">
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Cor Hover Scroll</h5>
-
-                    <input type="color" opacity style="padding:0" class="form-control" id="config-corhoverscroll" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Hover Scroll">
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Cor Login Box</h5>
-
-                    <input type="color" opacity style="padding:0" class="form-control" id="config-corloginbox" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Login Box">
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Campos</h5>
-
-                    <select class="form-control" id="config-campos" multiple="multiple" style="width: 100%" data-field="Campos">
-                    </select>
-                </div>
-
-
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Logo</h5>
-                    <img id="img-logo" style="width:20%;margin:auto" src="" class="m-auto" />
-                    <form enctype="multipart/form-data" id="frm-logo" method="post" novalidate="novalidate">
-                        <label for="logo" class="inputFile">
-                            <span id="add-logo" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                            <input accept="image/*" onchange='Logo()' style="display: none;" class="custom-file-input inputFile" id="logo" name="logo" type="file" value="">
-                        </label>
-                    </form>
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Logo Relatórios</h5>
-                    <img id="img-logorelatorio" style="width:20%;margin:auto" src="" class="m-auto" />
-                    <form enctype="multipart/form-data" id="frm-logorelatorio" method="post" novalidate="novalidate">
-                        <label for="logorelatorio" class="inputFile">
-                            <span id="add-logorelatorio" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                            <input accept="image/*" onchange='LogoRelatorio()' style="display: none;" class="custom-file-input inputFile" id="logorelatorio" name="logorelatorio" type="file" value="">
-                        </label>
-                    </form>
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Background</h5>
-                    <img id="img-background" style="width:50%;margin:auto" src="" class="m-auto" />
-                    <form enctype="multipart/form-data" id="frm-background" method="post" novalidate="novalidate">
-                        <label for="background" class="inputFile">
-                            <span id="add-background" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                            <input accept="image/*" onchange='Background()' style="display: none;" class="custom-file-input inputFile" id="background" name="background" type="file" value="">
-                        </label>
-                    </form>
-                </div>
-
-                <div class="col-sm-6 p-w-md m-t-md text-center">
-                    <h5>Background Celular</h5>
-                    <img id="img-backgroundcelular" style="width:50%;margin:auto" src="" class="m-auto" />
-                    <form enctype="multipart/form-data" id="frm-backgroundcelular" method="post" novalidate="novalidate">
-                        <label for="backgroundcelular" class="inputFile">
-                            <span id="add-backgroundcelular" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                            <input accept="image/*" onchange='BackgroundCelular()' style="display: none;" class="custom-file-input inputFile" id="backgroundcelular" name="backgroundcelular" type="file" value="">
-                        </label>
-                    </form>
-                </div>
-                <div class="col-sm-12 p-w-md m-t-md text-center">
-                    <h5>Mensagem Conclusão</h5>
-
-                    <textarea id="config-msg" name="editordata"></textarea>
-                </div>
-                <div class="col-sm-12 p-w-md m-t-md text-center">
-                    <h5>Mensagem Conclusão para a Equipe</h5>
-
-                    <textarea id="config-msgequipe" name="editordata"></textarea>
-                </div>
-                <div class="col-sm-12 p-w-md m-t-md text-center">
-                    <button type="button" class="btn btn-primary" onclick="PostConfig()">Salvar</button>
-                </div>
+            <div class="ibox-tools pull-right" style="width:250px">
+                @if (User.IsInRole("Geral"))
+                {
+                    <button class="btn btn-primary" onclick="addConfig()">Adicionar</button>
+                }
             </div>
         </div>
     </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight wrapper-config">
+
 </div>
 
 
@@ -139,43 +45,77 @@
 
     <script>
         let configMsg, configMsgEquipe
-        function PostConfig() {
+        function addConfig() {
+            $.ajax({
+                url: "/Configuracao/PostConfiguracao/",
+                datatype: "json",
+                type: "POST",
+                contentType: `application/json; charset=utf-8`,
+                data: JSON.stringify(
+                    {
+                        Titulo: ""
+                    }),
+                success: function () {
+                    SuccessMesageOperation()
+                    carregarConfiguracoes()
+                }
+            });
+        }
+
+        function PostConfig(id, tipoEvento) {
             if (ValidateForm(`#form-config`)) {
                 $.ajax({
                     url: "/Configuracao/PostConfiguracao/",
                     datatype: "json",
                     type: "POST",
-                    contentType: 'application/json; charset=utf-8',
+                    contentType: `application/json; charset=utf-8`,
                     data: JSON.stringify(
                         {
-                            Titulo: $('#config-titulo').val(),
-                            CorHoverBotao: $('#config-corhoverbotao').val(),
-                            CorBotao: $('#config-corbotao').val(),
-                            CorLoginBox: $('#config-corloginbox').val(),
-                            CorScroll: $('#config-corscroll').val(),
-                            CorHoverScroll: $('#config-corhoverscroll').val(),
-                            MsgConclusao: configMsg.summernote('code'),
-                            MsgConclusaoEquipe: configMsgEquipe.summernote('code'),
+                            Id: id,
+                            Titulo: $(`#config-titulo${tipoEvento}`).val(),
+                            CorHoverBotao: $(`#config-corhoverbotao${tipoEvento}`).val(),
+                            CorBotao: $(`#config-corbotao${tipoEvento}`).val(),
+                            CorLoginBox: $(`#config-corloginbox${tipoEvento}`).val(),
+                            CorScroll: $(`#config-corscroll${tipoEvento}`).val(),
+                            EquipeCirculoId: $(`#config-equipecirculo${tipoEvento}`).val(),
+                            CentroCustoInscricaoId: $(`#config-centrocustoinscricao${tipoEvento}`).val(),
+                            CentroCustoTaxaId: $(`#config-centrocustoequipe${tipoEvento}`).val(),
+                            CorHoverScroll: $(`#config-corhoverscroll${tipoEvento}`).val(),
+                            MsgConclusao: $(`#config-msg${tipoEvento}`).summernote('code'),
+                            MsgConclusaoEquipe: $(`#config-msgequipe${tipoEvento}`).summernote('code'),
                         }),
                     success: function () {
-                        SuccessMesageOperation()
-                        carregarConfiguracoes()
-                    }
-                });
 
-                $.ajax({
-                    url: "/Configuracao/PostCampos/",
-                    datatype: "json",
-                    type: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(
-                        {
-                            campos: $('#config-campos').val().map(campo => { return { CampoId: campo } })
+                        $.ajax({
+                            url: "/Configuracao/PostCampos/",
+                            datatype: "json",
+                            type: "POST",
+                            contentType: `application/json; charset=utf-8`,
+                            data: JSON.stringify(
+                                {
+                                    id: id,
+                                    campos: $(`#config-campos${tipoEvento}`).val().map(campo => { return { CampoId: campo } })
 
-                        }),
-                    success: function () {
-                        SuccessMesageOperation()
-                        carregarConfiguracoes()
+                                }),
+                            success: function () {
+                                $.ajax({
+                                    url: "/Configuracao/PostEquipes/",
+                                    datatype: "json",
+                                    type: "POST",
+                                    contentType: `application/json; charset=utf-8`,
+                                    data: JSON.stringify(
+                                        {
+                                            id: id,
+                                            equipes: $(`#config-equipes${tipoEvento}`).val().map(equipe => { return { EquipeId: equipe } })
+
+                                        }),
+                                    success: function () {
+                                        SuccessMesageOperation()
+                                        carregarConfiguracoes()
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -183,122 +123,318 @@
 
         function carregarConfiguracoes() {
             $.ajax({
-                url: "/Configuracao/GetConfiguracao/",
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    config = data.Configuracao
-                    $('#config-titulo').val(config.Titulo)
-                    $('#config-corhoverbotao').val(config.CorHoverBotao)
-                    $('#config-corbotao').val(config.CorBotao)
-                    $('#config-corloginbox').val(config.CorLoginBox)
-                    $('#config-corscroll').val(config.CorScroll)
-                    $('#config-corhoverscroll').val(config.CorHoverScroll)
-                    configMsg.summernote('code', config.MsgConclusao)
-                    configMsgEquipe.summernote('code', config.MsgConclusaoEquipe)
-                    if (config.LogoId) {
-                        $('#img-logo').css('display', 'block')
-                        $('#img-logo').attr("src", 'data:image/jpeg;base64,' + config.Logo)
-                    } else {
-                        $('#img-logo').css('display', 'none')
-                    }
-
-                    if (config.BackgroundId) {
-                        $('#img-background').css('display', 'block')
-                        $('#img-background').attr("src", 'data:image/jpeg;base64,' + config.Background)
-                    } else {
-                        $('#img-background').css('display', 'none')
-                    }
-
-                    if (config.LogoRelatorioId) {
-                        $('#img-logorelatorio').css('display', 'block')
-                        $('#img-logorelatorio').attr("src", 'data:image/jpeg;base64,' + config.LogoRelatorio)
-                    } else {
-                        $('#img-logorelatorio').css('display', 'none')
-                    }
-
-                    if (config.BackgroundCelularId) {
-                        $('#img-backgroundcelular').css('display', 'block')
-                        $('#img-backgroundcelular').attr("src", 'data:image/jpeg;base64,' + config.BackgroundCelular)
-                    } else {
-                        $('#img-backgroundcelular').css('display', 'none')
-                    }
-                }
-            });
-            $.ajax({
                 url: "/Configuracao/GetCamposEnum/",
                 datatype: "json",
                 type: "GET",
-                contentType: 'application/json; charset=utf-8',
+                contentType: `application/json; charset=utf-8`,
                 success: function (data) {
                     campos = data.Campos
-                    $("#config-campos").html(`
+
+                    $.ajax({
+                        url: "/Equipe/GetEquipesConfig/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: `application/json; charset=utf-8`,
+                        success: function (data) {
+                            equipes = data.data
+                            $.ajax({
+                                url: "/Configuracao/GetConfiguracoes/",
+                                datatype: "json",
+                                type: "GET",
+                                contentType: `application/json; charset=utf-8`,
+                                success: function (data) {
+                                    html = ``
+
+                                    data.data.forEach(config => {
+                                        html += `<div class="ibox">
+                                                        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+                                                            <h4>${config.Titulo}</h4>
+                                                            <div class="ibox-tools">
+                                                                <a class="collapse-link">
+                                                                    <i class="fa fa-chevron-up"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="ibox-content">
+                                                            <div class="row p-h-xs" id="form-config">
+                                                                <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                    <h5>Título</h5>
+
+                                                                    <input type="text" class="form-control required" id="config-titulo${config.Id}" data-field="Título" />
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Cor Botão</h5>
+
+                                                                    <input type="color" style="padding:0" class="form-control" id="config-corbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Botão">
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Cor Hover Botão</h5>
+
+                                                                    <input type="color" style="padding:0" class="form-control" id="config-corhoverbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Hover Botão">
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Cor Scroll</h5>
+
+                                                                    <input type="color" opacity style="padding:0" class="form-control" id="config-corscroll${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Scroll">
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Cor Hover Scroll</h5>
+
+                                                                    <input type="color" opacity style="padding:0" class="form-control" id="config-corhoverscroll${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Hover Scroll">
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Cor Login Box</h5>
+
+                                                                    <input type="color" opacity style="padding:0" class="form-control" id="config-corloginbox${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Login Box">
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Campos</h5>
+
+                                                                    <select class="form-control config-campos" id="config-campos${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos">
+                                                                    </select>
+                                                                </div>
+
+                  <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Equipes</h5>
+
+                                                                    <select class="form-control config-equipes" id="config-equipes${config.Id}" multiple="multiple" style="width: 100%" data-field="Equipes">
+                                                                    </select>
+                                                                </div>
+               <div class="col-sm-6 p-w-md m-t-md text-center">
+            <h5>Equipe de Círculo</h5>
+
+                                                                    <select class="form-control config-equipes" id="config-equipecirculo${config.Id}" style="width: 100%" data-field="Equipe Círculo">
+                                                                    </select>
+                 </div>
+              <div class="col-sm-6 p-w-md m-t-md text-center">
+            <h5>Centro de Custo para Inscrições</h5>
+                                                                      <select class="form-control centro-custos${config.Id}" id="config-centrocustoinscricao${config.Id}" style="width: 100%" data-field="Centro de Custo para Inscrições">
+                                                                    </select>
+                 </div>
+              <div class="col-sm-6 p-w-md m-t-md text-center">
+            <h5>Centro de Custo para Taxa de Equipante</h5>
+               <select class="form-control centro-custos${config.Id}" id="config-centrocustoequipe${config.Id}" style="width: 100%" data-field="Centro de Custo para Taxa de Equipante">
+                                                                    </select>
+                                                                </div>
+
+
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Logo</h5>
+                                                                    <img id="img-logo${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
+                                                                    <form enctype="multipart/form-data" id="frm-logo${config.Id}" method="post" novalidate="novalidate">
+                                                                        <label for="logo${config.Id}" class="inputFile">
+                                                                            <span id="add-logo${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                            <input accept="image/*" onchange='Logo(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logo${config.Id}" name="logo${config.Id}" type="file" value="">
+                                                                        </label>
+                                                                    </form>
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Logo Relatórios</h5>
+                                                                    <img id="img-logorelatorio${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
+                                                                    <form enctype="multipart/form-data" id="frm-logorelatorio${config.Id}" method="post" novalidate="novalidate">
+                                                                        <label for="logorelatorio${config.Id}" class="inputFile">
+                                                                            <span id="add-logorelatorio${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                            <input accept="image/*" onchange='LogoRelatorio(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logorelatorio${config.Id}" name="logorelatorio${config.Id}" type="file" value="">
+                                                                        </label>
+                                                                    </form>
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Background</h5>
+                                                                    <img id="img-background${config.Id}" style="width:50%;margin:auto" src="" class="m-auto" />
+                                                                    <form enctype="multipart/form-data" id="frm-background${config.Id}" method="post" novalidate="novalidate">
+                                                                        <label for="background${config.Id}" class="inputFile">
+                                                                            <span id="add-background${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                            <input accept="image/*" onchange='Background(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="background${config.Id}" name="background${config.Id}" type="file" value="">
+                                                                        </label>
+                                                                    </form>
+                                                                </div>
+
+                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                    <h5>Background Celular</h5>
+                                                                    <img id="img-backgroundcelular${config.Id}" style="width:50%;margin:auto" src="" class="m-auto" />
+                                                                    <form enctype="multipart/form-data" id="frm-backgroundcelular${config.Id}" method="post" novalidate="novalidate">
+                                                                        <label for="backgroundcelular${config.Id}" class="inputFile">
+                                                                            <span id="add-backgroundcelular${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                            <input accept="image/*" onchange='BackgroundCelular(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="backgroundcelular${config.Id}" name="backgroundcelular${config.Id}" type="file" value="">
+                                                                        </label>
+                                                                    </form>
+                                                                </div>
+            <div class="col-sm-12 p-w-md m-t-md text-center">
+                            <h5>Mensagem Conclusão</h5>
+
+                            <textarea class="config-msg" id="config-msg${config.Id}" name="editordata"></textarea>
+                        </div>
+                        <div class="col-sm-12 p-w-md m-t-md text-center">
+                            <h5>Mensagem Conclusão para a Equipe</h5>
+
+                            <textarea class="config-msgequipe" id="config-msgequipe${config.Id}" name="editordata"></textarea>
+                        </div>
+                                                                <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                    <button type="button" class="btn btn-primary" onclick="PostConfig(${config.Id},${config.Id})">Salvar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`
+
+
+                                    })
+
+
+                                    $(`.wrapper-config`).html(html)
+
+                                    $(".config-campos").html(`
 ${campos.map(p => `<option value=${p.Id}>${p.Description}</option>`)}
 `)
-                    $('#config-campos').select2();
-                    $.ajax({
-                        url: "/Configuracao/GetCampos/",
-                        datatype: "json",
-                        type: "GET",
-                        contentType: 'application/json; charset=utf-8',
-                        success: function (data) {
-                            campos = data.Campos
-                            $("#config-campos").val(campos.map(campo => campo.CampoId));
-                            $('#config-campos').select2();
+
+                                    $(".config-equipes").html(`
+${equipes.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+
+
+                                    data.data.forEach(config => {
+
+
+                                        $(`.centro-custos${config.Id}`).html(`${config.CentroCustos.filter(x => x.Tipo == "Receita").map(p => `<option value=${p.Id}>${p.Descricao}</option>`)}`)
+                                        $(`#config-centrocustoinscricao${config.Id}`).val(config.CentroCustoInscricaoId)
+                                        $(`#config-centrocustoequipe${config.Id}`).val(config.CentroCustoTaxaId)
+                                        $(`#config-titulo${config.Id}`).val(config.Titulo)
+                                        $(`#config-msg${config.Id}`).summernote({
+                                            height: 300,
+                                            lang: 'pt-BR',
+                                            toolbar: [
+                                                ['style', ['style']],
+                                                ['font', ['bold', 'italic']],
+                                                ['fontname', ['fontname']],
+                                                ['view', ['codeview']],
+                                                ['mybutton', ['Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
+                                            ],
+                                            buttons: {
+                                                Apelido: ApelidoButton,
+                                                Evento: EventoButton,
+                                                NumeracaoEvento: NumeracaoEventoButton,
+                                                DescricaoEvento: DescricaoEventoButton,
+                                                Data: DataButton,
+                                                Valor: ValorButton,
+                                                NomePadrinho: PadrinhoNomeButton,
+                                                FonePadrinho: PadrinhoFoneButton,
+
+                                            }
+                                        }).summernote('code', config.MsgConclusao)
+                                        $(`#config-msgequipe${config.Id}`).summernote({
+                                            height: 300,
+                                            lang: 'pt-BR',
+                                            toolbar: [
+                                                ['style', ['style']],
+                                                ['font', ['bold', 'italic']],
+                                                ['fontname', ['fontname']],
+                                                ['view', ['codeview']],
+                                                ['mybutton', ['Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor']]
+                                            ],
+                                            buttons: {
+                                                Apelido: ApelidoButton,
+                                                Evento: EventoButton,
+                                                NumeracaoEvento: NumeracaoEventoButton,
+                                                DescricaoEvento: DescricaoEventoButton,
+                                                Data: DataButton,
+                                                Valor: ValorButton
+                                            }
+                                        }).summernote('code', config.MsgConclusaoEquipe)
+                                        $(`#config-corhoverbotao${config.Id}`).val(config.CorHoverBotao)
+                                        $(`#config-corbotao${config.Id}`).val(config.CorBotao)
+                                        $(`#config-corloginbox${config.Id}`).val(config.CorLoginBox)
+                                        $(`#config-corscroll${config.Id}`).val(config.CorScroll)
+                                        $(`#config-equipecirculo${config.Id}`).val(config.EquipeCirculoId)
+                                        $(`#config-corhoverscroll${config.Id}`).val(config.CorHoverScroll)
+                                        if (config.LogoId) {
+                                            $(`#img-logo${config.Id}`).css(`display`, `block`)
+                                            $(`#img-logo${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Logo)
+                                        } else {
+                                            $(`#img-logo${config.Id}`).css(`display`, `none`)
+                                        }
+
+                                        if (config.BackgroundId) {
+                                            $(`#img-background${config.Id}`).css(`display`, `block`)
+                                            $(`#img-background${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Background)
+                                        } else {
+                                            $(`#img-background${config.Id}`).css(`display`, `none`)
+                                        }
+
+                                        if (config.LogoRelatorioId) {
+                                            $(`#img-logorelatorio${config.Id}`).css(`display`, `block`)
+                                            $(`#img-logorelatorio${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.LogoRelatorio)
+                                        } else {
+                                            $(`#img-logorelatorio${config.Id}`).css(`display`, `none`)
+                                        }
+
+                                        if (config.BackgroundCelularId) {
+                                            $(`#img-backgroundcelular${config.Id}`).css(`display`, `block`)
+                                            $(`#img-backgroundcelular${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.BackgroundCelular)
+                                        } else {
+                                            $(`#img-backgroundcelular${config.Id}`).css(`display`, `none`)
+                                        }
+
+                                        $.ajax({
+                                            url: "/Configuracao/GetCampos/",
+                                            data: {
+                                                id: config.Id
+                                            },
+                                            datatype: "json",
+                                            type: "GET",
+                                            contentType: `application/json; charset=utf-8`,
+                                            success: function (data) {
+                                                campos = data.Campos
+                                                $(`#config-campos${config.Id}`).val(campos.map(campo => campo.CampoId));
+                                                $(`#config-campos${config.Id}`).select2();
+                                            }
+                                        });
+
+
+                                        $.ajax({
+                                            url: "/Configuracao/GetEquipes/",
+                                            data: {
+                                                id: config.Id
+                                            },
+                                            datatype: "json",
+                                            type: "GET",
+                                            contentType: `application/json; charset=utf-8`,
+                                            success: function (data) {
+                                                equipes = data.Equipes
+                                                $(`#config-equipes${config.Id}`).val(equipes.map(equipe => equipe.EquipeId));
+                                                $(`#config-equipes${config.Id}`).select2();
+                                            }
+                                        });
+                                    })
+
+                                    carregarChevron()
+                                }
+                            });
                         }
-                    });
+                    })
                 }
             });
+
 
         }
 
         $(document).ready(function () {
             carregarConfiguracoes()
-            configMsg = $('#config-msg').summernote({
-                height: 300,
-                lang: 'pt-BR',
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic']],
-                    ['fontname', ['fontname']],
-                    ['view', ['codeview']],
-                    ['mybutton', ['Apelido', 'Evento', 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
-                ],
-                buttons: {
-                    Apelido: ApelidoButton,
-                    Evento: EventoButton,
-                    Data: DataButton,
-                    Valor: ValorButton,
-                    NomePadrinho: PadrinhoNomeButton,
-                    FonePadrinho: PadrinhoFoneButton,
 
-                }
-            });
-            configMsgEquipe = $('#config-msgequipe').summernote({
-                height: 300,
-                lang: 'pt-BR',
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic']],
-                    ['fontname', ['fontname']],
-                    ['view', ['codeview']],
-                    ['mybutton', ['Apelido', 'Evento', 'Data', 'Valor']]
-                ],
-                buttons: {
-                    Apelido: ApelidoButton,
-                    Evento: EventoButton,
-                    Data: DataButton,
-                    Valor: ValorButton
-                }
-            });
         })
 
-        function postArquivo(tipo) {
-            var dataToPost = new FormData($(`#frm-${tipo.toLowerCase()}`)[0]);
-            var filename = dataToPost.get(tipo.toLowerCase()).name
-            var arquivo = new File([dataToPost.get(tipo.toLowerCase())], tipo + ' Sistema' + filename.substr(filename.indexOf('.')));
-            dataToPost.set('Arquivo', arquivo)
+        function postArquivo(tipo, id, idConfig) {
+            var dataToPost = new FormData($(`#frm-${tipo.toLowerCase()}${id}`)[0]);
+            var filename = dataToPost.get(`${tipo.toLowerCase()}${id}`).name
+            var arquivo = new File([dataToPost.get(`${tipo.toLowerCase()}${id}`)], tipo + ` Sistema` + filename.substr(filename.indexOf(`.`)));
+            dataToPost.set(`Arquivo`, arquivo)
             $.ajax(
                 {
                     processData: false,
@@ -311,12 +447,10 @@ ${campos.map(p => `<option value=${p.Id}>${p.Description}</option>`)}
                             {
                                 datatype: "json",
                                 type: "POST",
-                                contentType: 'application/json; charset=utf-8',
+                                contentType: `application/json; charset=utf-8`,
                                 url: `Configuracao/Post${tipo}`,
-                                data: JSON.stringify(
-                                    {
-                                        Id: data
-                                    }),
+                                data: `{ Id: ${idConfig}, sourceId: ${data}
+                                                                            }`,
                                 success: function () {
                                     carregarConfiguracoes()
                                 }
@@ -325,20 +459,20 @@ ${campos.map(p => `<option value=${p.Id}>${p.Description}</option>`)}
                 });
         }
 
-        function Logo() {
-            postArquivo('Logo')
+        function Logo(id, idConfig) {
+            postArquivo(`Logo`, id, idConfig)
         }
 
-        function Background() {
-            postArquivo('Background')
+        function Background(id, idConfig) {
+            postArquivo(`Background`, id, idConfig)
         }
 
-        function LogoRelatorio() {
-            postArquivo('logorelatorio')
+        function LogoRelatorio(id, idConfig) {
+            postArquivo(`logorelatorio`, id, idConfig)
         }
 
-        function BackgroundCelular() {
-            postArquivo('backgroundcelular')
+        function BackgroundCelular(id, idConfig) {
+            postArquivo(`backgroundcelular`, id, idConfig)
         }
     </script>
 }

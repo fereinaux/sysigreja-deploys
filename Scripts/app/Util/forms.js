@@ -120,13 +120,7 @@ function ValidateFone(form, formResult) {
 function ValidateData(form, formResult) {
     $(`${form} input.full-date`).each(function () {
         var input = $(this);
-        AplicarCssPadrao(input);
-
-        if ((input.data("idade")) && (moment().year() - moment(input.val(), 'DD/MM/YYYY', 'pt-br').year() < input.data("idade"))) {
-            formResult.IsValid = false;
-            AplicarCssErro(input);
-            formResult.ErrorsValidacao += AddErro(`O Participante deve ter mais de ${input.data("idade")} anos `);
-        }
+        AplicarCssPadrao(input);       
     });
 
     return formResult;
@@ -211,6 +205,38 @@ var EventoButton = function (context) {
         click: function () {
             // invoke insertText method with 'hello' on editor module.
             context.invoke('editor.insertText', '${Evento}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var NumeracaoEventoButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'Numeracão do Evento',
+        tooltip: 'NumeracaoEvento',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${NumeracaoEvento}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var DescricaoEventoButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'Descricao do Evento',
+        tooltip: 'DescricaoEvento',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${DescricaoEvento}');
         }
     });
 

@@ -14,7 +14,7 @@ using Utils.Extensions;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class ReuniaoController : SysIgrejaControllerBase
     {
         private readonly IReunioesBusiness reuniaosBusiness;
@@ -49,9 +49,9 @@ namespace SysIgreja.Controllers
                     Titulo = x.Titulo,
                     Equipes = x.Presenca.GroupBy(y => y.EquipanteEvento.Equipe).Select(z => new EquipesModel
                     {
-                        Equipe = z.Key.GetDescription(),
-                        Presenca = $"{z.Count()}/{equipesBusiness.GetMembrosEquipe(EventoId, z.Key).Count()}",
-                        PresencaOrder = z.Count()/equipesBusiness.GetMembrosEquipe(EventoId, z.Key).Count()
+                        Equipe = z.Key.Nome,
+                        Presenca = $"{z.Count()}/{equipesBusiness.GetMembrosEquipe(EventoId, z.Key.Id).Count()}",
+                        PresencaOrder = z.Count()/equipesBusiness.GetMembrosEquipe(EventoId, z.Key.Id).Count()
                     }).ToList()
                 }); ;
 

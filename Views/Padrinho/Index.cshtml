@@ -29,7 +29,7 @@
                         <select class="form-control" id="padrinho-eventoid" onchange=" PadrinhoRefresh()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
-                                <option value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                                <option value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                             }
                         </select>
                     </div>
@@ -56,12 +56,12 @@
        
         <div class="ibox">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
-                <h4 id="gerenciar">Gerenciar Padrinhos</h4>
+                <h4>Gerenciar Padrinhos</h4>
             </div>
             <div class="ibox-content">
                 <div class="row p-m">
                     <div class="col-xs-12 col-lg-3 sem-padrinho pg text-center">
-                        <h4 class="p-h-xs" id="participantes-sem">Participantes sem Padrinho</h4>
+                        <h4 class="p-h-xs">Participantes sem Padrinho</h4>
                         <table class="table">
                             <thead>
                                 <tr>

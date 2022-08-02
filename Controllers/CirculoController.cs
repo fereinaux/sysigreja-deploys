@@ -18,16 +18,18 @@ using Utils.Services;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class CirculoController : SysIgrejaControllerBase
     {
         private readonly ICirculosBusiness circulosBusiness;
         private readonly IEquipesBusiness equipesBusiness;
+        private readonly IEventosBusiness eventosBusiness;
 
         public CirculoController(ICirculosBusiness circulosBusiness, IEquipesBusiness equipesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.circulosBusiness = circulosBusiness;
             this.equipesBusiness = equipesBusiness;
+            this.eventosBusiness = eventosBusiness;
         }
 
         public ActionResult Index()
@@ -48,25 +50,41 @@ namespace SysIgreja.Controllers
                 .Select(x => new CirculoViewModel
                 {
                     Id = x.Id,
-                    Dirigente1 = x.Dirigente1 != null ? UtilServices.CapitalizarNome(x.Dirigente1.Equipante.Nome) : "",
-                    Dirigente2 = x.Dirigente2 != null ? UtilServices.CapitalizarNome(x.Dirigente2.Equipante.Nome) : "",
+                    Dirigentes = x.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }).ToList(),
                     QtdParticipantes = circulosBusiness.GetParticipantesByCirculos(x.Id).Count(),
-                    Cor = x.Cor.GetDescription()
+                    Titulo = x.Titulo,
+                    Cor = x.Cor?.GetDescription()
                 });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpPost]
+        public ActionResult GetDirigentes(int CirculoId)
+        {
+            var result = circulosBusiness
+                .GetDirigentes()       
+                .Where(x => x.CirculoId == CirculoId)
+                .ToList()
+                .Select(x =>  new
+                {
+                    Id = x.Id,
+                    Nome = UtilServices.CapitalizarNome(x.Equipante.Equipante.Nome)
+                });                
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpGet]
         public ActionResult GetCirculo(int Id)
         {
-            var result = circulosBusiness.GetCirculos().Where(x => x.Id == Id).Select(x => new
+            var result = circulosBusiness.GetCirculos().Where(x => x.Id == Id).ToList().Select(x => new
             {
-                x.Dirigente1Id,
-                Dirigente1Nome = x.Dirigente1.Equipante.Nome,
-                x.Dirigente2Id,
-                Dirigente2Nome = x.Dirigente2.Equipante.Nome,
+                Dirigentes = x.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }),
                 x.Id,
+                x.Titulo,
                 x.EventoId,
                 x.Cor
             }
@@ -101,11 +119,23 @@ namespace SysIgreja.Controllers
 
         [HttpGet]
         public ActionResult GetEquipantes(int EventoId)
-        {     
-            var pgList = equipesBusiness.GetMembrosEquipe(EventoId, EquipesEnum.Circulo).Select(x => new { x.Id, Nome = x.Equipante.Nome }).ToList();
+        {
 
-            return Json(new { Equipantes = pgList }, JsonRequestBehavior.AllowGet);
+            var evento = eventosBusiness.GetEventoById(EventoId);
+            if (evento.Configuracao.EquipeCirculoId.HasValue)
+            {
+            var dirigentes = circulosBusiness.GetDirigentes().Select(x => x.EquipanteId).ToList();
+                var pgList = equipesBusiness.GetMembrosEquipe(EventoId, evento.Configuracao.EquipeCirculoId.Value).Where(x => !dirigentes.Contains(x.Id)).Select(x => new { x.Id, Nome = x.Equipante.Nome }).ToList();
+
+                return Json(new { Equipantes = pgList }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return new HttpStatusCodeResult(200);
+            }
         }
+
+
 
         [HttpGet]
         public ActionResult GetParticipantesSemCirculo(int EventoId)
@@ -123,8 +153,8 @@ namespace SysIgreja.Controllers
                     Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                     ParticipanteId = x.ParticipanteId,
                     CirculoId = x.CirculoId,
-                    Cor = x.Circulo.Cor.GetDescription(),
-                    Equipante = x.Circulo.Dirigente1 != null ? UtilServices.CapitalizarNome(x.Circulo.Dirigente1.Equipante.Nome) : ""
+                    Cor = x.Circulo.Cor?.GetDescription(),
+                    Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)) }),
                 }).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
@@ -140,11 +170,26 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetCores(int EventoId)
         {
-            var circuloList = circulosBusiness.GetCirculos().Where(x => x.EventoId == EventoId).ToList().Select(x => x.Cor.GetDescription());
+            var circuloList = circulosBusiness.GetCirculos().Where(x => x.EventoId == EventoId).ToList().Select(x => x.Cor?.GetDescription());
 
             var coresList = circulosBusiness.GetCores(EventoId).ToList().Where(x => !circuloList.Contains(x.Description));
 
             return Json(new { Cores = coresList }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public ActionResult AddDirigente(int EquipanteId, int CirculoId)
+        {
+            circulosBusiness.AddDirigente(EquipanteId, CirculoId);
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteDirigente(int Id)
+        {
+            circulosBusiness.DeleteDirigente(Id);
+            return new HttpStatusCodeResult(200);
         }
     }
 }

@@ -19,7 +19,7 @@ using Utils.Services;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class PadrinhoController : SysIgrejaControllerBase
     {
         private readonly IPadrinhosBusiness padrinhosBusiness;
@@ -96,8 +96,8 @@ namespace SysIgreja.Controllers
                    Id = x.Id,
                    Quantidade = x.Participantes.Count(),
                    Padrinho = x.EquipanteEvento.Equipante.Nome,
-                   PadrinhoId = x.EquipanteEvento.EquipanteId
-               });
+                   PadrinhoId = x.EquipanteEvento.EquipanteId.Value
+           });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

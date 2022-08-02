@@ -16,7 +16,7 @@ using Utils.Services;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class CaronaController : SysIgrejaControllerBase
     {
         private readonly ICaronasBusiness caronasBusiness;

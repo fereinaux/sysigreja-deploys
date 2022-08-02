@@ -59,7 +59,14 @@ function GetUsuario(id) {
                 $("#usuario-senha").val(data.Usuario.Senha);
                 $("#usuario-oldsenha").val(data.Usuario.Senha);
                 $(`input[type=radio][value=${data.Usuario.Perfil}]`).iCheck('check');
+                if (data.Usuario.Perfil != "Admin") {
+                    $(".eventos").addClass('d-none');
+                } else {
+                    $(".eventos").removeClass('d-none');
+                }
                 $("#usuario-equipanteid").val(data.Usuario.EquipanteId > 0 ? data.Usuario.EquipanteId : "Selecione").trigger("chosen:updated");
+                $("#usuario-eventos").val(data.Usuario.Eventos)
+                $("#usuario-eventos").select2({ dropdownParent: $("#form-usuario") })
             }
         });
     }
@@ -68,8 +75,10 @@ function GetUsuario(id) {
         $("#usuario-login").val("");
         $("#usuario-senha").val("");
         $("#usuario-oldsenha").val("");
-        $(`input[type=radio][value=1]`).iCheck('check');
+        $(`input[type=radio][value=Admin]`).iCheck('check');
         $("#usuario-equipanteid").val("Selecione").trigger("chosen:updated");
+        $("#usuario-eventos").val()
+        $("#usuario-eventos").select2({ dropdownParent: $("#form-usuario") })
     }
 }
 
@@ -116,6 +125,9 @@ function DeleteUsuario(id) {
 
 function PostUsuario() {
     if (ValidateForm(`#form-usuario`)) {
+        if (!$("#usuario-id").val()) {
+            var windowReference = window.open('_blank');
+        }
         $.ajax({
             url: "/Account/Register/",
             datatype: "json",
@@ -127,19 +139,24 @@ function PostUsuario() {
                     UserName: $("#usuario-login").val(),
                     Password: $("#usuario-senha").val(),
                     Perfil: $("input[type=radio][name=usuario-perfil]:checked").val(),
+                    Eventos: $("#usuario-eventos").val(),
                     OldPassword: $("#usuario-oldsenha").val(),
                     EquipanteId: $("#usuario-equipanteid").val() != "Selecione" ? $("#usuario-equipanteid").val() : 0
                 }),
-            success: function () {
+            success: function (data) {
                 SuccessMesageOperation();
                 CarregarTabelaUsuario();
                 $("#modal-usuarios").modal("hide");
+                if (!$("#usuario-id").val()) {                   
+                    windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
+                }
             }
         });
     }
 }
 
 $(document).ready(function () {
+    GetTipos()
     CarregarTabelaUsuario();
 
     $(".password-click").mousedown(function () {
@@ -171,3 +188,30 @@ function GetEquipantes(id) {
     });
 
 }
+
+
+
+function GetTipos() {
+    $("#usuario-eventos").empty();
+
+    $.ajax({
+        url: "/Evento/GetTipos/",
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            data.Tipos.forEach(function (tipo, index, array) {
+                $('#usuario-eventos').append($(`<option value="${tipo.Id}">${tipo.Titulo}</option>`));
+            });
+            $("#usuario-eventos").select2({ dropdownParent: $("#form-usuario") })
+        }
+    });
+}
+
+$(`input[type=radio][value=Geral]`).on('ifChecked', function (event) {
+    $(".eventos").addClass('d-none'); 
+});
+$(`input[type=radio][value=Admin]`).on('ifChecked', function (event) {
+    $(".eventos").removeClass('d-none');
+    $("#usuario-eventos").select2({ dropdownParent: $("#form-usuario") })
+});

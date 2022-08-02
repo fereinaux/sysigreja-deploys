@@ -19,16 +19,28 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right">
-                <button class="btn btn-default" id="btn_Adicionar" onclick="EditMeioPagamento(0)">Adicionar</button>
-            </div>
+
+            <div class="ibox-tools pull-right w-300">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <select class="form-control" id="meiopagamento-configId" onchange="CarregarTabelaMeioPagamento()">
+                            @foreach (var config in ViewBag.Configuracoes)
+                            {
+                                <option value="@config.Id">@config.Titulo</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditMeioPagamento(0)">Adicionar</button>
+                    </div>
+                </div>
+            </div>           
         </div>
         <div class="ibox-content">
             <table id="table-meio-pagamento" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
                 <thead>
                     <tr>
                         <th>Forma de Pagamento</th>
-                        <th>Taxa (%)</th>
                         <th>Ações</th>  
                     </tr>
                 </thead>
@@ -49,12 +61,7 @@
                             <h5>Forma de Pagamento</h5>
 
                             <input type="text" class="form-control required" id="meio-pagamento-descricao" data-field="Forma de Pagamento" />
-                        </div>
-                        <div class="col-sm-6 p-w-md text-center">
-                            <h5>Taxa (%)</h5>
-
-                            <input type="number" step="any" value="0" class="form-control required" id="meio-pagamento-taxa" data-field="Taxa (%)" />
-                        </div>
+                        </div>                        
                     </div>
                 </div>             
 

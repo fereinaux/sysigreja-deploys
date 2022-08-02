@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Utils.Enums;
 
 namespace SysIgreja.ViewModels
@@ -49,8 +50,9 @@ namespace SysIgreja.ViewModels
         public string Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string Perfil { get; set; }
         public string OldPassword { get; set; }
         public int? EquipanteId { get; set; }
-        public PerfisUsuarioEnum Perfil { get; set; }
+        public List<int> Eventos { get; set; }
     }
 }

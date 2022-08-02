@@ -8,7 +8,7 @@ using Utils.Constants;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
+    [Authorize]
     public class RelatorioController : SysIgrejaControllerBase
     {
         public RelatorioController(IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
@@ -18,7 +18,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Relatórios";
-            GetEventos();
+            GetEventos(new string[] { "Admin" });
 
             return View();
         }

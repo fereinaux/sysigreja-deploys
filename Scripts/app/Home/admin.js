@@ -98,9 +98,7 @@ function GetResultadosAdmin() {
                                                                     <div class="mobile-content">
                                                                         <h4>${element.Nome}</h4>
                                                                     </div>
-                                                                    <a target="_blank" href='${GetLinkWhatsApp(element.Fone, Convidar(element.Nome))}' class="btn-convidar btn-primary btn">
-                                                                        <i class="fab fa-whatsapp" aria-hidden="true" title="WhatsApp"></i>
-                                                                    </a>
+                                                                  
                                                                 </div>
                                                             </div>
                                                             `
@@ -128,14 +126,7 @@ function GetResultadosAdmin() {
                                                             `
 
                         $('#tb-detalhamento-equipes').html(htmlDetalhamento);
-                        $('.detalhamento-mobile-container').html(htmlDetalhamentoMobile);
-
-                        $(".equipante-fone").each((i, element) => {
-
-                            $(element).html(`${GetConvidar($(element).text(), $($(element).parent().children()[0]).text().replace('Coordenador: ', ''))}
-                            ${GetIconWhatsApp($(element).text())}
-                            ${GetIconTel($(element).text())}`);
-                        });
+                        $('.detalhamento-mobile-container').html(htmlDetalhamentoMobile);                     
                     }
                 })
             } else
@@ -233,6 +224,11 @@ function GetResultadosAdmin() {
                     </tr>`;
             });
 
+            if ($('#eventoid option:selected').data('role') == "Administrativo") {
+                $('#resumo-financeiro-bloco').css('display', 'none')
+            } else {
+                $('#resumo-financeiro-bloco').css('display', 'block')
+            }
             $('#tb-reunioes').html(htmlReunioes);
         }
     });

@@ -81,51 +81,44 @@ function GetLancamento(id) {
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
+                handleSelect()
                 $("#lancamento-id").val(data.Lancamento.Id);
-                $("#lancamento-centcusto").val(data.Lancamento.CentroCustoId);
+                $("#lancamento-centrocusto").val(data.Lancamento.CentroCustoId);
                 $("#lancamento-descricao").val(data.Lancamento.Descricao);
                 $("#lancamento-origem").val(data.Lancamento.Origem);
                 $("#lancamento-observacao").val(data.Lancamento.Observacao);
                 $("#lancamento-meiopagamento").val(data.Lancamento.MeioPagamentoId);
                 $("#lancamento-data").val(moment(data.Lancamento.DataLancamento).format('DD/MM/YYYY'));
-                ChangeMeioPagamento();
                 $("#lancamento-contabancaria").val(data.Lancamento.ContaBancariaId > 0 ? data.Lancamento.ContaBancariaId : 0);
                 $("#lancamento-valor").val(data.Lancamento.Valor);
             }
         });
     }
     else {
+        handleSelect()
         $("#lancamento-id").val(0);
-        $("#lancamento-centcusto").val($("#lancamento-centcusto option:first").val());
+        $("#lancamento-centrocusto").val($("#lancamento-centrocusto option").not(".d-none").first().val());
         $("#lancamento-descricao").val("");
         $("#lancamento-origem").val("");
         $("#lancamento-observacao").val("");
         $("#lancamento-meiopagamento").val($("#lancamento-meiopagamento option:first").val());
-        $("#lancamento-contabancaria").val($("#lancamento-contabancaria option:first").val());
         $("#lancamento-valor").val(0);
-        $('.contabancaria').addClass('d-none');
     }
-}
-
-function ChangeMeioPagamento() {
-    optionSelected = $("#lancamento-meiopagamento option:selected");
-    if ((optionSelected.text() == Transferencia) || (optionSelected.text() == Boleto)) {
-        $('.contabancaria').removeClass('d-none');
-        $("#lancamento-contabancaria").val($("#lancamento-contabancaria option:first").val());
-    }
-    else
-        $('.contabancaria').addClass('d-none');
 }
 
 function EditLancamento(params) {
-    GetLancamento(params.Id);
     $("#lancamento-tipo").val(params.Tipo == "Receber" ? 1 : 2);
-    if (params.Tipo == 'Receber') {
-        $('.centCusto-pagar').addClass('d-none');
-        $('.centCusto-receber').removeClass('d-none');
+    GetLancamento(params.Id);
+   
+}
+
+function handleSelect() {
+    if ($("#lancamento-tipo").val() == 1) {
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').addClass('d-none');
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').removeClass('d-none');
     } else {
-        $('.centCusto-pagar').removeClass('d-none');
-        $('.centCusto-receber').addClass('d-none');
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').removeClass('d-none');
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').addClass('d-none');
     }
     $("#modal-lancamentos").modal();
 }
@@ -168,7 +161,7 @@ function PostLancamento() {
                     Data: moment($("#lancamento-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#lancamento-meiopagamento").val(),
                     EventoId: $('#lancamento-eventoid').val(),
-                    CentCustoId: $("#lancamento-centcusto").val(),
+                    CentCustoId: $("#lancamento-centrocusto").val(),
                     ContaBancariaId: $('.contabancaria').hasClass('d-none') ? 0 : $("#lancamento-contabancaria").val(),
                     Valor: Number($("#lancamento-valor").val())
                 }),

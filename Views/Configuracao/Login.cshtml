@@ -1,0 +1,235 @@
+﻿@using Microsoft.AspNet.Identity
+@using Utils.Constants;
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="#">Configurações</a>
+            </li>
+        </ol>
+    </div>
+</div>
+<div style="padding-top:10px;padding-bottom:0" class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox" style="margin:0">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>@ViewBag.Title</h4>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight wrapper-config">
+
+</div>
+
+
+@section Styles {
+    <style>
+        span .inputFile {
+            width: 100%;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script>
+        let configMsg, configMsgEquipe
+
+
+        function PostConfig() {
+            if (ValidateForm(`#form-config`)) {
+                $.ajax({
+                    url: "/Configuracao/PostLogin/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: `application/json; charset=utf-8`,
+                    data: JSON.stringify(
+                        {
+                            Titulo: $(`#config-titulo`).val(),
+                            CorHoverBotao: $(`#config-corhoverbotao`).val(),
+                            CorBotao: $(`#config-corbotao`).val(),
+                            CorLoginBox: $(`#config-corloginbox`).val(),
+                        }),
+                    success: function () {
+
+                        SuccessMesageOperation()
+                        carregarConfiguracoes()
+                    }
+                });
+            }
+        }
+
+        function carregarConfiguracoes() {
+            $.ajax({
+                url: "/Configuracao/GetLogin/",
+                datatype: "json",
+                type: "GET",
+                contentType: `application/json; charset=utf-8`,
+                success: function (data) {
+                    config = data.Login
+                    html = ``
+
+
+                    html += `<div class="ibox">
+                                                                <div class="ibox-title" style="display: flex;justify-content: space-between;">
+                                                                    <h4>${config.Titulo}</h4>
+                                                                    <div class="ibox-tools">
+                                                                        <a class="collapse-link">
+                                                                            <i class="fa fa-chevron-up"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="ibox-content">
+                                                                    <div class="row p-h-xs" id="form-config">
+                                                                        <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                            <h5>Título</h5>
+
+                                                                            <input type="text" class="form-control required" id="config-titulo" data-field="Título" />
+                                                                        </div>
+
+                                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                            <h5>Cor Botão</h5>
+
+                                                                            <input type="color" style="padding:0" class="form-control" id="config-corbotao" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Botão">
+                                                                        </div>
+
+                                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                            <h5>Cor Hover Botão</h5>
+
+                                                                            <input type="color" style="padding:0" class="form-control" id="config-corhoverbotao" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Hover Botão">
+                                                                        </div>
+
+                                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                            <h5>Cor Login Box</h5>
+
+                                                                            <input type="color" opacity style="padding:0" class="form-control" id="config-corloginbox" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Login Box">
+                                                                        </div>
+
+                                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                    <h5>Logo</h5>
+                    <img id="img-logo" style="width:20%;margin:auto" src="" class="m-auto" />
+                    <form enctype="multipart/form-data" id="frm-logo" method="post" novalidate="novalidate">
+                        <label for="logo" class="inputFile">
+                            <span id="add-logo" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                            <input accept="image/*" onchange='Logo()' style="display: none;" class="custom-file-input inputFile" id="logo" name="logo" type="file" value="">
+                        </label>
+                    </form>
+                </div>
+
+                <div class="col-sm-6 p-w-md m-t-md text-center">
+                    <h5>Background</h5>
+                    <img id="img-background" style="width:50%;margin:auto" src="" class="m-auto" />
+                    <form enctype="multipart/form-data" id="frm-background" method="post" novalidate="novalidate">
+                        <label for="background" class="inputFile">
+                            <span id="add-background" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                            <input accept="image/*" onchange='Background()' style="display: none;" class="custom-file-input inputFile" id="background" name="background" type="file" value="">
+                        </label>
+                    </form>
+                </div>
+
+                                                                         <div class="col-sm-6 p-w-md m-t-md text-center">
+                    <h5>Background Celular</h5>
+                    <img id="img-backgroundcelular" style="width:50%;margin:auto" src="" class="m-auto" />
+                    <form enctype="multipart/form-data" id="frm-backgroundcelular" method="post" novalidate="novalidate">
+                        <label for="backgroundcelular" class="inputFile">
+                            <span id="add-backgroundcelular" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                            <input accept="image/*" onchange='BackgroundCelular()' style="display: none;" class="custom-file-input inputFile" id="backgroundcelular" name="backgroundcelular" type="file" value="">
+                        </label>
+                    </form>
+                </div>
+
+                    <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                    <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                            <button type="button" class="btn btn-primary" onclick="PostConfig()">Salvar</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>`
+
+
+
+                    $(`.wrapper-config`).html(html)
+
+                    $(`#config-titulo`).val(config.Titulo)
+                    $(`#config-corhoverbotao`).val(config.CorHoverBotao)
+                    $(`#config-corbotao`).val(config.CorBotao)
+                    $(`#config-corloginbox`).val(config.CorLoginBox)
+
+                    if (config.LogoId) {
+                        $(`#img-logo`).css(`display`, `block`)
+                        $(`#img-logo`).attr("src", `data:image/jpeg;base64,` + config.Logo)
+                    } else {
+                        $(`#img-logo`).css(`display`, `none`)
+                    }
+
+                    if (config.BackgroundId) {
+                        $(`#img-background`).css(`display`, `block`)
+                        $(`#img-background`).attr("src", `data:image/jpeg;base64,` + config.Background)
+                    } else {
+                        $(`#img-background`).css(`display`, `none`)
+                    }         
+
+                    if (config.BackgroundCelularId) {
+                        $(`#img-backgroundcelular`).css(`display`, `block`)
+                        $(`#img-backgroundcelular`).attr("src", `data:image/jpeg;base64,` + config.BackgroundCelular)
+                    } else {
+                        $(`#img-backgroundcelular`).css(`display`, `none`)
+                    }
+                    carregarChevron()
+                }
+            });
+
+
+        }
+
+        $(document).ready(function () {
+            carregarConfiguracoes()
+
+        })
+
+        function postArquivo(tipo) {
+            var dataToPost = new FormData($(`#frm-${tipo.toLowerCase()}`)[0]);
+            var filename = dataToPost.get(tipo.toLowerCase()).name
+            var arquivo = new File([dataToPost.get(tipo.toLowerCase())], tipo + ' Sistema' + filename.substr(filename.indexOf('.')));
+            dataToPost.set('Arquivo', arquivo)
+            $.ajax(
+                {
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    data: dataToPost,
+                    url: "/Arquivo/PostArquivo",
+                    success: function (data) {
+                        $.ajax(
+                            {
+                                datatype: "json",
+                                type: "POST",
+                                contentType: `application/json; charset=utf-8`,
+                                url: `/Configuracao/Post${tipo}Login`,
+                                data: `{ sourceId: ${data}  }`,
+                                success: function () {
+                                    carregarConfiguracoes()
+                                }
+                            });
+                    }
+                });
+        }
+
+        function Logo() {
+            postArquivo('Logo')
+        }
+
+        function Background() {
+            postArquivo('Background')
+        }  
+
+        function BackgroundCelular() {
+            postArquivo(`backgroundcelular`)
+        }
+    </script>
+}

@@ -36,7 +36,7 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(null);
+            ViewBag.Configuracao = configuracaoBusiness.GetLogin();
             accountBusiness.Seed();
             return View();
         }

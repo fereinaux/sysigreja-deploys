@@ -62,6 +62,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.Login = configuracaoBusiness.GetLogin();
             return loadLP("Inscrições");
         }
 

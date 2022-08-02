@@ -1215,6 +1215,7 @@
     <Content Include="Views\Configuracao\Equipe.cshtml" />
     <Content Include="Views\Inscricoes\Index.cshtml" />
     <Content Include="Views\NaoAutorizado\Index.cshtml" />
+    <Content Include="Views\Configuracao\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

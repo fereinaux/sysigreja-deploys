@@ -52,7 +52,7 @@
                 </ul>
             </li>
 
-            <li class="@Html.IsSelectedMenuItem(controller: new string[] { "MeioPagamento", "Account", "ContaBancaria", "CentroCusto", "Arquivo", "Configuracao", }, actions: new List<string> { "Index", "Equipe" })">
+            <li class="@Html.IsSelectedMenuItem(controller: new string[] { "MeioPagamento", "Account", "ContaBancaria", "CentroCusto", "Arquivo", "Configuracao", }, actions: new List<string> { "Login","Index", "Equipe" })">
                 <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">Configurações</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] { "MeioPagamento", "Account", "ContaBancaria", "CentroCusto", "Arquivo", "Configuracao", }, actions: new List<string> { "Index", "Equipe" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller: "MeioPagamento")"><a href="@Url.Action("Index", "MeioPagamento")">Formas de Pagamento</a></li>
@@ -61,6 +61,7 @@
                     <li class="@Html.IsSelected(action: "Index", controller: "Account")"><a href="@Url.Action("Index", "Account")">Administradores</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "Arquivo")"><a href="@Url.Action("Index", "Arquivo")">Arquivos</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "Configuracao")"><a href="@Url.Action("Index", "Configuracao")">Parâmetros</a></li>
+                    <li class="@Html.IsSelected(action: "Login", controller: "Configuracao")"><a href="@Url.Action("Login", "Configuracao")">Login</a></li>
                 </ul>
             </li>
 

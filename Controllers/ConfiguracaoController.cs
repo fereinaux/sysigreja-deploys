@@ -35,6 +35,14 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        public ActionResult Login()
+        {
+            GetEventos(new string[] { "Geral" });
+            ViewBag.Title = "Login";
+
+            return View();
+        }
+
         public ActionResult Equipe()
         {
             GetEventos(new string[] {"Geral"});
@@ -178,6 +186,47 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+        [HttpGet]
+        public ActionResult GetLogin()
+        {
+            var result = configuracaoBusiness.GetLogin();
+
+            var jsonRes = Json(new { Login = result }, JsonRequestBehavior.AllowGet);
+            jsonRes.MaxJsonLength = Int32.MaxValue;
+            return jsonRes;
+        }
+
+        [HttpPost]
+        public ActionResult PostLogin(PostLoginModel model)
+        {
+            configuracaoBusiness.PostLogin(model);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult PostLogoLogin(int sourceId)
+        {
+            configuracaoBusiness.PostLogoLogin(sourceId);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult PostBackgroundLogin( int sourceId)
+        {
+            configuracaoBusiness.PostBackgroundLogin(sourceId);
+
+            return new HttpStatusCodeResult(200);
+        }
+        [HttpPost]
+        public ActionResult PostBackgroundCelularLogin(int sourceId)
+        {
+            configuracaoBusiness.PostBackgroundCelularLogin(sourceId);
+
+            return new HttpStatusCodeResult(200);
+        }
 
         [HttpPost]
         public ActionResult PostLogo(int id, int sourceId)
@@ -195,6 +244,13 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
+        [HttpPost]
+        public ActionResult PostBackgroundCelular(int id, int sourceId)
+        {
+            configuracaoBusiness.PostBackgroundCelular(sourceId, id);
+
+            return new HttpStatusCodeResult(200);
+        }
 
         [HttpPost]
         public ActionResult PostLogoRelatorio(int id, int sourceId)
@@ -205,12 +261,5 @@ namespace SysIgreja.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult PostBackgroundCelular(int id, int sourceId)
-        {
-            configuracaoBusiness.PostBackgroundCelular(sourceId, id);
-
-            return new HttpStatusCodeResult(200);
-        }
     }
 }

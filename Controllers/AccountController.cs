@@ -77,15 +77,14 @@ namespace SysIgreja.Controllers
         {
             var query = accountBusiness
                 .GetUsuarios()
-                .ToList().Where(x => x.EquipanteId.HasValue && x.Claims.Any(y => y.ClaimType == "Permissões") && JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue).Any(z => z.Eventos != null && z.Eventos.Any(a => a.EventoId == eventoid)))
-                 .Select(x => new UsuarioViewModel
+                .ToList().Where(x => x.EquipanteId.HasValue && x.Claims.Any(y => y.ClaimType == "Permissões") && JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue).Any(z => z.Eventos != null && z.Eventos.Any(a => a.EventoId == eventoid))).Select(x => new 
                  {
                      Id = x.Id,
                      UserName = UtilServices.CapitalizarNome(x.UserName),
                      Status = x.Status.GetDescription(),
                      Nome = x.Equipante.Nome,
                      EquipanteId = x.EquipanteId,
-                     Perfil = JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue).FirstOrDefault(a => a.Eventos.Any(b => b.EventoId == eventoid)).Eventos.FirstOrDefault().Role
+                     Perfil = JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue)
                  });
 
             return Json(new { data = query }, JsonRequestBehavior.AllowGet);

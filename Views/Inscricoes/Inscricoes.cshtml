@@ -32,7 +32,7 @@
                         {
                             <div class="form-group">
                                 <label for="participante-nome" class="text-white">Nome Completo do participante</label>
-                                <input type="text" class="form-control required" id="participante-nome" name="name" data-field="Nome" />
+                                <input type="text" class="form-control required" id="participante-nome" name="name" data-field="Nome" value="@ViewBag.Nome" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Apelido.GetDescription()))
@@ -68,7 +68,7 @@
                         {
                             <div class="form-group">
                                 <label for="participante-conjuge" class="text-white">Cônjuge</label>
-                                <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" />
+                                <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" value="@ViewBag.Conjuge" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
@@ -84,7 +84,7 @@
                                 <div class="col col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-cep" class="text-white">CEP</label>
-                                        <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                        <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" value="@ViewBag.CEP" onkeyup="verificaCep(this)" />
                                         <input type="hidden" id="participante-latitude" />
                                         <input type="hidden" id="participante-longitude" />
                                     </div>
@@ -120,13 +120,13 @@
                                 <div class="col col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-numero" class="text-white">Número</label>
-                                        <input type="text" class="form-control" id="participante-numero" data-field="Número" />
+                                        <input type="text" class="form-control" id="participante-numero" value="@ViewBag.Numero" data-field="Número" />
                                     </div>
                                 </div>
                                 <div class="col col-md-8 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-complemento" class="text-white">Complemento</label>
-                                        <input type="text" class="form-control" id="participante-complemento" data-field="Complemento" />
+                                        <input type="text" class="form-control" id="participante-complemento" value="@ViewBag.Complemento" data-field="Complemento" />
                                     </div>
                                 </div>
 
@@ -135,7 +135,7 @@
                                 <div class="col col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-referencia" class="text-white">Ponto de Referência</label>
-                                        <input type="text" class="form-control" id="participante-referencia" data-field="Ponto de Referência" />
+                                        <input type="text" class="form-control" id="participante-referencia" value="@ViewBag.Referencia" data-field="Ponto de Referência" />
                                     </div>
                                     <div class="form-group">
                                         <div id="map" style="height:300px;display:none">
@@ -181,11 +181,11 @@
                         {
                             <div class="form-group">
                                 <label for="participante-nome-convite" class="text-white">Pessoa que lhe convidou</label>
-                                <input type="text" class="form-control required" id="participante-nome-convite" data-field="Pessoa que convidou" />
+                                <input type="text" class="form-control required" id="participante-nome-convite" value="@ViewBag.NomeConvite" data-field="Pessoa que convidou" />
                             </div>
                             <div class="form-group">
                                 <label for="participante-fone-convite" class="text-white">Fone de quem lhe convidou</label>
-                                <input type="text" class="form-control fone" id="participante-fone-convite" data-field="Fone da pessoa que convidou" />
+                                <input type="text" class="form-control fone" id="participante-fone-convite" value="@ViewBag.FoneConvite" data-field="Fone da pessoa que convidou" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Parente.GetDescription()))

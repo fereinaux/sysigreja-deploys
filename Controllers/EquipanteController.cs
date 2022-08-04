@@ -342,11 +342,14 @@ namespace SysIgreja.Controllers
             var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
             ViewBag.Configuracao = config;
             ViewBag.MsgConclusao = config.MsgConclusaoEquipe
+                 .Replace("${Nome}", equipante.Nome)
+                  .Replace("${EventoId}", EventoId.ToString())
+                                  .Replace("${Id}", equipante.Id.ToString())
          .Replace("${Apelido}", equipante.Apelido)
                .Replace("${Evento}", eventoAtual.Configuracao.Titulo)
                   .Replace("${NumeracaoEvento}", eventoAtual.Numeracao.ToString())
                    .Replace("${DescricaoEvento}", eventoAtual.Descricao)
-         .Replace("${ValorEvento}", eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
+         .Replace("${ValorEvento}", eventoAtual.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
          .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
 
             return View("InscricaoConcluida");

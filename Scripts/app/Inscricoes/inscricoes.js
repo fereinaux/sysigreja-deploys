@@ -105,9 +105,13 @@ function VerificaCadastro() {
                     $('.dados-participante-contato').removeClass('d-none');
                     $('.dados-participante-contato input[id*="nome"]').addClass('required');
                     $('.dados-participante-contato input[id*="fone"]').addClass('fone');
+                 
                 }
                 else if (data) {
                     window.location.href = data;
+                }
+                if ($('#participante-cep').val()) {
+                    verificaCep($('#participante-cep')[0])
                 }
                 $("#participante-email").prop("disabled", true)
                 $(".pnl-cadastro").show();
@@ -238,3 +242,4 @@ $(".pnl-cadastro").hide();
 $('.inscricoes.middle-box').height('30%');
 $('.inscricoes.middle-box').css('overflow', 'hidden');
 $('.float').css("bottom", "34%")
+

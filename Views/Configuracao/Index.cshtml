@@ -315,9 +315,10 @@ ${equipes.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                                                 ['font', ['bold', 'italic']],
                                                 ['fontname', ['fontname']],
                                                 ['view', ['codeview']],
-                                                ['mybutton', ['Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
+                                                ['mybutton', ['Id','Nome','Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
                                             ],
                                             buttons: {
+                                                Nome: NomeButton,
                                                 Apelido: ApelidoButton,
                                                 Evento: EventoButton,
                                                 NumeracaoEvento: NumeracaoEventoButton,
@@ -337,9 +338,10 @@ ${equipes.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                                                 ['font', ['bold', 'italic']],
                                                 ['fontname', ['fontname']],
                                                 ['view', ['codeview']],
-                                                ['mybutton', ['Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor']]
+                                                ['mybutton', ['Id', 'Nome', 'Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor']]
                                             ],
                                             buttons: {
+                                                Nome: NomeButton,
                                                 Apelido: ApelidoButton,
                                                 Evento: EventoButton,
                                                 NumeracaoEvento: NumeracaoEventoButton,

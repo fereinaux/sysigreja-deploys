@@ -25,7 +25,7 @@
 
                             <div class="form-group">
                                 <label for="participante-nome" class="text-white">Nome Completo</label>
-                                <input type="text" class="form-control required" id="participante-nome" data-field="Nome" />
+                                <input type="text" class="form-control required" id="participante-nome" data-field="Nome" value="" />
                             </div>
                             <div class="form-group">
                                 <label for="participante-apelido" class="text-white">Como você gostaria que seu crachá fosse Impresso?</label>
@@ -44,7 +44,7 @@
                                 <div class="col col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-cep" class="text-white">CEP</label>
-                                        <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                        <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" value="@ViewBag.CEP" onkeyup="verificaCep(this)" />
                                         <input type="hidden" id="participante-latitude" />
                                         <input type="hidden" id="participante-longitude" />
                                     </div>
@@ -80,13 +80,13 @@
                                 <div class="col col-md-4 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-numero" class="text-white">Número</label>
-                                        <input type="text" class="form-control" id="participante-numero" data-field="Número" />
+                                        <input type="text" class="form-control" id="participante-numero" value="@ViewBag.Numero" data-field="Número" />
                                     </div>
                                 </div>
                                 <div class="col col-md-8 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-complemento" class="text-white">Complemento</label>
-                                        <input type="text" class="form-control" id="participante-complemento" data-field="Complemento" />
+                                        <input type="text" class="form-control" id="participante-complemento" value="@ViewBag.Complemento" data-field="Complemento" />
                                     </div>
                                 </div>
 
@@ -95,7 +95,7 @@
                                 <div class="col col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-referencia" class="text-white">Ponto de Referência</label>
-                                        <input type="text" class="form-control" id="participante-referencia" data-field="Ponto de Referência" />
+                                        <input type="text" class="form-control" id="participante-referencia" value="@ViewBag.Referencia" data-field="Ponto de Referência" />
                                     </div>
                                     <div class="form-group">
                                         <div id="map" style="height:300px;display:none">
@@ -234,6 +234,9 @@
                     if (url) {
                         window.location.href = url;
                     } else {
+                        if ($('#participante-cep').val()) {
+                            verificaCep($('#participante-cep')[0])
+                        }
                         $("#participante-fone").prop("disabled", true)
                         $(".pnl-cadastro").show();
                         $(".pnl-verifica").hide();
@@ -280,8 +283,7 @@
                             Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         }),
                     success: function (url) {
-                        console.log(window.location.href);
-                        //window.location.href = url;
+                        window.location.href = url;
                     }
                 });
             }
@@ -345,6 +347,8 @@
         $(".pnl-cadastro").hide();
         $('.inscricoes.middle-box').height('40%');
         $('.float').css("bottom", "25%")
+
+
     </script>
 
 }

@@ -248,7 +248,7 @@ var DataButton = function (context) {
 
     // create button
     var button = ui.button({
-        contents: 'DataEvento',
+        contents: 'Data do Evento',
         tooltip: 'data evento',
         click: function () {
             // invoke insertText method with 'hello' on editor module.
@@ -264,11 +264,43 @@ var ValorButton = function (context) {
 
     // create button
     var button = ui.button({
-        contents: 'ValorEvento',
+        contents: 'Valor do Evento',
         tooltip: 'valor evento',
         click: function () {
             // invoke insertText method with 'hello' on editor module.
             context.invoke('editor.insertText', '${ValorEvento}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var IdButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'Id de Inscrição',
+        tooltip: 'Id',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${Id}');
+        }
+    });
+
+    return button.render();   // return button as jquery object
+}
+
+var NomeButton = function (context) {
+    var ui = $.summernote.ui;
+
+    // create button
+    var button = ui.button({
+        contents: 'Nome',
+        tooltip: 'nome',
+        click: function () {
+            // invoke insertText method with 'hello' on editor module.
+            context.invoke('editor.insertText', '${Nome}');
         }
     });
 
@@ -296,7 +328,7 @@ var PadrinhoNomeButton = function (context) {
 
     // create button
     var button = ui.button({
-        contents: 'NomePadrinho',
+        contents: 'Nome do Padrinho',
         tooltip: 'padrinho',
         click: function () {
             // invoke insertText method with 'hello' on editor module.
@@ -312,7 +344,7 @@ var PadrinhoFoneButton = function (context) {
 
     // create button
     var button = ui.button({
-        contents: 'FonePadrinho',
+        contents: 'Fone do Padrinho',
         tooltip: 'padrinho',
         click: function () {
             // invoke insertText method with 'hello' on editor module.

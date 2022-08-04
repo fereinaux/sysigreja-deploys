@@ -1,5 +1,6 @@
 ﻿
 using Core.Business.Configuracao;
+using Core.Business.Equipantes;
 using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
@@ -25,12 +26,14 @@ namespace SysIgreja.Controllers
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
         private readonly IEventosBusiness eventosBusiness;
+        private readonly IEquipantesBusiness equipantesBusiness;
         private readonly INewsletterBusiness newsletterBusiness;
 
-        public InscricoesController(IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
+        public InscricoesController(IParticipantesBusiness participantesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
+            this.equipantesBusiness = equipantesBusiness;
             this.meioPagamentoBusiness = meioPagamentoBusiness;
             this.lancamentoBusiness = lancamentoBusiness;
             this.eventosBusiness = eventosBusiness;
@@ -66,7 +69,7 @@ namespace SysIgreja.Controllers
             return loadLP("Inscrições");
         }
 
-        public ActionResult Inscricoes(int Id,string Tipo)
+        public ActionResult Inscricoes(int Id, string Tipo, int? ConjugeId)
         {
             ViewBag.Title = Tipo;
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && x.Status == StatusEnum.Aberto);
@@ -75,11 +78,32 @@ namespace SysIgreja.Controllers
             ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
             ViewBag.EventoId = Id;
+         
             switch (Tipo)
             {
                 case "Inscrições Equipe":
+                    if (ConjugeId.HasValue)
+                    {
+                        Equipante equipante = equipantesBusiness.GetEquipanteById(ConjugeId.Value);
+                        ViewBag.CEP = equipante.CEP;
+                        ViewBag.Numero = equipante.Numero;
+                        ViewBag.Complemento = equipante.Complemento;
+                        ViewBag.Referencia = equipante.Referencia;
+                    }
                     return View("Equipe");
                 default:
+                    if (ConjugeId.HasValue)
+                    {
+                        Participante participante = participantesBusiness.GetParticipanteById(ConjugeId.Value);
+                        ViewBag.Nome = participante.Conjuge;
+                        ViewBag.Conjuge = participante.Nome;
+                        ViewBag.CEP = participante.CEP;
+                        ViewBag.Numero = participante.Numero;
+                        ViewBag.Complemento = participante.Complemento;
+                        ViewBag.Referencia = participante.Referencia;
+                        ViewBag.NomeConvite = participante.NomeConvite;
+                        ViewBag.FoneConvite = participante.FoneConvite;
+                    }
                     return View();
             }
         }
@@ -102,6 +126,9 @@ namespace SysIgreja.Controllers
             var config = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
             ViewBag.MsgConclusao = config.MsgConclusao
+                         .Replace("${Nome}", participante.Nome)
+                                  .Replace("${Id}", participante.Id.ToString())
+                                  .Replace("${EventoId}", participante.EventoId.ToString())
          .Replace("${Apelido}", participante.Apelido)
          .Replace("${Evento}", participante.Evento.Configuracao.Titulo)
                   .Replace("${NumeracaoEvento}", participante.Evento.Numeracao.ToString())
@@ -110,9 +137,11 @@ namespace SysIgreja.Controllers
          .Replace("${DataEvento}", participante.Evento.DataEvento.ToString("dd/MM/yyyy"))
          .Replace("${FonePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "")
          .Replace("${NomePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? "");
-            ViewBag.Participante = new InscricaoConcluidaViewModel { 
-                Apelido = participante.Apelido, Evento = $"{config.Titulo} " +
-                $"{participante.Evento.Numeracao.ToString()}", 
+            ViewBag.Participante = new InscricaoConcluidaViewModel
+            {
+                Apelido = participante.Apelido,
+                Evento = $"{config.Titulo} " +
+                $"{participante.Evento.Numeracao.ToString()}",
                 DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy"),
                 PadrinhoFone = participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "",
                 PadrinhoNome = participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? ""

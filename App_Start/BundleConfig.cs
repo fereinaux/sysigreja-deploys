@@ -35,14 +35,6 @@ namespace SysIgreja
             bundles.Add(new StyleBundle("~/bundles/jscropcss").Include(
                    "~/Scripts/plugins/jsCrop-master/js-crop.css"));
 
-            // jQueryUI CSS
-            bundles.Add(new ScriptBundle("~/Scripts/plugins/jquery-ui/jqueryuiStyles").Include(
-                        "~/Scripts/plugins/jquery-ui/jquery-ui.min.css"));
-
-            // jQueryUI 
-            bundles.Add(new StyleBundle("~/bundles/jqueryui").Include(
-                        "~/Scripts/plugins/jquery-ui/jquery-ui.min.js"));
-
             //Moment
             bundles.Add(new ScriptBundle("~/bundles/moment").Include(
                      "~/Scripts/plugins/moment/moment-with-locales.min.js"));

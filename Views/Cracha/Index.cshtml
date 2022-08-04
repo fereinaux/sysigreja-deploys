@@ -1,0 +1,236 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="#">Configurações</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>@ViewBag.Title</h4>
+            <div class="ibox-tools pull-right w-300">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <select class="form-control" id="cracha-configId" onchange="">
+                            @foreach (var config in ViewBag.Configuracoes)
+                            {
+                                <option value="@config.Id">@config.Titulo</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="moldura-modal p-h-xs" id="form-cracha">
+                        <div class="row p-h-xs">
+                            <div class="col-sm-6 p-w-md text-center">
+                                <h5 class=" m-t-md">Largura</h5>
+
+                                <input type="number" class="form-control" onchange="setLargura()" value="8" id="largura" data-field="Largura" />
+                                <h5 class=" m-t-md">Altura</h5>
+
+                                <input type="number" class="form-control" onchange="setAltura()" value="12" id="altura" data-field="Altura" />
+
+                                <label for="arquivo" class="inputFile">
+                                    <span id="add-arquivo" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                    <input accept="image/*" onchange='AddArquivo()' style="display: none;" class="custom-file-input inputFile" id="arquivo" name="arquivo" type="file" value="">
+                                </label>
+                            </div>
+                            <div class="col-sm-6 p-w-md text-center">
+                                <div class="nome-font" style=" display: flex; background: #d7d8d9; border-radius: 4px; padding: 5px;margin-bottom:10px">
+                                    <input type="text" style="width:160px" id="font-picker" value="" />
+                                    <input class="form-control" type="number" id="font-size" style="width:80px;margin-left:5px" value="20" />
+                                </div>
+                                <div class="apelido-font" style=" display: flex; background: #d7d8d9; border-radius: 4px; padding: 5px;">
+                                    <input type="text" style="width:160px" id="font-picker" value="" />
+                                    <input class="form-control" type="number" id="font-size" style="width:80px;margin-left:5px" value="30" />
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="moldura-modal p-h-xs d-flex" id="container-cracha" style="position:relative">
+                        <div class="botoes-cracha" style="position:absolute;top: 2px; left: 2px; width: 100px">
+                            <button onclick="print()" class="btn btn-primary m-xs">Impressão de Teste</button>
+                        </div>
+                        <div class="moldura-modal" style="margin:auto" id="cracha">
+                            <span style="display:block;padding: 5px;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha d-none">{Nome}</span>
+                            <span style="display: block; padding: 5px; position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha d-none">{Apelido}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Styles {
+    <style>
+
+        .text-cracha {
+            cursor: grab;
+        }
+
+        .font-picker {
+            width: 160px;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script>
+        let arquivos = 0
+        let selected
+        let razao = 37.79
+
+        const cracha = {
+            largura: 302.32,
+            altura: 453.48,
+            nome: {
+                fontSize: 20
+            },
+            apelido: {
+                fontSize: 30
+            }
+        }
+
+        function print() {
+            $('span.nome-cracha').text('Felipe Reinaux')
+            $('span.apelido-cracha').text('Mago')
+            html2canvas($("#cracha")[0]).then(canvas => {
+                var imgData = canvas.toDataURL(
+                    'image/png');
+                var doc = new jsPDF('p', 'mm');
+                doc.addImage(imgData, 'PNG', 10, 10);
+                printDoc(doc)
+            }
+            );
+        }
+
+        function setLargura() {
+            cracha.largura = $("#largura").val() * razao
+            renderCracha()
+        }
+
+        function setAltura() {
+            cracha.altura = $("#altura").val() * razao
+            renderCracha()
+        }
+
+        function setFontNome() {
+            cracha.nome.fontSize = $("#font-nome").val()
+            renderCracha()
+        }
+
+        function setFontApelido() {
+            cracha.apelido.fontSize = $("#font-apelido").val()
+            renderCracha()
+        }
+
+        function selectFile(evt) {
+            console.log(evt);
+            selected = evt
+        }
+
+        $('html').keyup(function (e) {
+            if (e.keyCode == 46 && selected) {
+                $(selected).remove()
+            }
+        });
+
+
+
+        function AddArquivo() {
+            const [file] = $('#arquivo')[0].files
+            if (file) {
+                var container = $(`<div onclick='selectFile(this)' id="arquivo-container${arquivos}" style="position:absloute;top:0;left:0;display:inline-block;z-index:${arquivos}">
+                                        <img style="position:absloute;top:0;left:0;width: 200px; cursor: grab" id="img-arquivo${arquivos}" src="${URL.createObjectURL(file)}" />
+                                    </div>`)
+                container.appendTo("#cracha")
+
+                $(`#arquivo-container${arquivos}`).draggable({
+                    containment: "#cracha"
+                });
+
+                function loadResizable() {
+                    $(`#img-arquivo${arquivos}`).resizable({
+                        containment: "#cracha"
+                    })
+                    arquivos++
+                }
+
+                setTimeout(loadResizable, 500)
+
+            }
+        }
+
+
+        function renderCracha() {
+            $("#container-cracha").height(cracha.altura)
+            $("#cracha").height(cracha.altura)
+            $("#cracha").width(cracha.largura)
+
+            $('#logo-container').draggable({
+                containment: "#cracha"
+            });
+            $('#logo').resizable({
+                containment: "#cracha"
+            });
+            $('.text-cracha').draggable({
+                containment: "#cracha"
+            })
+            $('span.nome-cracha').css('font-size', `${cracha.nome.fontSize}px`)
+            $('span.apelido-cracha').css('font-size', `${cracha.apelido.fontSize}px`)
+        }
+
+
+        $(document).ready(function () {
+            renderCracha()
+            $('.nome-font #font-picker')
+                .fontpicker().on('change', function () {
+                    $('.nome-cracha').css(getCss(this.value));
+                });
+            $('.apelido-font #font-picker')
+                .fontpicker().on('change', function () {
+                    $('.apelido-cracha').css(getCss(this.value));
+                });
+        });
+
+        function getCss(value) {
+            var tmp = value.split(':'),
+                family = tmp[0],
+                variant = tmp[1] || '400',
+                weight = parseInt(variant, 10),
+                italic = /i$/.test(variant);
+
+            // Set selected font on body
+            return {
+                fontFamily: "'" + family + "'",
+                fontWeight: weight,
+                fontStyle: italic ? 'italic' : 'normal'
+            };
+        }
+
+    </script>
+}

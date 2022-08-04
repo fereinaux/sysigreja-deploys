@@ -75,14 +75,9 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                     .ForMember(dest => dest.HasFoto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto)))
-                    .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()))
-                    .ForMember(dest => dest.Faltas, opt => opt.MapFrom(x => x.Equipes.LastOrDefault().Evento.Reunioes.Count() - x.Equipes.LastOrDefault().Presencas.Count()))
-                    .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()))
-                    .ForMember(dest => dest.HasOferta, opt => opt.MapFrom(x => x.Lancamentos.Any(y => y.CentroCustoId == y.Evento.Configuracao.CentroCustoTaxaId && y.EventoId == x.Equipes.LastOrDefault().EventoId)))
-                    .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipes.Any() ? x.Equipes.LastOrDefault().Equipe.Nome : null)))
-                    .ForMember(dest => dest.Checkin, opt => opt.MapFrom(x => x.Equipes.LastOrDefault().Checkin));
+                    .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()));
                 cfg.CreateMap<EquipanteEvento, EquipanteListModel>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.EquipanteId))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Equipante.Id))
                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
                 .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)))
                 .ForMember(dest => dest.Etiquetas, opt => opt.MapFrom(x => x.Equipante.ParticipantesEtiquetas.Select(y => y.Etiqueta)))

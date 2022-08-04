@@ -773,6 +773,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Controllers\CrachaController.cs" />
     <Compile Include="Controllers\PadrinhoController.cs" />
     <Compile Include="Controllers\MensagemController.cs" />
     <Compile Include="Controllers\ConfiguracaoController.cs" />
@@ -1216,6 +1217,7 @@
     <Content Include="Views\Inscricoes\Index.cshtml" />
     <Content Include="Views\NaoAutorizado\Index.cshtml" />
     <Content Include="Views\Configuracao\Login.cshtml" />
+    <Content Include="Views\Cracha\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

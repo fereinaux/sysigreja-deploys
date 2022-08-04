@@ -24,7 +24,7 @@
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/av01d/fontpicker-jquery-plugin@1.5/dist/jquery.fontpicker.min.css" integrity="sha256-urFh3EMgi9s3j3w+TsAP1TfUQiE0yUZmmLX7JRyvjqE=" crossorigin="anonymous">
     <!-- Add local styles, mostly for plugins css file -->
     @if (IsSectionDefined("Styles"))
     {@RenderSection("Styles", required: false)}
@@ -55,7 +55,7 @@
 
 
     <!-- Add jQuery Style direct - used for jQGrid plugin -->
-    <link href="@Url.Content("~/Scripts/plugins/jquery-ui/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
 
     <!-- Primary Inspinia style -->
     @Styles.Render("~/font-awesome/css")
@@ -102,7 +102,6 @@
     <!-- End wrapper-->
     <!-- Section for main scripts render -->
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/imaskjs")
     @Scripts.Render("~/plugins/slimScroll")
@@ -115,10 +114,11 @@
     @Scripts.Render("~/plugins/dataPicker")
     @Scripts.Render("~/plugins/chosen")
     @Scripts.Render("~/plugins/jasny")
-    @Scripts.Render("~/plugins/html2canvas")
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
     <script src="~/Scripts/app/Util/mapa.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/av01d/fontpicker-jquery-plugin@1.5/dist/jquery.fontpicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.1.1/compressor.min.js" integrity="sha512-VaRptAfSxXFAv+vx33XixtIVT9A/9unb1Q8fp63y1ljF+Sbka+eMJWoDAArdm7jOYuLQHVx5v60TQ+t3EA8weA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
@@ -158,46 +158,49 @@
 
 
         function getConfig(id) {
-            $.ajax({
-                url: "/Configuracao/GetConfiguracaoByEventoId/",
-                data: { Id: id },
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    config = data.Configuracao
-                    $('title').text(`${config.Titulo} | ${$('#title').text()}`)
+            if (id != 999) {
 
-                    $('.title-circulo').text(config.EquipeCirculo)
-                    if (config.LogoId) {
-                        $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
-                        $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
-                    }
-                    $('#home-button-logo').css('display', 'block')
-                    if (config.LogoRelatorioId) {
-                        logoRelatorio = config.LogoRelatorio
-                    }
+                $.ajax({
+                    url: "/Configuracao/GetConfiguracaoByEventoId/",
+                    data: { Id: id },
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        config = data.Configuracao
+                        $('title').text(`${config.Titulo} | ${$('#title').text()}`)
 
-                    if (config.MeioPagamentos.length > 0) {
-                        $("[id$='meiopagamento']").html(`${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
+                        $('.title-circulo').text(config.EquipeCirculo)
+                        if (config.LogoId) {
+                            $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
+                            $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
+                        }
+                        $('#home-button-logo').css('display', 'block')
+                        if (config.LogoRelatorioId) {
+                            logoRelatorio = config.LogoRelatorio
+                        }
+
+                        if (config.MeioPagamentos.length > 0) {
+                            $("[id$='meiopagamento']").html(`${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
                             $("#busca-meiopagamento").html(`<option value="0">Selecione</option>${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
 
-                    }
-                    if (config.Etiquetas.length > 0) {
-                        $("[id$='-etiquetas']").html(`${config.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)}`)
-                    }
-                    if (config.CentroCustos.length > 0) {
-                        $("[id$='-centrocusto']").html(`${config.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
+                        }
+                        if (config.Etiquetas.length > 0) {
+                            $("[id$='-etiquetas']").html(`${config.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)}`)
+                        }
+                        if (config.CentroCustos.length > 0) {
+                            $("[id$='-centrocusto']").html(`${config.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
 
                             $("#busca-centrocusto").html(`<option value="0">Selecione</option>${config.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
 
-                    }
+                        }
 
-                    if ($("#busca-centrocusto").length > 0 && $("#busca-meiopagamento").length > 0) {
-                        Filtrar()
+                        if ($("#busca-centrocusto").length > 0 && $("#busca-meiopagamento").length > 0) {
+                            Filtrar()
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
 
@@ -256,6 +259,7 @@
                     },
                     error: function () {
                         $('.img-avatar').attr('src', "../Images/profile.jpg")
+
                     }
                 });
         }

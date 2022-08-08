@@ -49,7 +49,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                 $('#participante-marcadores').select2();
                 $('#participante-nao-marcadores').select2();
                 $('#participante-status').select2();
-                
+
             }
         });
     }
@@ -172,6 +172,9 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
             $('.i-checks-green').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green'
+            });
+            $('.i-checks-green').on('ifToggled', function (event) {
+                checkBulkActions()
             });
             $('#select-all').on('ifClicked', function (event) {
                 $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
@@ -1748,3 +1751,53 @@ function getFiltros(Foto) {
         Foto: Foto
     }
 }
+
+function checkBulkActions() {
+    if ($('input[type=checkbox][id!=select-all]:checked').length > 0) {
+        $('#btn_bulk').css('display', 'inline-block')
+    } else {
+        $('#btn_bulk').css('display', 'none')
+    }
+}
+
+async function openBulkActions() {
+    const quartos = await $.ajax({
+        url: '/Quarto/GetQuartos',
+        datatype: "json",
+        data: { EventoId: $("#participante-eventoid").val(), Tipo: 1 },
+        type: "POST"
+    })
+
+    const caronas = await $.ajax({
+        url: '/Carona/GetCaronas',
+        datatype: "json",
+        data: { EventoId: $("#participante-eventoid").val(), Tipo: 1 },
+        type: "POST"
+    })
+
+    const padrinhos = await $.ajax({
+        url: '/Circulo/GetCirculos',
+        datatype: "json",
+        data: { EventoId: $("#participante-eventoid").val() },
+        type: "POST"
+    })
+
+    const circulos = await $.ajax({
+        url: '/Padrinho/GetPadrinhos',
+        datatype: "json",
+        data: { EventoId: $("#participante-eventoid").val() },
+        type: "POST"
+    })
+
+    const etiquetas = await $.ajax({
+        url: '/Etiqueta/GetEtiquetasByEventoId',
+        data: { eventoId: $("#participante-eventoid").val() },
+        datatype: "json",
+        type: "POST",        
+    });
+
+    
+    $("#modal-bulk").modal();
+}
+
+

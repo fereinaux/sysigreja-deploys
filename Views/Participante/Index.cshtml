@@ -87,6 +87,7 @@
             <h4>@ViewBag.Title</h4>
             <div style=" width: 70%;" class="ibox-tools pull-right">
                 <button class="btn btn-default" id="btn_Imprimir" onclick="openModalCracha()">Crachá</button>
+                <button class="btn btn-default" style="display:none" id="btn_bulk" onclick="openBulkActions()">Editar</button>
                 <button class="btn btn-default" id="btn_Adicionar" onclick="EditParticipante(0)">Adicionar</button>
             </div>
         </div>
@@ -319,6 +320,50 @@
                             </table>
                         </div>
                     </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal" id="modal-actions" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs">
+
+                    <div class="row p-md">
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Quarto</h5>
+                            <select class="form-control" id="bulk-quarto">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Padrinho</h5>
+                            <select class="form-control" id="bulk-padrinho">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Círculo</h5>
+                            <select class="form-control" id="bulk-circulo">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Carona</h5>
+                            <select class="form-control" id="bulk-carona">
+                            </select>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="modal-footer">

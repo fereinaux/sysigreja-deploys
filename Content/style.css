@@ -10427,3 +10427,7 @@ label {
 .swal2-container {
     z-index: 10000 !important;
 }
+
+.modal-xl {
+    width: 1200px;
+}

@@ -1,0 +1,37 @@
+﻿
+<div class="modal inmodal" id="modal-impressao-cracha" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 m-b-md">
+                        <h5>Modelo</h5>
+                        <select class="form-control chosen-select" id="crachaid" onchange="getModelo()">
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row ">
+                    <div class="preview-layout" style="display:none;flex-direction:column;">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="moldura-modal p-h-xs d-flex" id="container-cracha" style="position:relative;display:none">
+                            <div class="moldura-modal" style="margin:auto;position:relative" id="cracha">
+                                <img src="~/Images/profile.jpg" class="background" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0" />
+                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
+                                <span style="display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
+                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary pull-right" onclick="print(0,0)">Imprimir</button>
+            </div>
+        </div>
+    </div>
+</div>

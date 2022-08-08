@@ -304,6 +304,70 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetCracha(FilterModel model)
+        {
+
+            var result = participantesBusiness
+                        .GetParticipantesByEvento(model.EventoId.Value)
+                        .Where(x => x.EventoId == model.EventoId && (StatusEnum.Confirmado == x.Status || x.Status == StatusEnum.Inscrito));
+
+            if (model.Foto)
+            {
+                result = result.Where(x => x.Arquivos.Any(y => y.IsFoto));
+            }
+
+            if (model.Ids != null)
+            {
+                result = result.Where(x => model.Ids.Contains(x.Id));
+            }
+            else
+            {
+                if (model.Etiquetas != null && model.Etiquetas.Count > 0)
+                {
+                    model.Etiquetas.ForEach(etiqueta =>
+                    result = result.Where(x => x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                }
+
+                if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
+                {
+                    model.NaoEtiquetas.ForEach(etiqueta =>
+                    result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                }
+
+                if (model.PadrinhoId != null)
+                {
+                    if (model.PadrinhoId.Contains(0))
+                    {
+                        result = result.Where(x => (!x.PadrinhoId.HasValue));
+                    }
+                    else
+                    {
+                        result = result.Where(x => (model.PadrinhoId.Contains(x.PadrinhoId.Value)));
+                    }
+                }
+
+                if (model.CirculoId != null)
+                {
+                    result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+                }
+
+                if (model.search != null && model.search.value != null)
+                {
+                    result = result.Where(x => (x.Nome.Contains(model.search.value)));
+                }
+            }
+
+            result.OrderBy(x => x.Nome);
+
+            var json = Json(new
+            {
+                data = mapper.Map<IEnumerable<CrachaModel>>(result),
+            }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
+        }
+
+        [HttpPost]
         public ActionResult GetParticipantesDatatable(FilterModel model)
         {
             var extract = Request.QueryString["extract"];
@@ -312,7 +376,7 @@ namespace SysIgreja.Controllers
                 Guid g = Guid.NewGuid();
 
                 var result = participantesBusiness
-                .GetParticipantesByEvento(model.EventoId);
+                .GetParticipantesByEvento(model.EventoId.Value);
                 var data = mapper.Map<IEnumerable<ParticipanteExcelViewModel>>(result);
 
                 Session[g.ToString()] = datatableService.GenerateExcel(data.ToList(), model.Campos);
@@ -323,7 +387,7 @@ namespace SysIgreja.Controllers
             {
 
                 var result = participantesBusiness
-                .GetParticipantesByEvento(model.EventoId);
+                .GetParticipantesByEvento(model.EventoId.Value);
 
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;
@@ -341,38 +405,42 @@ namespace SysIgreja.Controllers
                  result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
                 }
 
-                if (model.Status.HasValue)
+                if (model.Status != null)
                 {
-                    if ((int)model.Status.Value == 12)
+
+                    if (model.Status.Contains(StatusEnum.Checkin))
                     {
-                        result = result.Where(x => (x.Checkin));
+                        result = result.Where(x => x.Checkin || (model.Status.Contains(x.Status)));
+                    } else
+                    {
+                        result = result.Where(x => (model.Status.Contains(x.Status) && !x.Checkin));
+
                     }
-                    else if (model.Status == StatusEnum.Confirmado)
+
+
+                    filteredResultsCount = result.Count();
+                }
+
+                if (model.PadrinhoId != null)
+                {
+                    if (model.PadrinhoId.Contains(0))
                     {
-                        result = result.Where(x => (x.Status == StatusEnum.Confirmado && !x.Checkin));
+                        result = result.Where(x => (!x.PadrinhoId.HasValue));
                     }
                     else
                     {
-                        result = result.Where(x => (x.Status == model.Status));
-
+                        result = result.Where(x => (model.PadrinhoId.Contains(x.PadrinhoId.Value)));
                     }
                     filteredResultsCount = result.Count();
                 }
 
-                if (model.PadrinhoId > 0 && model.PadrinhoId != 999)
+                if (model.CirculoId != null)
                 {
-                    result = result.Where(x => (x.PadrinhoId == model.PadrinhoId));
-                    filteredResultsCount = result.Count();
-                }
-                else if (model.PadrinhoId == 0)
-                {
-                    result = result.Where(x => (!x.PadrinhoId.HasValue));
+                    result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
                     filteredResultsCount = result.Count();
                 }
 
-
-
-                if (model.search.value != null)
+                if (model.search != null && model.search.value != null)
                 {
                     result = result.Where(x => (x.Nome.Contains(model.search.value)));
                     filteredResultsCount = result.Count();
@@ -389,8 +457,8 @@ namespace SysIgreja.Controllers
                     result = result.OrderBy(x => x.Id);
                 }
 
-                result = result.Skip(model.Start)
-                .Take(model.Length);
+                result = result.Skip(model.Start.Value)
+                .Take(model.Length.Value);
 
                 return Json(new
                 {

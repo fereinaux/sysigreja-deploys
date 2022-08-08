@@ -84,6 +84,80 @@ namespace SysIgreja.Controllers
             return Content(g.ToString());
         }
 
+        [HttpPost]
+        public ActionResult GetCracha(FilterModel model)
+        {
+            var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
+                        .IncludeOptimized(x => x.Equipante)
+                .IncludeOptimized(x => x.Equipante.Arquivos)
+                .IncludeOptimized(x => x.Equipante.Lancamentos)
+                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+                .IncludeOptimized(x => x.Equipe)
+                .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
+                        .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
+
+            if (model.Foto)
+            {
+                result = result.Where(x => x.Equipante.Arquivos.Any(y => y.IsFoto));
+            }
+
+            if (model.Ids != null)
+            {
+                result = result.Where(x => model.Ids.Contains(x.EquipanteId.Value));
+            }
+            else
+            {
+                if (model.Etiquetas != null && model.Etiquetas.Count > 0)
+                {
+                    model.Etiquetas.ForEach(etiqueta =>
+                    result = result.Where(x => x.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+
+                }
+
+                if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
+                {
+                    model.NaoEtiquetas.ForEach(etiqueta =>
+                 result = result.Where(x => !x.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                }
+
+                if (model.Status != null)
+                {
+                    if (!(model.Status.Contains("pendente") && model.Status.Contains("pago")))
+                    {
+                        if (model.Status.Contains("pendente"))
+                        {
+                            result = result.Where(x => (!x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
+                        }
+                        else if (model.Status.Contains("pago"))
+                        {
+                            result = result.Where(x => (x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
+
+                        }
+                    }
+                }
+
+                if (model.Equipe != null)
+                {
+                    result = result.Where(x => model.Equipe.Contains(x.EquipeId.Value));
+                }
+
+                if (model.search != null && !string.IsNullOrEmpty(model.search.value))
+                {
+                    result = result.Where(x => (x.Equipante.Nome.ToLower().Contains(model.search.value.ToLower())));
+                }
+
+            }
+
+            result.OrderBy(x => x.Equipante.Nome);
+
+            var json = Json(new
+            {
+                data = mapper.Map<IEnumerable<CrachaModel>>(result),
+            }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
+        }
 
         [HttpPost]
         public ActionResult GetEquipantesDataTable(FilterModel model)
@@ -130,25 +204,27 @@ namespace SysIgreja.Controllers
                      result = result.Where(x => !x.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
                     }
 
-                    if (!string.IsNullOrEmpty(model.Status))
+                    if (model.Status != null)
                     {
-                        if (model.Status == "pendente")
+                        if (!(model.Status.Contains("pendente") && model.Status.Contains("pago")))
                         {
-                            result = result.Where(x => (!x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
-                        }
-                        else if (model.Status == "pago")
-                        {
-                            result = result.Where(x => (x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
+                            if (model.Status.Contains("pendente"))
+                            {
+                                result = result.Where(x => (!x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
+                            }
+                            else if (model.Status.Contains("pago"))
+                            {
+                                result = result.Where(x => (x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId)));
 
+                            }
                         }
                         filteredResultsCount = result.Count();
                     }
 
 
-                    if (model.Equipe.HasValue)
+                    if (model.Equipe != null)
                     {
-                        result = result.Where(x => x.EquipeId == model.Equipe);
-                        filteredResultsCount = result.Count();
+                        result = result.Where(x => model.Equipe.Contains(x.EquipeId.Value));
                     }
 
                     if (!string.IsNullOrEmpty(model.search.value))
@@ -381,7 +457,7 @@ namespace SysIgreja.Controllers
 
             if (model.Inscricao)
             {
-                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = model.EventoId}));
+                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = model.EventoId }));
             }
             else
             {

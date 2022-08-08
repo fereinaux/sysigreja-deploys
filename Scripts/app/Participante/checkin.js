@@ -227,7 +227,7 @@ function GetParticipante() {
                 $('.paitext').text(realista.NomePai)
                 $('.convitetext').text(realista.NomeConvite)
                 $('.contatotext').text(realista.NomeContato)
-                $('#marcadores').html(realista.Etiquetas.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))        
+                $('#marcadores').html(realista.Etiquetas.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
                 $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
                 $('.participante-etiquetas').select2()
                 $('.pagamento').show()
@@ -876,7 +876,7 @@ function loadCampos(id) {
         success: function (data) {
             campos = data.Campos
             $('.campos-cadastro').html(`
-${campos.find(x => x.Campo == 'Nome Completo') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
+${campos.find(x => x.Campo == 'Nome e Sobrenome') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
                             <h5>Nome</h5>
 
                             <input type="text" class="form-control required" id="participante-nome" data-field="Nome" />
@@ -1082,7 +1082,7 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
 
                 map = initMap('map')
                 markerLayer = createMarkerLayer(map)
-              
+
             }
 
             $('#has-medicacao').on('ifChecked', function (event) {
@@ -1175,4 +1175,40 @@ function verificaCep(input) {
             }
         })
     }
+}
+
+async function loadCrachaImprimir(Foto) {
+    ids = [];
+    $('input[type=checkbox]:checked').each((index, input) => {
+        if ($(input).data('id') && $(input).data('id') != 'all') {
+            ids.push($(input).data('id'))
+        }
+
+    })
+
+    let result
+    if ($("#participante-id").val() > 0) {
+        result = await $.ajax(
+            {
+                processData: false,
+                contentType: false,
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ Ids: [$("#participante-id").val()], Foto: Foto, EventoId: $("#eventoid").val() }),
+                url: "/Participante/GetCracha",
+            });
+    } else {
+
+        result = await $.ajax(
+            {
+                processData: false,
+                contentType: false,
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ Ids: [$("#equipante-id").val()], Foto: Foto, EventoId: $("#eventoid").val() }),
+                url: "/Equipante/GetCracha",
+            });
+    }
+
+    return result.data
 }

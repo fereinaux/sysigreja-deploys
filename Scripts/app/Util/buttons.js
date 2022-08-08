@@ -56,6 +56,6 @@ function GetLabel(functionClick, functionParameter, color, title) {
     return `<span onclick='${functionClick}(${functionParameter})' style="font-size:13px" class="m-r-sm pointer text-center label label-${button}">${title}</span>`;
 }
 
-function GetCheckBox(functionClick, functionParameter, id, checked) {
+function GetCheckBox(id, checked) {
     return `<div class="checkbox i-checks-green"><label> <input type="checkbox" data-id="${id}" value="" ${checked ? 'checked=""' : ''}> <i></i></label></div>`;
 }

@@ -54,11 +54,10 @@
                         <h5>Forma de Pagamento</h5>
 
                         <select class="form-control" id="pagamentos-meiopagamento">
-                      
                         </select>
 
                     </div>
-      
+
                     <div class="col-sm-6 p-w-md text-center">
                         <h5>Valor</h5>
 
@@ -201,6 +200,7 @@
                         <div class="pull-right">
                             @*<button class="btn btn-primary m-r-xs" onclick="NewParticipante()">Novo</button>*@
                             <button class="btn btn-primary" onclick="PostParticipante()">Salvar</button>
+                            <button class="btn btn-default" id="btn_Imprimir" onclick="openModalCracha()">Crachá</button>
                         </div>
                     </div>
                 </div>
@@ -219,7 +219,7 @@
                         </select>
                     </div>
                     <div class="campos-cadastro"></div>
-                    
+
                 </div>
 
                 <div id="form-info" class="d-none">
@@ -259,6 +259,7 @@
         </div>
     </div>
 </div>
+@Html.Partial("~/Views/Cracha/ModalImpressao.cshtml")
 
 @section Styles {
     <style>
@@ -271,6 +272,7 @@
 @section Scripts {
 
     <script src="~/Scripts/app/Participante/checkin.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Cracha/print.js?@ViewBag.Numero"></script>
 
     <script>
 

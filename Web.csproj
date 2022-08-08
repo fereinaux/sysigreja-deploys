@@ -1061,6 +1061,8 @@
     <Content Include="Images\Bancos\Santander.png" />
     <Content Include="Images\tag-background.jpg" />
     <Content Include="Scripts\app\Carona\carona.js" />
+    <Content Include="Scripts\app\Cracha\print.js" />
+    <Content Include="Scripts\app\Cracha\cracha.js" />
     <Content Include="Scripts\app\Etiqueta\etiqueta.js" />
     <Content Include="Scripts\app\Mensagem\mensagem.js" />
     <Content Include="Scripts\app\Padrinho\padrinho.js" />
@@ -1077,9 +1079,7 @@
     <Content Include="Scripts\app\Home\admin.js" />
     <Content Include="Scripts\app\Home\coordenador.js" />
     <Content Include="Scripts\app\Participante\etiquetas.js" />
-    <Content Include="Scripts\app\Participante\boletos.js" />
     <Content Include="Scripts\app\Participante\participante.js" />
-    <Content Include="Scripts\app\Participante\lista-telefonica.js" />
     <Content Include="Scripts\app\Relatorio\financeiro.js" />
     <Content Include="Scripts\app\Relatorio\parentes.js" />
     <Content Include="Scripts\app\Relatorio\restricoes.js" />
@@ -1184,7 +1184,6 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Reuniao\Index.cshtml" />
     <Content Include="Views\Equipante\Index.cshtml" />
-    <Content Include="Views\Participante\ListaTelefonica.cshtml" />
     <Content Include="Views\Participante\Index.cshtml" />
     <Content Include="Views\Equipe\Index.cshtml" />
     <Content Include="Views\Equipe\Presenca.cshtml" />
@@ -1192,7 +1191,6 @@
     <Content Include="Views\ContaBancaria\Index.cshtml" />
     <Content Include="Views\CentroCusto\Index.cshtml" />
     <Content Include="Views\Arquivo\Index.cshtml" />
-    <Content Include="Views\Participante\Boletos.cshtml" />
     <Content Include="Views\Lancamento\Index.cshtml" />
     <Content Include="Views\Participante\Etiquetas.cshtml" />
     <Content Include="Views\Circulo\Index.cshtml" />
@@ -1218,6 +1216,8 @@
     <Content Include="Views\NaoAutorizado\Index.cshtml" />
     <Content Include="Views\Configuracao\Login.cshtml" />
     <Content Include="Views\Cracha\Index.cshtml" />
+    <Content Include="Views\Cracha\Modal.cshtml" />
+    <Content Include="Views\Cracha\ModalImpressao.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

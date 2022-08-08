@@ -45,7 +45,7 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(null);
+            ViewBag.Configuracao = configuracaoBusiness.GetLogin();
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(model.UserName.ToLower(), model.Password.ToLower());

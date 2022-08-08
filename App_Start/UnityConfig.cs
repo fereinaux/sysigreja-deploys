@@ -4,6 +4,7 @@ using Core.Business.Caronas;
 using Core.Business.CentroCusto;
 using Core.Business.Circulos;
 using Core.Business.Configuracao;
+using Core.Business.Cracha;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Etiquetas;
@@ -40,6 +41,7 @@ namespace Web
             container.RegisterType<IGenericRepository<Participante>, GenericRepository<Participante>>();
             container.RegisterType<IGenericRepository<Login>, GenericRepository<Login>>();
             container.RegisterType<IGenericRepository<Newsletter>, GenericRepository<Newsletter>>();
+            container.RegisterType<IGenericRepository<Cracha>, GenericRepository<Cracha>>();
             container.RegisterType<IGenericRepository<Padrinho>, GenericRepository<Padrinho>>();
             container.RegisterType<IGenericRepository<MeioPagamento>, GenericRepository<MeioPagamento>>();
             container.RegisterType<IGenericRepository<ReuniaoEvento>, GenericRepository<ReuniaoEvento>>();
@@ -81,6 +83,7 @@ namespace Web
             container.RegisterType<IAccountBusiness, AccountBusiness>();
             container.RegisterType<IReunioesBusiness, ReunioesBusiness>();
             container.RegisterType<ICirculosBusiness, CirculosBusiness>();
+            container.RegisterType<ICrachaBusiness, CrachaBusiness>();
             container.RegisterType<ICaronasBusiness, CaronasBusiness>();
             container.RegisterType<IQuartosBusiness, QuartosBusiness>();
             container.RegisterType<IMensagemBusiness, MenssagemBusinesss>();

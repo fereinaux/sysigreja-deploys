@@ -39,7 +39,6 @@
                     <li class="@Html.IsSelected(action: "Equipe", controller:"Quarto")"><a href="@Url.Action("Equipe", "Quarto")">Quartos</a></li>
                 </ul>
             </li>
-            <li class="@Html.IsSelected(action: "Etiquetas", controller: "Participante")"><a href="@Url.Action("Etiquetas", "Participante")"><i class="fa fa-tags"></i><span class="nav-label">Etiquetas</span></a></li>
             <li class="@Html.IsSelected(action: "Index", controller: "Lancamento")"><a href="@Url.Action("Index", "Lancamento")"><i class="far fa-money-bill-alt"></i><span class="nav-label">Financeiro</span></a></li>
             <li class="@Html.IsSelected(action: "Index", controller: "Relatorio")"><a href="@Url.Action("Index", "Relatorio")"><i class="fa fa-chart-area"></i><span class="nav-label">Relatórios</span></a></li>
             <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Evento","Reuniao","Mensagem"}, actions: new List<string> { "Index" })">

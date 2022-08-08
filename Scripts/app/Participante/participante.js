@@ -13,9 +13,23 @@ function CarregarTabelaParticipante(callbackFunction) {
             success: (result) => {
                 eventoId = $("#participante-eventoid").val()
                 $("#participante-padrinhoid").html(`
-<option value=999>Selecione</option>
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
+                $("#participante-padrinhoid").select2()
+            }
+        });
+
+        $.ajax({
+            url: '/Circulo/GetCirculos',
+            data: { eventoId: $("#participante-eventoid").val() },
+            datatype: "json",
+            type: "POST",
+            success: (result) => {
+                eventoId = $("#participante-eventoid").val()
+                $("#participante-circuloid").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
+`)
+                $("#participante-circuloid").select2()
             }
         });
 
@@ -34,6 +48,8 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
                 $('#participante-marcadores').select2();
                 $('#participante-nao-marcadores').select2();
+                $('#participante-status').select2();
+                
             }
         });
     }
@@ -58,6 +74,12 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
         dom: domConfig,
         buttons: getButtonsConfig(`Participantes ${$("#participante-eventoid option:selected").text()}`),
         columns: [
+            {
+                data: "Id", name: "Id", orderable: false, width: "2%",
+                "render": function (data, type, row) {
+                    return `${GetCheckBox(data, row.Presenca)}`;
+                }
+            },
             { data: "Sexo", name: "Sexo", visible: false },
             {
                 data: "Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
@@ -76,6 +98,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
             {
                 data: "Nome", name: "Nome", width: "25%", render: function (data, type, row) {
                     return `<div>
+${row.Circulo ? `<span style="background-color:${GetCor(row.Circulo)}" class="dot"></span>` : ""}
                         <span>${row.Nome}</br></span>
                         ${row.Etiquetas.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, '')}
                     </div>`
@@ -146,13 +169,20 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
             [2, "asc"]
         ],
         drawCallback: function () {
+            $('.i-checks-green').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+            $('#select-all').on('ifClicked', function (event) {
+                $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
+            });
             if (callbackFunction) {
                 callbackFunction()
             }
         },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
-            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val() || 999, Status: $("#participante-status").val() != 999 ? $("#participante-status").val() : null, Etiquetas: $("#participante-marcadores").val(), NaoEtiquetas: $("#participante-nao-marcadores").val() },
+            data: getFiltros(),
             datatype: "json",
             type: "POST"
         }
@@ -1393,7 +1423,7 @@ function loadCampos(id) {
             campos = data.Campos
             $('.campos-cadastro').html(`
           <input type="hidden" id="participante-id" />
-${campos.find(x => x.Campo == "Nome Completo") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Nome</h5>
 
                                 <input type="text" class="form-control required" id="participante-nome" data-field="Nome" />
@@ -1685,3 +1715,36 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
     });
 }
 
+
+async function loadCrachaImprimir(Foto) {
+    ids = [];
+    $('input[type=checkbox]:checked').each((index, input) => {
+        if ($(input).data('id') != 'all') {
+            ids.push($(input).data('id'))
+        }
+
+    })
+    const result = await $.ajax(
+        {
+            processData: false,
+            contentType: false,
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(ids.length > 0 ? { Ids: ids, Foto: Foto, EventoId: $("#participante-eventoid").val() } : getFiltros(Foto)),
+            url: "Participante/GetCracha",
+        });
+
+    return result.data
+}
+
+function getFiltros(Foto) {
+    return {
+        EventoId: $("#participante-eventoid").val(),
+        CirculoId: $("#participante-circuloid").val(),
+        PadrinhoId: $("#participante-padrinhoid").val(),
+        Status: $("#participante-status").val(),
+        Etiquetas: $("#participante-marcadores").val(),
+        NaoEtiquetas: $("#participante-nao-marcadores").val(),
+        Foto: Foto
+    }
+}

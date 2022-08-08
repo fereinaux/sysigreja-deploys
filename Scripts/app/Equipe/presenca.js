@@ -18,7 +18,7 @@
                 {
                     data: "Id", name: "Id", orderable: false, width: "15%",
                     "render": function (data, type, row) {
-                        return `${GetCheckBox('TogglePresenca', data, data, row.Presenca)}`;
+                        return `${GetCheckBox(data, row.Presenca)}`;
                     }
                 }
             ],
@@ -48,7 +48,6 @@
         $("#table-presenca").DataTable(tablePresencaConfig);
     }
 }
-
 
 function loadScreen() {
     getReunioes();

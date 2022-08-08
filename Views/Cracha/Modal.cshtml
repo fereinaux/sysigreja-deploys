@@ -1,0 +1,261 @@
+﻿
+<div class="modal inmodal" id="modal-cracha" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="moldura-modal p-h-xs" id="form-cracha">
+                            <div class="row p-h-xs">
+                                <div class="col-sm-12 p-w-md text-center">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+
+                                            <h5 class=" m-t-md">Título</h5>
+
+                                            <input type="text" class="form-control required" id="titulo" data-field="Título" />
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                            <h5 class=" m-t-md">Largura</h5>
+
+                                            <input type="number" class="form-control" onchange="renderCracha()" id="largura" data-field="Largura" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h5 class=" m-t-md">Altura</h5>
+
+                                            <input type="number" class="form-control" onchange="renderCracha()" id="altura" data-field="Altura" />
+                                        </div>
+
+                                        <div class="col-sm-6">
+
+                                            <h5 class=" m-t-md">Tipo de Papel</h5>
+
+                                            <select class="form-control" id="paper">
+
+                                                <option value="a3">A3</option>
+                                                <option value="a4">A4</option>
+                                                <option value="letter">Carta</option>
+                                                <option value="custom">Personalizado</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h5 class=" m-t-md">Orientação</h5>
+
+                                            <div class="radio i-checks-green inline">
+                                                <label>
+                                                    <input type="radio" id="orientation" value="p" name="orientation"> Retrato
+                                                </label>
+                                                <label>
+                                                    <input type="radio" id="orientation" checked="" value="l" name="orientation"> Paisagem
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                            <h5 class=" m-t-md">Margem Vertical</h5>
+
+                                            <input type="number" class="form-control" id="margin-w" data-field="Margem Vertical" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h5 class=" m-t-md">Margem Horizontal</h5>
+
+                                            <input type="number" class="form-control" id="margin-h" data-field="Margem Horizontal" />
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                            <h5 class=" m-t-md">Colunas</h5>
+
+                                            <input type="number" class="form-control" value="5" id="cols" data-field="Colunas" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h5 class=" m-t-md">Linhas</h5>
+
+                                            <input type="number" class="form-control" value="2" id="rows" data-field="Linhas" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h5 class=" m-t-md">Plano de Fundo</h5>
+
+                                            <div class="radio i-checks-green inline">
+                                                <label>
+                                                    <input type="radio" id="background" checked="" value="foto" name="background"> Foto
+                                                </label>
+                                                <label>
+                                                    <input type="radio" id="background" value="nenhum" name="background"> Nenhum
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="arquivo" class="inputFile">
+                                                <span id="add-arquivo" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Adicionar Arquivo</span>
+                                                <input accept="image/*" onchange='AddArquivo()' style="display: none;" class="custom-file-input inputFile" id="arquivo" name="arquivo" type="file" value="">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <h5 class=" m-t-md">Nome</h5>
+                                    <div class="nome-font" style=" display: flex; flex-wrap: wrap; background: #d7d8d9; border-radius: 4px; padding: 5px; margin-bottom: 10px">
+                                        <div class="font-picker-div ">
+                                            <input type="text" id="font-picker" onchange="renderCracha()" value="" />
+                                        </div>
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-height"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-size" style="width:80px;" value="20" />
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-width"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-padding" style="width:80px;" value="0" />
+                                        <div class="line-break"></div>
+                                        <div class="moldura-modal pointer" onclick="Align('left','nome')" style="padding:8px">
+                                            <i class="fas fa-align-left active"></i>
+
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('center','nome')" style="padding:8px">
+
+                                            <i class="fas fa-align-center"></i>
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('right','nome')" style="padding:8px">
+
+                                            <i class="fas fa-align-right"></i>
+                                        </div>
+
+                                        <div class="moldura-modal " style="padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-palette"></i>
+                                        </div>
+                                        <input type="color" onchange="renderCracha()" style="padding: 0; flex: 1;" class="form-control" id="font-color" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#FFFFFF" data-field="Cor">
+                                    </div>
+                                    <h5 class=" m-t-md">Apelido</h5>
+                                    <div class="apelido-font" style=" display: flex;flex-wrap:wrap; background: #d7d8d9; border-radius: 4px; padding: 5px;">
+                                        <div class="font-picker-div ">
+                                            <input type="text" id="font-picker" onchange="renderCracha()" value="" />
+                                        </div>
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-height"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-size" style="width:80px;" value="20" />
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-width"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-padding" style="width:80px;" value="0" />
+                                        <div class="line-break"></div>
+                                        <div class="moldura-modal pointer" onclick="Align('left','apelido')" style="padding:8px">
+                                            <i class="fas fa-align-left active"></i>
+
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('center','apelido')" style="padding:8px">
+
+                                            <i class="fas fa-align-center"></i>
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('right','apelido')" style="padding:8px">
+
+                                            <i class="fas fa-align-right"></i>
+                                        </div>
+                                      
+                                        <div class="moldura-modal " style="padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-palette"></i>
+                                        </div>
+                                        <input type="color" onchange="renderCracha()" style="padding: 0; flex: 1;" class="form-control" id="font-color" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#FFFFFF" data-field="Cor">
+                                    </div>
+                                    <h5 class=" m-t-md">Equipe</h5>
+                                    <div class="equipe-font" style=" display: flex;flex-wrap:wrap; background: #d7d8d9; border-radius: 4px; padding: 5px;">
+                                        <div class="font-picker-div ">
+                                            <input type="text" id="font-picker" onchange="renderCracha()" value="" />
+                                        </div>
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-height"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-size" style="width:80px;" value="20" />
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-width"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-padding" style="width:80px;" value="0" />
+                                        <div class="line-break"></div>
+                                        <div class="moldura-modal pointer" onclick="Align('left','equipe')" style="padding:8px">
+                                            <i class="fas fa-align-left active"></i>
+
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('center','equipe')" style="padding:8px">
+
+                                            <i class="fas fa-align-center"></i>
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('right','equipe')" style="padding:8px">
+
+                                            <i class="fas fa-align-right"></i>
+                                        </div>
+
+                                        <div class="moldura-modal " style="padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-palette"></i>
+                                        </div>
+                                        <input type="color" onchange="renderCracha()" style="padding: 0; flex: 1;" class="form-control" id="font-color" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#FFFFFF" data-field="Cor">
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="moldura-modal p-h-xs d-flex" id="container-cracha" style="position:relative">
+                            <div class="moldura-modal" style="margin:auto;position:relative" id="cracha">
+                                <img src="~/Images/profile.jpg" class="background" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0" />
+                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
+                                <span style="display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
+                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary pull-right" onclick="print()">Imprimir</button>
+                <button type="button" class="btn btn-white pull-right" onclick="PostCracha()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .text-cracha {
+        cursor: grab;
+    }
+
+    .line-break {
+        width: 100%;
+    }
+
+    span:hover {
+        opacity: 0.7;
+    }
+
+    .fa-align-left, .fa-align-center, .fa-align-right {
+        color: #b3b1b1;
+    }
+
+        .fa-align-left.active, .fa-align-center.active, .fa-align-right.active {
+            color: #626262;
+        }
+
+
+    .font-picker-div {
+        flex: 1
+    }
+
+    .font-picker {
+        width: 100%;
+    }
+</style>
+

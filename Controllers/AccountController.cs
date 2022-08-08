@@ -138,13 +138,6 @@ namespace SysIgreja.Controllers
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
 
-        [AllowAnonymous]
-        public ActionResult Login()
-        {
-            accountBusiness.Seed();
-            return View();
-        }
-
         [HttpGet]
         public ActionResult GetAvatar()
         {

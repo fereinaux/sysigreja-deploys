@@ -16,12 +16,7 @@
     </div>
     <div class="col-xl-12 col-md-1">
         <div class="radio i-checks-green"><label> <input type="radio" class="tipo" value="1" checked="" name="etiquetas-tipo"> <i></i> Participante </label></div>
-        <div class="radio i-checks-green"><label> <input type="radio" class="tipo" value="2"  name="etiquetas-tipo"> <i></i> Equipante </label></div>
-    </div>
-    <div class="col-xl-12 col-md-1">
-        <div class="radio i-checks-green"><label> <input type="radio" class="cracha"  value="1" checked="" name="cracha-tipo"> <i></i> Crachá </label></div>
-        <div class="radio i-checks-green"><label> <input type="radio" class="cracha" value="2" name="cracha-tipo"> <i></i> Etiqueta </label></div>
-        <div class="radio i-checks-green"><label> <input type="radio" class="cracha" value="3"  name="cracha-tipo"> <i></i> Tag </label></div>
+        <div class="radio i-checks-green"><label> <input type="radio" class="tipo" value="2" name="etiquetas-tipo"> <i></i> Equipante </label></div>
     </div>
     <div class="col-xs-12 col-md-2">
         <h5>Evento</h5>
@@ -30,6 +25,12 @@
             {
                 <option value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
             }
+        </select>
+
+    </div>
+    <div class="col-xl-12 col-md-1">
+        <h5>Modelo</h5>
+        <select class="form-control chosen-select" id="etiquetas-crachas">
         </select>
     </div>
     <div id="participante">
@@ -62,20 +63,16 @@
                     <div class="col-xs-12 p-xs">
                         <button class="btn btn-default form-control" id="btn_Imprimir" onclick="CarregarEtiquetas()">Imprimir Todas</button>
                     </div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(1) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(2) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(3) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(4) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(5) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(6) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(7) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(8) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(9) "><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(10)"><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(11)"><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(12)"><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(13)"><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
-                    <div class="col-xs-6 p-xs" onclick="CarregarEtiquetaIndividual(14)"><div class="pointer" style="height:70px;width:100%;background-color:#d1dce3;"></div></div>
+
+                </div>
+
+            </div>
+            <div class="moldura-modal p-h-xs d-flex" id="container-cracha" style="position:relative;display:none">
+                <div class="moldura-modal" style="margin:auto;position:relative" id="cracha">
+                    <img src="~/Images/profile.jpg" class="background" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0" />
+                    <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
+                    <span style="display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
+                    <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>
                 </div>
             </div>
         </div>

@@ -289,7 +289,7 @@ function GetUsuarios(id) {
                             return x.Eventos.find(y => y.EventoId = id)
                         }
 
-                         }).Eventos[0].Role
+                    }).Eventos[0].Role
                 }
             },
             {
@@ -352,7 +352,7 @@ function saveUser() {
             SuccessMesageOperation()
             GetUsers(eventoId);
             if (data) {
-           
+
                 windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
             }
         }

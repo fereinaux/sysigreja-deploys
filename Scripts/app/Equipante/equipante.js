@@ -20,6 +20,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
                 $('#equipante-marcadores').select2();
                 $('#equipante-nao-marcadores').select2();
+                $('#equipante-status').select2();             
             }
         });
     } else {
@@ -61,6 +62,12 @@ function CarregarTabelaEquipante(callbackFunction) {
         },
         buttons: getButtonsConfig('Equipantes'),
         columns: [
+            {
+                data: "Id", name: "Id", orderable: false, width: "2%", visible: $("#equipante-eventoid-filtro").val() != 999,
+                "render": function (data, type, row) {
+                    return `${GetCheckBox(data, row.Presenca)}`;
+                }
+            },
             { data: "Sexo", name: "Sexo", visible: false },
             {
                 data: "Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
@@ -131,15 +138,21 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
             [2, "asc"]
         ],
         drawCallback: function () {
+            $('.i-checks-green').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+            $('#select-all').on('ifClicked', function (event) {
+                $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
+            });
             if (callbackFunction) {
                 callbackFunction()
             }
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
-
-            data: { EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : null, Status: $("#equipante-status").val(), Etiquetas: $("#equipante-marcadores").val(), NaoEtiquetas: $("#equipante-nao-marcadores").val(), Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null },
-            datatype: "json",
+            data: getFiltros(),
+                datatype: "json",
             type: "POST"
         }
     };
@@ -160,6 +173,7 @@ function getEquipes() {
 <option value=999>Selecione</option>
 ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
 `)
+                $('#equipe-select').select2();
             }
         });
     } else {
@@ -605,7 +619,7 @@ function GetEquipante(id) {
                 $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
-     
+
                 $("#equipante-numeracao").val(data.Equipante.Numeracao);
                 $(`#equipante-cep`).val(data.Equipante.CEP);
                 $(`#equipante-logradouro`).val(data.Equipante.Logradouro);
@@ -722,7 +736,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 })
             }
             $('.realista-nome').text(equipante.Nome)
-    
+
             $('#equipante-etiquetas').val(data.Equipante.Etiquetas.map(etiqueta => etiqueta.Id))
             $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
             $('#equipante-obs').val(data.Equipante.Observacao)
@@ -965,5 +979,39 @@ if ($('#map').length > 0) {
                 }
             })
         }
+    }
+}
+
+
+
+async function loadCrachaImprimir(Foto) {
+    ids = [];
+    $('input[type=checkbox]:checked').each((index, input) => {
+        if ($(input).data('id') && $(input).data('id') != 'all') {
+            ids.push($(input).data('id'))
+        }
+
+    })
+    const result = await $.ajax(
+        {
+            processData: false,
+            contentType: false,
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(ids.length > 0 ? { Ids: ids, Foto: Foto, EventoId: $("#equipante-eventoid-filtro").val() } : getFiltros(Foto)),
+            url: "Equipante/GetCracha",
+        });
+
+    return result.data
+}
+
+function getFiltros(Foto) {
+    return {
+        EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : null,
+        Status: $("#equipante-status").val(),
+        Etiquetas: $("#equipante-marcadores").val(),
+        NaoEtiquetas: $("#equipante-nao-marcadores").val(),
+        Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null,
+        Foto: Foto
     }
 }

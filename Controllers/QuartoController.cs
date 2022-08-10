@@ -105,12 +105,13 @@ namespace SysIgreja.Controllers
             {
                 Id = x.Id,
                 Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count().ToString()}/{x.Capacidade.ToString()}",
+                CapacidadeInt = x.Capacidade,
                 Quantidade = quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count(),
                 EquipanteId = x.EquipanteId,
                 Equipante = UtilServices.CapitalizarNome(x.Equipante?.Nome),
                 Titulo = x.Titulo,
                 Sexo = x.Sexo.GetDescription()
-            }); ;
+            });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

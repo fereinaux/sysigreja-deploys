@@ -338,9 +338,21 @@
                 <div class="moldura-modal p-h-xs">
 
                     <div class="row p-md">
-                        <div class="col-sm-12 p-w-md text-center">
-                            <h5>Quarto</h5>
-                            <select class="form-control" id="bulk-quarto">
+                        <div class="col-sm-12 p-w-md text-center quarto-m">
+                            <h5>Quarto Masculino</h5>
+                            <select class="form-control quarto-normal" id="bulk-quarto-m" onchange="$('#bulk-quarto-misto').val(999)">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center quarto-f">
+                            <h5>Quarto Feminino</h5>
+                            <select class="form-control quarto-normal" id="bulk-quarto-f" onchange="$('#bulk-quarto-misto').val(999)">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center quarto-misto">
+                            <h5>Quarto Misto</h5>
+                            <select class="form-control" id="bulk-quarto-misto" onchange="$('.quarto-normal').val(999)">
                             </select>
                         </div>
 
@@ -356,9 +368,21 @@
                             </select>
                         </div>
 
-                        <div class="col-sm-12 p-w-md text-center">
+                        <div class="col-sm-12 p-w-md text-center carona">
                             <h5>Carona</h5>
                             <select class="form-control" id="bulk-carona">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Adicionar Etiqueta</h5>
+                            <select class="form-control" id="bulk-add-etiqueta">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Remover Etiqueta</h5>
+                            <select class="form-control" id="bulk-remove-etiqueta">
                             </select>
                         </div>
 
@@ -367,6 +391,7 @@
                 </div>
 
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary m-l-sm" onclick="applyBulk()" data-dismiss="modal">Aplicar</button>
                     <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
                 </div>
             </div>

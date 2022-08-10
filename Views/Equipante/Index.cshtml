@@ -76,6 +76,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <button class="btn btn-default hide-tipoevento" id="btn_Imprimir" onclick="openModalCracha()">Crachá</button>
+                        <button class="btn btn-default" style="display:none" id="btn_bulk" onclick="openBulkActions()">Editar</button>
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Adicionar</button>
                     </div>
                 </div>
@@ -419,6 +420,75 @@
 </div>
 
 @Html.Partial("~/Views/Cracha/ModalImpressao.cshtml")
+
+
+<div class="modal inmodal" id="modal-actions" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs">
+
+                    <div class="row p-md">
+
+                        <div class="col-sm-12 p-w-md text-center evento-bulk" style="display:none">
+                            <h5>Evento</h5>
+                            <select class="form-control" id="equipante-eventoid-bulk" onchange="loadEquipesBulk()">
+                                @foreach (var evento in ViewBag.Eventos)
+                                {
+                                    <option data-status="@evento.Status" value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center quarto-m not-evento-bulk">
+                            <h5>Quarto Masculino</h5>
+                            <select class="form-control quarto-normal" id="bulk-quarto-m" onchange="$('#bulk-quarto-misto').val(999)">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center quarto-f not-evento-bulk">
+                            <h5>Quarto Feminino</h5>
+                            <select class="form-control quarto-normal" id="bulk-quarto-f" onchange="$('#bulk-quarto-misto').val(999)">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center quarto-misto not-evento-bulk">
+                            <h5>Quarto Misto</h5>
+                            <select class="form-control" id="bulk-quarto-misto" onchange="$('.quarto-normal').val(999)">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Equipe</h5>
+                            <select class="form-control" id="bulk-equipe">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center not-evento-bulk">
+                            <h5>Adicionar Etiqueta</h5>
+                            <select class="form-control" id="bulk-add-etiqueta">
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 p-w-md text-center not-evento-bulk">
+                            <h5>Remover Etiqueta</h5>
+                            <select class="form-control" id="bulk-remove-etiqueta">
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary m-l-sm" onclick="applyBulk()" data-dismiss="modal">Aplicar</button>
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section Styles {
     <style>

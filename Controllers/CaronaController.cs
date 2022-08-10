@@ -60,6 +60,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.Id).Count().ToString()}/{x.Capacidade.ToString()}",
+                    CapacidadeInt = x.Capacidade,
                     Quantidade = caronasBusiness.GetParticipantesByCaronas(x.Id).Count(),
                     Motorista = x.Motorista.Nome,
                     Latitude = x.Motorista.Latitude,

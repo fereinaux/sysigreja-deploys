@@ -270,9 +270,10 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult AddMembroEquipe(PostEquipeMembroModel model)
         {
-            equipesBusiness.AddMembroEquipe(model);
+            equipesBusiness.ChangeEquipe(model);
             return new HttpStatusCodeResult(200);
         }
+
 
         [HttpPost]
         public ActionResult DeleteMembroEquipe(int Id)

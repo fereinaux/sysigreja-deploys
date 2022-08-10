@@ -4,6 +4,7 @@ eventoId = 0
 let table
 let map, markerLayer
 function CarregarTabelaParticipante(callbackFunction) {
+    $('#btn_bulk').css('display', 'none')
     if ($("#participante-eventoid").val() != eventoId) {
         $.ajax({
             url: '/Participante/GetPadrinhos',
@@ -77,7 +78,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
             {
                 data: "Id", name: "Id", orderable: false, width: "2%",
                 "render": function (data, type, row) {
-                    return `${GetCheckBox(data, row.Presenca)}`;
+                    return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, row.Presenca) : '';
                 }
             },
             { data: "Sexo", name: "Sexo", visible: false },
@@ -117,7 +118,7 @@ ${row.Circulo ? `<span style="background-color:${GetCor(row.Circulo)}" class="do
                     else if (data === Cancelado)
                         cor = "danger";
                     else if (data === Inscrito)
-                        cor = "info";
+                        cor = "success";
                     else if (data === Espera)
                         cor = "default";
                     return `<span style="font-size:13px" class="text-center label label-${cor}">${data}</span>`;
@@ -1720,13 +1721,7 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
 
 
 async function loadCrachaImprimir(Foto) {
-    ids = [];
-    $('input[type=checkbox]:checked').each((index, input) => {
-        if ($(input).data('id') != 'all') {
-            ids.push($(input).data('id'))
-        }
-
-    })
+    let ids = getCheckedIds()
     const result = await $.ajax(
         {
             processData: false,
@@ -1761,6 +1756,7 @@ function checkBulkActions() {
 }
 
 async function openBulkActions() {
+    let ids = getCheckedIds()
     const quartos = await $.ajax({
         url: '/Quarto/GetQuartos',
         datatype: "json",
@@ -1775,14 +1771,14 @@ async function openBulkActions() {
         type: "POST"
     })
 
-    const padrinhos = await $.ajax({
+    const circulos = await $.ajax({
         url: '/Circulo/GetCirculos',
         datatype: "json",
         data: { EventoId: $("#participante-eventoid").val() },
         type: "POST"
     })
 
-    const circulos = await $.ajax({
+    const padrinhos = await $.ajax({
         url: '/Padrinho/GetPadrinhos',
         datatype: "json",
         data: { EventoId: $("#participante-eventoid").val() },
@@ -1793,11 +1789,222 @@ async function openBulkActions() {
         url: '/Etiqueta/GetEtiquetasByEventoId',
         data: { eventoId: $("#participante-eventoid").val() },
         datatype: "json",
-        type: "POST",        
+        type: "POST",
     });
 
-    
-    $("#modal-bulk").modal();
+    $("#bulk-circulo").html(`
+<option value=999>Selecione</option>
+        ${circulos.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
+        `)
+
+    $("#bulk-padrinho").html(`
+<option value=999>Selecione</option>
+        ${padrinhos.data.map(p => `<option value=${p.Id}>${p.Padrinho}</option>`)}
+        `)
+
+    if (caronas.data.filter(x => x.CapacidadeInt - x.Quantidade >= ids.length).length == 0) {
+        $('.carona').css('display', 'none')
+    } else {
+        $('.carona').css('display', 'block')
+    }
+
+    $("#bulk-carona").html(`
+<option value=999>Selecione</option>
+        ${caronas.data.filter(x => x.CapacidadeInt - x.Quantidade >= ids.length).map(p => `<option value=${p.Id}>${p.Motorista}</option>`)}
+        `)
+
+    arrayData = table.data().toArray()
+    let idsM = ids.filter(x => arrayData.find(y => y.Id == x && y.Sexo == "Masculino"))
+    let idsF = ids.filter(x => arrayData.find(y => y.Id == x && y.Sexo == "Feminino"))
+
+    if ((quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsM.length && x.Sexo == "Masculino").length == 0) || idsM.length == 0) {
+        $('.quarto-m').css('display', 'none')
+    } else {
+        $('.quarto-m').css('display', 'block')
+    }
+
+    $("#bulk-quarto-m").html(`
+<option value=999>Selecione</option>
+        ${quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsM.length && x.Sexo == "Masculino").map(p => `<option value=${p.Id}>${p.Titulo} ${p.Equipante}</option>`)}
+        `)
+
+    if ((quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsF.length && x.Sexo == "Feminino").length == 0) || idsF.length == 0) {
+        $('.quarto-f').css('display', 'none')
+    } else {
+        $('.quarto-f').css('display', 'block')
+    }
+
+    $("#bulk-quarto-f").html(`
+<option value=999>Selecione</option>
+        ${quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsF.length && x.Sexo == "Feminino").map(p => `<option value=${p.Id}>${p.Titulo} ${p.Equipante}</option>`)}
+        `)
+
+
+    if (quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= ids.length && x.Sexo == "Misto").length == 0) {
+        $('.quarto-misto').css('display', 'none')
+    } else {
+        $('.quarto-misto').css('display', 'block')
+    }
+
+    $("#bulk-quarto-misto").html(`
+<option value=999>Selecione</option>
+        ${quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= ids.length && x.Sexo == "Misto").map(p => `<option value=${p.Id}>${p.Titulo} ${p.Equipante}</option>`)}
+        `)
+
+    $("#bulk-add-etiqueta").html(`
+<option value=999>Selecione</option>
+${etiquetas.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+    $("#bulk-remove-etiqueta").html(`
+<option value=999>Selecione</option>
+${etiquetas.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+
+    $("#modal-actions").modal();
 }
 
+function getCheckedIds() {
+    let ids = [];
+    $('input[type=checkbox]:checked').each((index, input) => {
+        if ($(input).data('id') != 'all') {
+            ids.push($(input).data('id'))
+        }
 
+    })
+    return ids
+}
+
+async function applyBulk() {
+    let ids = getCheckedIds()
+
+    let arrPromises = []
+    arrayData = table.data().toArray()
+    ids.forEach(id => {
+
+        if (($("#bulk-quarto-m").val() != 999) && arrayData.find(x => x.Id == id).Sexo == "Masculino") {
+            arrPromises.push($.ajax({
+                url: "/Quarto/ChangeQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-quarto-m").val(),
+                        tipo: 1
+                    }),
+            }))
+        }
+
+        if (($("#bulk-quarto-f").val() != 999) && arrayData.find(x => x.Id == id).Sexo == "Feminino") {
+            arrPromises.push($.ajax({
+                url: "/Quarto/ChangeQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-quarto-f").val(),
+                        tipo: 1
+                    }),
+            }))
+        }
+
+        if (($("#bulk-quarto-misto").val() != 999)) {
+            arrPromises.push($.ajax({
+                url: "/Quarto/ChangeQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-quarto-misto").val(),
+                        tipo: 1
+                    }),
+            }))
+        }
+
+        if ($("#bulk-circulo").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Circulo/ChangeCirculo/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-circulo").val()
+                    }),
+            }))
+        }
+
+        if ($("#bulk-carona").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Carona/ChangeCarona/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-carona").val()
+                    }),
+
+            }))
+        }
+
+
+        if ($("#bulk-add-etiqueta").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Etiqueta/AddEtiqueta/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        destinoId: id,
+                        etiquetaId: $("#bulk-add-etiqueta").val(),
+                        tipo: 1
+                    }),
+
+            }))
+        }
+
+        if ($("#bulk-remove-etiqueta").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Etiqueta/RemoveEtiqueta/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        destinoId: id,
+                        etiquetaId: $("#bulk-remove-etiqueta").val(),
+                        tipo: 1
+                    }),
+
+            }))
+        }
+
+        if ($("#bulk-padrinho").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Padrinho/ChangePadrinho/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-padrinho").val()
+                    }),
+
+            }))
+        }
+    })
+
+    await Promise.all(arrPromises);
+    SuccessMesageOperation();
+    CarregarTabelaParticipante()
+}

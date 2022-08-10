@@ -7,6 +7,7 @@ using Core.Models.Etiquetas;
 using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
+using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
@@ -83,6 +84,22 @@ namespace SysIgreja.Controllers
         public ActionResult DeleteEtiqueta(int Id)
         {
             etiquetasBusiness.DeleteEtiqueta(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult AddEtiqueta(int destinoId,int etiquetaId, TipoPessoaEnum tipo, int? eventoId)
+        {
+            etiquetasBusiness.AddEtiqueta(destinoId,etiquetaId,tipo,eventoId);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult RemoveEtiqueta(int destinoId, int etiquetaId, TipoPessoaEnum tipo, int? eventoId)
+        {
+            etiquetasBusiness.RemoveEtiqueta(destinoId, etiquetaId,tipo, eventoId);
 
             return new HttpStatusCodeResult(200);
         }

@@ -20,7 +20,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
                 $('#equipante-marcadores').select2();
                 $('#equipante-nao-marcadores').select2();
-                $('#equipante-status').select2();             
+                $('#equipante-status').select2();
             }
         });
     } else {
@@ -38,7 +38,7 @@ function loadEquipes() {
 }
 
 function CarregarTabelaEquipante(callbackFunction) {
-
+    $('#btn_bulk').css('display', 'none')
 
     const tableEquipanteConfig = {
         language: languageConfig,
@@ -63,7 +63,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         buttons: getButtonsConfig('Equipantes'),
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%", visible: $("#equipante-eventoid-filtro").val() != 999,
+                data: "Id", name: "Id", orderable: false, width: "2%",
                 "render": function (data, type, row) {
                     return `${GetCheckBox(data, row.Presenca)}`;
                 }
@@ -142,6 +142,9 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green'
             });
+            $('.i-checks-green').on('ifToggled', function (event) {
+                checkBulkActions()
+            });
             $('#select-all').on('ifClicked', function (event) {
                 $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
             });
@@ -152,7 +155,7 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
             data: getFiltros(),
-                datatype: "json",
+            datatype: "json",
             type: "POST"
         }
     };
@@ -1014,4 +1017,224 @@ function getFiltros(Foto) {
         Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null,
         Foto: Foto
     }
+}
+
+
+function checkBulkActions() {
+    if ($('input[type=checkbox][id!=select-all]:checked').length > 0) {
+        $('#btn_bulk').css('display', 'inline-block')
+    } else {
+        $('#btn_bulk').css('display', 'none')
+    }
+}
+
+async function loadEquipesBulk() {
+    const equipes = await $.ajax({
+        url: '/Equipe/GetEquipes',
+        datatype: "json",
+        data: { EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val() },
+        type: "POST"
+    })
+
+    $("#bulk-equipe").html(`
+<option value=999>Selecione</option>
+        ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
+        `)
+}
+
+async function openBulkActions() {
+    let ids = getCheckedIds()
+
+    if ($("#equipante-eventoid-filtro").val() == 999) {
+        $('.evento-bulk').css('display', 'block');
+        $('.not-evento-bulk').css('display', 'none');
+    } else {
+        $('.evento-bulk').css('display', 'none');
+        $('.not-evento-bulk').css('display', 'block');
+    }
+
+    const quartos = await $.ajax({
+        url: '/Quarto/GetQuartos',
+        datatype: "json",
+        data: {
+            EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val(), Tipo: 0 },
+        type: "POST"
+    })
+
+    await loadEquipesBulk()
+
+    const etiquetas = await $.ajax({
+        url: '/Etiqueta/GetEtiquetasByEventoId',
+        data: { eventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val() },
+        datatype: "json",
+        type: "POST",
+    });
+
+    arrayData = table.data().toArray()
+    let idsM = ids.filter(x => arrayData.find(y => y.Id == x && y.Sexo == "Masculino"))
+    let idsF = ids.filter(x => arrayData.find(y => y.Id == x && y.Sexo == "Feminino"))
+
+    if ((quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsM.length && x.Sexo == "Masculino").length == 0) || idsM.length == 0) {
+        $('.quarto-m').css('display', 'none')
+    } else {
+        $('.quarto-m').css('display', 'block')
+    }
+
+    $("#bulk-quarto-m").html(`
+<option value=999>Selecione</option>
+        ${quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsM.length && x.Sexo == "Masculino").map(p => `<option value=${p.Id}>${p.Titulo} ${p.Equipante}</option>`)}
+        `)
+
+    if ((quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsF.length && x.Sexo == "Feminino").length == 0) || idsF.length == 0) {
+        $('.quarto-f').css('display', 'none')
+    } else {
+        $('.quarto-f').css('display', 'block')
+    }
+
+    $("#bulk-quarto-f").html(`
+<option value=999>Selecione</option>
+        ${quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= idsF.length && x.Sexo == "Feminino").map(p => `<option value=${p.Id}>${p.Titulo} ${p.Equipante}</option>`)}
+        `)
+
+
+    if (quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= ids.length && x.Sexo == "Misto").length == 0) {
+        $('.quarto-misto').css('display', 'none')
+    } else {
+        $('.quarto-misto').css('display', 'block')
+    }
+
+    $("#bulk-quarto-misto").html(`
+<option value=999>Selecione</option>
+        ${quartos.data.filter(x => x.CapacidadeInt - x.Quantidade >= ids.length && x.Sexo == "Misto").map(p => `<option value=${p.Id}>${p.Titulo} ${p.Equipante}</option>`)}
+        `)
+
+    $("#bulk-add-etiqueta").html(`
+<option value=999>Selecione</option>
+${etiquetas.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+    $("#bulk-remove-etiqueta").html(`
+<option value=999>Selecione</option>
+${etiquetas.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+
+    $("#modal-actions").modal();
+}
+
+function getCheckedIds() {
+    let ids = [];
+    $('input[type=checkbox]:checked').each((index, input) => {
+        if ($(input).data('id') != 'all') {
+            ids.push($(input).data('id'))
+        }
+
+    })
+    return ids
+}
+
+async function applyBulk() {
+    let ids = getCheckedIds()
+
+    let arrPromises = []
+    arrayData = table.data().toArray()
+    ids.forEach(id => {
+
+        if (($("#bulk-quarto-m").val() != 999) && arrayData.find(x => x.Id == id).Sexo == "Masculino") {
+            arrPromises.push($.ajax({
+                url: "/Quarto/ChangeQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-quarto-m").val(),
+                        tipo: 0
+                    }),
+            }))
+        }
+
+        if (($("#bulk-quarto-f").val() != 999) && arrayData.find(x => x.Id == id).Sexo == "Feminino") {
+            arrPromises.push($.ajax({
+                url: "/Quarto/ChangeQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-quarto-f").val(),
+                        tipo: 0
+                    }),
+            }))
+        }
+
+        if (($("#bulk-quarto-misto").val() != 999)) {
+            arrPromises.push($.ajax({
+                url: "/Quarto/ChangeQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        DestinoId: $("#bulk-quarto-misto").val(),
+                        tipo: 0
+                    }),
+            }))
+        }
+
+        if ($("#bulk-add-etiqueta").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Etiqueta/AddEtiqueta/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        destinoId: id,
+                        etiquetaId: $("#bulk-add-etiqueta").val(),
+                        EventoId: $("#equipante-eventoid-filtro").val(),
+                        tipo: 0
+                    }),
+
+            }))
+        }
+
+        if ($("#bulk-remove-etiqueta").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Etiqueta/RemoveEtiqueta/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        destinoId: id,
+                        etiquetaId: $("#bulk-remove-etiqueta").val(),
+                        EventoId: $("#equipante-eventoid-filtro").val(),
+                        tipo: 0
+                    }),
+
+            }))
+        }
+
+        if ($("#bulk-equipe").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Equipe/AddMembroEquipe/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        EquipanteId: id,
+                        EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val(),
+                        EquipeId: $("#bulk-equipe").val()
+                    }),
+
+            }))
+        }
+    })
+
+    await Promise.all(arrPromises);
+    SuccessMesageOperation();
+    CarregarTabelaEquipante()
 }

@@ -68,14 +68,6 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-        public ActionResult Etiquetas()
-        {
-            ViewBag.Title = "Impressão de Etiquetas";
-            GetEventos();
-
-            return View();
-        }
-
         public ActionResult Index()
         {
             ViewBag.Title = "Participantes";

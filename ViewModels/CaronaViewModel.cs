@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Capacidade { get; set; }
+        public int CapacidadeInt { get; set; }
         public string Motorista { get; set; }
         public string Longitude { get; set; }
         public string Latitude { get; set; }

@@ -889,7 +889,7 @@ $(document).ready(function () {
 function Pagamentos(row) {
     realista = row;
     $("#pagamentos-whatsapp").val(row.Fone);
-    $("#pagamentos-valor").val($("#pagamentos-valor").data("valor"));
+    $("#pagamentos-valor").val($("#pagamentos-valor").data("valor-realista"));
     $("#pagamentos-origem").val('')
     $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
     $("#pagamentos-participanteid").val(row.Id);
@@ -903,21 +903,6 @@ $("#modal-pagamentos").on('hidden.bs.modal', function () {
         CarregarTabelaParticipante();
     }
 })
-
-function CarregarValorTaxa() {
-    optionSelected = $("#pagamentos-meiopagamento option:selected");
-    if ((optionSelected.text() == Transferencia) || (optionSelected.text() == Boleto))
-        $('.contabancaria').removeClass('d-none');
-    else
-        $('.contabancaria').addClass('d-none');
-    taxa = parseFloat(String(optionSelected.data("taxa")).replace(",", "."));
-    valor = parseFloat($("#pagamentos-valor").data("valor"));
-    if (taxa > 0)
-        $("#pagamentos-valor").val(valor + (valor * taxa / 100));
-    else
-        $("#pagamentos-valor").val(valor);
-
-}
 
 function DeletePagamento(id) {
     ConfirmMessageDelete().then((result) => {

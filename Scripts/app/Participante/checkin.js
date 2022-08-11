@@ -528,21 +528,6 @@ function DeletePagamento(id) {
     });
 }
 
-function CarregarValorTaxa() {
-    optionSelected = $("#pagamentos-meiopagamento option:selected");
-    if ((optionSelected.text() == Transferencia) || (optionSelected.text() == Boleto))
-        $('.contabancaria').removeClass('d-none');
-    else
-        $('.contabancaria').addClass('d-none');
-    taxa = parseFloat(String(optionSelected.data("taxa")).replace(",", "."));
-    valor = parseFloat($("#pagamentos-valor").data("valor"));
-    if (taxa > 0)
-        $("#pagamentos-valor").val(valor + (valor * taxa / 100));
-    else
-        $("#pagamentos-valor").val(valor);
-
-}
-
 function Pagamentos(id) {
     $('.contabancaria').addClass('d-none');
     $("#pagamentos-valor").val($("#pagamentos-valor").data($("#equipante-id").val() > 0 ? "valor-equipante" : "valor-realista"));

@@ -43,6 +43,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult loadLP(string action)
         {
+            ViewBag.Configuracao = configuracaoBusiness.GetLogin();
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             ViewBag.Title = action;
             ViewBag.Action = action;
@@ -50,7 +51,7 @@ namespace SysIgreja.Controllers
             {
                 Id = x.Id,
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
-                Valor = x.Valor,
+                Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                 Numeracao = x.Numeracao,
                 Descricao = x.Descricao,
                 Configuracao = configuracaoBusiness.GetConfiguracao(x.ConfiguracaoId)
@@ -123,6 +124,7 @@ namespace SysIgreja.Controllers
         public ActionResult InscricaoConcluida(int Id)
         {
             Participante participante = participantesBusiness.GetParticipanteById(Id);
+            var Valor = participante.Evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? participante.Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
             var config = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
             ViewBag.MsgConclusao = config.MsgConclusao
@@ -133,7 +135,7 @@ namespace SysIgreja.Controllers
          .Replace("${Evento}", participante.Evento.Configuracao.Titulo)
                   .Replace("${NumeracaoEvento}", participante.Evento.Numeracao.ToString())
                    .Replace("${DescricaoEvento}", participante.Evento.Descricao)
-         .Replace("${ValorEvento}", participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
+         .Replace("${ValorEvento}", Valor)
          .Replace("${DataEvento}", participante.Evento.DataEvento.ToString("dd/MM/yyyy"))
          .Replace("${FonePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "")
          .Replace("${NomePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? "");
@@ -159,13 +161,14 @@ namespace SysIgreja.Controllers
         {
             Participante participante = participantesBusiness.GetParticipanteById(Id);
             ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
+            var Valor = participante.Evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? participante.Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {
                 Id = participante.Id,
                 Apelido = participante.Apelido,
                 Logo = participante.Evento.Configuracao.Titulo + ".png",
                 Evento = $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.Configuracao.Titulo} {participante.Evento.Descricao}",
-                Valor = participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
+                Valor = Valor,
                 DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy")
             };
 

@@ -416,6 +416,7 @@ namespace SysIgreja.Controllers
             Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
             var eventoAtual = eventosBusiness.GetEventoById(EventoId);
             var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
+            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
             ViewBag.Configuracao = config;
             ViewBag.MsgConclusao = config.MsgConclusaoEquipe
                  .Replace("${Nome}", equipante.Nome)

@@ -589,7 +589,7 @@ function CarregarTabelaPagamentos(id) {
 
 function Pagamentos(row) {
     $("#pagamentos-whatsapp").val(row.Fone);
-    $("#pagamentos-valor").val($("#pagamentos-valor").data("valor"));
+    $("#pagamentos-valor").val($("#pagamentos-valor").data("valor-equipante"));
     $("#pagamentos-origem").val('')
     $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
     $("#pagamentos-equipanteid").val(row.Id);
@@ -852,21 +852,6 @@ function DeletePagamento(id) {
     });
 }
 
-function CarregarValorTaxa() {
-    optionSelected = $("#pagamentos-meiopagamento option:selected");
-    if ((optionSelected.text() == Transferencia) || (optionSelected.text() == Boleto))
-        $('.contabancaria').removeClass('d-none');
-    else
-        $('.contabancaria').addClass('d-none');
-    taxa = parseFloat(String(optionSelected.data("taxa")).replace(",", "."));
-    valor = parseFloat($("#pagamentos-valor").data("valor"));
-    if (taxa > 0)
-        $("#pagamentos-valor").val(valor + (valor * taxa / 100));
-    else
-        $("#pagamentos-valor").val(valor);
-
-}
-
 function PostPagamento() {
     if (ValidateForm(`#form-pagamento`)) {
         $.ajax({
@@ -895,6 +880,7 @@ function PostPagamento() {
 }
 
 $(document).ready(function () {
+    loadEquipes()
     checkEvento()
     CarregarTabelaEquipante();
 });

@@ -58,11 +58,15 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetResultadosAdmin(int EventoId)
         {
+            var evento = eventosBusiness.GetEventoById(EventoId);
 
             var result = new
             {
 
-                Evento = eventosBusiness.GetEventoById(EventoId).Status.GetDescription(),
+                Evento = evento.Status.GetDescription(),
+                EventoOferta = evento.EventoLotes.Any() && evento.EventoLotes.OrderByDescending(x => x.Valor).FirstOrDefault().Valor > evento.Valor ?
+                evento.EventoLotes.OrderByDescending(x => x.Valor).FirstOrDefault().Valor :
+                evento.Valor,
                 Confirmados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Confirmado).Count(),
                 Cancelados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Cancelado).Count(),
                 Espera = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Espera).Count(),

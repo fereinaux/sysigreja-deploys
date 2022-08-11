@@ -7,19 +7,21 @@ function initInputs() {
 
     $('.chosen-select').chosen({ width: "100%" });
 
-    $('.full-date').datepicker({
-        format: "dd/mm/yyyy",
-        language: "pt-BR",
-        autoclose: true
-    });
+    //$('.full-date').datepicker({
+    //    format: "dd/mm/yyyy",
+    //    language: "pt-BR",
+    //    autoclose: true
+    //});
 
-    $('.full-date-time').bootstrapMaterialDatePicker({ time: true, format: "DD/MM/YYYY HH:mm", shortTime: false, clearButton: false, nowButton: false })
+    $('.full-date').bootstrapMaterialDatePicker({ time: false, format: "DD/MM/YYYY", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br', })
 
-    $('.full-date').each((i) => {
-        IMask($('.full-date')[i], {
-            mask: '00/00/0000'
-        });
-    });
+    $('.full-date-time').bootstrapMaterialDatePicker({ time: true, format: "DD/MM/YYYY HH:mm", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br', })
+
+    //$('.full-date').each((i) => {
+    //    IMask($('.full-date')[i], {
+    //        mask: '00/00/0000'
+    //    });
+    //});
 
     $('.i-checks-green').iCheck({
         checkboxClass: 'icheckbox_square-green',

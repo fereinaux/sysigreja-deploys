@@ -10,12 +10,29 @@
             <select class="form-control" id="eventoid" onchange="GetResultadosAdmin()">
                 @foreach (var evento in ViewBag.Eventos)
                 {
-                    <option value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                    <option value="@evento.Id" data-valor="@evento.Valor" data-pendente="@evento.IsPendente" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                 }
             </select>
         </div>
         <div class="col-lg-6 col-xs-12 p-w-xs">
             <div class="row vertical-align">
+                <div class="col-xs-12 col-lg-12 p-w-xs evento-cobranca" style="display:none">
+                    <div class="widget-head-color-box navy-bg p-lg text-center" style="width:100%">
+                        <div class="m-b-md">
+                            <h2 class="font-bold no-margins">
+                                Avisos
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="widget-text-box" style="position:relative">
+                        <img src="~/Images/recibo.png" style="width:100%" />
+                        <span class="event-title" style="font-family: 'Roboto', sans-serif; color: #bd4242; font-style: normal; font-weight: 900; position: absolute; left: 87px; font-size: 40px; top: 193px;">Realidade 26 </span>
+                        <span class="event-value" style="font-family: 'Roboto', sans-serif; color: #bd4242; font-style: normal; font-weight: 900; position: absolute; left: 87px; font-size: 40px; top: 363px;">R$ 300,00</span>
+                        <button class="btn" onclick="ofertar()" style="background-color: #bd4242; color:white;position: absolute;right: 90px;bottom: 100px;border-radius: 50%;width: 100px;height: 100px;font-size: 20px;">
+                            Ofertar
+                        </button>
+                    </div>
+                </div>
                 <div class="pointer" style="width:100%;" onclick="window.location.href='@Url.Action("Index", "Participante")'">
                     <div class="col-xs-12 col-lg-4 p-w-xs">
                         <div class="width100 bloco widget blue-bg p-md text-center">
@@ -90,40 +107,40 @@
                 </div>
 
             </div>
-                <div class="row">
-                    <div class="pointer" id="resumo-financeiro-bloco" style="display:none" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
-                        <div class="col-xs-12 p-w-xs">
-                            <div class="widget-head-color-box navy-bg p-lg text-center">
-                                <div class="m-b-md">
-                                    <h2 class="font-bold no-margins">
-                                        Resumo Financeiro
-                                    </h2>
-                                </div>
+            <div class="row">
+                <div class="pointer" id="resumo-financeiro-bloco" style="display:none" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
+                    <div class="col-xs-12 p-w-xs">
+                        <div class="widget-head-color-box navy-bg p-lg text-center">
+                            <div class="m-b-md">
+                                <h2 class="font-bold no-margins">
+                                    Resumo Financeiro
+                                </h2>
                             </div>
-                            <div class="widget-text-box">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Forma de Pagamento</th>
-                                            <th>Receber</th>
-                                            <th>Pagar</th>
-                                            <th>Saldo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="resumo-financeiro"></tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th scope="row">Totais</th>
-                                            <th id="receberTotal"></th>
-                                            <th id="pagarTotal"></th>
-                                            <th id="saldoTotal"></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                        </div>
+                        <div class="widget-text-box">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Forma de Pagamento</th>
+                                        <th>Receber</th>
+                                        <th>Pagar</th>
+                                        <th>Saldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resumo-financeiro"></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th scope="row">Totais</th>
+                                        <th id="receberTotal"></th>
+                                        <th id="pagarTotal"></th>
+                                        <th id="saldoTotal"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
             <div class="row">
                 <div class="pointer" onclick="window.location.href='@Url.Action("Index", "Participante")'">
                     <div class="col-xs-12 p-w-xs">

@@ -338,3 +338,7 @@ td {
     border-radius: 50%;
     display: inline-block;
 }
+
+.dtp {
+    z-index: 2051 !important;
+}

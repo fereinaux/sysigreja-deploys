@@ -77,6 +77,7 @@ function PrintAll() {
 }
 
 function GetAnexos(id) {
+    console.log('a');
     const tableArquivoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],
@@ -97,7 +98,7 @@ function GetAnexos(id) {
                 data: "Id", name: "Id", orderable: false, width: "15%",
                 "render": function (data, type, row) {
                     return `${GetButton('GetArquivo', data, 'blue', 'fa-download', 'Download')}
-                            ${GetButton('DeleteArquivo', data, 'red', 'fa-trash', 'Excluir')}`;
+                            ${GetButton('DeleteArquivoEquipe', data, 'red', 'fa-trash', 'Excluir')}`;
                 }
             }
         ],
@@ -158,7 +159,7 @@ function Anexos(id) {
 }
 
 
-function DeleteArquivo(id) {
+function DeleteArquivoEquipe(id) {
     ConfirmMessageDelete().then((result) => {
         if (result) {
             $.ajax({
@@ -171,8 +172,8 @@ function DeleteArquivo(id) {
                         Id: id
                     }),
                 success: function () {
-                    SuccessMesageDelete();
                     GetAnexos();
+                    SuccessMesageDelete();
                 }
             });
         }

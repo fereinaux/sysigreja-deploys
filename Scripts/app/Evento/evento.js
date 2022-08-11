@@ -37,8 +37,9 @@ function CarregarTabelaEvento() {
 
                     return `${GetLabel('ToggleEventoStatus', data, color, row.Status)}
 ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
+                            ${GetButton('Lotes', data, 'green', 'far fa-calendar-check', 'Editar')}
                             ${GetAnexosButton('AnexosEvento', data, row.QtdAnexos)}
-                            ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}                            
+                            ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}
                             ${GetButton('DeleteEvento', data, 'red', 'fa-trash', 'Excluir')}`;
                 }
             }
@@ -87,9 +88,69 @@ function GetEvento(id) {
     }
 }
 
+function resetLote() {
+
+}
+
+function GetLotesEvento(id) {
+    eventoId = id;
+    const tableLotesConfig = {
+        language: languageConfig,
+        lengthMenu: [200, 500, 1000],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true,
+        destroy: true,
+        dom: domConfig,
+        buttons: getButtonsConfig('Eventos'),
+        columns: [
+            {
+                data: "DataLote", name: "DataLote", autoWidth: true,
+                "render": function (data, type, row) {
+                    return `${moment(data).format('DD/MM/YYYY')} `;
+                }
+            },
+            { data: "Valor", name: "Valor", autoWidth: true },
+            { data: "ValorTaxa", name: "ValorTaxa", autoWidth: true },
+            {
+                data: "Id", name: "Id", orderable: false, width: "30%",
+                "render": function (data, type, row) {
+                    return `
+                            ${GetButton('DeleteLote', data, 'red', 'fa-trash', 'Excluir')}`;
+                }
+            }
+        ],
+        order: [
+            [2, "desc"]
+        ],
+        ajax: {
+            url: '/Evento/GetLotesEvento',
+            data: { Id: eventoId },
+            datatype: "json",
+            type: "POST"
+        }
+    };
+
+    $("#table-lotes").DataTable(tableLotesConfig);
+    $("#lote-data").val("");
+    $("#lote-valor").val("");
+    $("#lote-taxa").val("");
+}
+
+
 function EditEvento(id) {
     GetEvento(id);
     $("#modal-eventos").modal();
+}
+
+function Lotes(id) {
+    GetLotesEvento(id);
+    $("#modal-lotes").modal();
 }
 
 function ToggleEventoStatus(id) {
@@ -381,4 +442,50 @@ function DeleteUsuario(row) {
         }
     })
 
+}
+
+
+function DeleteLote(id) {
+    ConfirmMessageDelete().then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Evento/DeleteLote/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: id
+                    }),
+                success: function (data) {
+                    SuccessMesageOperation()
+                    GetLotesEvento(eventoId)
+                }
+            });
+        }
+    })
+
+}
+
+
+function PostLote() {
+    if (ValidateForm(`#form-lote`)) {
+        $.ajax({
+            url: "/Evento/CreateLote/",
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                {
+                    EventoId: eventoId,
+                    Valor: $("#lote-valor").val(),
+                    ValorTaxa: $("#lote-taxa").val(),
+                    DataLote: moment($("#lote-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON()
+                }),
+            success: function () {
+                SuccessMesageOperation();
+                GetLotesEvento(eventoId);
+            }
+        });
+    }
 }

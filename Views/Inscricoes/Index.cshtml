@@ -158,14 +158,14 @@
 <script>
     $(document).ready(() => {
         if (isMobile) {
-            @if (ViewBag.Login.BackgroundCelularId != null)
+            @if (ViewBag.Configuracao.BackgroundCelularId != null)
             {
                 <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Login.BackgroundCelular) no-repeat center center fixed`) </text>
                 <text> $('.background-inscricoes').css('background-size', 'cover')</text>
             }
         } else {
 
-            @if (ViewBag.Login.BackgroundId != null)
+            @if (ViewBag.Configuracao.BackgroundId != null)
             {
                 <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Login.Background) no-repeat center center fixed`) </text>
                 <text> $('.background-inscricoes').css('background-size', 'cover')</text>

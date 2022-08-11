@@ -126,7 +126,7 @@ function GetResultadosAdmin() {
                                                             `
 
                         $('#tb-detalhamento-equipes').html(htmlDetalhamento);
-                        $('.detalhamento-mobile-container').html(htmlDetalhamentoMobile);                     
+                        $('.detalhamento-mobile-container').html(htmlDetalhamentoMobile);
                     }
                 })
             } else
@@ -230,6 +230,28 @@ function GetResultadosAdmin() {
                 $('#resumo-financeiro-bloco').css('display', 'block')
             }
             $('#tb-reunioes').html(htmlReunioes);
+
+            if ($('#eventoid option:selected').data('pendente') == "True") {
+                $('.event-title').text($('#eventoid option:selected').text())
+                $('.event-value').text(`R$ ${result.EventoOferta.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
+                $('.evento-cobranca').css('display', 'block')
+            } else {
+                $('.evento-cobranca').css('display', 'none')
+            }
+        }
+    });
+}
+
+function ofertar() {
+    $.ajax({
+        url: "/Evento/OfertaEvento/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            { Id: $("#eventoid").val() }),
+        success: (data) => {
+            window.location.reload()
         }
     });
 }

@@ -22,8 +22,12 @@
     <link rel="manifest" href="~/manifest.json" />
     <title></title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/av01d/fontpicker-jquery-plugin@1.5/dist/jquery.fontpicker.min.css" integrity="sha256-urFh3EMgi9s3j3w+TsAP1TfUQiE0yUZmmLX7JRyvjqE=" crossorigin="anonymous">
     <!-- Add local styles, mostly for plugins css file -->
     @if (IsSectionDefined("Styles"))
@@ -128,8 +132,11 @@
     <script src="https://unpkg.com/@("@")popperjs/core@("@")2"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 
+
     <script>
         const { jsPDF } = window.jspdf;
+        let globalEventoId
+        let globalConfigId
         var config = {}
         var campos = []
         let isAdm = @User.IsInRole(Usuario.Admin).ToString().ToLower();
@@ -140,11 +147,27 @@
 
         $("*[id*='eventoid']").change(function () {
             getConfig(this.value)
+            if (this.value != 999) {
+                localStorage.setItem('eventoId', this.value)
+            }
 
+        })
+
+        $("*[id*='configId']").change(function () {
+            console.log(this.value);
+            localStorage.setItem('configId', this.value)
         })
 
         $(document).ready(function () {
             loadAvatar()
+            globalEventoId = localStorage.getItem('eventoId')
+            globalConfigId = localStorage.getItem('configId')
+            if (globalConfigId != null) {
+                $("*[id*='configId']").val(globalConfigId)
+            }
+            if (globalEventoId != 999 && globalEventoId != null) {
+                $("*[id*='eventoid']").val(globalEventoId)
+            }
             if ($("*[id*='eventoid']").val()) {
 
                 getConfig($("*[id*='eventoid']").val())
@@ -160,6 +183,29 @@
         function getConfig(id) {
             if (id != 999) {
 
+                
+                $.ajax({
+                    url: "/Evento/GetValorEvento/",
+                    data: { Id: id },
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $('#pagamentos-valor').data('valor-realista',data)
+                    }
+                })
+
+                $.ajax({
+                    url: "/Evento/GetTaxaEvento/",
+                    data: { Id: id },
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $('#pagamentos-valor').data('valor-equipante', data)
+                    }
+                })
+
                 $.ajax({
                     url: "/Configuracao/GetConfiguracaoByEventoId/",
                     data: { Id: id },
@@ -168,6 +214,7 @@
                     contentType: 'application/json; charset=utf-8',
                     success: function (data) {
                         config = data.Configuracao
+                        globalConfigId = config.Id
                         $('title').text(`${config.Titulo} | ${$('#title').text()}`)
 
                         $('.title-circulo').text(config.EquipeCirculo)

@@ -6,7 +6,7 @@ function PrintFinanceiro() {
         title: "Relatório Financeiro",
         icon: "info",
         text: "Escolha os centros de custo presentes no relatório",
-        content: div,
+        content: div2,
         className: "button-center",
         dangerMode: true,
         buttons: {
@@ -303,7 +303,7 @@ function SetHeight(height, doc) {
     return height;
 }
 
-let div = document.createElement("div");
+let div2 = document.createElement("div");
 
 $(document).ready(function () {
     getCentroCustoRel()
@@ -325,7 +325,7 @@ function getCentroCustoRel() {
         type: "POST",
         success: (result) => {
             selected = false
-            div.innerHTML = `
+            div2.innerHTML = `
 <div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
 <label style="display:block"> <input id="select-all" type="checkbox" onChange="selectAll()" value="all"> Selecionar Todos <i></i></label>
 </div>

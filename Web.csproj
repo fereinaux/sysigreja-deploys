@@ -1013,6 +1013,7 @@
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff" />
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.woff2" />
     <Content Include="Images\mapa\marker.psd" />
+    <Content Include="Images\recibo.png" />
     <Content Include="manifest.json" />
     <None Include="packages.config" />
     <Content Include="Content\landing\avatar_all.png" />

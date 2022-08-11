@@ -28,7 +28,7 @@ namespace SysIgreja.Controllers
         private readonly IArquivosBusiness arquivosBusiness;
         private readonly IMapper mapper;
 
-        public EventoController(IEventosBusiness eventosBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness,IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EventoController(IEventosBusiness eventosBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.eventosBusiness = eventosBusiness;
             this.arquivosBusiness = arquivosBusiness;
@@ -99,6 +99,40 @@ namespace SysIgreja.Controllers
             return Json(new { Evento = mapper.Map<PostEventoModel>(result) }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public int GetValorEvento(int Id)
+        {
+            var eventoAtual = eventosBusiness.GetEventoById(Id);
+            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : eventoAtual.Valor;
+            return Valor;
+        }
+
+        [HttpGet]
+        public int GetTaxaEvento(int Id)
+        {
+            var eventoAtual = eventosBusiness.GetEventoById(Id);
+            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : eventoAtual.ValorTaxa;
+            return Valor;
+        }
+
+
+        [HttpPost]
+        public ActionResult GetLotesEvento(int Id)
+        {
+            var result = eventosBusiness.GetEventoById(Id);
+
+            var lotes = result.EventoLotes.Select(x => new LoteModel
+            {
+                Id = x.Id,
+                DataLote = x.DataLote,
+                EventoId = x.EventoId.Value,
+                Valor = x.Valor,
+                ValorTaxa = x.ValorTaxa
+            }).ToList();
+
+            return Json(new { data = lotes }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult ToggleEventoStatus(int Id)
         {
@@ -120,9 +154,33 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
+        public ActionResult CreateLote(LoteModel model)
+        {
+            eventosBusiness.CreateLote(model);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
         public ActionResult DeleteEvento(int Id)
         {
             eventosBusiness.DeleteEvento(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult OfertaEvento(int Id)
+        {
+            eventosBusiness.OfertaEvento(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteLote(int Id)
+        {
+            eventosBusiness.DeleteLote(Id);
 
             return new HttpStatusCodeResult(200);
         }

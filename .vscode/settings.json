@@ -79,6 +79,22 @@
       "database": "ejc",
       "username": "ejcuser",
       "password": "Reinaux0)"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "sozo.iecbeventos.com.br",
+      "port": 1431,
+      "driver": "MSSQL",
+      "name": "Sozo",
+      "group": "IECB",
+      "database": "sozo",
+      "username": "sozo",
+      "password": "Reinaux0)"
     }
   ]
 }

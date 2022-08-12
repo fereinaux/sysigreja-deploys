@@ -111,6 +111,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Equipe()
         {
+            ViewBag.Configuracao = configuracaoBusiness.GetLogin();
             return loadLP("Inscrições Equipe");
         }
         private bool CapacidadeUltrapassada(Evento evento, StatusEnum[] arrStatus)

@@ -12,6 +12,8 @@ namespace SysIgreja.ViewModels
         public string Sexo { get; set; }
         public string Email { get; set; }
         public string Fone { get; set; }
+        [DisplayName("Tamanho da Camisa")]
+        public string Camisa { get; set; }
         public string CEP { get; set; }
         public string Logradouro { get; set; }
         public string Bairro { get; set; }

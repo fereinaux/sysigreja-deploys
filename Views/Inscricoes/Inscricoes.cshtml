@@ -64,7 +64,7 @@
                                 <input type="text" class="form-control fone" id="participante-fone" data-field="Fone do participante" />
                             </div>
                         }
-                                 @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
+                        @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
                             <div class="form-group">
                                 <label for="participante-conjuge" class="text-white">Cônjuge</label>
@@ -76,6 +76,20 @@
                             <div class="form-group">
                                 <label for="participante-instagram" class="text-white">Instagram do participante</label>
                                 <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do Participante" />
+                            </div>
+                        }
+                        @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))
+                        {
+                            <div class="form-group">
+                                <label for="participante-fone" class="text-white">Tamanho da Camisa</label>
+                                <select class="form-control" id="participante-camisa">
+                                    <option value="PP">PP</option>
+                                    <option value="P">P</option>
+                                    <option value="M">M</option>
+                                    <option value="G">G</option>
+                                    <option value="GG">GG</option>
+                                    <option value="XGG">XGG</option>
+                                </select>
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Endereco.GetDescription()))

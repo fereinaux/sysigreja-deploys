@@ -90,6 +90,7 @@ namespace SysIgreja.Controllers
                 DataNascimento = x.DataNascimento,
                 Email = x.Email,
                 EventoId = x.EventoId,
+                Camisa = x.Camisa,
                 Fone = x.Fone,
                 FoneConvite = x.FoneConvite,
                 FoneContato = x.FoneContato,

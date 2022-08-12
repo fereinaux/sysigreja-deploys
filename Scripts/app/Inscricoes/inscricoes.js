@@ -146,6 +146,7 @@ function PostInscricao() {
                         Email: $(`#participante-email`).val(),
                         Fone: $(`#participante-fone`).val(),
                         Instagram: $(`#participante-instagram`).val(),
+                        Camisa: $(`#participante-camisa`).val(),
                         Profissao: $(`#participante-profissao`).val(),
                         CEP: $(`#participante-cep`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),

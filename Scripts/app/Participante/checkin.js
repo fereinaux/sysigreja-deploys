@@ -69,6 +69,7 @@ function PostParticipante() {
                         Conjuge: $(`#participante-conjuge`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),
                         Bairro: $(`#participante-bairro`).val(),
+                        Camisa: $(`#participante-camisa`).val(),
                         Cidade: $(`#participante-cidade`).val(),
                         Estado: $(`#participante-estado`).val(),
                         Numero: $(`#participante-numero`).val(),
@@ -177,6 +178,7 @@ function GetParticipante() {
                 $("#equipante-id").val(0);
                 $("#participante-id").val(data.Participante.Id);
                 $("#participante-checkin").val(data.Participante.Checkin);
+                $(`#participante-camisa`).val(data.Participante.Camisa);
                 $(`#participante-nome`).val(data.Participante.Nome);
                 $(`#participante-apelido`).val(data.Participante.Apelido);
                 $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
@@ -899,6 +901,19 @@ ${campos.find(x => x.Campo == 'Fone') ? ` <div class="col-sm-6 p-w-md m-t-md tex
                             <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
                         </div>` : ''}
 
+
+                ${campos.find(x => x.Campo == 'Camisa') ? `        <div class="col-sm-6 p-w-md m-t-md text-center">
+                            <h5>Tamanho da Camisa</h5>
+
+                            <select class="form-control" id="participante-camisa">
+                                <option value="PP">PP</option>
+                                <option value="P">P</option>
+                                <option value="M">M</option>
+                                <option value="G">G</option>
+                                <option value="GG">GG</option>
+                                <option value="XGG">XGG</option>
+                            </select>
+                        </div>` : ''}
 ${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-6 p-w-md m-t-md text-center">
                                 <h5>Cônjuge</h5>
 

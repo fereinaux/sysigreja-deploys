@@ -160,14 +160,14 @@
         if (isMobile) {
             @if (ViewBag.Configuracao.BackgroundCelularId != null)
             {
-                <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Login.BackgroundCelular) no-repeat center center fixed`) </text>
+                <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.BackgroundCelular) no-repeat center center fixed`) </text>
                 <text> $('.background-inscricoes').css('background-size', 'cover')</text>
             }
         } else {
 
             @if (ViewBag.Configuracao.BackgroundId != null)
             {
-                <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Login.Background) no-repeat center center fixed`) </text>
+                <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`) </text>
                 <text> $('.background-inscricoes').css('background-size', 'cover')</text>
             }
         }

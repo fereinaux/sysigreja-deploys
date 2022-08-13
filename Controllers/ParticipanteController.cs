@@ -125,14 +125,6 @@ namespace SysIgreja.Controllers
                 Sexo = x.Sexo,
                 Status = x.Status.GetDescription(),
                 Observacao = x.Observacao,
-                MsgVacina = x.MsgVacina,
-                MsgPagamento = x.MsgPagamento,
-                Boleto = x.Boleto,
-                MsgGeral = x.MsgGeral,
-                MsgNoitita = x.MsgNoitita,
-                MsgFoto = x.MsgFoto,
-                PendenciaBoleto = x.PendenciaBoleto,
-                PendenciaContato = x.PendenciaContato,
                 Etiquetas = etiquetasBusiness.GetEtiquetasByParticipante(x.Id)?.Select(y => new PostEtiquetaModel { Id = y.Id, Cor = y.Cor, Nome = y.Nome }),
                 Foto = x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
             };
@@ -488,74 +480,6 @@ namespace SysIgreja.Controllers
             json.MaxJsonLength = Int32.MaxValue;
             return json;
 
-        }
-
-        [HttpPost]
-        public ActionResult GetBoletos(int EventoId)
-        {
-            var list = participantesBusiness
-                .GetParticipantesByEvento(EventoId)
-                .Where(x => x.Boleto)
-                .ToList();
-
-            var result = list
-           .Select(x => new ParticipanteViewModel
-           {
-               Id = x.Id,
-               Nome = UtilServices.CapitalizarNome(x.Nome),
-               Sexo = x.Sexo.GetDescription(),
-               Fone = x.Fone,
-               Status = x.Status.GetDescription(),
-               Idade = UtilServices.GetAge(x.DataNascimento),
-               PendenciaBoleto = x.PendenciaBoleto,
-               DataCadastro = x.DataCadastro.Value.ToString("dd/MM/yyyy hh:mm")
-           }); ;
-
-            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult ToggleBoleto(int ParticipanteId)
-        {
-            participantesBusiness.TogglePendenciaBoleto(ParticipanteId);
-
-            return new HttpStatusCodeResult(200);
-        }
-
-        [HttpPost]
-        public ActionResult ToggleContato(int ParticipanteId)
-        {
-            participantesBusiness.TogglePendenciaContato(ParticipanteId);
-
-            return new HttpStatusCodeResult(200);
-        }
-
-        [HttpPost]
-        public ActionResult GetListaTelefonica(int EventoId)
-        {
-            var result = participantesBusiness
-                .GetParticipantesByEvento(EventoId)
-                .Where(x => x.Status != StatusEnum.Cancelado)
-                .ToList()
-                .Select(x => new
-                {
-                    Id = x.Id,
-                    Nome = UtilServices.CapitalizarNome(x.Nome),
-                    Status = x.Status.GetDescription(),
-                    Evento = $"{x.Evento.Numeracao.ToString()}º {x.Evento.Configuracao.Titulo} {x.Evento.Descricao}",
-                    Sexo = x.Sexo.GetDescription(),
-                    Fone = x.Fone,
-                    x.NomeMae,
-                    x.FoneMae,
-                    x.NomePai,
-                    x.FonePai,
-                    x.NomeConvite,
-                    x.FoneConvite,
-                    PendenciaContato = x.PendenciaContato,
-                    Padrinho = x.Padrinho?.EquipanteEvento.Equipante.Nome
-                }); ;
-
-            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

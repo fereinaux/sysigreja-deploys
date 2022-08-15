@@ -156,11 +156,11 @@ namespace SysIgreja.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
             var oldPassword = user.Senha;
-            user.Senha = senha;
+            user.Senha = senha.ToLower();
             user.HasChangedPassword = true;
 
             UserManager.Update(user);
-            UserManager.ChangePassword(User.Identity.GetUserId(), oldPassword, senha);
+            UserManager.ChangePassword(User.Identity.GetUserId(), oldPassword, senha.ToLower());
             return new HttpStatusCodeResult(200);
         }
 

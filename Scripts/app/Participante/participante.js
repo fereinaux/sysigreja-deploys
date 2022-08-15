@@ -144,26 +144,13 @@ ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt',
                         }
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconWhatsApp(row.Fone)}
-                            ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}      
-                         
-                            ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
-                            
-                            ${$("#participante-eventoid option:selected").data('status') == 'Encerrado' ? `<a target="_blank" href='${GetLinkWhatsApp(row.Fone, `Olá *${row.Nome}*,
-
-Você gostaria de trabalhar no próximo Realidade de 25 a 27 de Março nossa primeira reunião será na quarta feira (16/02) às 19h30 na *Catedral da Trindade*.
-
-Esse convite é pessoal e *intransferível*.
-
-Carol Bastos.`)}' style="font-size:18px; color:#23c6c8; " class="pointer p-l-xs"><i class="fas fa-envelope" aria-hidden="true" title="${row.Fone}"></i></a>
-${GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante')}
-` : ''}
-
+                            ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}                               
+                            ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}                            
+                            ${$("#participante-eventoid option:selected").data('status') == 'Encerrado' ? GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante') : ""}
                             ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
                         : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
 ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'red', 'Deletar Inscrição') : ''}` : ''}`
-
-
                 }
             }
         ],
@@ -658,128 +645,6 @@ function enviar() {
 
 }
 
-//function enviar() {
-//    var text = ''
-//    switch (tipoGlobal) {
-//        case 'covid':
-//            text = `Olá, *${getNome(destinatarioGlobal)}*!
-
-//Estou vendo aqui que a inscrição de *${getNome('realista')}* para o *Realidade* já foi paga e sua vaga está garantida, sendo assim, tenho uns avisos:
-
-//Tendo em vista a situação do novo Coronavírus e os decretos do governo do estado, a realização e apresentação do resultado do RT-PCR ou Teste Rápido é OPCIONAL , mas ainda fica obrigatório a apresentação do Cartão de Vacinação do participante com pelo menos 2 doses da vacina.
-
-//- Caso vá realizar o exeme, a realização do RT-PCR deverá ser feita em até 48h antes do dia do evento (a partir do dia 23/03). Já o Teste Rápido deverá ser realizado em até 24h antes do dia do evento (a partir do dia 24/03). O resultado deve ser NEGATIVO e apresentado no dia do evento ou enviado previamente.
-
-//- Caso o resultado do participante dê *POSITIVO*, o valor do evento será reembolsado.
-
-//${RodapeEvento($("#participante-eventoid option:selected").text())}`
-//            break;
-//        case 'pagamento':
-//            text = `Olá, *${getNome(destinatarioGlobal)}*!
-
-//Estamos com a inscrição de *${getNome('realista')}* para o Realidade, cursilho para jovens da IECB Catedral da Trindade. Porém, para confirmá-la é preciso efetuar o pagamento.
-
-//Como ainda estamos em pandemia, precisamos tomar um cuidado extra e por isso teremos *apenas 100 vagas*;
-
-//O investimento está custando *R$ 300,00*, e poderá ser feito através do PIX (celular): 81996557814, cartão ou dinheiro. *A secretaria estará na frente da livraria após os cultos das quartas e domingos para recebê-lo(a).*
-
-//No caso do PIX, lembra de enviar o comprovante de pagamento para mim! 
-
-//*Corre para garantir tua vaga!*  🥳
-
-//${RodapeEvento($("#participante-eventoid option:selected").text())}`
-//            break;
-//        case 'info':
-//            text = `Olá, *${getNome(destinatarioGlobal)}*!
-
-//Seguem AVISOS IMPORTANTES sobre o Realidade:
-
-//PAIS, LEIAM COM ATENÇÃO
-
-//• O Realidade começará as 19h da sexta-feira dia 25 e se encerrará às 18h do dia 27 de março. 🥳
-
-//• Onde será:📍
-//Colonial Aldeia, Km 11,5
-//R. Sete de Setembro - Aldeia dos Camarás
-//https://goo.gl/maps/ZYcmct2f4jrMa1bw9
-
-//• Na mala, coloque máscaras suficientes para troca durante o dia, pois o uso será obrigatório durante todo o evento. 😷
-
-//• Levar roupa de cama e banho, produtos de higiene pessoal 🧼 e medicações, caso o adolescente faça uso.💊
-
-//• O nosso plenário é bem frio então sugerimos levar casaco. 🧥
-
-//• Os quartos serão divididos com outras 5 pessoas, respeitando o distanciamento durante as dormidas.
-
-//⚠️⚠️⚠️
-//* Vocês precisarão providenciar mensagens, escritas ou impressas, de amigos próximos e da família*
-
-//Estaremos recebendo as mensagens no sábado do evento das 8h30 até as 12h30 na Catedral da Trindade, Rua Carneiro Vilela 569.
-
-//VOCÊ JÁ FEZ CURSILHO OU REALIDADE?
-//Se sim, me confirme por mensagem!!
-
-//${RodapeEvento($("#participante-eventoid option:selected").text())}`
-//            break;
-//        case 'carta':
-//            text = `Ficamos felizes por você ter participado de um dos nossos Cursilhos e temos um convite a lhe fazer! 😍
-
-//Temos um momento no Realidade que se parece muito com a Mañanitas, é a nossa Noitita que acontece no sábado à noite, a partir das 17h.
-
-//Então você e outras pessoas próximas do/da realista que já participaram de algum Cursilho/Realidade são muito bem-vindos.
-
-//É um momento muito especial onde demonstramos a importância de ser parte do corpo de Cristo para eles!
-
-//Lembramos que esse não é um momento entre família e filhos e sim um momento de CURSILHISTAS com os REALISTAS
-
-//Para participar da nossa Noitita, pedimos que siga algumas orientações:
-
-//- Use máscara  durante todo o momento e respeite o distanciamento orientado pela nossa equipe.
-
-//- Caso você esteja com sintomas de gripe, pedimos que não compareça, para sua segurança e a nossa.
-//(teremos mais de 200 adolescente entre participantes e equipe de trabalho na bolha do Realidade.)
-
-//Pode ficar tranquilo  que seu realista vai receber todo o amor e cuidado que o momento sugere.
-
-
-//Te esperamos lá! 🥰
-//*Equipe da Secretaria | ${$("#participante-eventoid option:selected").text()}*`
-//            break;
-//        case 'foto':
-//            text = `Oi, *${getNome('realista')}*! Como estão as expectativas para o Realidade? Espero que boas! 🥳
-
-//Somos da secretaria do Realidade e devido a pandemia e ao uso obrigatório da máscara no evento, vamos precisar de uma foto sua para o seu crachá de identificação.
-
-//Orientações:
-
-//1. Foto estilo retrato
-//2. Formato vertical
-//3. Sem óculos de sol ou máscara
-
-//Escolhe e me manda o mais rápido possível.
-
-//${RodapeEvento($("#participante-eventoid option:selected").text())}`
-//            break;
-//        default:
-//            break;
-//    }
-
-//    window.open(GetLinkWhatsApp(getTelefone(tipoGlobal == 'foto' ? 'realista' : destinatarioGlobal), text), '_blank').focus();
-
-//}
-
-
-
-
-function select1(tipo) {
-    $('.covid').removeClass('moldura-modal')
-    $('.pagamento').removeClass('moldura-modal')
-    $('.carta').removeClass('moldura-modal')
-    $('.info').removeClass('moldura-modal')
-    tipoGlobal = tipo
-    $(`.${tipo}`).addClass('moldura-modal')
-}
-
 function select2(destinatario) {
     $('.realista').removeClass('moldura-modal')
     $('.mae').removeClass('moldura-modal')
@@ -837,9 +702,6 @@ function getTelefone(destinatario) {
             break;
     }
 }
-
-
-
 
 function CarregarTabelaPagamentos(id) {
     const tablePagamentosConfig = {
@@ -1065,7 +927,6 @@ function Opcoes(row) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             realista = data.Participante
-            select1(realista.Status == 'Inscrito' ? 'pagamento' : 'covid')
             $('.maetext').text(realista.NomeMae)
             $('.realista-nome').text(realista.Nome)
             $('.paitext').text(realista.NomePai)
@@ -1077,11 +938,7 @@ function Opcoes(row) {
             }
 
             $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
-            console.log($('#participante-etiquetas').val());
             $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
-            if (realista.Status == "Confirmado") {
-                $('.pagamento').hide()
-            }
 
             arrayData = table.data().toArray()
             let index = arrayData.findIndex(r => r.Id == row.Id)
@@ -1089,7 +946,6 @@ function Opcoes(row) {
             $('#btn-previous').css('display', 'block')
             $('#btn-next').css('display', 'block')
             if (index == 0) {
-
                 $('#btn-previous').css('display', 'none')
             }
 
@@ -1413,6 +1269,10 @@ function loadCampos(id) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             campos = data.Campos
+            $('.contato-convite').css('display', campos.find(x => x.Campo == "Dados do Convite") ? 'block' : 'none')
+            $('.contato-pai').css('display', campos.find(x => x.Campo == "Dados do Pai") ? 'block' : 'none')
+            $('.contato-contato').css('display', campos.find(x => x.Campo == "Dados do Contato") ? 'block' : 'none')
+            $('.contato-mae').css('display', campos.find(x => x.Campo == "Dados da Mãe") ? 'block' : 'none')
             $('.campos-cadastro').html(`
           <input type="hidden" id="participante-id" />
 ${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">

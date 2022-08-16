@@ -1,6 +1,6 @@
 ﻿$(document).ready(() => {
    
-
+    $('#eventoid').val($('#eventoid option:first').val())
     CarregarTela()
 });
 

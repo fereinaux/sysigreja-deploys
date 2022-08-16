@@ -160,13 +160,15 @@
 
         $(document).ready(function () {
             loadAvatar()
-            globalEventoId = localStorage.getItem('eventoId')
-            globalConfigId = localStorage.getItem('configId')
-            if (globalConfigId != null) {
-                $("*[id*='configId']").val(globalConfigId)
-            }
-            if (globalEventoId != 999 && globalEventoId != null) {
-                $("*[id*='eventoid']").val(globalEventoId)
+            if (!window.location.href.includes('Coordenador')) {
+                globalEventoId = localStorage.getItem('eventoId')
+                globalConfigId = localStorage.getItem('configId')
+                if (globalConfigId != null) {
+                    $("*[id*='configId']").val(globalConfigId)
+                }
+                if (globalEventoId != 999 && globalEventoId != null) {
+                    $("*[id*='eventoid']").val(globalEventoId)
+                }
             }
             if ($("*[id*='eventoid']").val()) {
 
@@ -183,7 +185,7 @@
         function getConfig(id) {
             if (id != 999) {
 
-                
+
                 $.ajax({
                     url: "/Evento/GetValorEvento/",
                     data: { Id: id },

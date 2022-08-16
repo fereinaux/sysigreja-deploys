@@ -453,7 +453,6 @@ function PrintAll() {
             var arrPromises = []
             data.data.forEach(carona => {
                 if (carona.Quantidade > 0) {
-                    console.log(carona.Id);
                     arrPromises.push($.ajax({
                         url: '/Carona/GetParticipantesByCarona',
                         data: { CaronaId: carona.Id },

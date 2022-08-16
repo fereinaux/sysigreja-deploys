@@ -338,7 +338,6 @@ function PrintAll() {
             var arrPromises = []
             data.data.forEach(padrinho => {
                 if (padrinho.Quantidade > 0) {
-                    console.log(padrinho.Id);
                     arrPromises.push($.ajax({
                         url: '/Padrinho/GetParticipantesByPadrinhos',
                         data: { PadrinhoId: padrinho.Id },

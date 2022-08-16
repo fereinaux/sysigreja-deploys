@@ -438,9 +438,7 @@ function PostTeste(id, realista) {
     dataToPost.set($("#pagamentos-participanteid").val() > 0 ? 'ParticipanteId' : 'EquipanteId', $("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : $("#pagamentos-equipanteid").val())
     var filename = dataToPost.get(`input-teste`).name
     var arquivo = new File([dataToPost.get(`input-teste`)], 'Teste COVID ' + realista.Nome + filename.substr(filename.indexOf('.')));
-    console.log(dataToPost.get(`input-teste`))
     dataToPost.set('Arquivo', arquivo)
-    console.log(arquivo)
     dataToPost.set('EventoId', $("#eventoid").val())
     $.ajax(
         {

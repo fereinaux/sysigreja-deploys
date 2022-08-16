@@ -18,7 +18,6 @@
             doc.line(10, 45, 195, 45); 
             doc.setFont('helvetica',"normal")
             height = 50;
-            console.log(result.data);
             $(result.data).each((index, participante) => {
                 doc.text(12, height, participante.Nome);
                 doc.text(112, height, participante.Circulo != null ? participante.Circulo : "");

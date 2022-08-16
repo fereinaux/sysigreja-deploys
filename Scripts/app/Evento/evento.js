@@ -347,7 +347,7 @@ function GetUsuarios(id) {
                     return row.Perfil.find(x => {
 
                         if (x.Eventos) {
-                            return x.Eventos.find(y => y.EventoId = id)
+                            return x.Eventos.find(y => y.EventoId == id)
                         }
 
                     }).Eventos[0].Role
@@ -432,7 +432,13 @@ function DeleteUsuario(row) {
                     {
                         EquipanteId: row.EquipanteId,
                         EventoId: eventoId,
-                        Perfil: row.Perfil,
+                        Perfil: row.Perfil.find(x => {
+
+                            if (x.Eventos) {
+                                return x.Eventos.find(y => y.EventoId == eventoId)
+                            }
+
+                        }).Eventos[0].Role,
                     }),
                 success: function (data) {
                     SuccessMesageOperation()

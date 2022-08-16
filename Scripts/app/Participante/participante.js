@@ -98,7 +98,6 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
             },
             {
                 data: "Nome", name: "Nome", width: "25%", render: function (data, type, row) {
-                    console.log(row);
                     return `<div>
 ${row.Circulo ? (row.Circulo.match(/\p{Emoji}+/gu) ? row.Circulo.match(/\p{Emoji}+/gu) : `<span style="background-color:${GetCor(row.Circulo)}" class="dot"></span>`) : ""}
                         <span>${row.Nome}</br></span>

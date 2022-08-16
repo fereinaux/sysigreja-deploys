@@ -77,7 +77,6 @@ function PrintAll() {
 }
 
 function GetAnexos(id) {
-    console.log('a');
     const tableArquivoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],
@@ -135,7 +134,6 @@ function PostArquivoEquipe() {
     dataToPost.set('Arquivo', dataToPost.get('arquivo-modal'))
     dataToPost.set('EquipeId', dataToPost.get('Equipe'))
     dataToPost.set('ConfiguracaoId', config.Id)
-    console.log(config);
     $.ajax(
         {
             processData: false,
@@ -339,7 +337,6 @@ function AddMembroEquipe() {
 }
 
 function ToggleMembroEquipeTipo(row) {
-    console.log(row);
     if (Membro == row.Tipo) {
         var windowReference = window.open('_blank');
 

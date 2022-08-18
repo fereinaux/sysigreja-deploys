@@ -131,6 +131,7 @@
         }
 
         .card-destaque {
+            height:410px !important;
             flex: 1;
             padding: 40px 24px;
             -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
@@ -147,7 +148,8 @@
         }
 
         .button-destaque {
-            margin-top: 200px;
+            position: absolute;
+            bottom: 40px;
             border: 1px solid #aa2428;
             color: #aa2428;
         }
@@ -160,7 +162,7 @@
         @@media (max-width: 768px) {
 
             .button-destaque {
-                margin-top: 20px;
+               position:relative;
                width: 100%;
             }
 
@@ -256,7 +258,6 @@
                             @(ViewBag.Destaque.Numeracao)º @ViewBag.Destaque.Configuracao.Titulo
 
                         </h3>
-                        <span style="display:block">@ViewBag.Destaque.Descricao</span>
                         <p style="display: block; color: #686464;">@string.Format("{0:C}", ViewBag.Destaque.Valor)</p>
                         <span href='@ViewBag.Destaque.UrlDestino' class="button-destaque btn btn-outline">INSCREVA-SE</span>
                     </div>
@@ -286,7 +287,6 @@
                                 @(evento.Numeracao)º @evento.Configuracao.Titulo
 
                             </h3>
-                            <span style="display:block">@evento.Descricao</span>
                             <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.Valor)</p>
                         </div>
                     </a>

@@ -85,6 +85,7 @@ namespace SysIgreja.Controllers
             else if (eventos.Count == 1)
                 return RedirectToAction("Inscricoes", new { Id = eventos.FirstOrDefault().Id, Tipo = action });
             ViewBag.Eventos = eventos.OrderBy(x => x.DataEvento);
+            ViewBag.Destaque = eventos.OrderBy(x => x.DataEvento).First();
             return View("Index");
         }
 

@@ -21,35 +21,29 @@
     <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
 
-        @@media (max-width: 768px) {
-
-            ::-webkit-scrollbar-thumb {
-                background: rgba(0, 0, 0, 0);
-            }
-
-            ::-webkit-scrollbar-track {
-                background: rgba(0, 0, 0, 0);
-            }
-
-            ::-webkit-scrollbar {
-                width: 0px;
-                height: 0px;
-            }
-
-            .wrapper {
-                height: 100vh;
-                overflow-y: auto;
-                overflow-x: hidden;
-            }
+        body {
+            font-family: "Roboto" !important;
         }
 
-
-        .background-inscricoes > * {
-            z-index: 100;
+        h3 {
+            text-transform: uppercase !important;
         }
+
+        span {
+            letter-spacing: 0.5px;
+        }
+
+        .row-eventos {
+            width: 70%;
+            margin:auto;
+        }
+
 
         .wrapper {
             position: relative;
@@ -58,7 +52,7 @@
 
         .img-logo {
             max-width: 100%;
-            max-height: 150px;
+            max-height: 100px;
             margin: auto;
         }
 
@@ -76,80 +70,224 @@
                 text-decoration: none;
             }
 
-        .background-inscricoes {
-            top: 0;
-            z-index: 1;
-            left: 0;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            /*background: url("./Images/background-inscricoes.jpg") no-repeat center center fixed;*/
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            -o-background-size: cover;
-            background-size: cover;
-        }
-
-            .background-inscricoes::after {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: #1e1e20;
-                opacity: .3;
-            }
-
         .overlay {
             position: absolute;
-            border-radius: 12px;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: #1e1e20;
-            opacity: .7;
+            opacity: .4;
+            border-radius: 12px;
         }
 
         a:hover .overlay {
-            opacity: .4;
+            border-bottom-left-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+            transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
+        }
+
+        a:hover .bloco {
+            border-bottom-left-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+            transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
+        }
+
+        a:hover .card-body {
+            -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+            box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+            transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
+        }
+
+        .card-body {
+            background: #fff;
+            color: #000;
+            padding: 10px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .destaque-a {
+            display: flex
+        }
+
+        .bloco-destaque {
+            height: 410px !important;
+            width: 70%;
+            border-radius: 12px;
+            background: url('data:image/png;base64,@ViewBag.Destaque.Configuracao.Background');
+            background-size: cover;
+            display: flex;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .img-desatque {
+            margin: auto;
+            position: relative;
+            z-index: 999;
+            height: 150px;
+        }
+
+        .card-destaque {
+            flex: 1;
+            padding: 40px 24px;
+            -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+            box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+            border-top-right-radius: 12px;
+            border-bottom-left-radius: 0px;
+        }
+
+        .bloco-normal {
+            height: 160px !important;
+            border-radius: 12px;
+            display: flex;
+            position: relative;
+        }
+
+        .button-destaque {
+            margin-top: 200px;
+            border: 1px solid #aa2428;
+            color: #aa2428;
+        }
+
+        .button-destaque:hover {
+            background-color: #aa2428;
+            color: #fff;
+        }
+
+        @@media (max-width: 768px) {
+
+            .button-destaque {
+                margin-top: 20px;
+               width: 100%;
+            }
+
+
+            .row-eventos {
+                width: 100%;
+            }
+
+            .card-destaque {
+                border-top-right-radius: 0px;
+                border-bottom-left-radius: 12px;
+
+            }
+
+            .destaque-a {
+                flex-direction: column
+            }
+
+            .bloco-destaque {
+                height: 200px !important;
+                width: 100%;
+                border-top-right-radius: 12px;
+                border-top-left-radius: 12px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+                background: url('data:image/png;base64,@ViewBag.Destaque.Configuracao.Background');
+                background-size: cover;
+                display: flex;
+                background-position: center;
+                background-repeat: no-repeat;
+                position: relative;
+            }
+
+            .img-desatque {
+                height: 100px;
+            }
+
+            .a-normal {
+                display: flex;
+                height: 80px !important;
+                margin-bottom: 20px;
+            }
+
+            .bloco-normal {
+                width: 40%;
+                height: 80px !important;
+            }
+
+                .bloco-normal > .img-logo {
+                    height: 45px;
+                }
+
+                .a-normal h3 {
+                    font-size: 14px
+                }
+
+            .a-normal > .card-body {
+                flex: 1;
+                background: transparent;
+            }
+
+            .a-normal span, .a-normal p {
+                font-size: 12px;
+            }
+
+
         }
     </style>
 </head>
 <body>
-    <div class="background-inscricoes">
-    </div>
 
-    <div class="wrapper wrapper-content">
+    <div class="wrapper" style="display:flex;flex-direction:column">
         <div class="row">
+            <div class="col-xs-12" style="height:50px;margin-top:20px">
+                <img style="height:40px" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+            </div>
+        </div>
+        <div class="row row-eventos" style="">
+            <div class="col-xs-12">
+                <h3 style="font-weight:900">Evento em destaque</h3>
+            </div>
+            <div class="col col-xs-12">
+                <a href='@ViewBag.Destaque.UrlDestino' class="destaque-a">
 
+                    <div class="bloco bloco-destaque">
+                        <div class="overlay"></div>
+                        <img class="img-desatque" src="data:image/png;base64,@ViewBag.Destaque.Configuracao.Logo" />
+                    </div>
+
+                    <div class="card-body card-destaque">
+                        <span style="display: block; color: #9b2125; font-size: 16px;">@ViewBag.Destaque.Data</span>
+                        <h3 style="font-size: 28px; margin-top: 4px; margin-bottom: 4px;">
+                            @(ViewBag.Destaque.Numeracao)º @ViewBag.Destaque.Configuracao.Titulo
+
+                        </h3>
+                        <span style="display:block">@ViewBag.Destaque.Descricao</span>
+                        <p style="display: block; color: #686464;">@string.Format("{0:C}", ViewBag.Destaque.Valor)</p>
+                        <span href='@ViewBag.Destaque.UrlDestino' class="button-destaque btn btn-outline">INSCREVA-SE</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-xs-12">
+                <h3 style="font-weight:900">Próximos eventos</h3>
+            </div>
             @foreach (var evento in ViewBag.Eventos)
             {
-                <div class="col-md-4 col col-xs-12">
-                    <a href='@evento.UrlDestino'>
+                <div class="col-md-3 col col-xs-12">
+                    <a href='@evento.UrlDestino' class="a-normal">
 
-                        <div class="width100 bloco widget p-md text-center" style="        background: url('data:image/png;base64,@evento.Configuracao.Background');
+                        <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,@evento.Configuracao.Background');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        position:relative;
 ">
                             <div class="overlay"></div>
-                            <div class="m-b-xs " style="position:relative; z-index:999">
-                                <div class="card">
-                                    <img class="img-logo" src="data:image/png;base64,@evento.Configuracao.Logo" />
+                            <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,@evento.Configuracao.Logo" />
+                        </div>
 
-                                    <h1>
-                                        @(evento.Numeracao)º @evento.Configuracao.Titulo
+                        <div class="card-body">
+                            <span style="display: block; color: #9b2125;">@evento.Data</span>
+                            <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
+                                @(evento.Numeracao)º @evento.Configuracao.Titulo
 
-                                    </h1>
-                                    <h5 style="display:block">@evento.Descricao</h5>
-                                    <h4 style="display:block">@string.Format("{0:C}", evento.Valor)</h4>
-                                    <span style="display:block">@evento.Data</span>
-
-                                </div>
-                            </div>
+                            </h3>
+                            <span style="display:block">@evento.Descricao</span>
+                            <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.Valor)</p>
                         </div>
                     </a>
                 </div>
@@ -177,20 +315,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="~/Scripts/app/Util/forms.js"></script>
 <script>
-    $(document).ready(() => {
-        if (isMobile) {
-            @if (ViewBag.Configuracao.BackgroundCelularId != null)
-            {
-                <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.BackgroundCelular) no-repeat center center fixed`) </text>
-                <text> $('.background-inscricoes').css('background-size', 'cover')</text>
-            }
-        } else {
-
-            @if (ViewBag.Configuracao.BackgroundId != null)
-            {
-                <text> $('.background-inscricoes').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`) </text>
-                <text> $('.background-inscricoes').css('background-size', 'cover')</text>
-            }
-        }
-    })
 </script>

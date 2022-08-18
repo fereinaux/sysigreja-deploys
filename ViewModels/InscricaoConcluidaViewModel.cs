@@ -19,6 +19,7 @@ namespace SysIgreja.ViewModels
     {
         public int Id { get; set; }
         public string Data { get; set; }
+        public System.DateTime DataEvento { get; set; }
         public string UrlDestino { get; set; }
         public int Valor { get; set; }
         public int Numeracao { get; set; }

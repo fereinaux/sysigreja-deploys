@@ -53,6 +53,7 @@ namespace SysIgreja.Controllers
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                 Numeracao = x.Numeracao,
+                DataEvento = x.DataEvento,
                 Descricao = x.Descricao,
                 UrlDestino = Url.Action("Inscricoes", "Inscricoes", new
                 {
@@ -69,6 +70,7 @@ namespace SysIgreja.Controllers
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                 Numeracao = x.Numeracao,
+                DataEvento = x.DataEvento,
                 Descricao = x.Descricao,
                 Configuracao = new Core.Models.Configuracao.PostConfiguracaoModel
                 {
@@ -82,7 +84,7 @@ namespace SysIgreja.Controllers
                 return RedirectToAction("InscricoesEncerradas");
             else if (eventos.Count == 1)
                 return RedirectToAction("Inscricoes", new { Id = eventos.FirstOrDefault().Id, Tipo = action });
-            ViewBag.Eventos = eventos.OrderBy(x => x.Data);
+            ViewBag.Eventos = eventos.OrderBy(x => x.DataEvento);
             return View("Index");
         }
 

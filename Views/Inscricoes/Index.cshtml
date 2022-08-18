@@ -24,6 +24,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
 
+        @@media (max-width: 768px) {
+
+            ::-webkit-scrollbar-thumb {
+                background: rgba(0, 0, 0, 0);
+            }
+
+            ::-webkit-scrollbar-track {
+                background: rgba(0, 0, 0, 0);
+            }
+
+            ::-webkit-scrollbar {
+                width: 0px;
+                height: 0px;
+            }
+
+            .wrapper {
+                height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+
 
         .background-inscricoes > * {
             z-index: 100;
@@ -38,22 +60,21 @@
             max-width: 100%;
             max-height: 150px;
             margin: auto;
-                
         }
 
         .widget {
-            color: #ffffff; 
+            color: #ffffff;
             border-radius: 12px;
-            height:375px !important;
+            height: 375px !important;
         }
 
         a {
-           text-decoration: none;
-        }
-
-        a:hover {
             text-decoration: none;
         }
+
+            a:hover {
+                text-decoration: none;
+            }
 
         .background-inscricoes {
             top: 0;
@@ -91,7 +112,7 @@
             opacity: .7;
         }
 
-        a:hover .overlay{
+        a:hover .overlay {
             opacity: .4;
         }
     </style>
@@ -106,30 +127,30 @@
             @foreach (var evento in ViewBag.Eventos)
             {
                 <div class="col-md-4 col col-xs-12">
-                    <a href="@Url.Action("Inscricoes", "Inscricoes",new { id = evento.Id, Tipo = ViewBag.Action })">
+                    <a href='@evento.UrlDestino'>
 
-                    <div class="width100 bloco widget p-md text-center" style="        background: url('data:image/png;base64,@evento.Configuracao.Background');
+                        <div class="width100 bloco widget p-md text-center" style="        background: url('data:image/png;base64,@evento.Configuracao.Background');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         position:relative;
 ">
-                        <div class="overlay"></div>
-                        <div class="m-b-xs " style="position:relative; z-index:999">
-                            <div class="card">
-                                <img class="img-logo" src="data:image/png;base64,@evento.Configuracao.Logo" />
+                            <div class="overlay"></div>
+                            <div class="m-b-xs " style="position:relative; z-index:999">
+                                <div class="card">
+                                    <img class="img-logo" src="data:image/png;base64,@evento.Configuracao.Logo" />
 
-                                <h1>
-                                    @(evento.Numeracao)º @evento.Configuracao.Titulo
+                                    <h1>
+                                        @(evento.Numeracao)º @evento.Configuracao.Titulo
 
-                                </h1>
-                                <h5 style="display:block">@evento.Descricao</h5>
-                                <h4 style="display:block">@string.Format("{0:C}", evento.Valor)</h4>
-                                <span style="display:block">@evento.Data</span>
+                                    </h1>
+                                    <h5 style="display:block">@evento.Descricao</h5>
+                                    <h4 style="display:block">@string.Format("{0:C}", evento.Valor)</h4>
+                                    <span style="display:block">@evento.Data</span>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </a>
                 </div>
 

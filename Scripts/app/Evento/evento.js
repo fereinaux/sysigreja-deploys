@@ -71,6 +71,7 @@ function GetEvento(id) {
                 $("#evento-numeracao").val(data.Evento.Numeracao);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
                 $("#evento-valor").val(data.Evento.Valor);
+                $('#evento-global').iCheck((data.Evento.Global ? 'check' : 'uncheck'))
                 $("#evento-taxa").val(data.Evento.ValorTaxa);
                 $("#evento-data").val(moment(data.Evento.DataEvento).format('DD/MM/YYYY'));
                 $("#evento-tipo").val(data.Evento.ConfiguracaoId).trigger("chosen:updated");
@@ -80,6 +81,7 @@ function GetEvento(id) {
     else {
         $("#evento-id").val(0);
         $("#evento-numeracao").val("");
+        $('#evento-global').iCheck('uncheck')
         $("#evento-descricao").val("");
         $("#evento-capacidade").val("");
         $("#evento-data").val("");
@@ -203,6 +205,7 @@ function PostEvento() {
             data: JSON.stringify(
                 {
                     Id: $("#evento-id").val(),
+                    Global: $('#evento-global:checked').length > 0,
                     ConfiguracaoId: $("#evento-tipo").val(),
                     Numeracao: $("#evento-numeracao").val(),
                     Descricao: $("#evento-descricao").val(),

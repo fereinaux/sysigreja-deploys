@@ -36,6 +36,8 @@ namespace Web
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
 
             container.RegisterType<IGenericRepositoryConsulta<ParticipanteConsulta>, GenericRepositoryConsulta<ParticipanteConsulta>>();
+            container.RegisterType<IGenericRepositoryConsulta<EventoConsulta>, GenericRepositoryConsulta<EventoConsulta>>();
+            container.RegisterType<IGenericRepositoryConsulta<EventoLoteConsulta>, GenericRepositoryConsulta<EventoLoteConsulta>>();
             container.RegisterType<IGenericRepository<Evento>, GenericRepository<Evento>>();
             container.RegisterType<IGenericRepository<ApplicationUser>, GenericRepository<ApplicationUser>>();
             container.RegisterType<IGenericRepository<Participante>, GenericRepository<Participante>>();

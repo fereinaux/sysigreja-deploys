@@ -54,13 +54,34 @@ namespace SysIgreja.Controllers
                 Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                 Numeracao = x.Numeracao,
                 Descricao = x.Descricao,
+                UrlDestino = Url.Action("Inscricoes", "Inscricoes", new
+                {
+                    id = x.Id,
+                    Tipo = action
+                }),
                 Configuracao = configuracaoBusiness.GetConfiguracao(x.ConfiguracaoId)
-            }).OrderBy(x => x.Data).ToList();
+            }).ToList();
+
+            eventos.AddRange(eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && !eventos.Any(y => y.Id == x.EventoId && x.Destino == System.Web.HttpContext.Current.Request.Url.Authority)).ToList().Select(x => new InscricoesViewModel
+            {
+                Id = x.Id,
+                UrlDestino = $"https://{x.Destino}/Inscricoes/Inscricoes/{x.EventoId}?Tipo={action}" ,
+                Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
+                Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
+                Numeracao = x.Numeracao,
+                Descricao = x.Descricao,
+                Configuracao = new Core.Models.Configuracao.PostConfiguracaoModel
+                {
+                    Background = Convert.ToBase64String(x.Background),
+                    Logo = Convert.ToBase64String(x.Logo),
+                }
+            }).ToList());
+
             if (eventos.Count == 0)
                 return RedirectToAction("InscricoesEncerradas");
             else if (eventos.Count == 1)
                 return RedirectToAction("Inscricoes", new { Id = eventos.FirstOrDefault().Id, Tipo = action });
-            ViewBag.Eventos = eventos;
+            ViewBag.Eventos = eventos.OrderBy(x => x.Data);
             return View("Index");
         }
 
@@ -79,7 +100,7 @@ namespace SysIgreja.Controllers
             ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
             ViewBag.EventoId = Id;
-         
+
             switch (Tipo)
             {
                 case "Inscrições Equipe":

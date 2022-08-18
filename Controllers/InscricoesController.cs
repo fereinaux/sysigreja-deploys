@@ -72,6 +72,7 @@ namespace SysIgreja.Controllers
                 Descricao = x.Descricao,
                 Configuracao = new Core.Models.Configuracao.PostConfiguracaoModel
                 {
+                    Titulo = x.TituloEvento,
                     Background = Convert.ToBase64String(x.Background),
                     Logo = Convert.ToBase64String(x.Logo),
                 }

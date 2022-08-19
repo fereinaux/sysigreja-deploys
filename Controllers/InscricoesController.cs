@@ -67,7 +67,7 @@ namespace SysIgreja.Controllers
             eventos.AddRange(eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && !eventos.Any(y => y.Id == x.EventoId && x.Destino == System.Web.HttpContext.Current.Request.Url.Authority)).ToList().Select(x => new InscricoesViewModel
             {
                 Id = x.Id,
-                UrlDestino = $"https://{x.Destino}/Detalhes/{x.EventoId}?Tipo={action}",
+                UrlDestino = $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={action}",
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                 ValorTaxa = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa,
@@ -138,6 +138,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Detalhes(int Id, string Tipo)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             ViewBag.Title = Tipo;
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && x.Status == StatusEnum.Aberto);
             if (evento == null)

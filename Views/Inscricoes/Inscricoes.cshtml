@@ -11,77 +11,73 @@
 
     <div style="margin:auto;width:95%">
 
-        @if (ViewBag.Configuracao.LogoId != null)
-        {
-            <div class="row justify-content-center" style="display:flex">
-                <div class="col col-sm-6" style="margin: auto; display: flex">
-                    <img style="max-width: 100%; max-height: 110px; margin: auto" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
-                </div>
 
-            </div>
-        }
-        <div class="row justify-content-center">
+        <div class="row justify-content-center p-sm">
             <div class="col col-12">
                 <div class="p-h-xs m-b-lg" id="form-inscricao">
                     <div class="form-group">
-                        <label for="participante-email" class="text-white">Digite o email do participante</label>
-                        <input type="email" class="form-control" name="email" id="participante-email" data-field="Email" />
+                        <label for="participante-email" class="">Digite o e-mail do participante</label>
+                        <div style="position:relative">
+                            <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
+                            <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
+                        </div>
+
                     </div>
                     <div class="pnl-cadastro">
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome" class="text-white">Nome e Sobrenome do participante</label>
+                                <label for="participante-nome" class="">Nome e sobrenome do participante</label>
                                 <input type="text" class="form-control required" id="participante-nome" name="name" data-field="Nome" value="@ViewBag.Nome" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Apelido.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-apelido" class="text-white">Como o participante gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
+                                <label for="participante-apelido" class="">Como o participante gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
                                 <input type="text" class="form-control required" id="participante-apelido" name"nickname" data-field="Apelido" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Genero.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-sexo" class="text-white block">Gênero do participante</label>
-                                <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="sexo-masculino" checked="" value="1" name="participante-sexo"> <i></i> Masculino </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="sexo-feminino" value="2" name="participante-sexo"> <i></i> Feminino </label></div>
+                                <label for="participante-sexo" class=" block">Gênero do participante</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="sexo-masculino" checked="" value="1" name="participante-sexo"> <i></i> Masculino </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="sexo-feminino" value="2" name="participante-sexo"> <i></i> Feminino </label></div>
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.DataNascimento.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-data-nascimento" class="text-white">Data de Nascimento do participante</label>
-                                <input type="text" class="form-control full-date required" id="participante-data-nascimento" data-idade="17" data-field="Data de Nascimento" />
+                                <label for="participante-data-nascimento" class="">Data de nascimento do participante</label>
+                                <input type="text" class="form-control full-date required" id="participante-data-nascimento" data-idade="17" data-field="Data de nascimento" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-fone" class="text-white">Fone do participante</label>
-                                <input type="text" class="form-control fone" id="participante-fone" data-field="Fone do participante" />
+                                <label for="participante-fone" class="">Telefone do participante</label>
+                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-conjuge" class="text-white">Cônjuge</label>
+                                <label for="participante-conjuge" class="">Cônjuge</label>
                                 <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" value="@ViewBag.Conjuge" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-instagram" class="text-white">Instagram do participante</label>
-                                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do Participante" />
+                                <label for="participante-instagram" class="">Instagram do participante</label>
+                                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do participante" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-fone" class="text-white">Tamanho da Camisa</label>
+                                <label for="participante-fone" class="">Tamanho da camisa</label>
                                 <select class="form-control" id="participante-camisa">
                                     <option value="PP">PP</option>
                                     <option value="P">P</option>
@@ -97,7 +93,7 @@
                             <div class="row justify-content-center">
                                 <div class="col col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-cep" class="text-white">CEP</label>
+                                        <label for="participante-cep" class="">CEP</label>
                                         <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" value="@ViewBag.CEP" onkeyup="verificaCep(this)" />
                                         <input type="hidden" id="participante-latitude" />
                                         <input type="hidden" id="participante-longitude" />
@@ -105,7 +101,7 @@
                                 </div>
                                 <div class="col col-md-9 col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-logradouro" class="text-white">Logradouro</label>
+                                        <label for="participante-logradouro" class="">Logradouro</label>
                                         <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
                                     </div>
                                 </div>
@@ -113,19 +109,19 @@
                             <div class="row justify-content-center">
                                 <div class="col col-md-5 col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-bairro" class="text-white">Bairro</label>
+                                        <label for="participante-bairro" class="">Bairro</label>
                                         <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
                                     </div>
                                 </div>
                                 <div class="col col-md-5 col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-cidade" class="text-white">Cidade</label>
+                                        <label for="participante-cidade" class="">Cidade</label>
                                         <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
                                     </div>
                                 </div>
                                 <div class="col col-md-2 col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-estado" class="text-white">Estado</label>
+                                        <label for="participante-estado" class="">Estado</label>
                                         <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
                                     </div>
                                 </div>
@@ -133,13 +129,13 @@
                             <div class="row justify-content-center">
                                 <div class="col col-md-4 col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-numero" class="text-white">Número</label>
+                                        <label for="participante-numero" class="">Número</label>
                                         <input type="text" class="form-control" id="participante-numero" value="@ViewBag.Numero" data-field="Número" />
                                     </div>
                                 </div>
                                 <div class="col col-md-8 col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-complemento" class="text-white">Complemento</label>
+                                        <label for="participante-complemento" class="">Complemento</label>
                                         <input type="text" class="form-control" id="participante-complemento" value="@ViewBag.Complemento" data-field="Complemento" />
                                     </div>
                                 </div>
@@ -148,8 +144,8 @@
                             <div class="row justify-content-center">
                                 <div class="col col-sm-12">
                                     <div class="form-group">
-                                        <label for="participante-referencia" class="text-white">Ponto de Referência</label>
-                                        <input type="text" class="form-control" id="participante-referencia" value="@ViewBag.Referencia" data-field="Ponto de Referência" />
+                                        <label for="participante-referencia" class="">Ponto de referência</label>
+                                        <input type="text" class="form-control" id="participante-referencia" value="@ViewBag.Referencia" data-field="Ponto de referência" />
                                     </div>
                                     <div class="form-group">
                                         <div id="map" style="height:300px;display:none">
@@ -161,69 +157,69 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Mae.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome-mae" class="text-white">Nome da Mãe</label>
-                                <input type="text" class="form-control required" id="participante-nome-mae" data-field="Nome da Mãe" />
+                                <label for="participante-nome-mae" class="">Nome da mãe</label>
+                                <input type="text" class="form-control required" id="participante-nome-mae" data-field="Nome da mãe" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-fone-mae" class="text-white">Fone da Mãe</label>
-                                <input type="text" class="form-control fone" id="participante-fone-mae" data-field="Fone da Mãe" />
+                                <label for="participante-fone-mae" class="">Telefone da mãe</label>
+                                <input type="text" class="form-control fone" id="participante-fone-mae" data-field="Telefone da mãe" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Pai.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome-pai" class="text-white">Nome do Pai</label>
-                                <input type="text" class="form-control required" id="participante-nome-pai" data-field="Nome do Pai" />
+                                <label for="participante-nome-pai" class="">Nome do pai</label>
+                                <input type="text" class="form-control required" id="participante-nome-pai" data-field="Nome do pai" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-fone-pai" class="text-white">Fone do Pai</label>
-                                <input type="text" class="form-control fone" id="participante-fone-pai" data-field="Fone do Pai" />
+                                <label for="participante-fone-pai" class="">Telefone do pai</label>
+                                <input type="text" class="form-control fone" id="participante-fone-pai" data-field="Telefone do pai" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Contato.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome-contato" class="text-white">Pessoa de contato</label>
+                                <label for="participante-nome-contato" class="">Pessoa de contato</label>
                                 <input type="text" class="form-control required" id="participante-nome-contato" data-field="Pessoa de contato" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-fone-contato" class="text-white">Fone do contato</label>
-                                <input type="text" class="form-control fone" id="participante-fone-contato" data-field="Fone do contato" />
+                                <label for="participante-fone-contato" class="">Telefone do contato</label>
+                                <input type="text" class="form-control fone" id="participante-fone-contato" data-field="Telefone do contato" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Convite.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome-convite" class="text-white">Pessoa que lhe convidou</label>
-                                <input type="text" class="form-control required" id="participante-nome-convite" value="@ViewBag.NomeConvite" data-field="Pessoa que convidou" />
+                                <label for="participante-nome-convite" class="">Quem lhe fez o convite?</label>
+                                <input type="text" class="form-control required" id="participante-nome-convite" value="@ViewBag.NomeConvite" data-field="Quem lhe fez o convite?" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-fone-convite" class="text-white">Fone de quem lhe convidou</label>
-                                <input type="text" class="form-control fone" id="participante-fone-convite" value="@ViewBag.FoneConvite" data-field="Fone da pessoa que convidou" />
+                                <label for="participante-fone-convite" class="">Telefone de quem lhe fez o convite</label>
+                                <input type="text" class="form-control fone" id="participante-fone-convite" value="@ViewBag.FoneConvite" data-field="Telefone de quem lhe fez o convite" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Parente.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-hasparente" class="text-white block">Tem algum Parente fazendo o @ViewBag.Configuracao.Titulo?</label>
-                                <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>
+                                <label for="participante-hasparente" class=" block">Tem algum parente fazendo o @ViewBag.Configuracao.Titulo?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group parente d-none">
-                                <label for="participante-parente" class="text-white">Nome do Parente</label>
-                                <input type="text" class="form-control" id="participante-parente" data-field="Nome do Parente" />
+                                <label for="participante-parente" class="">Nome do parente</label>
+                                <input type="text" class="form-control" id="participante-parente" data-field="Nome do parente" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Congregacao.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-congregacao" class="text-white block">Participa de qual Congregação?</label>
-                                <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="trindade" checked="" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="recon" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="outra" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
+                                <label for="participante-congregacao" class=" block">Participa de qual congregação?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="trindade" checked="" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="recon" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="outra" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
                             </div>
                             <div class="form-group congregacao d-none">
-                                <label for="participante-congregacaodescricao" class="text-white">Qual?</label>
+                                <label for="participante-congregacaodescricao" class="">Qual?</label>
                                 <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
                             </div>
                         }
@@ -231,53 +227,51 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Medicacao.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-hasmedicacao" class="text-white block">Toma alguma medicação?</label>
-                                <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="has-medicacao" value="true" name="participante-hasmedicacao"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="not-medicacao" checked="" value="false" name="participante-hasmedicacao"> <i></i> Não </label></div>
+                                <label for="participante-hasmedicacao" class=" block">Toma alguma medicação?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-medicacao" value="true" name="participante-hasmedicacao"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-medicacao" checked="" value="false" name="participante-hasmedicacao"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group medicacao d-none">
-                                <label for="participante-medicacao" class="text-white">Qual?</label>
+                                <label for="participante-medicacao" class="">Qual?</label>
                                 <input type="text" class="form-control" id="participante-medicacao" data-field="Medicação" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Alergia.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-hasalergia" class="text-white block">Tem alguma alergia?</label>
-                                <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="has-alergia" value="true" name="participante-hasalergia"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="not-alergia" checked="" value="false" name="participante-hasalergia"> <i></i> Não </label></div>
+                                <label for="participante-hasalergia" class=" block">Tem alguma alergia?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-alergia" value="true" name="participante-hasalergia"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-alergia" checked="" value="false" name="participante-hasalergia"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group alergia d-none">
-                                <label for="participante-alergia" class="text-white">Qual?</label>
+                                <label for="participante-alergia" class="">Qual?</label>
                                 <input type="text" class="form-control" id="participante-alergia" data-field="Alergia" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Restricao.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-hasrestricaoalimentar" class="text-white block">Tem alguma restrição alimentar?</label>
-                                <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="has-restricaoalimentar" value="true" name="participante-hasrestricaoalimentar"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="not-restricaoalimentar" checked="" value="false" name="participante-hasrestricaoalimentar"> <i></i> Não </label></div>
+                                <label for="participante-hasrestricaoalimentar" class=" block">Tem alguma restrição alimentar?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-restricaoalimentar" value="true" name="participante-hasrestricaoalimentar"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-restricaoalimentar" checked="" value="false" name="participante-hasrestricaoalimentar"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group restricaoalimentar d-none">
-                                <label for="participante-restricaoalimentar" class="text-white">Qual?</label>
-                                <input type="text" class="form-control" id="participante-restricaoalimentar" data-field="Restrição Alimentar" />
+                                <label for="participante-restricaoalimentar" class="">Qual?</label>
+                                <input type="text" class="form-control" id="participante-restricaoalimentar" data-field="Tem alguma restrição alimentar?" />
                             </div>
                         }
+
+                        <div class="text-right">
+
+                            <button type="button" class="btn btn-juventude pnl-cadastro" onclick="PostInscricao()">Finalizar</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 </div>
-<div style="margin-bottom:auto">
 
-    <button type="button" class="btn btn-rounded btn-float btn-juventude pnl-verifica" onclick="VerificaCadastro()">Seguinte</button>
-
-    <button type="button" class="btn btn-rounded btn-float btn-juventude pnl-cadastro" style="height: 60px; width: 60px; margin-top: -30px;" onclick="PostInscricao()"><i class="fa fa-2x fa-paper-plane m-r-sm"></i></button>
-</div>
 
 @section scripts {
     <script src="~/Scripts/app/Inscricoes/inscricoes.js?@ViewBag.Numero"></script>

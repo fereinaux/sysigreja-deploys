@@ -105,7 +105,18 @@ function VerificaCadastro() {
                     $('.dados-participante-contato').removeClass('d-none');
                     $('.dados-participante-contato input[id*="nome"]').addClass('required');
                     $('.dados-participante-contato input[id*="fone"]').addClass('fone');
-                 
+                    $('.pnl-cadastro input').attr('disabled', false)
+                    $('.pnl-cadastro select').attr('disabled', false)
+                    $('.pnl-cadastro button').attr('disabled', false)
+                    $('.i-checks-green').iCheck({
+                        checkboxClass: 'icheckbox_square-green',
+                        radioClass: 'iradio_square-green'
+                    });
+
+                    $('.i-checks-brown').iCheck({
+                        checkboxClass: 'icheckbox_square-brown',
+                        radioClass: 'iradio_square-brown'
+                    });
                 }
                 else if (data) {
                     window.location.href = data;
@@ -114,11 +125,7 @@ function VerificaCadastro() {
                     verificaCep($('#participante-cep')[0])
                 }
                 $("#participante-email").prop("disabled", true)
-                $(".pnl-cadastro").show();
-                $(".pnl-verifica").hide();
-                $('.inscricoes.middle-box').height('80%');
-                $('.inscricoes.middle-box').css('overflow-y','auto');
-                $('.float').css("bottom", "40px")
+
 
             }
         })
@@ -239,8 +246,6 @@ $('#not-restricaoalimentar').on('ifChecked', function (event) {
     $("#participante-restricaoalimentar").removeClass('required');
 });
 
-$(".pnl-cadastro").hide();
-$('.inscricoes.middle-box').height('30%');
-$('.inscricoes.middle-box').css('overflow', 'hidden');
-$('.float').css("bottom", "34%")
-
+$('.pnl-cadastro input').attr('disabled', true)
+$('.pnl-cadastro select').attr('disabled', true)
+$('.pnl-cadastro button').attr('disabled', true)

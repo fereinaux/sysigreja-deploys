@@ -22,12 +22,40 @@
     <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        .header-evento {
+            height: 50px;
+        }
+
+
+        body {
+            font-family: "Roboto" !important;
+        }
+
+        @@media (max-width: 768px) {
+            ::-webkit-scrollbar {
+                width: 0px;
+                height: 0px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+        }
     </style>
 </head>
-<body class="background-evento">
-    <div style=" display: flex; flex-direction: column; width: 100vw; height: 100vh;">
+<body>
+    <div class="row justify-content-center header-evento" style="display:flex">
+        <div class="col-header" style="margin: auto; display: flex">
+            <img style="height: 50px; margin: auto" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="display:flex">
 
         @RenderBody()
     </div>
@@ -68,6 +96,8 @@
             }
         }
 
+        $('.header-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
+        $('.icon-check-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.btn-juventude').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
 
@@ -86,9 +116,9 @@
         existingStylesheet = $("#currentCSS");
         if (existingStylesheet.length) { $(existingStylesheet).replaceWith(new_stylesheet); }
         else { $(new_stylesheet).appendTo('head'); }
-        var corLoginBox = '@ViewBag.Configuracao.CorLoginBox';
+        var corLoginBox = '@ViewBag.Configuracao.CorBotao';
         var rgbLoginBox = corLoginBox.convertToRGB()
-        $('.inscricoes.middle-box').css('background-color', `rgba(${rgbLoginBox[0]},${rgbLoginBox[1]},${rgbLoginBox[2]},0.7)`)
+         $('body').css('background-color', `rgba(${rgbLoginBox[0]},${rgbLoginBox[1]},${rgbLoginBox[2]},0.2)`)
     })
 </script>
 

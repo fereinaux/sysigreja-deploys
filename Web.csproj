@@ -1115,6 +1115,44 @@
     <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="assets\css\animate.css" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\main.css" />
+    <Content Include="assets\css\menu_sideslide.css" />
+    <Content Include="assets\css\responsive.css" />
+    <Content Include="assets\css\slicknav.css" />
+    <Content Include="assets\css\vegas.min.css" />
+    <Content Include="assets\fonts\line-icons.css" />
+    <Content Include="assets\fonts\LineIcons.svg" />
+    <Content Include="assets\img\background - Copia.jpg" />
+    <Content Include="assets\img\background.jpg" />
+    <Content Include="assets\img\celular.jpg" />
+    <Content Include="assets\img\download.jpg" />
+    <Content Include="assets\img\logo.png" />
+    <Content Include="assets\img\map-marker.png" />
+    <Content Include="assets\img\slide1.jpg" />
+    <Content Include="assets\img\slide2.jpg" />
+    <Content Include="assets\img\slide3.jpg" />
+    <Content Include="assets\img\team\team-01.jpg" />
+    <Content Include="assets\img\team\team-02.jpg" />
+    <Content Include="assets\img\team\team-03.jpg" />
+    <Content Include="assets\img\team\team-04.jpg" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\classie.js" />
+    <Content Include="assets\js\contact-form-script.min.js" />
+    <Content Include="assets\js\form-validator.min.js" />
+    <Content Include="assets\js\jquery-min.js" />
+    <Content Include="assets\js\jquery.countdown.min.js" />
+    <Content Include="assets\js\jquery.easing.min.js" />
+    <Content Include="assets\js\jquery.nav.js" />
+    <Content Include="assets\js\jquery.slicknav.js" />
+    <Content Include="assets\js\main.js" />
+    <Content Include="assets\js\map.js" />
+    <Content Include="assets\js\menu.js" />
+    <Content Include="assets\js\popper.min.js" />
+    <Content Include="assets\js\scrolling-nav.js" />
+    <Content Include="assets\js\vegas.min.js" />
+    <Content Include="assets\js\wow.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1178,6 +1216,18 @@
     <Content Include="Views\Cracha\Index.cshtml" />
     <Content Include="Views\Cracha\Modal.cshtml" />
     <Content Include="Views\Cracha\ModalImpressao.cshtml" />
+    <Content Include="Views\Inscricoes\Detalhes.cshtml" />
+    <Content Include="assets\.DS_Store" />
+    <Content Include="assets\css\.DS_Store" />
+    <Content Include="assets\fonts\.DS_Store" />
+    <Content Include="assets\fonts\LineIcons.eot" />
+    <Content Include="assets\fonts\LineIcons.ttf" />
+    <Content Include="assets\fonts\LineIcons.woff" />
+    <Content Include="assets\img\.DS_Store" />
+    <Content Include="assets\img\logo.psd" />
+    <Content Include="assets\img\team\.DS_Store" />
+    <Content Include="assets\js\.DS_Store" />
+    <Content Include="assets\php\form-process.php" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

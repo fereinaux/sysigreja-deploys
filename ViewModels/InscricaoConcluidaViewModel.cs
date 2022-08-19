@@ -10,6 +10,7 @@ namespace SysIgreja.ViewModels
         public string Evento { get; set; }
         public string DataEvento { get; set; }
         public string Valor { get; set; }
+        public string ValorTaxa { get; set; }
         public string PadrinhoFone { get; internal set; }
         public string PadrinhoNome { get; internal set; }
     }
@@ -22,6 +23,7 @@ namespace SysIgreja.ViewModels
         public System.DateTime DataEvento { get; set; }
         public string UrlDestino { get; set; }
         public int Valor { get; set; }
+        public int ValorTaxa { get; set; }
         public int Numeracao { get; set; }
         public string Descricao { get; set; }
         public PostConfiguracaoModel Configuracao{ get; set; }

@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IECB Eventos | Inscrições</title>
+    <title>IECB Eventos | @ViewBag.Action</title>
 
     <link href="~/Fonts/font-awesome/css/all.css" rel="stylesheet">
     <link rel="stylesheet"
@@ -149,7 +149,7 @@
 
         .button-destaque {
             position: absolute;
-            bottom: 40px;
+            bottom: 74px;
             border: 1px solid #aa2428;
             color: #aa2428;
         }
@@ -237,34 +237,40 @@
 
     <div class="wrapper" style="display:flex;flex-direction:column">
         <div class="row">
-            <div class="col-xs-12" style="height:50px;margin-top:20px">
-                <img style="height:40px" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+            <div class="col-xs-12" style="height:50px;margin-top:20px;display:flex">
+                <img style="height: 40px; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+
+                <h3 style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
             </div>
         </div>
         <div class="row row-eventos" style="">
-            <div class="col-xs-12">
-                <h3 style="font-weight: 900; font-size: 28px;">Evento em destaque</h3>
-            </div>
-            <div class="col col-xs-12">
-                <a href='@ViewBag.Destaque.UrlDestino' class="destaque-a" style="margin-bottom: 25px;">
+            @if (ViewBag.Action == "Inscrições")
+            {
 
-                    <div class="bloco bloco-destaque">
-                        <div class="overlay"></div>
-                        <img class="img-desatque" src="data:image/png;base64,@ViewBag.Destaque.Configuracao.Logo" />
-                    </div>
 
-                    <div class="card-body card-destaque">
-                        <span style="display: block; color: #9b2125; font-size: 16px;">@ViewBag.Destaque.Data</span>
-                        <h3 style="font-size: 28px; margin-top: 4px; margin-bottom: 4px;">
-                            @(ViewBag.Destaque.Numeracao)º @ViewBag.Destaque.Configuracao.Titulo
+                <div class="col-xs-12">
+                    <h3 style="font-weight: 900; font-size: 28px;">Evento em destaque</h3>
+                </div>
+                <div class="col col-xs-12">
+                    <a href='@ViewBag.Destaque.UrlDestino' class="destaque-a" style="margin-bottom: 25px;">
 
-                        </h3>
-                        <p style="display: block; color: #686464;">@string.Format("{0:C}", ViewBag.Destaque.Valor)</p>
-                        <span href='@ViewBag.Destaque.UrlDestino' class="button-destaque btn btn-outline">INSCREVA-SE</span>
-                    </div>
-                </a>
-            </div>
+                        <div class="bloco bloco-destaque">
+                            <div class="overlay"></div>
+                            <img class="img-desatque" src="data:image/png;base64,@ViewBag.Destaque.Configuracao.Logo" />
+                        </div>
 
+                        <div class="card-body card-destaque">
+                            <span style="display: block; color: #9b2125; font-size: 16px;">@ViewBag.Destaque.Data</span>
+                            <h3 style="font-size: 28px; margin-top: 4px; margin-bottom: 4px;">
+                                @(ViewBag.Destaque.Numeracao)º @ViewBag.Destaque.Configuracao.Titulo
+
+                            </h3>
+                            <p style="display: block; color: #686464;">@string.Format("{0:C}", ViewBag.Destaque.Valor)</p>
+                            <span href='@ViewBag.Destaque.UrlDestino' class="button-destaque btn btn-outline">VER DETALHES</span>
+                        </div>
+                    </a>
+                </div>
+            }
             <div class="col-xs-12">
                 <h3 style="font-weight:900;font-size:22px">Próximos eventos</h3>
             </div>
@@ -288,7 +294,15 @@
                                 @(evento.Numeracao)º @evento.Configuracao.Titulo
 
                             </h3>
-                            <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.Valor)</p>
+                            @if (ViewBag.Action == "Inscrições")
+                            {
+
+                                <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.Valor)</p>
+                            }
+                            else
+                            {
+                                <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.ValorTaxa)</p>
+                            }
                         </div>
                     </a>
                 </div>

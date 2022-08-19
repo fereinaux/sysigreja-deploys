@@ -6,26 +6,17 @@
 <style>
     body, h1, h2, h3, h4, h5, h6, span, p {
         text-align: center !important;
-        color: white !important;
     }
 </style>
-<div class="middle-box inscricoes animated fadeInDown " style="display:flex;margin:auto">
+<div class="icon-check-evento" style="position: absolute; z-index: 1000; left: 50%; height: 82px; padding: 13px; border-radius: 50%; top: 65px; left: 50%; transform: translateX(-50%);">
+    <i class="fas fa-check" style="color:#fff;font-size:60px"></i>
+</div>
+<div class="middle-box inscricoes animated fadeInDown " style="display:flex;margin-top:60px;position:relative;border-radius:12px !important;padding-bottom:40px">
     <div class="row" style="margin:auto">
-        <div class="col-sm-12">
-            @if (ViewBag.Configuracao.LogoId != null)
-            {
-                <div class="row justify-content-center">
-                    <div class="col-sm-offset-3 col-sm-6" style="display:flex">
-                        <img style="max-width:100%;max-height:200px;margin:auto" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" alt="Igreja Episcopal Carismática do Brasil" />
-                    </div>
 
-                </div>
-            }
-
-        </div>
-        <div class="col-sm-12 p-h-sm text-white text-center">
+        <div class="col-sm-12 p-h-sm text-center">
             @Html.Raw(ViewBag.MsgConclusao)
 
         </div>
     </div>
-    </div>
+</div>

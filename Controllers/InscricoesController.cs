@@ -52,10 +52,11 @@ namespace SysIgreja.Controllers
                 Id = x.Id,
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
+                ValorTaxa = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa,
                 Numeracao = x.Numeracao,
                 DataEvento = x.DataEvento,
                 Descricao = x.Descricao,
-                UrlDestino = Url.Action("Inscricoes", "Inscricoes", new
+                UrlDestino = Url.Action("Detalhes", "Inscricoes", new
                 {
                     id = x.Id,
                     Tipo = action
@@ -66,9 +67,10 @@ namespace SysIgreja.Controllers
             eventos.AddRange(eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && !eventos.Any(y => y.Id == x.EventoId && x.Destino == System.Web.HttpContext.Current.Request.Url.Authority)).ToList().Select(x => new InscricoesViewModel
             {
                 Id = x.Id,
-                UrlDestino = $"https://{x.Destino}/Inscricoes/Inscricoes/{x.EventoId}?Tipo={action}" ,
+                UrlDestino = $"https://{x.Destino}/Detalhes/{x.EventoId}?Tipo={action}",
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
+                ValorTaxa = x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa,
                 Numeracao = x.Numeracao,
                 DataEvento = x.DataEvento,
                 Descricao = x.Descricao,
@@ -130,6 +132,30 @@ namespace SysIgreja.Controllers
                         ViewBag.NomeConvite = participante.NomeConvite;
                         ViewBag.FoneConvite = participante.FoneConvite;
                     }
+                    return View();
+            }
+        }
+
+        public ActionResult Detalhes(int Id, string Tipo)
+        {
+            ViewBag.Title = Tipo;
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && x.Status == StatusEnum.Aberto);
+            if (evento == null)
+                return RedirectToAction("InscricoesEncerradas");
+            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            ViewBag.UrlDestino = Url.Action("Inscricoes", "Inscricoes", new
+            {
+                id = Id,
+                Tipo = Tipo
+            });
+            ViewBag.EventoId = Id;
+            ViewBag.Evento = evento;
+
+            switch (Tipo)
+            {
+                case "Inscrições Equipe":
+                    return View("Equipe");
+                default:
                     return View();
             }
         }

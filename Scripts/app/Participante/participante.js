@@ -210,6 +210,9 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> Círculo <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Motorista <i></i></label>
@@ -983,6 +986,8 @@ function GetParticipanteContato(id) {
             $(`#participante-fonecontato`).val(data.Participante.FoneContato);
             $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
             $(`#participante-medicacao`).val(data.Participante.Medicacao);
+            $(`#participante-convenio`).val(data.Participante.Convenio);
+            $(`#participante-hospitais`).val(data.Participante.Hospitais);
             $(`#participante-alergia`).val(data.Participante.Alergia);
             $(`#participante-parente`).val(data.Participante.Parente);
             if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
@@ -994,6 +999,7 @@ function GetParticipanteContato(id) {
             $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
             $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
             $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
+            $(`input[type=radio][name=participante-hasconvenio][value=${data.Participante.HasConvenio}]`).iCheck('check');
             $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
 
             $("#participante-numeracao").val(data.Participante.Numeracao);
@@ -1027,6 +1033,32 @@ function GetParticipante(id) {
                 $(`#participante-fonecontato`).val(data.Participante.FoneContato);
                 $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Participante.Medicacao);
+
+                if (data.Participante.HasMedicacao) {
+                    $('.medicacao').removeClass('d-none')
+                } else {
+                    $('.medicacao').addClass('d-none')
+                }
+
+                if (data.Participante.HasConvenio) {
+                    $('.convenio').removeClass('d-none')
+                } else {
+                    $('.convenio').addClass('d-none')
+                }
+
+                if (data.Participante.HasAlergia) {
+                    $('.alergia').removeClass('d-none')
+                } else {
+                    $('.alergia').addClass('d-none')
+                }
+
+                if (data.Participante.HasRestricaoAlimentar) {
+                    $('.restricaoalimentar').removeClass('d-none')
+                } else {
+                    $('.restricaoalimentar').addClass('d-none')
+                }
+                $(`#participante-convenio`).val(data.Participante.Convenio);
+                $(`#participante-hospitais`).val(data.Participante.Hospitais);
                 $(`#participante-alergia`).val(data.Participante.Alergia);
                 $(`#participante-parente`).val(data.Participante.Parente);
                 if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
@@ -1041,6 +1073,7 @@ function GetParticipante(id) {
                 $(`input[type=radio][name=participante-hasparente][value=${data.Participante.HasParente}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
+                $(`input[type=radio][name=participante-hasconvenio][value=${data.Participante.HasConvenio}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
                 $(`#participante-cep`).val(data.Participante.CEP);
                 $(`#participante-logradouro`).val(data.Participante.Logradouro);
@@ -1070,6 +1103,8 @@ function GetParticipante(id) {
         $(`#participante-fone`).val("");
         $(`#participante-restricaoalimentar`).val("");
         $(`#participante-medicacao`).val("");
+        $(`#participante-convenio`).val("");
+        $(`#participante-hospitais`).val("");
         $(`#participante-alergia`).val("");
         $(`#participante-nomepai`).val("");
         $(`#participante-fonepai`).val("");
@@ -1093,6 +1128,7 @@ function GetParticipante(id) {
         $(`input[type=radio][name=participante-congregacao][value='Trindade']`).iCheck('check');
         $(`input[type=radio][name=participante-parente][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasmedicacao][value=false]`).iCheck('check');
+        $(`input[type=radio][name=participante-hasconvenio][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasrestricaoalimentar][value=false]`).iCheck('check');
     }
 }
@@ -1145,6 +1181,9 @@ function PostParticipante() {
                     Medicacao: $(`#participante-medicacao`).val(),
                     HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
                     Alergia: $(`#participante-alergia`).val(),
+                    HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
+                    Convenio: $(`#participante-convenio`).val(),
+                    Hospitais: $(`#participante-hospitais`).val(),
                     HasParente: $("input[type=radio][name=participante-hasparente]:checked").val(),
                     Parente: $(`#participante-parente`).val(),
                     Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
@@ -1469,6 +1508,20 @@ ${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-12 p-w-md m
                                 </div>
                             </div>` : ''}
 
+${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Possui convênio médico?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-convenio" value="true" name="participante-hasconvenio"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-convenio" checked="" value="false" name="participante-hasconvenio"> <i></i> Não </label></div>
+
+                                <div class="convenio d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="participante-convenio" data-field="Convênio" />
+                     <h5>Quais hospitais atendem?</h5>
+                                <input type="text" class="form-control" id="participante-hospitais" data-field="Hospitais" />
+                                </div>
+                            </div>` : ''}
+
 ${campos.find(x => x.Campo == 'Medicação') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Toma alguma medicação?</h5>
 
@@ -1526,6 +1579,16 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
             $('#not-medicacao').on('ifChecked', function (event) {
                 $('.medicacao').addClass('d-none');
                 $("#participante-medicacao").removeClass('required');
+            });
+
+            $('#has-convenio').on('ifChecked', function (event) {
+                $('.convenio').removeClass('d-none');
+                $("#participante-convenio").addClass('required');
+            });
+
+            $('#not-convenio').on('ifChecked', function (event) {
+                $('.convenio').addClass('d-none');
+                $("#participante-convenio").removeClass('required');
             });
 
 

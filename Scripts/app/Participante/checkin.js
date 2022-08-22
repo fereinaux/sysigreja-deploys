@@ -81,6 +81,9 @@ function PostParticipante() {
                         RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
                         HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
                         Medicacao: $(`#participante-medicacao`).val(),
+                        HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
+                        Convenio: $(`#participante-convenio`).val(),
+                        Hospitais: $(`#participante-hospitais`).val(),
                         HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
                         Alergia: $(`#participante-alergia`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
@@ -213,10 +216,13 @@ function GetParticipante() {
                 $(`#participante-fone-contato`).val(data.Participante.FoneContato);
                 $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Participante.Medicacao);
+                $(`#participante-convenio`).val(data.Participante.Convenio);
+                $(`#participante-hospitais`).val(data.Participante.Hospitais);
                 $(`#participante-alergia`).val(data.Participante.Alergia);
                 $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
+                $(`input[type=radio][name=participante-hasconvenio][value=${data.Participante.HasConvenio}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
                 $('.dados-participante-contato').removeClass('d-none');
                 $('.dados-participante-contato input[id*="nome"]').addClass('required');
@@ -262,6 +268,30 @@ function GetParticipante() {
                             <input onchange='PostTeste(${data.Participante.Id},${JSON.stringify(data.Participante)})' style="display: none;" class="custom-file-input inputFile" id="input-teste" name="input-teste" type="file" value="">
                         </label>`: `<span class="text-success p-l-xs pointer" onclick="toggleTeste(${data.Participante.Id})"><i class="fa fa-microscope fa-3x" aria-hidden="true" title="Teste"></i></span>`}
                     </form>`)
+
+                if (data.Participante.HasMedicacao) {
+                    $('.medicacao').removeClass('d-none')
+                } else {
+                    $('.medicacao').addClass('d-none')
+                }
+
+                if (data.Participante.HasConvenio) {
+                    $('.convenio').removeClass('d-none')
+                } else {
+                    $('.convenio').addClass('d-none')
+                }
+
+                if (data.Participante.HasAlergia) {
+                    $('.alergia').removeClass('d-none')
+                } else {
+                    $('.alergia').addClass('d-none')
+                }
+
+                if (data.Participante.HasRestricaoAlimentar) {
+                    $('.restricaoalimentar').removeClass('d-none')
+                } else {
+                    $('.restricaoalimentar').addClass('d-none')
+                }
 
                 $('.status').text(data.Participante.Status);
                 $('.circulo').text(data.DadosAdicionais.Circulo || "Sem Círculo");
@@ -1033,6 +1063,20 @@ ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-6 p-w-md
                                 <input type="text" class="form-control fone" id="participante-fone-convite" data-field="Fone de quem convidou" placeholder="+55 (81) 9999-9999" />
                             </div>` : ''}
 
+${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-6 p-w-md m-t-md text-center">
+                                <h5>Possui convênio médico?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-convenio" value="true" name="participante-hasconvenio"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-convenio" checked="" value="false" name="participante-hasconvenio"> <i></i> Não </label></div>
+
+                                <div class="convenio d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="participante-convenio" data-field="Convênio" />
+                     <h5>Quais hospitais atendem?</h5>
+                                <input type="text" class="form-control" id="participante-hospitais" data-field="Hospitais" />
+                                </div>
+                            </div>` : ''}
+
 ${campos.find(x => x.Campo == 'Medicação') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
                             <h5>Toma alguma medicação?</h5>
 
@@ -1092,6 +1136,17 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
                 $('.medicacao').addClass('d-none');
                 $("#participante-medicacao").removeClass('required');
             });
+
+            $('#has-convenio').on('ifChecked', function (event) {
+                $('.convenio').removeClass('d-none');
+                $("#participante-convenio").addClass('required');
+            });
+
+            $('#not-convenio').on('ifChecked', function (event) {
+                $('.convenio').addClass('d-none');
+                $("#participante-convenio").removeClass('required');
+            });
+
 
             $('#has-alergia').on('ifChecked', function (event) {
                 $('.alergia').removeClass('d-none');

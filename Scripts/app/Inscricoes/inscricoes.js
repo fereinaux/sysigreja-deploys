@@ -104,19 +104,7 @@ function VerificaCadastro() {
                     $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
                     $('.dados-participante-contato').removeClass('d-none');
                     $('.dados-participante-contato input[id*="nome"]').addClass('required');
-                    $('.dados-participante-contato input[id*="fone"]').addClass('fone');
-                    $('.pnl-cadastro input').attr('disabled', false)
-                    $('.pnl-cadastro select').attr('disabled', false)
-                    $('.pnl-cadastro button').attr('disabled', false)
-                    $('.i-checks-green').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green'
-                    });
-
-                    $('.i-checks-brown').iCheck({
-                        checkboxClass: 'icheckbox_square-brown',
-                        radioClass: 'iradio_square-brown'
-                    });
+                    $('.dados-participante-contato input[id*="fone"]').addClass('fone');                   
                 }
                 else if (data) {
                     window.location.href = data;
@@ -125,7 +113,91 @@ function VerificaCadastro() {
                     verificaCep($('#participante-cep')[0])
                 }
                 $("#participante-email").prop("disabled", true)
+                $('.pnl-cadastro input').attr('disabled', false)
+                $('.pnl-cadastro select').attr('disabled', false)
+                $('.pnl-cadastro button').attr('disabled', false)
 
+                $('.i-checks-green').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green'
+                });
+
+                $('.i-checks-brown').iCheck({
+                    checkboxClass: 'icheckbox_square-brown',
+                    radioClass: 'iradio_square-brown'
+                });
+
+
+                $('#has-medicacao').on('ifChecked', function (event) {
+                    $('.medicacao').removeClass('d-none');
+                    $("#participante-medicacao").addClass('required');
+                });
+
+                $('#not-medicacao').on('ifChecked', function (event) {
+                    $('.medicacao').addClass('d-none');
+                    $("#participante-medicacao").removeClass('required');
+                });
+
+                $('#has-parente').on('ifChecked', function (event) {
+                    $('.parente').removeClass('d-none');
+                    $("#participante-parente").addClass('required');
+                });
+
+                $('#not-parente').on('ifChecked', function (event) {
+                    $('.parente').addClass('d-none');
+                    $("#participante-parente").removeClass('required');
+                });
+
+                $('#trindade').on('ifChecked', function (event) {
+                    $('.congregacao').addClass('d-none');
+                    $("#participante-congregacaodescricao").removeClass('required');
+                });
+
+                $('#recon').on('ifChecked', function (event) {
+                    $('.congregacao').addClass('d-none');
+                    $("#participante-congregacaodescricao").removeClass('required');
+                });
+
+                $('#outra').on('ifChecked', function (event) {
+                    $('.congregacao').removeClass('d-none');
+                    $("#participante-congregacaodescricao").addClass('required');
+                });
+
+
+                $('#has-alergia').on('ifChecked', function (event) {
+                    $('.alergia').removeClass('d-none');
+                    $("#participante-alergia").addClass('required');
+                });
+
+                $('#not-alergia').on('ifChecked', function (event) {
+                    $('.alergia').addClass('d-none');
+                    $("#participante-alergia").removeClass('required');
+                });
+
+                $('#has-restricaoalimentar').on('ifChecked', function (event) {
+                    $('.restricaoalimentar').removeClass('d-none');
+                    $("#participante-restricaoalimentar").addClass('required');
+                });
+
+                $('#not-restricaoalimentar').on('ifChecked', function (event) {
+                    $('.restricaoalimentar').addClass('d-none');
+                    $("#participante-restricaoalimentar").removeClass('required');
+                });
+
+                $('#has-convenio').on('ifChecked', function (event) {
+                    $('.convenio').removeClass('d-none');
+                    $("#participante-convenio").addClass('required');
+                    $("#participante-hospitais").addClass('required');
+                });
+
+                $('#not-convenio').on('ifChecked', function (event) {
+                    $('.convenio').addClass('d-none');
+                    $("#participante-convenio").removeClass('required');
+                    $("#participante-hospitais").removeClass('required');
+                });
+
+
+                $('.pnl-cadastro input').first().focus()
 
             }
         })
@@ -172,6 +244,9 @@ function PostInscricao() {
                         Medicacao: $(`#participante-medicacao`).val(),
                         HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
                         Alergia: $(`#participante-alergia`).val(),
+                        HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
+                        Convenio: $(`#participante-convenio`).val(),
+                        Hospitais: $(`#participante-hospitais`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         NomePai: $(`#participante-nome-pai`).val(),
                         FonePai: $(`#participante-fone-pai`).val(),
@@ -189,63 +264,14 @@ function PostInscricao() {
     }
 }
 
-
-$('#has-medicacao').on('ifChecked', function (event) {
-    $('.medicacao').removeClass('d-none');
-    $("#participante-medicacao").addClass('required');
-});
-
-$('#not-medicacao').on('ifChecked', function (event) {
-    $('.medicacao').addClass('d-none');
-    $("#participante-medicacao").removeClass('required');
-});
-
-$('#has-parente').on('ifChecked', function (event) {
-    $('.parente').removeClass('d-none');
-    $("#participante-parente").addClass('required');
-});
-
-$('#not-parente').on('ifChecked', function (event) {
-    $('.parente').addClass('d-none');
-    $("#participante-parente").removeClass('required');
-});
-
-$('#trindade').on('ifChecked', function (event) {
-    $('.congregacao').addClass('d-none');
-    $("#participante-congregacaodescricao").removeClass('required');
-});
-
-$('#recon').on('ifChecked', function (event) {
-    $('.congregacao').addClass('d-none');
-    $("#participante-congregacaodescricao").removeClass('required');
-});
-
-$('#outra').on('ifChecked', function (event) {
-    $('.congregacao').removeClass('d-none');
-    $("#participante-congregacaodescricao").addClass('required');
-});
-
-
-$('#has-alergia').on('ifChecked', function (event) {
-    $('.alergia').removeClass('d-none');
-    $("#participante-alergia").addClass('required');
-});
-
-$('#not-alergia').on('ifChecked', function (event) {
-    $('.alergia').addClass('d-none');
-    $("#participante-alergia").removeClass('required');
-});
-
-$('#has-restricaoalimentar').on('ifChecked', function (event) {
-    $('.restricaoalimentar').removeClass('d-none');
-    $("#participante-restricaoalimentar").addClass('required');
-});
-
-$('#not-restricaoalimentar').on('ifChecked', function (event) {
-    $('.restricaoalimentar').addClass('d-none');
-    $("#participante-restricaoalimentar").removeClass('required');
-});
-
 $('.pnl-cadastro input').attr('disabled', true)
 $('.pnl-cadastro select').attr('disabled', true)
 $('.pnl-cadastro button').attr('disabled', true)
+
+
+$("#participante-email").on('keypress', function (e) {
+    if (e.which == 13) {
+        VerificaCadastro()
+    }
+});
+

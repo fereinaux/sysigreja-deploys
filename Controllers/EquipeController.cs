@@ -65,7 +65,7 @@ namespace SysIgreja.Controllers
             {
                 return Json(new
                 {
-                    Equipes = equipesBusiness.GetEquipes(EventoId).ToList()
+                    Equipes = equipesBusiness.GetEquipes(EventoId).Select(x => new { x.Id, x.Nome }).ToList()
                     .Where(x =>
                     x.Id == equipesBusiness.GetEquipanteEventoByUser(EventoId, user.Id)
                         .EquipeId)
@@ -74,7 +74,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return Json(new { Equipes = equipesBusiness.GetEquipes(EventoId).ToList() }, JsonRequestBehavior.AllowGet);
+                return Json(new { Equipes = equipesBusiness.GetEquipes(EventoId).Select(x => new { x.Id, x.Nome }).ToList() }, JsonRequestBehavior.AllowGet);
             }
         }
 

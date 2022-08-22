@@ -34,6 +34,14 @@ namespace SysIgreja.ViewModels
         public string FoneConvite { get; set; }
         [DisplayName("Restrição Alimentar")]
         public string RestricaoAlimentar { get; set; }
+        [DisplayName("Medicação")]
+        public string Medicacao { get; set; }
+
+        [DisplayName("Convênio")]
+        public string Convenio { get; set; }
+
+        [DisplayName("Hospitais")]
+        public string Hospitais { get; set; }
 
         [DisplayName("Situação")]
         public string Situacao { get; set; }

@@ -223,7 +223,20 @@
                                 <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
                             </div>
                         }
-
+                        @if (ViewBag.Campos.Contains(CamposEnum.Convenio.GetDescription()))
+                        {
+                            <div class="form-group">
+                                <label for="participante-hasmedicacao" class=" block">Possui convênio médico?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-convenio" value="true" name="participante-hasconvenio"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-convenio" checked="" value="false" name="participante-hasconvenio"> <i></i> Não </label></div>
+                            </div>
+                            <div class="form-group convenio d-none">
+                                <label for="participante-convenio" class="">Qual?</label>
+                                <input type="text" class="form-control" id="participante-convenio" data-field="Convênio" />
+                                <label for="participante-hospitais" class="">Quais hospitais atendem?</label>
+                                <input type="text" class="form-control" id="participante-hospitais" data-field="Hospitais" />
+                            </div>
+                        }
                         @if (ViewBag.Campos.Contains(CamposEnum.Medicacao.GetDescription()))
                         {
                             <div class="form-group">

@@ -116,6 +116,17 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetConfiguracaoResumido(int? Id)
+        {
+            var result = configuracaoBusiness.GetConfiguracaoResumido(Id);
+
+            var jsonRes = Json(new { Configuracao = result }, JsonRequestBehavior.AllowGet);
+            jsonRes.MaxJsonLength = Int32.MaxValue;
+            return jsonRes;
+        }
+
+
+        [HttpGet]
         public ActionResult GetConfiguracaoByEventoId(int Id)
         {
             var result = configuracaoBusiness.GetConfiguracaoByEventoId(Id);

@@ -179,7 +179,6 @@ namespace SysIgreja.Controllers
         {
             var user = accountBusiness
                 .GetUsuarios().FirstOrDefault(x => x.EquipanteId == EquipanteId);
-            var config = configuracaoBusiness.GetConfiguracaoByEventoId(EventoId);
             var evento = eventosBusiness.GetEventoById(EventoId);
 
             List<Permissoes> permissoes = new List<Permissoes>();
@@ -214,7 +213,7 @@ namespace SysIgreja.Controllers
                 }
             }
 
-            var configPermissao = permissoes.FirstOrDefault(x => x.ConfiguracaoId == config.Id);
+            var configPermissao = permissoes.FirstOrDefault(x => x.ConfiguracaoId == evento.ConfiguracaoId);
             var eventoPermissao = new EventoPermissao
             {
                 EventoId = EventoId,
@@ -236,7 +235,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                permissoes.Add(new Permissoes { ConfiguracaoId = config.Id.Value, Eventos = new List<EventoPermissao> { eventoPermissao } });
+                permissoes.Add(new Permissoes { ConfiguracaoId = evento.ConfiguracaoId.Value, Eventos = new List<EventoPermissao> { eventoPermissao } });
 
             }
 
@@ -268,7 +267,6 @@ namespace SysIgreja.Controllers
         {
             var user = accountBusiness
                 .GetUsuarios().FirstOrDefault(x => x.EquipanteId == EquipanteId);
-            var config = configuracaoBusiness.GetConfiguracaoByEventoId(EventoId);
             var evento = eventosBusiness.GetEventoById(EventoId);
             List<Permissoes> permissoes = JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue)  ;
             var claims = UserManager.GetClaims(user.Id);
@@ -277,7 +275,7 @@ namespace SysIgreja.Controllers
                 UserManager.RemoveClaim(user.Id, claims.Where(x => x.Type == "Permissões").FirstOrDefault());
             }
 
-            var configPermissao = permissoes.FirstOrDefault(x => x.ConfiguracaoId == config.Id);
+            var configPermissao = permissoes.FirstOrDefault(x => x.ConfiguracaoId == evento.ConfiguracaoId);
 
             configPermissao.Eventos.Remove(configPermissao.Eventos.FirstOrDefault(x => x.EventoId == EventoId && x.Role == Perfil));
 

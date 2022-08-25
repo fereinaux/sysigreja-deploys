@@ -287,7 +287,7 @@
                 </div>
             }
 
-            @if (ViewBag.HasEventosAbertos || (ViewBag.Action != "Inscrições" && ViewBag.Destaque.UrlDestino != null))
+            @if (ViewBag.HasEventosAbertos || (ViewBag.Action != "Inscrições" && string.IsNullOrEmpty(ViewBag.Destaque.UrlDestino)))
             {
                 <div class="col-xs-12">
                     <h3 style="font-weight:900;font-size:22px">Inscrições Abertas</h3>

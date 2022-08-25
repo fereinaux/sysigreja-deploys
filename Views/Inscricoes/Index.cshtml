@@ -404,10 +404,21 @@
 
                         <div class="card-body">
                             <span style="display: block; color: #9b2125;">@evento.Data</span>
-                            <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
-                                @(evento.Numeracao)º @evento.Configuracao.Titulo
+                            @if (evento.Numeracao > 0)
+                            {
 
-                            </h3>
+                                <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
+                                    @(evento.Numeracao)º @evento.Configuracao.Titulo
+
+                                </h3>
+                            }
+                            else
+                            {
+                                <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
+                                    @evento.Configuracao.Titulo
+
+                                </h3>
+                            }
                             @if (ViewBag.Action == "Inscrições")
                             {
 

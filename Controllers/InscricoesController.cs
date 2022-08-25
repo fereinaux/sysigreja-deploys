@@ -233,6 +233,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult InscricaoConcluida(int Id)
         {
+            ViewBag.Title = "Inscrição Concluída";
             Participante participante = participantesBusiness.GetParticipanteById(Id);
             var Valor = participante.Evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? participante.Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
             var config = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);

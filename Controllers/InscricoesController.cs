@@ -145,7 +145,7 @@ namespace SysIgreja.Controllers
             ViewBag.HasEventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
             ViewBag.EventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
             ViewBag.HasEventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
-            if (eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Count == 1)
+            if (eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription()).OrderBy(x => x.DataEvento).Count == 1)
                 return RedirectToAction("Detalhes", new { Id = eventos.FirstOrDefault().Id, Tipo = action });
             return View("Index");
         }

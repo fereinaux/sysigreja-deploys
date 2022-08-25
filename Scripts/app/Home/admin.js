@@ -93,8 +93,7 @@ function GetResultadosAdmin() {
                             }
 
                             htmlDetalhamentoMobile += `<div class="col col-xs-6">
-                                                                <div class="equipe-mobile black-bg">
-                                                                    ${element.Tipo == "Coordenador" ? '<img src="/Images/crown.png" />' : ''} 
+                                                                <div class="equipe-mobile black-bg">                                                              
                                                                     <div class="mobile-content">
                                                                         <h4>${element.Nome}</h4>
                                                                     </div>

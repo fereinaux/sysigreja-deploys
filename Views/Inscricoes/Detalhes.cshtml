@@ -114,7 +114,15 @@
             <div class="row text-center">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="heading-count">
-                        <h2>O <span>@(ViewBag.Evento.Numeracao)</span>º @(ViewBag.Configuracao.Titulo) está chegando</h2>
+                        @if (ViewBag.Evento.Numeracao > 0)
+                        {
+
+                            <h2>O <span>@(ViewBag.Evento.Numeracao)</span>º @(ViewBag.Configuracao.Titulo) está chegando</h2>
+                        }
+                        else
+                        {
+                            <h2>O @(ViewBag.Configuracao.Titulo) está chegando</h2>
+                        }
                         <p>Prepare-se para viver algo inesquecível...</p>
                     </div>
                 </div>
@@ -155,7 +163,7 @@
                         </div>
                         <h3><a href="#">Investimento</a></h3>
                         <p>
-                           Preço: @string.Format("{0:C}", ViewBag.Evento.Valor) 
+                            Preço: @string.Format("{0:C}", ViewBag.Evento.Valor)
                         </p>
                     </div>
                 </div>
@@ -171,20 +179,20 @@
                     </div>
                 </div>
                 @*<div class="col-lg-4 col-md-6 col-xs-12 fadeInUp"
-                     data-animation="fadeInUp"
-                     data-delay="600">
-                    <div class="services-item">
-                        <div class="icon">
-                            <i class="fas fa-map"></i>
+                         data-animation="fadeInUp"
+                         data-delay="600">
+                        <div class="services-item">
+                            <div class="icon">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <h3><a href="#">Local</a></h3>
+                            <p>
+                                Chalés de Aldeia Episcopal: Estr. p/ O
+                                Guanabara, 29 - Aldeia dos Camarás, Camaragibe - PE, 54789-205
+                            </p>
+                            <a target="_blank" href="https://goo.gl/maps/dZEyscQCDKVts5UX8">https://goo.gl/maps/dZEyscQCDKVts5UX8</a>
                         </div>
-                        <h3><a href="#">Local</a></h3>
-                        <p>
-                            Chalés de Aldeia Episcopal: Estr. p/ O
-                            Guanabara, 29 - Aldeia dos Camarás, Camaragibe - PE, 54789-205
-                        </p>
-                        <a target="_blank" href="https://goo.gl/maps/dZEyscQCDKVts5UX8">https://goo.gl/maps/dZEyscQCDKVts5UX8</a>
-                    </div>
-                </div>*@
+                    </div>*@
             </div>
         </div>
     </section>

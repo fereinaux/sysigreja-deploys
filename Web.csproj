@@ -872,8 +872,6 @@
     <Content Include="fonts\font-awesome\webfonts\fa-brands-400.svg" />
     <Content Include="fonts\font-awesome\webfonts\fa-regular-400.svg" />
     <Content Include="fonts\font-awesome\webfonts\fa-solid-900.svg" />
-    <Content Include="Images\calibri-bold.js" />
-    <Content Include="Images\calibri-normal.js" />
     <Content Include="Images\logo-iecb.png" />
     <Content Include="Images\mapa\amarelo-crown.png" />
     <Content Include="Images\mapa\amarelo.png" />
@@ -897,8 +895,6 @@
     <Content Include="Images\mapa\verde-escuro.png" />
     <Content Include="Images\mapa\vermelho-crown.png" />
     <Content Include="Images\mapa\vermelho.png" />
-    <Content Include="Images\mont-normal.js" />
-    <Content Include="Images\Montserrat-normal.js" />
     <Content Include="Images\profile.jpg" />
     <Content Include="Content\Images\question-mark-1.png" />
     <Content Include="Content\Images\red_bool.png" />
@@ -1191,7 +1187,6 @@
     <Content Include="Views\CentroCusto\Index.cshtml" />
     <Content Include="Views\Arquivo\Index.cshtml" />
     <Content Include="Views\Lancamento\Index.cshtml" />
-    <Content Include="Views\Participante\Etiquetas.cshtml" />
     <Content Include="Views\Circulo\Index.cshtml" />
     <Content Include="Views\Relatorio\Index.cshtml" />
     <Content Include="Views\Quarto\Participantes.cshtml" />

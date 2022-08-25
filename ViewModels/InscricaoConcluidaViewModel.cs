@@ -22,10 +22,11 @@ namespace SysIgreja.ViewModels
         public string Data { get; set; }
         public System.DateTime DataEvento { get; set; }
         public string UrlDestino { get; set; }
+        public string Status { get; set; }
         public int Valor { get; set; }
         public int ValorTaxa { get; set; }
         public int Numeracao { get; set; }
         public string Descricao { get; set; }
-        public PostConfiguracaoModel Configuracao{ get; set; }
+        public PostConfiguracaoModel Configuracao { get; set; }
     }
 }

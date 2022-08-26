@@ -393,7 +393,7 @@ namespace SysIgreja.Controllers
             {
                 case "Inscrições Equipe":
                     var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == Email);
-                    if (equipante.Equipes.Any(x => x.EventoId == eventoId))
+                    if (equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId))
                     {
                         return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }));
                     }

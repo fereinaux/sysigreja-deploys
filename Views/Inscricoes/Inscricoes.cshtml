@@ -19,16 +19,16 @@
                     <div class="form-group">
                         @if (ViewBag.Tipo.Contains("Equipe"))
                         {
-                            <label for="participante-email" class="">Telefone do participante</label>
+                            <label for="participante-email" class="">Telefone do @ViewBag.Sujeito</label>
                             <div style="position:relative">
                                 <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
-                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
+                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do @ViewBag.Sujeito" />
                             </div>
 
                         }
                         else
                         {
-                            <label for="participante-email" class="">Digite o e-mail do participante</label>
+                    <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
                             <div style="position:relative">
                                 <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
                                 <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
@@ -40,21 +40,21 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome" class="">Nome e sobrenome do participante</label>
+                                <label for="participante-nome" class="">Nome e sobrenome do @ViewBag.Sujeito</label>
                                 <input type="text" class="form-control required" id="participante-nome" name="name" data-field="Nome" value="@ViewBag.Nome" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Apelido.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-apelido" class="">Como o participante gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
+                                <label for="participante-apelido" class="">Como o @ViewBag.Sujeito gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
                                 <input type="text" class="form-control required" id="participante-apelido" name"nickname" data-field="Apelido" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Genero.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-sexo" class=" block">Gênero do participante</label>
+                                <label for="participante-sexo" class=" block">Gênero do @ViewBag.Sujeito</label>
                                 <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="sexo-masculino" checked="" value="1" name="participante-sexo"> <i></i> Masculino </label></div>
                                 <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="sexo-feminino" value="2" name="participante-sexo"> <i></i> Feminino </label></div>
                             </div>
@@ -62,7 +62,7 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.DataNascimento.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-data-nascimento" class="">Data de nascimento do participante</label>
+                                <label for="participante-data-nascimento" class="">Data de nascimento do @ViewBag.Sujeito</label>
                                 <input type="text" class="form-control full-date required" id="participante-data-nascimento" data-idade="17" data-field="Data de nascimento" />
                             </div>
                         }
@@ -71,14 +71,14 @@
                             if (ViewBag.Tipo.Contains("Equipe"))
                             {
                                 <div class="form-group">
-                                    <label for="participante-email" class="">Digite o e-mail do participante</label>
+                                    <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
                                     <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
                                 </div>
                             }
                             else
                             {
                                 <div class="form-group">
-                                    <label for="participante-fone" class="">Telefone do participante</label>
+                                    <label for="participante-fone" class="">Telefone do @ViewBag.Sujeito</label>
                                     <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
                                 </div>
 
@@ -95,8 +95,8 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-instagram" class="">Instagram do participante</label>
-                                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do participante" />
+                                <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
+                                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))

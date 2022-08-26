@@ -167,6 +167,7 @@ namespace SysIgreja.Controllers
         public ActionResult Inscricoes(int Id, string Tipo, int? ConjugeId)
         {
             ViewBag.Title = Tipo;
+           
             ViewBag.Tipo = Tipo;
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && x.Status == StatusEnum.Aberto);
             if (evento == null)
@@ -177,7 +178,8 @@ namespace SysIgreja.Controllers
             switch (Tipo)
             {
                 case "Inscrições Equipe":
-                    ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
+                    ViewBag.Sujeito = "equipante";
+                   ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
                     ViewBag.Equipes = equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
                     if (ConjugeId.HasValue)
                     {
@@ -189,6 +191,7 @@ namespace SysIgreja.Controllers
                     }
                     return View();
                 default:
+                    ViewBag.Sujeito = "participante";
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
                     if (ConjugeId.HasValue)
                     {
@@ -229,6 +232,7 @@ namespace SysIgreja.Controllers
             switch (Tipo)
             {
                 case "Inscrições Equipe":
+                    ViewBag.Sujeito = "equipante";
                     ViewBag.Equipes = equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
                     if (ConjugeId.HasValue)
@@ -241,6 +245,7 @@ namespace SysIgreja.Controllers
                     }
                     return View("Inscricoes");
                 default:
+                    ViewBag.Sujeito = "participante";
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
                     if (ConjugeId.HasValue)
                     {

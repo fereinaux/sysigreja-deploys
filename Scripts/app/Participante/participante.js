@@ -935,6 +935,7 @@ function Opcoes(row) {
             $('.convitetext').text(realista.NomeConvite)
             $('.contatotext').text(realista.NomeContato)
             $('#participante-obs').val(realista.Observacao)
+            $('.btn-ligar').attr("href", `tel:${getTelefone('realista')}`)
             if ($('#modal-opcoes').is(":hidden")) {
                 getMensagensByTipo(["Participante"])
             }
@@ -1152,6 +1153,7 @@ function PostParticipante() {
                     EventoId: $("#participante-eventoid").val(),
                     Nome: $(`#participante-nome`).val(),
                     Apelido: $(`#participante-apelido`).val(),
+                    Instagram: $('#participante-instagram').val(),
                     DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#participante-email`).val(),
                     Fone: $(`#participante-fone`).val(),

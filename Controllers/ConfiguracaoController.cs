@@ -75,10 +75,8 @@ namespace SysIgreja.Controllers
                     EquipeCirculoId = x.EquipeCirculoId,
                     CentroCustoInscricaoId = x.CentroCustoInscricaoId,
                     CentroCustoTaxaId = x.CentroCustoTaxaId,
-                    BackgroundCelularId = x.BackgroundCelularId,
                     CorBotao = x.CorBotao,
                     CorHoverBotao = x.CorHoverBotao,
-                    CorHoverScroll = x.CorHoverScroll,
                     TipoCirculoId = x.TipoCirculo,
                     TipoCirculo = x.TipoCirculo.GetDescription(),
                     CentroCustos = x.CentroCustos.Select(y => new CentroCustoModel
@@ -87,14 +85,11 @@ namespace SysIgreja.Controllers
                         Tipo = y.Tipo.GetDescription(),
                         Id = y.Id
                     }).ToList(),
-                    CorLoginBox = x.CorLoginBox,
-                    CorScroll = x.CorScroll,
                     LogoId = x.LogoId,
                     LogoRelatorioId = x.LogoRelatorioId,
                     Logo = x.Logo != null ? Convert.ToBase64String(x.Logo.Conteudo) : "",
                     Background = x.Background != null ? Convert.ToBase64String(x.Background.Conteudo) : "",
                     LogoRelatorio = x.LogoRelatorio != null ? Convert.ToBase64String(x.LogoRelatorio.Conteudo) : "",
-                    BackgroundCelular = x.BackgroundCelular != null ? Convert.ToBase64String(x.BackgroundCelular.Conteudo) : "",
                     MsgConclusao = x.MsgConclusao,
                     MsgConclusaoEquipe = x.MsgConclusaoEquipe,                    
 
@@ -148,9 +143,26 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetCamposEquipeByEventoId(int id)
+        {
+            var evento = eventoBusiness.GetEventoById(id);
+            var result = configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value);
+
+            return Json(new { Campos = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public ActionResult GetCampos(int id)
         {
             var result = configuracaoBusiness.GetCampos(id);
+
+            return Json(new { Campos = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetCamposEquipe(int id)
+        {
+            var result = configuracaoBusiness.GetCamposEquipe(id);
 
             return Json(new { Campos = result }, JsonRequestBehavior.AllowGet);
         }
@@ -177,6 +189,14 @@ namespace SysIgreja.Controllers
         public ActionResult PostCampos(List<CamposModel> campos, int id)
         {
             configuracaoBusiness.PostCampos(campos, id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult PostCamposEquipe(List<CamposModel> campos, int id)
+        {
+            configuracaoBusiness.PostCamposEquipe(campos, id);
 
             return new HttpStatusCodeResult(200);
         }
@@ -252,13 +272,6 @@ namespace SysIgreja.Controllers
         public ActionResult PostBackground(int id, int sourceId)
         {
             configuracaoBusiness.PostBackground(sourceId, id);
-
-            return new HttpStatusCodeResult(200);
-        }
-        [HttpPost]
-        public ActionResult PostBackgroundCelular(int id, int sourceId)
-        {
-            configuracaoBusiness.PostBackgroundCelular(sourceId, id);
 
             return new HttpStatusCodeResult(200);
         }

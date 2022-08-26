@@ -65,7 +65,7 @@ namespace SysIgreja.Controllers
             {
                 return Json(new
                 {
-                    Equipes = equipesBusiness.GetEquipes(EventoId).Select(x => new { x.Id, x.Nome }).ToList()
+                    Equipes = equipesBusiness.GetEquipes(EventoId).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList()
                     .Where(x =>
                     x.Id == equipesBusiness.GetEquipanteEventoByUser(EventoId, user.Id)
                         .EquipeId)

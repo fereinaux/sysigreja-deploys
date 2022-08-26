@@ -803,6 +803,7 @@
     <Compile Include="Mapper\Mapper.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="ViewModels\AdminViewModel.cs" />
+    <Compile Include="ViewModels\EquipeViewModel.cs" />
     <Compile Include="ViewModels\PadrinhoViewModel.cs" />
     <Compile Include="ViewModels\CaronaViewModel.cs" />
     <Compile Include="ViewModels\QuartoViewModel.cs" />
@@ -1201,7 +1202,6 @@
     <Content Include="Views\Carona\Index.cshtml" />
     <Content Include="Views\Quarto\Equipe.cshtml" />
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
-    <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
     <None Include="Properties\PublishProfiles\SysIgreja Deploy.pubxml" />
     <Content Include="Views\Shared\_Inscricoes.cshtml" />
     <Content Include="Views\Padrinho\Index.cshtml" />

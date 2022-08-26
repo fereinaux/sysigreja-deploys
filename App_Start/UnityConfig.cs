@@ -66,6 +66,7 @@ namespace Web
             container.RegisterType<IGenericRepository<Mensagem>, GenericRepository<Mensagem>>();
             container.RegisterType<IGenericRepository<Configuracao>, GenericRepository<Configuracao>>();
             container.RegisterType<IGenericRepository<ConfiguracaoCampos>, GenericRepository<ConfiguracaoCampos>>();
+            container.RegisterType<IGenericRepository<ConfiguracaoCamposEquipe>, GenericRepository<ConfiguracaoCamposEquipe>>();
             container.RegisterType<IGenericRepository<Carona>, GenericRepository<Carona>>();
             container.RegisterType<IGenericRepository<CaronaParticipante>, GenericRepository<CaronaParticipante>>();
 

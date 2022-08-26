@@ -15,14 +15,26 @@
         <div class="row justify-content-center p-sm">
             <div class="col col-12">
                 <div class="p-h-xs m-b-lg" id="form-inscricao">
+                    <input type="hidden" name="EquipanteId" id="EquipanteId" value="0" />
                     <div class="form-group">
-                        <label for="participante-email" class="">Digite o e-mail do participante</label>
-                        <input type="hidden" name="EquipanteId" id="EquipanteId" value="0" />
-                        <div style="position:relative">
-                            <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
-                            <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
-                        </div>
+                        @if (ViewBag.Tipo.Contains("Equipe"))
+                        {
+                            <label for="participante-email" class="">Telefone do participante</label>
+                            <div style="position:relative">
+                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
+                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
+                            </div>
 
+                        }
+                        else
+                        {
+                            <label for="participante-email" class="">Digite o e-mail do participante</label>
+                            <div style="position:relative">
+                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
+                                <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
+                            </div>
+
+                        }
                     </div>
                     <div class="pnl-cadastro">
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
@@ -56,10 +68,22 @@
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))
                         {
-                            <div class="form-group">
-                                <label for="participante-fone" class="">Telefone do participante</label>
-                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
-                            </div>
+                            if (ViewBag.Tipo.Contains("Equipe"))
+                            {
+                                <div class="form-group">
+                                    <label for="participante-email" class="">Digite o e-mail do participante</label>
+                                    <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <label for="participante-fone" class="">Telefone do participante</label>
+                                    <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
+                                </div>
+
+                            }
+
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
@@ -376,7 +400,7 @@
        }
 
        function VerificaCadastro() {
-           if (IsEmail($(`#participante-email`).val())) {
+           if ('@ViewBag.Tipo'.includes('Equipe') ? $('#participante-fone').val() : IsEmail($(`#participante-email`).val())) {
                AplicarCssPadrao($(`#participante-email`));
                $.ajax({
                    url: "/Inscricoes/VerificaCadastro",
@@ -384,7 +408,7 @@
                    type: "POST",
                    contentType: 'application/json; charset=utf-8',
                    data: JSON.stringify({
-                       Email: $(`#participante-email`).val(),
+                       Email: '@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone`).val() : $(`#participante-email`).val(),
                        Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
                        eventoId: window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
                    }),

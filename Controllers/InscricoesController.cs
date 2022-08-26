@@ -392,13 +392,17 @@ namespace SysIgreja.Controllers
             switch (Tipo)
             {
                 case "Inscrições Equipe":
-                    var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == Email);
-                    if (equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId))
+                    var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone == Email);
+                    if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId))
                     {
                         return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }));
                     }
+                    else if (equipante != null)
+                    {
+                        return Json(new { Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
+                    }
+                    return new HttpStatusCodeResult(200);
 
-                    return Json(new { Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
                 default:
                     var participante = participantesBusiness.GetParticipantesByEvento(eventoId).FirstOrDefault(x => x.Email == Email && (new StatusEnum[] { StatusEnum.Confirmado, StatusEnum.Inscrito }).Contains(x.Status));
 

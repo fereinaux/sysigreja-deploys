@@ -104,6 +104,10 @@
                             <div class="form-group">
                                 <label for="participante-fone" class="">Tamanho da camisa</label>
                                 <select class="form-control" id="participante-camisa">
+                                    <option value="8">8</option>
+                                    <option value="10">10</option>
+                                    <option value="12">12</option>
+                                    <option value="14">14</option>
                                     <option value="PP">PP</option>
                                     <option value="P">P</option>
                                     <option value="M">M</option>
@@ -328,6 +332,22 @@
 
 @section scripts {
     <script>
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 700;  //time in ms, 5 seconds for example
+        var $input = '@ViewBag.Tipo'.includes('Equipe') ? $('#participante-fone') : $('#participante-email');
+
+        $input.focus()
+        //on keyup, start the countdown
+        $input.on('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(VerificaCadastro, doneTypingInterval);
+        });
+
+        //on keydown, clear the countdown
+        $input.on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
        var lat, lon;
 
        if ($('#map').length > 0) {
@@ -400,8 +420,6 @@
        }
 
        function VerificaCadastro() {
-           if ('@ViewBag.Tipo'.includes('Equipe') ? $('#participante-fone').val() : IsEmail($(`#participante-email`).val())) {
-               AplicarCssPadrao($(`#participante-email`));
                $.ajax({
                    url: "/Inscricoes/VerificaCadastro",
                    datatype: "json",
@@ -410,7 +428,7 @@
                    data: JSON.stringify({
                        Email: '@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone`).val() : $(`#participante-email`).val(),
                        Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
-                       eventoId: window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
+                       eventoId: @ViewBag.EventoId
                    }),
                    success: function (data) {
                        if (data.Participante) {
@@ -447,10 +465,6 @@
                        if ($('#participante-cep').val()) {
                            verificaCep($('#participante-cep')[0])
                        }
-                       $("#participante-email").prop("disabled", true)
-                       $('.pnl-cadastro input').attr('disabled', false)
-                       $('.pnl-cadastro select').attr('disabled', false)
-                       $('.pnl-cadastro button').attr('disabled', false)
 
                        $('.i-checks-green').iCheck({
                            checkboxClass: 'icheckbox_square-green',
@@ -531,16 +545,8 @@
                            $("#participante-hospitais").removeClass('required');
                        });
 
-
-                       $('.pnl-cadastro input').first().focus()
-
                    }
                })
-           } else {
-               AplicarCssErro($(`#participante-email`));
-               ErrorMessage(`Erros de Formatação:
-Email: exemplo@provedor.com.br`);
-           }
 
        }
 
@@ -602,10 +608,6 @@ Email: exemplo@provedor.com.br`);
                });
            }
        }
-
-       $('.pnl-cadastro input').attr('disabled', true)
-       $('.pnl-cadastro select').attr('disabled', true)
-       $('.pnl-cadastro button').attr('disabled', true)
 
 
        $("#participante-email").on('keypress', function (e) {

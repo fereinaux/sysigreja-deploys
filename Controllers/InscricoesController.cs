@@ -153,19 +153,17 @@ namespace SysIgreja.Controllers
             ViewBag.Destaque = destaque;
             if (action == "Inscrições Equipe")
             {
-                ViewBag.EventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription()).OrderBy(x => x.DataEvento);
-                ViewBag.HasEventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription()).OrderBy(x => x.DataEvento).Any();
-                ViewBag.EventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription()).OrderBy(x => x.DataEvento);
-                ViewBag.HasEventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription()).OrderBy(x => x.DataEvento).Any();
+                ViewBag.HasEventosAbertos = destaque != null || eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
+
             }
             else
             {
-
-                ViewBag.EventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
                 ViewBag.HasEventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
-                ViewBag.EventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
-                ViewBag.HasEventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
+
             }
+            ViewBag.EventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
+            ViewBag.EventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
+            ViewBag.HasEventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
             return View("Index");
         }
 

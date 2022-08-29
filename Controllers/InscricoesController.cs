@@ -151,10 +151,21 @@ namespace SysIgreja.Controllers
                 return RedirectToAction("Detalhes", new { Id = eventos.FirstOrDefault().Id, Tipo = action });
             var destaque = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription()).OrderBy(x => x.DataEvento).First();
             ViewBag.Destaque = destaque;
-            ViewBag.EventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
-            ViewBag.HasEventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
-            ViewBag.EventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
-            ViewBag.HasEventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
+            if (action == "Inscrições Equipe")
+            {
+                ViewBag.EventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription()).OrderBy(x => x.DataEvento);
+                ViewBag.HasEventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription()).OrderBy(x => x.DataEvento).Any();
+                ViewBag.EventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription()).OrderBy(x => x.DataEvento);
+                ViewBag.HasEventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription()).OrderBy(x => x.DataEvento).Any();
+            }
+            else
+            {
+
+                ViewBag.EventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
+                ViewBag.HasEventosAbertos = eventos.Where(x => x.Status == StatusEnum.Aberto.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
+                ViewBag.EventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento);
+                ViewBag.HasEventosEncerrados = eventos.Where(x => x.Status == StatusEnum.Encerrado.GetDescription() && x.Configuracao.Titulo != destaque.Configuracao.Titulo && x.Numeracao != destaque.Numeracao).OrderBy(x => x.DataEvento).Any();
+            }
             return View("Index");
         }
 
@@ -167,7 +178,7 @@ namespace SysIgreja.Controllers
         public ActionResult Inscricoes(int Id, string Tipo, int? ConjugeId)
         {
             ViewBag.Title = Tipo;
-           
+
             ViewBag.Tipo = Tipo;
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && x.Status == StatusEnum.Aberto);
             if (evento == null)
@@ -179,7 +190,7 @@ namespace SysIgreja.Controllers
             {
                 case "Inscrições Equipe":
                     ViewBag.Sujeito = "equipante";
-                   ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
+                    ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
                     ViewBag.Equipes = equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
                     if (ConjugeId.HasValue)
                     {

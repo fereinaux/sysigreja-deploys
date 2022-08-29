@@ -329,9 +329,28 @@
     </div>
 </div>
 
+<style>
+    .dtp > .dtp-content > .dtp-date-view > header.dtp-header {
+        background: @ViewBag.Configuracao.CorHoverBotao !important;
+    }
+
+    .dtp div.dtp-date, .dtp div.dtp-time {
+         background: @ViewBag.Configuracao.CorBotao !important;
+    }
+
+    .dtp .p10 > a {
+        color: white;
+    }
+
+    .dtp table.dtp-picker-days tr > td > a.selected {
+        background: @ViewBag.Configuracao.CorBotao !important;
+    }
+</style>
+
 
 @section scripts {
     <script>
+
         var typingTimer;                //timer identifier
         var doneTypingInterval = 700;  //time in ms, 5 seconds for example
         var $input = '@ViewBag.Tipo'.includes('Equipe') ? $('#participante-fone') : $('#participante-email');

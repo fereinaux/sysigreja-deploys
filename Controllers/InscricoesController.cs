@@ -1,6 +1,9 @@
 ﻿
 using AutoMapper;
+<<<<<<< HEAD
 using Core.Business.Categorias;
+=======
+>>>>>>> 066820cddea7ddcdc2e73ff9d8b4ca23123e59d3
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
@@ -36,10 +39,16 @@ namespace SysIgreja.Controllers
         private readonly INewsletterBusiness newsletterBusiness;
         private readonly IMapper mapper;
 
+<<<<<<< HEAD
         public InscricoesController(IParticipantesBusiness participantesBusiness, ICategoriaBusiness categoriaBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
             this.categoriaBusiness = categoriaBusiness;
+=======
+        public InscricoesController(IParticipantesBusiness participantesBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
+        {
+            this.participantesBusiness = participantesBusiness;
+>>>>>>> 066820cddea7ddcdc2e73ff9d8b4ca23123e59d3
             this.equipesBusiness = equipesBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
             this.equipantesBusiness = equipantesBusiness;

@@ -28,7 +28,11 @@
                         }
                         else
                         {
+<<<<<<< HEAD
                             <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
+=======
+                    <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
+>>>>>>> 066820cddea7ddcdc2e73ff9d8b4ca23123e59d3
                             <div style="position:relative">
                                 <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
                                 <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
@@ -569,8 +573,12 @@
 
        }
 
+<<<<<<< HEAD
         function PostInscricao() {
             $('.btn-juventude').prop('disabled', true)
+=======
+       function PostInscricao() {
+>>>>>>> 066820cddea7ddcdc2e73ff9d8b4ca23123e59d3
            if (ValidateForm(`#form-inscricao`)) {
                $.ajax({
                    url: '(@ViewBag.Tipo)'.includes('Equipe') ? "/Equipante/PostEquipante/" : "/Inscricoes/PostInscricao/",
@@ -624,12 +632,18 @@
                        }),
                    success: function (url) {
                        window.location.href = url;
+<<<<<<< HEAD
                    },
                    error: function () {
                       $('.btn-juventude').prop("disabled", false);
                    }
                });
             }
+=======
+                   }
+               });
+           }
+>>>>>>> 066820cddea7ddcdc2e73ff9d8b4ca23123e59d3
        }
 
 

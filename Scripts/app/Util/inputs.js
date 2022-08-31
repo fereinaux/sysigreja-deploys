@@ -31,13 +31,10 @@ function initInputs() {
     $('.full-date').on('keyup', function () {
         $('#full-date-changer').val($(this).val())
     })
-<<<<<<< HEAD
 
     $('.full-date').on('change', function () {
         $('#full-date-changer').val($(this).val())
     })
-=======
->>>>>>> 066820cddea7ddcdc2e73ff9d8b4ca23123e59d3
 
     $('.full-date-time').bootstrapMaterialDatePicker({ time: true, format: "DD/MM/YYYY HH:mm", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br', })
 

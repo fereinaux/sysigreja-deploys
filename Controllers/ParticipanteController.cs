@@ -445,6 +445,8 @@ namespace SysIgreja.Controllers
                     result = result.OrderBy(x => x.Id);
                 }
 
+                filteredResultsCount = result.Count();
+
                 result = result.Skip(model.Start.Value)
                 .Take(model.Length.Value);
 

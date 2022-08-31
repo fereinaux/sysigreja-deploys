@@ -41,7 +41,7 @@
             letter-spacing: 0.5px;
         }
 
-        .row-eventos {
+        .row-eventos, .panel-categorias {
             width: 70%;
             margin:auto;
         }
@@ -53,7 +53,7 @@
         }
 
         .img-logo {
-            max-width: 100%;
+            max-width: 90%;
             max-height: 90%;
             margin: auto;
         }
@@ -99,6 +99,18 @@
             -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
             box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
             transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
+        }
+
+        .img-wrapper img:hover {
+            transform: scale(1.15);
+        }
+
+        .img-wrapper {
+            margin: 10px auto; 
+            width: 110px;
+            height: 110px;
+            overflow: hidden;
+            border-radius: 50%;
         }
 
         .card-body {
@@ -246,6 +258,23 @@
 
                 <h3 style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
             </div>
+        </div>
+        <div class="row panel-categorias">
+            <div class="col-xs-12">
+                <h3 style="font-weight: 900; font-size: 18px;">Categorias</h3>
+            </div>
+            @foreach (var categoria in ViewBag.Categorias)
+            {
+                <div class="col-lg-2 col-sm-6 col-md-4">
+                    <div style="display:flex; flex-direction:column">
+                        <div class="img-wrapper">
+
+                            <img src="data:image/jpeg;base64,@categoria.Imagem" class="img-categoria" style="cursor:pointer; width:100%;height:100%; border-radius: 50%;" />
+                        </div>
+                        <h4 class="text-center" style="font-size: 14px; margin-top:5px">@categoria.Nome</h4>
+                    </div>
+                </div>
+            }
         </div>
         <div class="row row-eventos" style="">
             @if (ViewBag.Action == "Inscrições")

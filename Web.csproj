@@ -775,6 +775,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\CrachaController.cs" />
+    <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\PadrinhoController.cs" />
     <Compile Include="Controllers\MensagemController.cs" />
     <Compile Include="Controllers\ConfiguracaoController.cs" />
@@ -803,6 +804,7 @@
     <Compile Include="Mapper\Mapper.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="ViewModels\AdminViewModel.cs" />
+    <Compile Include="ViewModels\EquipeViewModel.cs" />
     <Compile Include="ViewModels\PadrinhoViewModel.cs" />
     <Compile Include="ViewModels\CaronaViewModel.cs" />
     <Compile Include="ViewModels\QuartoViewModel.cs" />
@@ -1201,7 +1203,6 @@
     <Content Include="Views\Carona\Index.cshtml" />
     <Content Include="Views\Quarto\Equipe.cshtml" />
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
-    <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
     <None Include="Properties\PublishProfiles\SysIgreja Deploy.pubxml" />
     <Content Include="Views\Shared\_Inscricoes.cshtml" />
     <Content Include="Views\Padrinho\Index.cshtml" />
@@ -1224,6 +1225,7 @@
     <Content Include="assets\img\team\.DS_Store" />
     <Content Include="assets\js\.DS_Store" />
     <Content Include="assets\php\form-process.php" />
+    <Content Include="Views\Categoria\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -15,6 +15,12 @@ namespace SysIgreja.ViewModels
         public string PadrinhoNome { get; internal set; }
     }
 
+    public class CategoriaViewModel
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Imagem { get; set; }
+    }
 
     public class InscricoesViewModel
     {

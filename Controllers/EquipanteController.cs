@@ -398,41 +398,6 @@ namespace SysIgreja.Controllers
             return Json(new { Equipante = result }, JsonRequestBehavior.AllowGet);
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public ActionResult VerificaCadastro(string Fone, int EventoId)
-        {
-            var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone.Replace("+", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace("-", "") == Fone.Replace("+", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace("-", ""));
-
-            if (equipante != null)
-                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = EventoId }));
-            else
-                return new HttpStatusCodeResult(200);
-        }
-
-        [AllowAnonymous]
-        public ActionResult InscricaoConcluida(int Id, int EventoId)
-        {
-            Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
-            var eventoAtual = eventosBusiness.GetEventoById(EventoId);
-            var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
-            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
-            ViewBag.Configuracao = config;
-            ViewBag.MsgConclusao = config.MsgConclusaoEquipe
-                 .Replace("${Nome}", equipante.Nome)
-                  .Replace("${EventoId}", EventoId.ToString())
-                                  .Replace("${Id}", equipante.Id.ToString())
-         .Replace("${Apelido}", equipante.Apelido)
-               .Replace("${Evento}", eventoAtual.Configuracao.Titulo)
-                  .Replace("${NumeracaoEvento}", eventoAtual.Numeracao.ToString())
-                   .Replace("${DescricaoEvento}", eventoAtual.Descricao)
-         .Replace("${ValorEvento}", eventoAtual.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
-         .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
-
-            return View("InscricaoConcluida");
-
-        }
-
         [HttpGet]
         public ActionResult GetEquipanteEvento(int Id, int eventoId)
         {
@@ -458,7 +423,7 @@ namespace SysIgreja.Controllers
 
             if (model.Inscricao)
             {
-                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = model.EventoId }));
+                return Json(Url.Action("InscricaoConcluida","Inscricoes", new { Id = equipante.Id, EventoId = model.EventoId, Tipo = "Inscrições Equipe" }));
             }
             else
             {

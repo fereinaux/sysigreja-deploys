@@ -1,6 +1,7 @@
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Caronas;
+using Core.Business.Categorias;
 using Core.Business.CentroCusto;
 using Core.Business.Circulos;
 using Core.Business.Configuracao;
@@ -50,6 +51,7 @@ namespace Web
             container.RegisterType<IGenericRepository<ReuniaoEvento>, GenericRepository<ReuniaoEvento>>();
             container.RegisterType<IGenericRepository<Equipante>, GenericRepository<Equipante>>();
             container.RegisterType<IGenericRepository<EquipanteEvento>, GenericRepository<EquipanteEvento>>();
+            container.RegisterType<IGenericRepository<CategoriaEvento>, GenericRepository<CategoriaEvento>>();
             container.RegisterType<IGenericRepository<PresencaReuniao>, GenericRepository<PresencaReuniao>>();
             container.RegisterType<IGenericRepository<Equipe>, GenericRepository<Equipe>>();
             container.RegisterType<IGenericRepository<ConfiguracaoEquipes>, GenericRepository<ConfiguracaoEquipes>>();
@@ -66,6 +68,7 @@ namespace Web
             container.RegisterType<IGenericRepository<Mensagem>, GenericRepository<Mensagem>>();
             container.RegisterType<IGenericRepository<Configuracao>, GenericRepository<Configuracao>>();
             container.RegisterType<IGenericRepository<ConfiguracaoCampos>, GenericRepository<ConfiguracaoCampos>>();
+            container.RegisterType<IGenericRepository<ConfiguracaoCamposEquipe>, GenericRepository<ConfiguracaoCamposEquipe>>();
             container.RegisterType<IGenericRepository<Carona>, GenericRepository<Carona>>();
             container.RegisterType<IGenericRepository<CaronaParticipante>, GenericRepository<CaronaParticipante>>();
 
@@ -82,6 +85,7 @@ namespace Web
             container.RegisterType<INewsletterBusiness, NewsletterBusiness>();
             container.RegisterType<IParticipantesBusiness, ParticipantesBusiness>();
             container.RegisterType<IEtiquetasBusiness, EtiquetasBusiness>();
+            container.RegisterType<ICategoriaBusiness, CategoriaBusiness>();
             container.RegisterType<IMeioPagamentoBusiness, MeioPagamentoBusiness>();
             container.RegisterType<IAccountBusiness, AccountBusiness>();
             container.RegisterType<IReunioesBusiness, ReunioesBusiness>();

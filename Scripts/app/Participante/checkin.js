@@ -62,6 +62,7 @@ function PostParticipante() {
                         CancelarCheckin: false,
                         Nome: $(`#participante-nome`).val(),
                         Apelido: $(`#participante-apelido`).val(),
+                        Instagram: $('#participante-instagram').val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
                         Fone: $(`#participante-fone`).val(),
@@ -69,6 +70,7 @@ function PostParticipante() {
                         Conjuge: $(`#participante-conjuge`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),
                         Bairro: $(`#participante-bairro`).val(),
+                        Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
                         Camisa: $(`#participante-camisa`).val(),
                         Cidade: $(`#participante-cidade`).val(),
                         Estado: $(`#participante-estado`).val(),
@@ -134,6 +136,7 @@ function PostParticipante() {
                         Id: $("#equipante-id").val(),
                         Nome: $(`#participante-nome`).val(),
                         Apelido: $(`#participante-apelido`).val(),
+                        Instagram: $('#participante-instagram').val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
                         Fone: $(`#participante-fone`).val(),
@@ -144,6 +147,30 @@ function PostParticipante() {
                         HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
                         Alergia: $(`#participante-alergia`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
+                        CEP: $(`#participante-cep`).val(),
+                        Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
+                        Conjuge: $(`#participante-conjuge`).val(),
+                        Logradouro: $(`#participante-logradouro`).val(),
+                        Bairro: $(`#participante-bairro`).val(),
+                        Camisa: $(`#participante-camisa`).val(),
+                        Cidade: $(`#participante-cidade`).val(),
+                        Estado: $(`#participante-estado`).val(),
+                        Numero: $(`#participante-numero`).val(),
+                        Complemento: $(`#participante-complemento`).val(),
+                        Referencia: $(`#participante-referencia`).val(),
+                        Latitude: $(`#participante-latitude`).val(),
+                        Longitude: $(`#participante-longitude`).val(),
+                        NomePai: $(`#participante-nome-pai`).val(),
+                        FonePai: $(`#participante-fone-pai`).val(),
+                        NomeMae: $(`#participante-nome-mae`).val(),
+                        FoneMae: $(`#participante-fone-mae`).val(),
+                        NomeConvite: $(`#participante-nome-convite`).val(),
+                        FoneConvite: $(`#participante-fone-convite`).val(),
+                        NomeContato: $(`#participante-nome-contato`).val(),
+                        FoneContato: $(`#participante-fone-contato`).val(),
+                        HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
+                        Convenio: $(`#participante-convenio`).val(),
+                        Hospitais: $(`#participante-hospitais`).val(),
                         Etiquetas: $('.participante-etiquetas').val()
                     }),
                 success: function () {
@@ -177,7 +204,6 @@ function GetParticipante() {
                 $('.div-map').css('display', 'none')
                 $("#equipantes").val("Pesquisar").trigger("chosen:updated");
                 $('#form-participante').removeClass('d-none');
-                $('#form-info').removeClass('d-none');
                 $("#equipante-id").val(0);
                 $("#participante-id").val(data.Participante.Id);
                 $("#participante-checkin").val(data.Participante.Checkin);
@@ -210,6 +236,15 @@ function GetParticipante() {
 
                 }
 
+                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
+                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
+                } else {
+                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
+                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
+                    $('.congregacao').removeClass('d-none');
+                    $("#participante-congregacaodescricao").addClass('required');
+                }
+
                 $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
                 $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
                 $(`#participante-nome-contato`).val(data.Participante.NomeContato);
@@ -240,11 +275,6 @@ function GetParticipante() {
                 $('.participante-etiquetas').select2()
                 $('.pagamento').show()
                 $('#participante-obs').val(realista.Observacao)
-                $(`#participante-msgcovid`).iCheck(realista.MsgVacina ? 'check' : 'uncheck');
-                $(`#participante-msgpagamento`).iCheck(realista.MsgPagamento ? 'check' : 'uncheck');
-                $(`#participante-msgnoitita`).iCheck(realista.MsgNoitita ? 'check' : 'uncheck');
-                $(`#participante-msggeral`).iCheck(realista.MsgGeral ? 'check' : 'uncheck');
-                $(`#participante-msgfoto`).iCheck(realista.MsgFoto ? 'check' : 'uncheck');
                 if (data.Participante.Foto) {
 
                     $('#foto').attr("src", 'data:image/jpeg;base64,' + data.Participante.Foto)
@@ -341,6 +371,16 @@ function GetEquipante() {
                 $('#form-participante').removeClass('d-none');
                 $("#equipante-id").val(data.Equipante.Id);
                 $("#participante-id").val(0);
+
+                if (data.Equipante.Congregacao == 'Trindade' || data.Equipante.Congregacao == 'Recon') {
+                    $(`input[type=radio][name=participante-congregacao][value='${data.Equipante.Congregacao}']`).iCheck('check');
+                } else {
+                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
+                    $(`#participante-congregacaodescricao`).val(data.Equipante.Congregacao);
+                    $('.congregacao').removeClass('d-none');
+                    $("#participante-congregacaodescricao").addClass('required');
+                }
+
                 $("#participante-checkin").val(data.Equipante.Checkin);
                 $(`#participante-nome`).val(data.Equipante.Nome);
                 $(`#participante-apelido`).val(data.Equipante.Apelido);
@@ -348,15 +388,43 @@ function GetEquipante() {
                 $(`#participante-email`).val(data.Equipante.Email);
                 $(`#participante-fone`).val(data.Equipante.Fone);
 
+                $(`#participante-nome-pai`).val(data.Equipante.NomePai);
+                $(`#participante-fone-pai`).val(data.Equipante.FonePai);
+                $(`#participante-nome-mae`).val(data.Equipante.NomeMae);
+                $(`#participante-fone-mae`).val(data.Equipante.FoneMae);
+                $(`#participante-cep`).val(data.Equipante.CEP);
+                $(`#participante-logradouro`).val(data.Equipante.Logradouro);
+                $(`#participante-bairro`).val(data.Equipante.Bairro);
+                $(`#participante-cidade`).val(data.Equipante.Cidade);
+                $(`#participante-estado`).val(data.Equipante.Estado);
+                $(`#participante-numero`).val(data.Equipante.Numero);
+                $(`#participante-complemento`).val(data.Equipante.Complemento);
+                $(`#participante-conjuge`).val(data.Equipante.Conjuge);
+                $(`#participante-referencia`).val(data.Equipante.Referencia);
+
+                $(`#participante-latitude`).val((data.Equipante.Latitude || '').replaceAll(',', '.'));
+                $(`#participante-longitude`).val((data.Equipante.Longitude || '').replaceAll(',', '.'));
+
+                if ($('#map').length > 0) {
+
+                    montarMapa()
+
+                }
+                $(`#participante-nome-convite`).val(data.Equipante.NomeConvite);
+                $(`#participante-fone-convite`).val(data.Equipante.FoneConvite);
+                $(`#participante-nome-contato`).val(data.Equipante.NomeContato);
+                $(`#participante-fone-contato`).val(data.Equipante.FoneContato);
                 $(`#participante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Equipante.Medicacao);
                 $(`#participante-alergia`).val(data.Equipante.Alergia);
+                $(`#participante-convenio`).val(data.Equipante.Convenio);
+                $(`#participante-hospitais`).val(data.Equipante.Hospitais);
                 $(`input[type=radio][name=participante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
+                $(`input[type=radio][name=participante-hasconvenio][value=${data.Equipante.HasConvenio}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
                 $('.dados-participante-contato').addClass('d-none');
-                $('#form-info').addClass('d-none');
                 $('.dados-equipante').removeClass('d-none');
                 $('.dados-participante-contato input').removeClass('required');
                 $('.dados-participante-contato input[id*="fone"]').removeClass('fone');
@@ -883,7 +951,7 @@ $("#arquivo-modal").change(function () {
 
 function loadCampos(id) {
     $.ajax({
-        url: "/Configuracao/GetCamposByEventoId/",
+        url: $("#equipantes").val() == "Pesquisar" ? "/Configuracao/GetCamposByEventoId/" : "/Configuracao/GetCamposEquipeByEventoId/",
         data: { Id: id },
         datatype: "json",
         type: "GET",
@@ -961,7 +1029,7 @@ ${campos.find(x => x.Campo == 'Endereço') ? `<div class="col-sm-3 p-w-md m-t-md
                             <input type="hidden" id="participante-latitude" />
                             <input type="hidden" id="participante-longitude" />
                         </div>
-
+fpo
                         <div class="col-sm-9 p-w-md m-t-md text-center">
                             <h5>Logradouro</h5>
 
@@ -1021,8 +1089,6 @@ ${campos.find(x => x.Campo == 'Endereço') ? `<div class="col-sm-3 p-w-md m-t-md
                             </div>
                         </div>` : ''}
 
-<div class="dados-participante-contato">
-
 ${campos.find(x => x.Campo == 'Dados da Mãe') ? `  <div class="col-sm-6 p-w-md m-t-md text-center">
                                 <h5>Nome da Mãe</h5>
                                 <input type="text" class="form-control required" id="participante-nome-mae" data-field="Nome da Mãe" />
@@ -1061,6 +1127,18 @@ ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-6 p-w-md
                                 <h5>Fone de quem convidou</h5>
 
                                 <input type="text" class="form-control fone" id="participante-fone-convite" data-field="Fone de quem convidou" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
+                                <h5>Participa de qual Congregação?</h5>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="trindade" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="recon" checked="" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="outra" checked="" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
+
+                                <div class="congregacao d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
+                                </div>
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-6 p-w-md m-t-md text-center">
@@ -1114,7 +1192,6 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
                             </div>
                         </div>` : ''}
 
-</div>
 `)
 
 
@@ -1196,10 +1273,15 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
             });
         }
     });
+
 }
 
-$("[id$='eventoid']").change(function () {
-    loadCampos(this.value)
+$("#participantes").change(function () {
+    loadCampos($('#eventoid').val())
+})
+
+$("#equipantes").change(function () {
+    loadCampos($('#eventoid').val())
 })
 
 function montarMapa() {

@@ -1,0 +1,134 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="#">Cadastros</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>@ViewBag.Title</h4>
+        </div>
+        <div class="ibox-content">
+            <div class="row panel-categorias">
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+
+}
+
+@section Scripts {
+
+    <script>
+        globalImageId = null
+ 
+        $(document).ready(function () {
+            carregarCategorias();
+        });
+
+        function carregarCategorias() {
+            $.ajax({
+                url: "/Categoria/GetCategorias/",
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $('.panel-categorias').html(` <div class="col-lg-2 col-sm-6 col-md-4">
+                    <div style="display:flex; flex-direction:column">
+                        <form enctype="multipart/form-data" id="frm-add" style="display:flex;margin:auto" method="post" novalidate="novalidate">
+                            <label for="add-image" class="inputFile m-auto">
+                                <img id="img-add" style="cursor:pointer; width: 90px; height: 90px; border-radius: 50%;  margin:10px auto " />
+                                <span id="add" class="m-auto"><i style="font-size: 65px; margin: 10px auto;padding-top:14px;cursor:pointer; color: white; background: #34e189; width: 90px; height: 90px; border-radius: 50%; " class="fas fa-plus text-center"></i></span>
+                                <input accept="image/*" onchange='postArquivo()' style="display: none;" class="custom-file-input inputFile" id="add-image" name="add-image" type="file" value="">
+                            </label>
+                        </form>
+
+                        <h4 class="text-center">Nome</h4>
+                        <input type="text" class="form-control required m-b-md" id="categoria-nome" data-field="Nome" />
+                        <button class="btn btn-salvar btn-default" onclick="postCategoria()">Salvar</button>
+                    </div>
+                </div> ${data.result.map(categoria => {
+                    return `
+     <div class="col-lg-2 col-sm-6 col-md-4">
+                    <div style="display:flex; flex-direction:column">
+     <img src="data:image/jpeg;base64,${categoria.Imagem}" id="img-add" style="cursor:pointer; width: 90px; height: 90px; border-radius: 50%; margin:10px auto " />
+    <h4 class="text-center">${categoria.Nome}</h4>
+       </div>
+                </div>
+
+    ` })}`)
+                    $('#add').css('display', 'block')
+                    $('#img-add').css('display', 'none')
+                }
+            });
+        }
+
+        function postCategoria() {
+            if (ValidateForm(`.panel-categorias`) && globalImageId) {
+                $.ajax({
+                    url: "/Categoria/PostCategoria/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(
+                        {
+                            ArquivoId: globalImageId,
+                            Nome: $("#categoria-nome").val(),
+                        }),
+                    success: function () {
+                        SuccessMesageOperation();
+                        carregarCategorias()
+                    }
+                });
+            } else {
+                if (!globalImageId) {
+                    ErrorMessage("Escolha uma imagem no botão de adicionar")
+                }
+            }
+        }
+
+        function postArquivo() {
+            var dataToPost = new FormData($(`#frm-add`)[0]);
+            var arquivo = dataToPost.get(`add-image`);
+            dataToPost.set(`Arquivo`, arquivo)
+            $.ajax(
+                {
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    data: dataToPost,
+                    url: "Arquivo/PostArquivo",
+                    success: function (data) {
+                        globalImageId = data
+                        $('#add').css('display', 'none')
+                        $('#img-add').css('display', 'block')
+                        const [file] = $(`#add-image`)[0].files
+                        if (file) {
+                            $('#img-add').attr('src', URL.createObjectURL(file))
+                        }
+                    }
+                });
+        }
+
+
+
+
+
+    </script>
+}

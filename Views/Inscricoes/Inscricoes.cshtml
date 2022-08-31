@@ -15,33 +15,46 @@
         <div class="row justify-content-center p-sm">
             <div class="col col-12">
                 <div class="p-h-xs m-b-lg" id="form-inscricao">
+                    <input type="hidden" name="EquipanteId" id="EquipanteId" value="0" />
                     <div class="form-group">
-                        <label for="participante-email" class="">Digite o e-mail do participante</label>
-                        <div style="position:relative">
-                            <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
-                            <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
-                        </div>
+                        @if (ViewBag.Tipo.Contains("Equipe"))
+                        {
+                            <label for="participante-email" class="">Telefone do @ViewBag.Sujeito</label>
+                            <div style="position:relative">
+                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
+                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do @ViewBag.Sujeito" />
+                            </div>
 
+                        }
+                        else
+                        {
+                            <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
+                            <div style="position:relative">
+                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
+                                <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
+                            </div>
+
+                        }
                     </div>
                     <div class="pnl-cadastro">
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome" class="">Nome e sobrenome do participante</label>
+                                <label for="participante-nome" class="">Nome e sobrenome do @ViewBag.Sujeito</label>
                                 <input type="text" class="form-control required" id="participante-nome" name="name" data-field="Nome" value="@ViewBag.Nome" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Apelido.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-apelido" class="">Como o participante gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
+                                <label for="participante-apelido" class="">Como o @ViewBag.Sujeito gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
                                 <input type="text" class="form-control required" id="participante-apelido" name"nickname" data-field="Apelido" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Genero.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-sexo" class=" block">Gênero do participante</label>
+                                <label for="participante-sexo" class=" block">Gênero do @ViewBag.Sujeito</label>
                                 <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="sexo-masculino" checked="" value="1" name="participante-sexo"> <i></i> Masculino </label></div>
                                 <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="sexo-feminino" value="2" name="participante-sexo"> <i></i> Feminino </label></div>
                             </div>
@@ -49,16 +62,28 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.DataNascimento.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-data-nascimento" class="">Data de nascimento do participante</label>
+                                <label for="participante-data-nascimento" class="">Data de nascimento do @ViewBag.Sujeito</label>
                                 <input type="text" class="form-control full-date required" id="participante-data-nascimento" data-idade="17" data-field="Data de nascimento" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))
                         {
-                            <div class="form-group">
-                                <label for="participante-fone" class="">Telefone do participante</label>
-                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
-                            </div>
+                            if (ViewBag.Tipo.Contains("Equipe"))
+                            {
+                                <div class="form-group">
+                                    <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
+                                    <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <label for="participante-fone" class="">Telefone do @ViewBag.Sujeito</label>
+                                    <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
+                                </div>
+
+                            }
+
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
@@ -70,8 +95,8 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-instagram" class="">Instagram do participante</label>
-                                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do participante" />
+                                <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
+                                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))
@@ -79,6 +104,10 @@
                             <div class="form-group">
                                 <label for="participante-fone" class="">Tamanho da camisa</label>
                                 <select class="form-control" id="participante-camisa">
+                                    <option value="8">8</option>
+                                    <option value="10">10</option>
+                                    <option value="12">12</option>
+                                    <option value="14">14</option>
                                     <option value="PP">PP</option>
                                     <option value="P">P</option>
                                     <option value="M">M</option>
@@ -274,6 +303,21 @@
                             </div>
                         }
 
+                        @if (ViewBag.Campos.Contains(CamposEnum.Equipe.GetDescription()))
+                        {
+                            <div class="form-group">
+                                <label for="participante-fone" class="">Para qual equipe você foi relacionado?</label>
+                                <select class="form-control" id="participante-equipe">
+                                    <option value="0">Nenhuma</option>
+                                    @foreach (var equipe in ViewBag.Equipes)
+                                    {
+
+                                        <option value="@equipe.Id">@equipe.Nome</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+
                         <div class="text-right">
 
                             <button type="button" class="btn btn-juventude pnl-cadastro" onclick="PostInscricao()">Finalizar</button>
@@ -285,8 +329,317 @@
     </div>
 </div>
 
+<style>
+    .dtp > .dtp-content > .dtp-date-view > header.dtp-header {
+        background: @ViewBag.Configuracao.CorHoverBotao !important;
+    }
+
+    .dtp div.dtp-date, .dtp div.dtp-time {
+         background: @ViewBag.Configuracao.CorBotao !important;
+    }
+
+    .dtp .p10 > a {
+        color: white;
+    }
+
+    .dtp table.dtp-picker-days tr > td > a.selected {
+        background: @ViewBag.Configuracao.CorBotao !important;
+    }
+</style>
+
 
 @section scripts {
-    <script src="~/Scripts/app/Inscricoes/inscricoes.js?@ViewBag.Numero"></script>
+    <script>
+
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 700;  //time in ms, 5 seconds for example
+        var $input = '@ViewBag.Tipo'.includes('Equipe') ? $('#participante-fone') : $('#participante-email');
+
+        $input.focus()
+        //on keyup, start the countdown
+        $input.on('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(VerificaCadastro, doneTypingInterval);
+        });
+
+        //on keydown, clear the countdown
+        $input.on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
+       var lat, lon;
+
+       if ($('#map').length > 0) {
+
+           const map = initMap('map')
+           const markerLayer = createMarkerLayer(map)
+
+           function verificaCep(input) {
+               let cep = $(input).val()
+               if (cep.length == 9) {
+                   $.blockUI({
+                       css: {
+                           backgroundColor: 'transparent',
+                           border: 'none'
+                       },
+                       message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+                       baseZ: 1500,
+                       overlayCSS: {
+                           opacity: 0.7,
+                           cursor: 'wait'
+                       }
+                   });
+                   $.ajax({
+                       url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+                       datatype: "json",
+                       type: "GET",
+                       contentType: 'application/json; charset=utf-8',
+                       success: function (data) {
+                           $(`#participante-logradouro`).val(data.logradouro)
+                           $(`#participante-bairro`).val(data.bairro)
+                           $(`#participante-cidade`).val(data.localidade)
+                           $(`#participante-estado`).val(data.uf)
+                           $(`#participante-latitude`).val(data.lat)
+                           $(`#participante-longitude`).val(data.lon)
+                           $.unblockUI();
+                           markerLayer.getLayers().forEach(mark => mark.remove())
+                           var marker = L.marker([data.lat, data.lon], {
+                               icon: getIcon('vermelho'), draggable: true,
+                               autoPan: true
+                           }).addTo(markerLayer);
+                           marker.on('moveend', function (event) {
+                               $(`#participante-latitude`).val(event.target._latlng.lat)
+                               $(`#participante-longitude`).val(event.target._latlng.lng)
+
+                           });
+                           $('#map').css('display', 'block')
+                           map.setView([data.lat, data.lon], 18);
+                           map.on('click', function (event) {
+                               markerLayer.getLayers().forEach(mark => mark.remove())
+                               var marker = L.marker([event.latlng.lat, event.latlng.lng], {
+                                   icon: getIcon('vermelho'), draggable: true,
+                                   autoPan: true
+                               }).addTo(markerLayer);
+                               marker.on('moveend', function (event) {
+                                   $(`#participante-latitude`).val(event.latlng.lat)
+                                   $(`#participante-longitude`).val(event.latlng.lng)
+
+                               });
+                           })
+                       }
+                   })
+               }
+           }
+       }
+
+       function VerificaCadastro() {
+               $.ajax({
+                   url: "/Inscricoes/VerificaCadastro",
+                   datatype: "json",
+                   type: "POST",
+                   contentType: 'application/json; charset=utf-8',
+                   data: JSON.stringify({
+                       Email: '@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone`).val() : $(`#participante-email`).val(),
+                       Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
+                       eventoId: @ViewBag.EventoId
+                   }),
+                   success: function (data) {
+                       if (data.Participante) {
+                           if ('(@ViewBag.Tipo)'.includes('Equipe')) {
+                               $('#EquipanteId').val(data.Participante.Id)
+                           }
+                           $(`#participante-nome`).val(data.Participante.Nome);
+                           $(`#participante-apelido`).val(data.Participante.Apelido);
+                           $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
+                           $(`#participante-email`).val(data.Participante.Email);
+                           $(`#participante-fone`).val(data.Participante.Fone);
+                           $(`#participante-nome-pai`).val(data.Participante.NomePai);
+                           $(`#participante-fone-pai`).val(data.Participante.FonePai);
+                           $(`#participante-nome-mae`).val(data.Participante.NomeMae);
+                           $(`#participante-fone-mae`).val(data.Participante.FoneMae);
+                           $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
+                           $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
+                           $(`#participante-nome-contato`).val(data.Participante.NomeContato);
+                           $(`#participante-fone-contato`).val(data.Participante.FoneContato);
+                           $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
+                           $(`#participante-medicacao`).val(data.Participante.Medicacao);
+                           $(`#participante-alergia`).val(data.Participante.Alergia);
+                           $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
+                           $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
+                           $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
+                           $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
+                           $('.dados-participante-contato').removeClass('d-none');
+                           $('.dados-participante-contato input[id*="nome"]').addClass('required');
+                           $('.dados-participante-contato input[id*="fone"]').addClass('fone');
+                       }
+                       else if (data) {
+                           window.location.href = data;
+                       }
+                       if ($('#participante-cep').val()) {
+                           verificaCep($('#participante-cep')[0])
+                       }
+
+                       $('.i-checks-green').iCheck({
+                           checkboxClass: 'icheckbox_square-green',
+                           radioClass: 'iradio_square-green'
+                       });
+
+                       $('.i-checks-brown').iCheck({
+                           checkboxClass: 'icheckbox_square-brown',
+                           radioClass: 'iradio_square-brown'
+                       });
+
+
+                       $('#has-medicacao').on('ifChecked', function (event) {
+                           $('.medicacao').removeClass('d-none');
+                           $("#participante-medicacao").addClass('required');
+                       });
+
+                       $('#not-medicacao').on('ifChecked', function (event) {
+                           $('.medicacao').addClass('d-none');
+                           $("#participante-medicacao").removeClass('required');
+                       });
+
+                       $('#has-parente').on('ifChecked', function (event) {
+                           $('.parente').removeClass('d-none');
+                           $("#participante-parente").addClass('required');
+                       });
+
+                       $('#not-parente').on('ifChecked', function (event) {
+                           $('.parente').addClass('d-none');
+                           $("#participante-parente").removeClass('required');
+                       });
+
+                       $('#trindade').on('ifChecked', function (event) {
+                           $('.congregacao').addClass('d-none');
+                           $("#participante-congregacaodescricao").removeClass('required');
+                       });
+
+                       $('#recon').on('ifChecked', function (event) {
+                           $('.congregacao').addClass('d-none');
+                           $("#participante-congregacaodescricao").removeClass('required');
+                       });
+
+                       $('#outra').on('ifChecked', function (event) {
+                           $('.congregacao').removeClass('d-none');
+                           $("#participante-congregacaodescricao").addClass('required');
+                       });
+
+
+                       $('#has-alergia').on('ifChecked', function (event) {
+                           $('.alergia').removeClass('d-none');
+                           $("#participante-alergia").addClass('required');
+                       });
+
+                       $('#not-alergia').on('ifChecked', function (event) {
+                           $('.alergia').addClass('d-none');
+                           $("#participante-alergia").removeClass('required');
+                       });
+
+                       $('#has-restricaoalimentar').on('ifChecked', function (event) {
+                           $('.restricaoalimentar').removeClass('d-none');
+                           $("#participante-restricaoalimentar").addClass('required');
+                       });
+
+                       $('#not-restricaoalimentar').on('ifChecked', function (event) {
+                           $('.restricaoalimentar').addClass('d-none');
+                           $("#participante-restricaoalimentar").removeClass('required');
+                       });
+
+                       $('#has-convenio').on('ifChecked', function (event) {
+                           $('.convenio').removeClass('d-none');
+                           $("#participante-convenio").addClass('required');
+                           $("#participante-hospitais").addClass('required');
+                       });
+
+                       $('#not-convenio').on('ifChecked', function (event) {
+                           $('.convenio').addClass('d-none');
+                           $("#participante-convenio").removeClass('required');
+                           $("#participante-hospitais").removeClass('required');
+                       });
+
+                   }
+               })
+
+       }
+
+        function PostInscricao() {
+            $('.btn-juventude').prop('disabled', true)
+           if (ValidateForm(`#form-inscricao`)) {
+               $.ajax({
+                   url: '(@ViewBag.Tipo)'.includes('Equipe') ? "/Equipante/PostEquipante/" : "/Inscricoes/PostInscricao/",
+                   datatype: "json",
+                   type: "POST",
+                   contentType: 'application/json; charset=utf-8',
+                   data: JSON.stringify(
+                       {
+                           Inscricao: true,
+                           EventoId: @ViewBag.EventoId,
+                           Id: '(@ViewBag.Tipo)'.includes('Equipe') ? $('#EquipanteId').val() : 0,
+                           Nome: $(`#participante-nome`).val(),
+                           Apelido: $(`#participante-apelido`).val(),
+                           Instagram: $('#participante-instagram').val(),
+                           DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                           Email: $(`#participante-email`).val(),
+                           Fone: $(`#participante-fone`).val(),
+                           Instagram: $(`#participante-instagram`).val(),
+                           Camisa: $(`#participante-camisa`).val(),
+                           Profissao: $(`#participante-profissao`).val(),
+                           CEP: $(`#participante-cep`).val(),
+                           Logradouro: $(`#participante-logradouro`).val(),
+                           Bairro: $(`#participante-bairro`).val(),
+                           Cidade: $(`#participante-cidade`).val(),
+                           EquipeId: $('#participante-equipe').val(),
+                           Estado: $(`#participante-estado`).val(),
+                           Numero: $(`#participante-numero`).val(),
+                           Complemento: $(`#participante-complemento`).val(),
+                           Conjuge: $(`#participante-conjuge`).val(),
+                           Referencia: $(`#participante-referencia`).val(),
+                           Latitude: $(`#participante-latitude`).val(),
+                           Longitude: $(`#participante-longitude`).val(),
+                           HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
+                           RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
+                           HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
+                           Medicacao: $(`#participante-medicacao`).val(),
+                           HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
+                           Alergia: $(`#participante-alergia`).val(),
+                           HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
+                           Convenio: $(`#participante-convenio`).val(),
+                           Hospitais: $(`#participante-hospitais`).val(),
+                           Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
+                           NomePai: $(`#participante-nome-pai`).val(),
+                           FonePai: $(`#participante-fone-pai`).val(),
+                           NomeMae: $(`#participante-nome-mae`).val(),
+                           FoneMae: $(`#participante-fone-mae`).val(),
+                           NomeConvite: $(`#participante-nome-convite`).val(),
+                           FoneConvite: $(`#participante-fone-convite`).val(),
+                           NomeContato: $(`#participante-nome-contato`).val(),
+                           FoneContato: $(`#participante-fone-contato`).val(),
+                       }),
+                   success: function (url) {
+                       window.location.href = url;
+                   },
+                   error: function () {
+                      $('.btn-juventude').prop("disabled", false);
+                   }
+               });
+            }
+       }
+
+
+       $("#participante-email").on('keypress', function (e) {
+           if (e.which == 13) {
+               VerificaCadastro()
+           }
+       });
+
+
+    </script>
 
 }

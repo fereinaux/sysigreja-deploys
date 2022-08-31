@@ -935,6 +935,7 @@ function Opcoes(row) {
             $('.convitetext').text(realista.NomeConvite)
             $('.contatotext').text(realista.NomeContato)
             $('#participante-obs').val(realista.Observacao)
+            $('.btn-ligar').attr("href", `tel:${getTelefone('realista')}`)
             if ($('#modal-opcoes').is(":hidden")) {
                 getMensagensByTipo(["Participante"])
             }
@@ -1152,6 +1153,7 @@ function PostParticipante() {
                     EventoId: $("#participante-eventoid").val(),
                     Nome: $(`#participante-nome`).val(),
                     Apelido: $(`#participante-apelido`).val(),
+                    Instagram: $('#participante-instagram').val(),
                     DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#participante-email`).val(),
                     Fone: $(`#participante-fone`).val(),
@@ -1364,6 +1366,10 @@ ${campos.find(x => x.Campo == 'Instagram') ? ` <div class="col-sm-12 p-w-md m-t-
                             <h5>Tamanho da Camisa</h5>
 
                             <select class="form-control" id="participante-camisa">
+ <option value="8">8</option>
+                                    <option value="10">10</option>
+                                    <option value="12">12</option>
+                                    <option value="14">14</option>
                                 <option value="PP">PP</option>
                                 <option value="P">P</option>
                                 <option value="M">M</option>

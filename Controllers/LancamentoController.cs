@@ -93,7 +93,7 @@ namespace SysIgreja.Controllers
                 CentroCusto = x.CentroCusto.Descricao,
                 Observacao = x.Observacao,
                 Descricao = UtilServices.CapitalizarNome(x.Descricao),
-                Origem = string.IsNullOrEmpty(x.Origem) ? UtilServices.CapitalizarNome(x.Origem) : "",
+                Origem = !string.IsNullOrEmpty(x.Origem) ? UtilServices.CapitalizarNome(x.Origem) : "",
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),
                 FormaPagamento =  x.MeioPagamento.Descricao,
                 Valor = UtilServices.DecimalToMoeda(x.Valor),

@@ -2,26 +2,47 @@
     initInputs()
 });
 
-
 function initInputs() {
 
     $('.chosen-select').chosen({ width: "100%" });
 
-    //$('.full-date').datepicker({
-    //    format: "dd/mm/yyyy",
-    //    language: "pt-BR",
-    //    autoclose: true
-    //});
+    $('.full-date').replaceWith(`<div style="position:relative">
 
-    $('.full-date').bootstrapMaterialDatePicker({ time: false, format: "DD/MM/YYYY", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br', })
+<label style="position: absolute; top: 10px; right: 10px; cursor: pointer;" for="full-date-changer">
+
+ <span id="calendar" class="" aria-hidden="true"> <i style="font-size: 16px; " class="fas fa-calendar"></i></span>
+                                                                                      
+                                                                                        <input type="text" class="full-date-changer" style="    border: none;
+    width: 0;" id="full-date-changer" name="full-date-changer" />
+                                                                                    </label>
+
+                                
+                                ${$('.full-date').prop('outerHTML')}
+                            </div>`)
+
+    $('.full-date-changer').bootstrapMaterialDatePicker({
+        time: false, format: "DD/MM/YYYY", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br'
+    })
+
+    $('#full-date-changer').on('change', function () {
+        $('.full-date').val($(this).val())
+    })
+
+    $('.full-date').on('keyup', function () {
+        $('#full-date-changer').val($(this).val())
+    })
+
+    $('.full-date').on('change', function () {
+        $('#full-date-changer').val($(this).val())
+    })
 
     $('.full-date-time').bootstrapMaterialDatePicker({ time: true, format: "DD/MM/YYYY HH:mm", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br', })
 
-    //$('.full-date').each((i) => {
-    //    IMask($('.full-date')[i], {
-    //        mask: '00/00/0000'
-    //    });
-    //});
+    $('.full-date').each((i) => {
+        IMask($('.full-date')[i], {
+            mask: '00/00/0000'
+        });
+    });
 
     $('.i-checks-green').iCheck({
         checkboxClass: 'icheckbox_square-green',

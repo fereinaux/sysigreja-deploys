@@ -130,6 +130,11 @@ function GetResultadosAdmin() {
                 })
             } else
                 $('.detalhamento-equipes').hide();
+            if (result.Total == 0) {
+                $('.zero-participantes').css('display', 'none')
+            } else {
+                $('.zero-participantes').css('display', 'block')
+            }
             $("#total").text(result.Total);
             $("#espera").text(result.Espera);
             $("#confirmados").text(result.Confirmados);

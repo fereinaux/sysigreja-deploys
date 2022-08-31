@@ -126,7 +126,7 @@ ${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
           ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
                             ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
-                            ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
+                            ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar') : ""}
 ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 
@@ -235,7 +235,7 @@ function GetAnexosLancamento(id) {
 
 function AnexosLancamento(row) {
     $("#LancamentoIdModal").val(row.Id);
-    $("#ParticipanteIdModal").val(row.ParticipanteId);
+    $("#equipanteIdModal").val(row.equipanteId);
     GetAnexosLancamento(row.Id)
     $("#modal-pagamentos").modal('hide');
     $("#modal-anexos").modal();
@@ -610,20 +610,26 @@ function GetEquipante(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $("#equipante-id").val(data.Equipante.Id);
+                if (data.Equipante.Congregacao == 'Trindade' || data.Equipante.Congregacao == 'Recon') {
+                    $(`input[type=radio][name=equipante-congregacao][value='${data.Equipante.Congregacao}']`).iCheck('check');
+                } else {
+                    $(`input[type=radio][name=equipante-congregacao][value='Outra']`).iCheck('check');
+                    $(`#equipante-congregacaodescricao`).val(data.Equipante.Congregacao);
+                    $('.congregacao').removeClass('d-none');
+                    $("#equipante-congregacaodescricao").addClass('required');
+                }
+
+                $("#equipante-checkin").val(data.Equipante.Checkin);
                 $(`#equipante-nome`).val(data.Equipante.Nome);
                 $(`#equipante-apelido`).val(data.Equipante.Apelido);
                 $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento).format('DD/MM/YYYY'));
                 $(`#equipante-email`).val(data.Equipante.Email);
                 $(`#equipante-fone`).val(data.Equipante.Fone);
-                $(`#equipante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
-                $(`#equipante-medicacao`).val(data.Equipante.Medicacao);
-                $(`#equipante-alergia`).val(data.Equipante.Alergia);
-                $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
 
-                $("#equipante-numeracao").val(data.Equipante.Numeracao);
+                $(`#equipante-nome-pai`).val(data.Equipante.NomePai);
+                $(`#equipante-fone-pai`).val(data.Equipante.FonePai);
+                $(`#equipante-nome-mae`).val(data.Equipante.NomeMae);
+                $(`#equipante-fone-mae`).val(data.Equipante.FoneMae);
                 $(`#equipante-cep`).val(data.Equipante.CEP);
                 $(`#equipante-logradouro`).val(data.Equipante.Logradouro);
                 $(`#equipante-bairro`).val(data.Equipante.Bairro);
@@ -631,12 +637,31 @@ function GetEquipante(id) {
                 $(`#equipante-estado`).val(data.Equipante.Estado);
                 $(`#equipante-numero`).val(data.Equipante.Numero);
                 $(`#equipante-complemento`).val(data.Equipante.Complemento);
+                $(`#equipante-conjuge`).val(data.Equipante.Conjuge);
                 $(`#equipante-referencia`).val(data.Equipante.Referencia);
+
                 $(`#equipante-latitude`).val((data.Equipante.Latitude || '').replaceAll(',', '.'));
                 $(`#equipante-longitude`).val((data.Equipante.Longitude || '').replaceAll(',', '.'));
+
                 if ($('#map').length > 0) {
+
                     montarMapa()
+
                 }
+                $(`#equipante-nome-convite`).val(data.Equipante.NomeConvite);
+                $(`#equipante-fone-convite`).val(data.Equipante.FoneConvite);
+                $(`#equipante-nome-contato`).val(data.Equipante.NomeContato);
+                $(`#equipante-fone-contato`).val(data.Equipante.FoneContato);
+                $(`#equipante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
+                $(`#equipante-medicacao`).val(data.Equipante.Medicacao);
+                $(`#equipante-alergia`).val(data.Equipante.Alergia);
+                $(`#equipante-convenio`).val(data.Equipante.Convenio);
+                $(`#equipante-hospitais`).val(data.Equipante.Hospitais);
+                $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasconvenio][value=${data.Equipante.HasConvenio}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
             }
         });
     }
@@ -702,7 +727,7 @@ function enviar() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome);
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome equipante}', equipante.Nome);
             windowReference.location = GetLinkWhatsApp(equipante.Fone, text)
         }
     });
@@ -803,6 +828,7 @@ function PostEquipante() {
                     DataNascimento: moment($("#equipante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#equipante-email`).val(),
                     Fone: $(`#equipante-fone`).val(),
+                    Instagram: $('#equipante-instagram').val(),
                     HasRestricaoAlimentar: $("input[type=radio][name=equipante-hasrestricaoalimentar]:checked").val(),
                     RestricaoAlimentar: $(`#equipante-restricaoalimentar`).val(),
                     HasMedicacao: $("input[type=radio][name=equipante-hasmedicacao]:checked").val(),
@@ -883,6 +909,7 @@ $(document).ready(function () {
     loadEquipes()
     checkEvento()
     CarregarTabelaEquipante();
+    loadCampos($("[id$='eventoid']").val());
 });
 
 
@@ -935,40 +962,6 @@ function next() {
             Opcoes(arrayData[index + 1])
         }
     })
-}
-
-
-if ($('#map').length > 0) {
-
-    const map = initMap('map')
-    const markerLayer = createMarkerLayer(map)
-    function montarMapa() {
-        markerLayer.getLayers().forEach(mark => mark.remove())
-        var marker = L.marker([$(`#equipante-latitude`).val().toString(), $(`#equipante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
-        marker.bindPopup(`<h4>${$(`#equipante-nome`).val()}</h4>`).openPopup();
-        $('.div-map').css('display', 'block')
-        map.setView([$(`#equipante-latitude`).val(), $(`#equipante-longitude`).val()], 18);
-    }
-    function verificaCep(input) {
-        let cep = $(input).val()
-        if (cep.length == 9) {
-            $.ajax({
-                url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    $(`#equipante-logradouro`).val(data.logradouro)
-                    $(`#equipante-bairro`).val(data.bairro)
-                    $(`#equipante-cidade`).val(data.localidade)
-                    $(`#equipante-estado`).val(data.uf)
-                    $(`#equipante-latitude`).val(data.lat)
-                    $(`#equipante-longitude`).val(data.lon)
-                    montarMapa()
-                }
-            })
-        }
-    }
 }
 
 
@@ -1132,7 +1125,7 @@ async function applyBulk() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        ParticipanteId: id,
+                        equipanteId: id,
                         DestinoId: $("#bulk-quarto-m").val(),
                         tipo: 0
                     }),
@@ -1147,7 +1140,7 @@ async function applyBulk() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        ParticipanteId: id,
+                        equipanteId: id,
                         DestinoId: $("#bulk-quarto-f").val(),
                         tipo: 0
                     }),
@@ -1162,7 +1155,7 @@ async function applyBulk() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        ParticipanteId: id,
+                        equipanteId: id,
                         DestinoId: $("#bulk-quarto-misto").val(),
                         tipo: 0
                     }),
@@ -1223,4 +1216,386 @@ async function applyBulk() {
     await Promise.all(arrPromises);
     SuccessMesageOperation();
     CarregarTabelaEquipante()
+}
+
+
+function loadCampos(id) {
+    $.ajax({
+        url: "/Configuracao/GetCamposEquipeByEventoId/",
+        data: { Id: id },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            campos = data.Campos
+            $('.campos-cadastro').html(`
+          <input type="hidden" id="equipante-id" />
+${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Nome</h5>
+
+                                <input type="text" class="form-control required" id="equipante-nome" data-field="Nome" />
+                            </div>` : ""}
+
+${campos.find(x => x.Campo == "Apelido") ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Apelido</h5>
+
+                                <input type="text" class="form-control required" id="equipante-apelido" data-field="Apelido" />
+                            </div>` : ""}
+${campos.find(x => x.Campo == 'Data Nascimento') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Data de Nascimento</h5>
+
+                                <input type="text" class="form-control full-date required" id="equipante-data-nascimento" data-field="Data de Nascimento" />
+                            </div>` : ''}
+${campos.find(x => x.Campo == 'Gênero') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Sexo</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" checked="" value="1" name="equipante-sexo"> <i></i> Masculino </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" value="2" name="equipante-sexo"> <i></i> Feminino </label></div>
+                            </div>` : ''}
+${campos.find(x => x.Campo == 'Email') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Email</h5>
+
+                                <input type="email" class="form-control" id="equipante-email" data-field="Email" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>WhatsApp</h5>
+
+                                <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Cônjuge</h5>
+
+                                <input type="text" class="form-control required" id="equipante-conjuge" data-field="Cônjuge" />
+                            </div>` : ''}
+
+
+${campos.find(x => x.Campo == 'Instagram') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Instagram</h5>
+
+                                <input type="text" class="form-control required" id="equipante-instagram" data-field="Apelido" />
+                            </div>` : ''}
+
+     ${campos.find(x => x.Campo == 'Camisa') ? `        <div class="col-sm-12 p-w-md m-t-md text-center">
+                            <h5>Tamanho da Camisa</h5>
+
+                            <select class="form-control" id="equipante-camisa">
+ <option value="8">8</option>
+                                    <option value="10">10</option>
+                                    <option value="12">12</option>
+                                    <option value="14">14</option>
+                                <option value="PP">PP</option>
+                                <option value="P">P</option>
+                                <option value="M">M</option>
+                                <option value="G">G</option>
+                                <option value="GG">GG</option>
+                                <option value="XGG">XGG</option>
+                            </select>
+                        </div>` : ''}
+
+${campos.find(x => x.Campo == 'Endereço') ? `<div class="col-sm-3 p-w-md m-t-md text-center">
+                                <h5>CEP</h5>
+
+                                <input type="text" class="form-control required cep" id="equipante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                <input type="hidden" id="equipante-latitude" />
+                                <input type="hidden" id="equipante-longitude" />
+                            </div>
+
+                            <div class="col-sm-9 p-w-md m-t-md text-center">
+                                <h5>Logradouro</h5>
+
+                                <input type="text" class="form-control required" disabled id="equipante-logradouro" data-field="Logradouro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>Bairro</h5>
+
+                                <input type="text" class="form-control required" disabled id="equipante-bairro" data-field="Bairro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>
+                                    Cidade
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="equipante-cidade" data-field="Cidade" />
+                            </div>
+
+                            <div class="col-sm-2 p-w-md m-t-md text-center">
+                                <h5>
+                                    Estado
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="equipante-estado" data-field="Estado" />
+                            </div>
+
+                            <div class="col-sm-4 p-w-md m-t-md text-center">
+                                <h5>
+                                    Número
+                                </h5>
+
+                                <input type="text" class="form-control" id="equipante-numero" data-field="Número" />
+                            </div>
+
+
+                            <div class="col-sm-8 p-w-md m-t-md text-center">
+                                <h5>
+                                    Complemento
+                                </h5>
+
+                                <input type="text" class="form-control" id="equipante-complemento" data-field="Complemento" />
+                            </div>
+
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>
+                                    Ponto de Referência
+                                </h5>
+
+                                <input type="text" class="form-control" id="equipante-referencia" data-field="Ponto de Referência" />
+                            </div>
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
+                                <div id="map" style="height:300px;">
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados da Mãe') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Nome da Mãe</h5>
+
+                                <input type="text" class="form-control required" id="equipante-nomemae" data-field="Nome da Mã" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone da Mãe</h5>
+
+                                <input type="text" class="form-control fone" id="equipante-fonemae" data-field="Fone da Mãe" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados do Pai') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Nome do Pai</h5>
+
+                                <input type="text" class="form-control required" id="equipante-nomepai" data-field="Nome do Pai" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone do Pai</h5>
+
+                                <input type="text" class="form-control fone" id="equipante-fonepai" data-field="Fone do Pai" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados do Contato') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Pessoa de Contato</h5>
+
+                                <input type="text" class="form-control required" id="equipante-nomecontato" data-field="Pessoa de Contato" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone do Contato</h5>
+
+                                <input type="text" class="form-control fone" id="equipante-fonecontato" data-field="Fone do Contato" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Pessoa que Convidou</h5>
+
+                                <input type="text" class="form-control required" id="equipante-nomeconvite" data-field="Pessoa de Convite" />
+                            </div>
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Fone de quem convidou</h5>
+
+                                <input type="text" class="form-control fone" id="equipante-foneconvite" data-field="Fone do Convite" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Parente') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Tem algum Parente fazendo o ${$('#equipante-eventoid option:selected').text()}?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-parente" value="true" name="equipante-hasparente"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-parente" checked="" value="false" name="equipante-hasparente"> <i></i> Não </label></div>
+
+                                <div class="parente d-none">
+                                    <h5>Nome do Parente</h5>
+                                    <input type="text" class="form-control" id="equipante-parente" data-field="Nome do Parente" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Participa de qual Congregação?</h5>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="trindade" value="Trindade" name="equipante-congregacao"> <i></i> Trindade </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="recon" checked="" value="Recon" name="equipante-congregacao"> <i></i> Reconciliação </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="outra" checked="" value="Outra" name="equipante-congregacao"> <i></i> Outra </label></div>
+
+                                <div class="congregacao d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="equipante-congregacaodescricao" data-field="Congregação" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Possui convênio médico?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-convenio" value="true" name="equipante-hasconvenio"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-convenio" checked="" value="false" name="equipante-hasconvenio"> <i></i> Não </label></div>
+
+                                <div class="convenio d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="equipante-convenio" data-field="Convênio" />
+                     <h5>Quais hospitais atendem?</h5>
+                                <input type="text" class="form-control" id="equipante-hospitais" data-field="Hospitais" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Medicação') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Toma alguma medicação?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-medicacao" value="true" name="equipante-hasmedicacao"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-medicacao" checked="" value="false" name="equipante-hasmedicacao"> <i></i> Não </label></div>
+
+                                <div class="medicacao d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="equipante-medicacao" data-field="Medicação" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Alergia') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Tem alguma alergia?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-alergia" value="true" name="equipante-hasalergia"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-alergia" checked="" value="false" name="equipante-hasalergia"> <i></i> Não </label></div>
+
+                                <div class="alergia d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="equipante-alergia" data-field="Alergia" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Tem alguma restrição alimentar?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="has-restricaoalimentar" value="true" name="equipante-hasrestricaoalimentar"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-restricaoalimentar" checked="" value="false" name="equipante-hasrestricaoalimentar"> <i></i> Não </label></div>
+
+                                <div class="restricaoalimentar d-none">
+                                    <h5>Qual?</h5>
+                                    <input type="text" class="form-control" id="equipante-restricaoalimentar" data-field="Restrição Alimentar" />
+                                </div>
+                            </div>` : ''}
+`)
+
+
+            initInputs()
+
+
+
+            if ($('#map').length > 0) {
+
+                map = initMap('map')
+                markerLayer = createMarkerLayer(map)
+
+
+            }
+
+
+            $('#has-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').removeClass('d-none');
+                $("#equipante-medicacao").addClass('required');
+            });
+
+            $('#not-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').addClass('d-none');
+                $("#equipante-medicacao").removeClass('required');
+            });
+
+            $('#has-convenio').on('ifChecked', function (event) {
+                $('.convenio').removeClass('d-none');
+                $("#equipante-convenio").addClass('required');
+            });
+
+            $('#not-convenio').on('ifChecked', function (event) {
+                $('.convenio').addClass('d-none');
+                $("#equipante-convenio").removeClass('required');
+            });
+
+
+            $('#has-alergia').on('ifChecked', function (event) {
+                $('.alergia').removeClass('d-none');
+                $("#equipante-alergia").addClass('required');
+            });
+
+            $('#not-alergia').on('ifChecked', function (event) {
+                $('.alergia').addClass('d-none');
+                $("#equipante-alergia").removeClass('required');
+            });
+
+            $('#has-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').removeClass('d-none');
+                $("#equipante-restricaoalimentar").addClass('required');
+            });
+
+            $('#not-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').addClass('d-none');
+                $("#equipante-restricaoalimentar").removeClass('required');
+            });
+
+
+            $('#has-parente').on('ifChecked', function (event) {
+                $('.parente').removeClass('d-none');
+                $("#equipante-parente").addClass('required');
+            });
+
+            $('#not-parente').on('ifChecked', function (event) {
+                $('.parente').addClass('d-none');
+                $("#equipante-parente").removeClass('required');
+            });
+
+            $('#trindade').on('ifChecked', function (event) {
+                $('.congregacao').addClass('d-none');
+                $("#equipante-congregacaodescricao").removeClass('required');
+            });
+
+            $('#recon').on('ifChecked', function (event) {
+                $('.congregacao').addClass('d-none');
+                $("#equipante-congregacaodescricao").removeClass('required');
+            });
+
+            $('#outra').on('ifChecked', function (event) {
+                $('.congregacao').removeClass('d-none');
+                $("#equipante-congregacaodescricao").addClass('required');
+            });
+
+        }
+    });
+}
+
+$("*[id*='eventoid']").change(function () {
+    loadCampos(this.value)
+})
+
+
+
+function montarMapa() {
+    markerLayer.getLayers().forEach(mark => mark.remove())
+    var marker = L.marker([$(`#equipante-latitude`).val().toString(), $(`#equipante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
+    marker.bindPopup(`<h4>${$(`#equipante-nome`).val()}</h4>`).openPopup();
+    $('.div-map').css('display', 'block')
+    map.setView([$(`#equipante-latitude`).val(), $(`#equipante-longitude`).val()], 18);
+}
+
+function verificaCep(input) {
+    let cep = $(input).val()
+    if (cep.length == 9) {
+        $.ajax({
+            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $(`#equipante-logradouro`).val(data.logradouro)
+                $(`#equipante-bairro`).val(data.bairro)
+                $(`#equipante-cidade`).val(data.localidade)
+                $(`#equipante-estado`).val(data.uf)
+                $(`#equipante-latitude`).val(data.lat)
+                $(`#equipante-longitude`).val(data.lon)
+                montarMapa()
+            }
+        })
+    }
 }

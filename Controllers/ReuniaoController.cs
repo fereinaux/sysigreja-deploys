@@ -63,6 +63,11 @@ namespace SysIgreja.Controllers
         {
             var result = reuniaosBusiness.GetReuniaoById(Id);
             result.Presenca = null;
+            result.Evento = null;
+            result.UsuarioCadastroId = null;
+            result.UsuarioCadastro = null;
+            result.UsuarioDelecao = null;
+            result.UsuarioEdicao = null;
 
             return Json(new { Reuniao = result }, JsonRequestBehavior.AllowGet);
         }

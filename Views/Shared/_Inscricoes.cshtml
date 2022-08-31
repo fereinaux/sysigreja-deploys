@@ -31,6 +31,8 @@
             height: 70px;
         }
 
+        ::-webkit-scrollbar-thumb { background: @ViewBag.Configuracao.CorBotao;}  ::-webkit-scrollbar-thumb:hover { background: @ViewBag.Configuracao.CorHoverBotao;}
+
 
         body {
             font-family: "Roboto" !important;
@@ -81,20 +83,13 @@
 <script>
     let corBotao = '@ViewBag.Configuracao.CorBotao'
     $(document).ready(function () {
-        if (isMobile) {
-            @if (ViewBag.Configuracao.BackgroundCelularId != null)
-            {
-                <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.BackgroundCelular) no-repeat center center fixed`) </text>
-                <text> $('.background-evento').css('background-size', 'cover')</text>
-            }
-        } else {
-
+  
             @if (ViewBag.Configuracao.BackgroundId != null)
             {
                 <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`) </text>
                 <text> $('.background-evento').css('background-size', 'cover')</text>
             }
-        }
+      
 
         $('.header-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.icon-check-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
@@ -107,18 +102,7 @@
         }, function() {
             $(this).css('background-color', '@ViewBag.Configuracao.CorBotao')
             $(this).css('border-color', '@ViewBag.Configuracao.CorBotao')
-        })
-
-        picker = ".inscricoes.middle-box::-webkit-scrollbar-thumb { background: @ViewBag.Configuracao.CorScroll;}  .inscricoes.middle-box::-webkit-scrollbar-thumb:hover { background: @ViewBag.Configuracao.CorHoverScroll;}  ";
-        new_stylesheet = "<style type='text/css' id='currentCSS'>" + picker + "</style>";
-
-        //check if stylsheet exists
-        existingStylesheet = $("#currentCSS");
-        if (existingStylesheet.length) { $(existingStylesheet).replaceWith(new_stylesheet); }
-        else { $(new_stylesheet).appendTo('head'); }
-        var corLoginBox = '@ViewBag.Configuracao.CorBotao';
-        var rgbLoginBox = corLoginBox.convertToRGB()
-         $('body').css('background-color', `rgba(${rgbLoginBox[0]},${rgbLoginBox[1]},${rgbLoginBox[2]},0.2)`)
+        })     
     })
 </script>
 

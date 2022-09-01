@@ -155,7 +155,83 @@ namespace SysIgreja.Controllers
 
             }
 
-            result.OrderBy(x => x.Equipante.Nome);
+            try
+            {
+                if (model.columns[model.order[0].column].name == "HasOferta")
+                {
+                    if (model.order[0].dir == "asc")
+                    {
+                        result = result.OrderBy(x => new
+                        {
+                            Order = x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any()
+                        });
+
+                    }
+                    else
+                    {
+                        result = result.OrderByDescending(x => new
+                        {
+                            Order = x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any()
+                        });
+                    }
+
+                }
+                else if (model.columns[model.order[0].column].name == "Faltas")
+                {
+                    if (model.order[0].dir == "asc")
+                    {
+                        result = result.OrderBy(x => new
+                        {
+                            Order = x.Presencas.Count()
+                        });
+
+                    }
+                    else
+                    {
+                        result = result.OrderByDescending(x => new
+                        {
+                            Order = x.Presencas.Count()
+                        });
+                    }
+
+                }
+                else if (model.columns[model.order[0].column].name == "Equipe")
+                {
+                    if (model.order[0].dir == "asc")
+                    {
+                        result = result.OrderBy(x => new
+                        {
+                            Order = x.Equipe.Nome
+                        });
+
+                    }
+                    else
+                    {
+                        result = result.OrderByDescending(x => new
+                        {
+                            Order = x.Equipe.Nome
+                        });
+                    }
+
+                }
+                else
+                {
+                    if (model.order[0].dir == "asc")
+                    {
+                        result = result.OrderByDynamic(x => "x.Equipante." + model.columns[model.order[0].column].name);
+
+                    }
+                    else
+                    {
+                        result = result.OrderByDescendingDynamic(x => "x.Equipante." + model.columns[model.order[0].column].name);
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+            }
+
 
             var json = Json(new
             {
@@ -429,7 +505,7 @@ namespace SysIgreja.Controllers
 
             if (model.Inscricao)
             {
-                return Json(Url.Action("InscricaoConcluida","Inscricoes", new { Id = equipante.Id, EventoId = model.EventoId, Tipo = "Inscrições Equipe" }));
+                return Json(Url.Action("InscricaoConcluida", "Inscricoes", new { Id = equipante.Id, EventoId = model.EventoId, Tipo = "Inscrições Equipe" }));
             }
             else
             {

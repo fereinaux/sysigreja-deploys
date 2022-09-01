@@ -6,6 +6,7 @@ using Core.Business.Cracha;
 using Core.Business.Eventos;
 using Core.Models.Cracha;
 using SysIgreja.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -42,7 +43,9 @@ namespace SysIgreja.Controllers
         {
             var result = crachaBusiness.GetCrachas()
                 .Where(x => x.ConfiguracaoId == configuracaoId);
-            return Json(new { data = mapper.Map<IEnumerable<PostCrachaModel>>(result) }, JsonRequestBehavior.AllowGet);
+            var json = Json(new { data = mapper.Map<IEnumerable<PostCrachaModel>>(result) }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
         }
 
         [HttpPost]

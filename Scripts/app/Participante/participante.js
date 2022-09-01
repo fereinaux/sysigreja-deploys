@@ -1026,6 +1026,7 @@ function GetParticipante(id) {
                 $(`#participante-nomepai`).val(data.Participante.NomePai);
                 $(`#participante-fonepai`).val(data.Participante.FonePai);
                 $(`#participante-camisa`).val(data.Participante.Camisa);
+                $(`#participante-instagram`).val(data.Participante.Instagram);
                 $(`#participante-nomemae`).val(data.Participante.NomeMae);
                 $(`#participante-fonemae`).val(data.Participante.FoneMae);
                 $(`#participante-nomeconvite`).val(data.Participante.NomeConvite);
@@ -1359,7 +1360,7 @@ ${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-12 p-w-md m-t-
 ${campos.find(x => x.Campo == 'Instagram') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Instagram</h5>
 
-                                <input type="text" class="form-control required" id="participante-instagram" data-field="Apelido" />
+                                <input type="text" class="form-control" id="participante-instagram" data-field="Apelido" />
                             </div>` : ''}
 
      ${campos.find(x => x.Campo == 'Camisa') ? `        <div class="col-sm-12 p-w-md m-t-md text-center">

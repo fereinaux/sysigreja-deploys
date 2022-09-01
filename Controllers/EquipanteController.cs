@@ -79,7 +79,13 @@ namespace SysIgreja.Controllers
         {
             Guid g = Guid.NewGuid();
 
-            Session[g.ToString()] = datatableService.GenerateExcel(mapper.Map<IEnumerable<EquipanteExcelModel>>(equipesBusiness.GetEquipantesByEvento(eventoid).OrderBy(x => x.Nome)));
+            Session[g.ToString()] = datatableService.GenerateExcel(mapper.Map<IEnumerable<EquipanteExcelModel>>(equipesBusiness.GetQueryEquipantesEvento(eventoid)
+                        .IncludeOptimized(x => x.Equipante)
+                .IncludeOptimized(x => x.Equipante.Arquivos)
+                .IncludeOptimized(x => x.Equipante.Lancamentos)
+                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+                .IncludeOptimized(x => x.Equipe).OrderBy(x => x.Equipante.Nome)));
 
             return Content(g.ToString());
         }

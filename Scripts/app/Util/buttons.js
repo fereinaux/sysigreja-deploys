@@ -28,7 +28,6 @@ function GetIconWhatsApp(tel,text) {
 
 
 function GetLinkWhatsApp(tel, text) {
-    console.log(tel,text);
     if (!tel)
         return ""
     tel = tel.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '');

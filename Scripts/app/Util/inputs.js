@@ -8,17 +8,18 @@ function initInputs() {
 
     $('.full-date').replaceWith(`<div style="position:relative">
 
-<label style="position: absolute; top: 10px; right: 10px; cursor: pointer;" for="full-date-changer">
+<label tab-index="-1" style="position: absolute; top: 10px; right: 10px; cursor: pointer;" for="full-date-changer">
 
- <span id="calendar" class="" aria-hidden="true"> <i style="font-size: 16px; " class="fas fa-calendar"></i></span>
+ <span tab-index="-1" id="calendar" class="" aria-hidden="true"> <i style="font-size: 16px; " class="fas fa-calendar"></i></span>
                                                                                       
                                                                                         <input type="text" class="full-date-changer" style="    border: none;
-    width: 0;" id="full-date-changer" name="full-date-changer" />
+    width: 0;opacity:0;" tab-index="-1" id="full-date-changer" name="full-date-changer" />
                                                                                     </label>
 
                                 
                                 ${$('.full-date').prop('outerHTML')}
                             </div>`)
+
 
     $('.full-date-changer').bootstrapMaterialDatePicker({
         time: false, format: "DD/MM/YYYY", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br'

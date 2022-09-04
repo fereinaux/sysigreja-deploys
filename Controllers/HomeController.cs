@@ -115,12 +115,12 @@ namespace SysIgreja.Controllers
                     QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Count()
                 }).ToList(),
                 Reunioes = reunioesBusiness.GetReunioes(EventoId).ToList().Select(x => new ReuniaoViewModel
-                {
+                { 
                     Id = x.Id,
                     DataReuniao = x.DataReuniao,
                     Titulo = x.Titulo,
                     Presenca = x.Presenca.Count()
-                }).ToList()
+                }).OrderBy(x => x.DataReuniao).ToList()
             };
 
             return Json(new

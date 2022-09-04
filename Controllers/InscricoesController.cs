@@ -427,10 +427,12 @@ namespace SysIgreja.Controllers
                     return new HttpStatusCodeResult(200);
 
                 default:
-                    var participante = participantesBusiness.GetParticipantesByEvento(eventoId).FirstOrDefault(x => x.Email == Email && (new StatusEnum[] { StatusEnum.Confirmado, StatusEnum.Inscrito }).Contains(x.Status));
+                    var participante = participantesBusiness.GetParticipantesByEvento(eventoId).FirstOrDefault(x => x.Email == Email && (new StatusEnum[] { StatusEnum.Confirmado, StatusEnum.Inscrito, StatusEnum.Espera }).Contains(x.Status));
 
-                    if (participante != null)
+                    if (participante != null && participante.Status != StatusEnum.Espera)
                         return Json(Url.Action("InscricaoConcluida", new { Id = participante.Id }));
+                    else if (participante != null && participante.Status == StatusEnum.Espera)
+                        return Json(Url.Action("InscricaoEspera", new { Id = participante.Id }));
 
                     var participanteConsulta = participantesBusiness.GetParticipanteConsulta(Email);
 

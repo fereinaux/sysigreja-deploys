@@ -120,9 +120,13 @@ function ValidateFone(form, formResult) {
 function ValidateData(form, formResult) {
     $(`${form} input.full-date`).each(function () {
         var input = $(this);
-        AplicarCssPadrao(input);       
+        AplicarCssPadrao(input);
+        if (!IsData(input.val())) {
+            formResult.IsValid = false;
+            AplicarCssErro(input);
+            formResult.ErrorsFormatacao += AddErro(`${input.data("field")}: 01/01/2000`);
+        }
     });
-
     return formResult;
 }
 
@@ -189,6 +193,11 @@ function IsEmail(email) {
 
 function IsFone(fone) {
     return fone.indexOf("+55") == 0 && fone.indexOf("(") == 3 && fone.indexOf(")") == 6 && fone.indexOf("9.") == 7 && fone.indexOf("-") == 13 && fone.length == 18;
+}
+
+function IsData(data) {
+    var re = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/
+    return re.test(data)
 }
 
 function IsCPF(cpf) {

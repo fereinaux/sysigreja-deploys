@@ -45,12 +45,36 @@ namespace SysIgreja.Controllers
 
         public ActionResult Equipe()
         {
-            GetEventos(new string[] {"Geral"});
+            GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Equipes";
 
             return View();
         }
 
+        [HttpGet]
+        public ActionResult GetConfiguracoesSelect()
+        {
+            var user = GetApplicationUser();
+            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões").Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                .Select(x => x.Select(y => new { ConfigId = y.ConfiguracaoId, Eventos = y.Eventos, Role = y.Role })).ToList();
+            List<int> configId = new List<int>();
+            permissoes.ForEach(permissao =>
+            {
+                configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));
+            });
+
+            var result = configuracaoBusiness.GetConfiguracoes()
+                .Where(x => configId.Contains(x.Id))
+                .ToList()
+                .Select(x => new {
+                    Id = x.Id,
+                    Titulo = x.Titulo,
+                });
+
+            var jsonRes = Json(new { data = result }, JsonRequestBehavior.AllowGet);
+            jsonRes.MaxJsonLength = Int32.MaxValue;
+            return jsonRes;
+        }
 
         [HttpGet]
         public ActionResult GetConfiguracoes()

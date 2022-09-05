@@ -43,7 +43,7 @@
 
         .row-eventos, .panel-categorias {
             width: 70%;
-            margin:auto;
+            margin: auto;
         }
 
 
@@ -106,7 +106,7 @@
         }
 
         .img-wrapper {
-            margin: 10px auto; 
+            margin: 10px auto;
             width: 110px;
             height: 110px;
             overflow: hidden;
@@ -129,11 +129,7 @@
             height: 410px !important;
             width: 70%;
             border-radius: 12px;
-            background: url('data:image/png;base64,@ViewBag.Destaque.Configuracao.Background');
-            background-size: cover;
             display: flex;
-            background-position: center;
-            background-repeat: no-repeat;
             position: relative;
         }
 
@@ -146,7 +142,7 @@
         }
 
         .card-destaque {
-            height:410px !important;
+            height: 410px !important;
             flex: 1;
             padding: 40px 24px;
             -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
@@ -169,10 +165,10 @@
             color: #aa2428;
         }
 
-        .button-destaque:hover {
-            background-color: #aa2428;
-            color: #fff;
-        }
+            .button-destaque:hover {
+                background-color: #aa2428;
+                color: #fff;
+            }
 
         @@media (max-width: 768px) {
 
@@ -190,7 +186,6 @@
             .card-destaque {
                 border-top-right-radius: 0px;
                 border-bottom-left-radius: 12px;
-
             }
 
             .destaque-a {
@@ -204,11 +199,7 @@
                 border-top-left-radius: 12px;
                 border-bottom-left-radius: 0px;
                 border-bottom-right-radius: 0px;
-                background: url('data:image/png;base64,@ViewBag.Destaque.Configuracao.Background');
-                background-size: cover;
                 display: flex;
-                background-position: center;
-                background-repeat: no-repeat;
                 position: relative;
             }
 
@@ -232,9 +223,9 @@
                     max-height: 90%;
                 }
 
-                .a-normal h3 {
-                    font-size: 14px
-                }
+            .a-normal h3 {
+                font-size: 14px
+            }
 
             .a-normal > .card-body {
                 flex: 1;
@@ -244,8 +235,6 @@
             .a-normal span, .a-normal p {
                 font-size: 12px;
             }
-
-
         }
     </style>
 </head>
@@ -259,210 +248,8 @@
                 <h3 style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
             </div>
         </div>
-        <div class="row panel-categorias">
-            @*<div class="col-xs-12">
-                <h3 style="font-weight: 900; font-size: 18px;">Categorias</h3>
-            </div>*@
-            @foreach (var categoria in ViewBag.Categorias)
-            {
-                <div class="col-lg-2 col-sm-6 col-md-4">
-                    <div style="display:flex; flex-direction:column">
-                        <div class="img-wrapper">
-
-                            <img src="data:image/jpeg;base64,@categoria.Imagem" class="img-categoria" style="cursor:pointer; width:100%;height:100%; border-radius: 50%;" />
-                        </div>
-                        <h4 class="text-center" style="font-size: 14px; margin-top:5px">@categoria.Nome</h4>
-                    </div>
-                </div>
-            }
-        </div>
         <div class="row row-eventos" style="">
-            @if (ViewBag.Action == "Inscrições")
-            {
 
-
-                <div class="col-xs-12">
-                    <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
-                </div>
-                <div class="col col-xs-12">
-                    <a href='@ViewBag.Destaque.UrlDestino' class="destaque-a" style="margin-bottom: 25px;">
-
-                        <div class="bloco bloco-destaque">
-                            <div class="overlay"></div>
-                            <img class="img-desatque" src="data:image/png;base64,@ViewBag.Destaque.Configuracao.Logo" />
-                        </div>
-
-                        <div class="card-body card-destaque">
-                            <span style="display: block; color: #9b2125; font-size: 16px;">@ViewBag.Destaque.Data</span>
-                            @if (ViewBag.Destaque.Numeracao > 0)
-                            {
-
-                                <h3 style="font-size: 28px; margin-top: 4px; margin-bottom: 4px;">
-                                    @(ViewBag.Destaque.Numeracao)º @ViewBag.Destaque.Configuracao.Titulo
-
-                                </h3>
-                            }
-                            else
-                            {
-                                <h3 style="font-size: 28px; margin-top: 4px; margin-bottom: 4px;">
-                                    @ViewBag.Destaque.Configuracao.Titulo
-
-                                </h3>
-                            }
-                            <p style="display: block; color: #686464;">@string.Format("{0:C}", ViewBag.Destaque.Valor)</p>
-                            <span href='@ViewBag.Destaque.UrlDestino' class="button-destaque btn btn-outline">VER DETALHES</span>
-                        </div>
-                    </a>
-                </div>
-            }
-
-            @if (ViewBag.HasEventosAbertos || (ViewBag.Action != "Inscrições" && string.IsNullOrEmpty(ViewBag.Destaque.UrlDestino)))
-            {
-                <div class="col-xs-12">
-                    <h3 style="font-weight:900;font-size:22px">Inscrições Abertas</h3>
-                </div>
-                if (ViewBag.Action != "Inscrições")
-                {
-                    <div class="col-md-3 col col-xs-12">
-                        <a href='@ViewBag.Destaque.UrlDestino' class="a-normal">
-
-                            <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,@ViewBag.Destaque.Configuracao.Background');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-">
-                                <div class="overlay"></div>
-                                <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,@ViewBag.Destaque.Configuracao.Logo" />
-                            </div>
-
-                            <div class="card-body">
-                                <span style="display: block; color: #9b2125;">@ViewBag.Destaque.Data</span>
-                                @if (ViewBag.Destaque.Numeracao > 0)
-                                {
-
-                                    <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
-                                        @(ViewBag.Destaque.Numeracao)º @ViewBag.Destaque.Configuracao.Titulo
-
-                                    </h3>
-                                }
-                                else
-                                {
-                                    <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
-                                        @ViewBag.Destaque.Configuracao.Titulo
-
-                                    </h3>
-                                }
-
-
-                                <p style="display: block; color: #686464;">@string.Format("{0:C}", ViewBag.Destaque.ValorTaxa)</p>
-
-                            </div>
-                        </a>
-                    </div>
-                }
-
-                foreach (var evento in ViewBag.EventosAbertos)
-                {
-
-                    <div class="col-md-3 col col-xs-12">
-                        <a href='@evento.UrlDestino' class="a-normal">
-
-                            <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,@evento.Configuracao.Background');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-">
-                                <div class="overlay"></div>
-                                <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,@evento.Configuracao.Logo" />
-                            </div>
-
-                            <div class="card-body">
-                                <span style="display: block; color: #9b2125;">@evento.Data</span>
-                                @if (evento.Numeracao > 0)
-                                {
-
-                                    <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
-                                        @(evento.Numeracao)º @evento.Configuracao.Titulo
-
-                                    </h3>
-                                }
-                                else
-                                {
-                                    <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
-                                        @evento.Configuracao.Titulo
-
-                                    </h3>
-                                }
-
-                                @if (ViewBag.Action == "Inscrições")
-                                {
-
-                                    <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.Valor)</p>
-                                }
-                                else
-                                {
-                                    <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.ValorTaxa)</p>
-                                }
-                            </div>
-                        </a>
-                    </div>
-
-
-                }
-            }
-
-            @if (ViewBag.HasEventosEncerrados)
-            {
-                <div class="col-xs-12">
-                    <h3 style="font-weight:900;font-size:22px">Inscrições em breve</h3>
-                </div>
-                foreach (var evento in ViewBag.EventosEncerrados)
-                {
-
-
-                    <div class="col-md-3 col col-xs-12 a-normal">
-
-                        <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,@evento.Configuracao.Background');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-">
-                            <div class="overlay"></div>
-                            <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,@evento.Configuracao.Logo" />
-                        </div>
-
-                        <div class="card-body">
-                            <span style="display: block; color: #9b2125;">@evento.Data</span>
-                            @if (evento.Numeracao > 0)
-                            {
-
-                                <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
-                                    @(evento.Numeracao)º @evento.Configuracao.Titulo
-
-                                </h3>
-                            }
-                            else
-                            {
-                                <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
-                                    @evento.Configuracao.Titulo
-
-                                </h3>
-                            }
-                            @if (ViewBag.Action == "Inscrições")
-                            {
-
-                                <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.Valor)</p>
-                            }
-                            else
-                            {
-                                <p style="display: block; color: #686464;">@string.Format("{0:C}", evento.ValorTaxa)</p>
-                            }
-                        </div>
-                    </div>
-
-
-                }
-            }
         </div>
     </div>
 </body>
@@ -485,4 +272,132 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="~/Scripts/app/Util/forms.js"></script>
 <script>
+    let isEquipe = window.location.pathname.toLowerCase().includes('equipe')
+    let action = isEquipe ? "Inscrições Equipe" : "Inscrições"
+
+    $('title').text(`IECB Eventos | ${isEquipe ? "Inscrições Equipe" : "Inscrições"}`)
+    function carregarEventos() {
+        $.ajax({
+            url: "/Inscricoes/GetEventosInscricao/",
+            data: {
+                type: action
+            },
+            datatype: "json",
+            type: "GET",
+            contentType: `application/json; charset=utf-8`,
+            success: function (data) {
+                let eventos = data.Eventos
+                    html = ""
+                if (!isEquipe) {
+                    let destaque = eventos[0]
+                    eventos = eventos.slice(1, eventos.length)
+                    html += `       <div class="col-xs-12">.
+                    <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
+                </div>
+                <div class="col col-xs-12">
+                    <a href='${destaque.UrlDestino}' class="destaque-a" style="margin-bottom: 25px;">
+
+                        <div class="bloco bloco-destaque" style=" background: url('data:image/png;base64,${destaque.Background}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;">
+                            <div class="overlay"></div>
+                            <img class="img-desatque" src="data:image/png;base64,${destaque.Logo}" />
+                        </div>
+
+                        <div class="card-body card-destaque">
+                            <span style="display: block; color: #9b2125; font-size: 16px;">${destaque.Data}</span>
+
+
+                                <h3 style="font-size: 28px; margin-top: 4px; margin-bottom: 4px;">
+                                   ${destaque.Numeracao > 0 ? `${destaque.Numeracao}º` : ""} ${destaque.Titulo}
+                                </h3>
+                            <p style="display: block; color: #686464;">${destaque.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
+                            <span class="button-destaque btn btn-outline">VER DETALHES</span>
+                        </div>
+                    </a>
+                </div>`
+                }
+          
+                var eventosAbertos = eventos.filter(evento => evento.Status == "Aberto" || evento.Status == null)
+
+                if (eventosAbertos.length > 0 || isEquipe && !destaque) {
+
+                    html += `
+
+                <div class="col-xs-12">
+                    <h3 style="font-weight:900;font-size:22px">Inscrições Abertas</h3>
+                </div>
+                     ${eventosAbertos.map(evento => `<div class="col-md-3 col col-xs-12">
+                        <a href='${evento.UrlDestino}' class="a-normal">
+
+                            <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+">
+                                <div class="overlay"></div>
+                                <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
+                            </div>
+
+                            <div class="card-body">
+                                <span style="display: block; color: #9b2125;">${evento.Data}</span>
+
+                                    <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
+                                        ${evento.Numeracao > 0 ? `${evento.Numeracao}º` : ""} ${evento.Titulo}
+                                     </h3>
+
+
+
+
+                                    <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
+
+                            </div>
+                        </a>
+                    </div>`)}
+
+            `}
+                var eventosEncerrados = eventos.filter(evento => evento.Status == "Encerrado")
+
+                if (eventosEncerrados.length > 0 || isEquipe && !destaque) {
+
+                    html += `     <div class="col-xs-12">
+                    <h3 style="font-weight:900;font-size:22px">Inscrições em breve</h3>
+                </div>
+
+
+  ${eventosEncerrados.map(evento => `<div class="col-md-3 col col-xs-12 a-normal">
+
+                        <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+">
+                            <div class="overlay"></div>
+                            <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
+                        </div>
+
+                        <div class="card-body">
+                            <span style="display: block; color: #9b2125;">${evento.Data}</span>
+                              <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
+                                        ${evento.Numeracao > 0 ? `${evento.Numeracao}º` : ""} ${evento.Titulo}
+                                     </h3>
+
+   <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
+
+                            </div>
+                        </div>`)}
+`
+                }
+
+                $('.row-eventos').html(html)
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        carregarEventos()
+
+    })
+
 </script>

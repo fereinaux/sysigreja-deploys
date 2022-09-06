@@ -1,10 +1,31 @@
 ﻿$(document).ready(function () {
+
     initInputs()
+
 });
+
+(function ($) {
+    var originalVal = $.fn.val;
+    $.fn.val = function () {
+        var prev;
+        if (arguments.length > 0) {
+            prev = originalVal.apply(this, []);
+        }
+        var result = originalVal.apply(this, arguments);
+        if ($(this).hasClass('full-date-changed') && arguments.length > 0 && prev != originalVal.apply(this, []))
+            $(this).change();  // OR with custom event $(this).trigger('value-changed')
+
+        return result;
+    };
+})(jQuery);
 
 function initInputs() {
 
     $('.chosen-select').chosen({ width: "100%" });
+
+    $('.full-date').each(function (i, element) {
+        $(this).data('index', i)
+    })
 
     $('.full-date').replaceWith(`<div style="position:relative">
 
@@ -21,20 +42,31 @@ function initInputs() {
                             </div>`)
 
 
+    $('.full-date').each(function (i, element) {
+        $(this).removeClass('full-date')
+        $(this).addClass('full-date-changed')
+    })
+
+    $('[class*="full-date-changer"]').each(function (i, element) {
+        $(this).parent().attr("for", `full-date-changer${i}`);
+        $(this).attr("id", `full-date-changer${i}`);
+        $(this).attr("name", `full-date-changer${i}`);
+    })
+
     $('.full-date-changer').bootstrapMaterialDatePicker({
         time: false, format: "DD/MM/YYYY", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br'
     })
 
-    $('#full-date-changer').on('change', function () {
-        $('.full-date').val($(this).val())
+    $('[id*="full-date-changer"]').on('change', function () {
+        $(this).parent().parent().find('.full-date-changed').val($(this).val())
     })
 
-    $('.full-date').on('keyup', function () {
-        $('#full-date-changer').val($(this).val())
+    $('.full-date-changed').on('keyup', function () {
+        $(this).parent().find('[id*="full-date-changer"]').val($(this).val())
     })
 
-    $('.full-date').on('change', function () {
-        $('#full-date-changer').val($(this).val())
+    $('.full-date-changed').on('change', function () {
+        $(this).parent().find('[id*="full-date-changer"]').val($(this).val())
     })
 
     $('.full-date-time').bootstrapMaterialDatePicker({ time: true, format: "DD/MM/YYYY HH:mm", shortTime: false, clearButton: false, nowButton: false, lang: 'pt-br', })

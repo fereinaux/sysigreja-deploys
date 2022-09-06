@@ -17,6 +17,7 @@
     <link href="~/Content/animate.css" rel="stylesheet">
     <link href="~/Content/style.css" rel="stylesheet">
     <link href="~/Content/evento.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/main.css" />
     <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
@@ -61,6 +62,10 @@
 
         @RenderBody()
     </div>
+
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
+    </div>
 </body>
 </html>
 
@@ -83,13 +88,13 @@
 <script>
     let corBotao = '@ViewBag.Configuracao.CorBotao'
     $(document).ready(function () {
-  
+
             @if (ViewBag.Configuracao.BackgroundId != null)
             {
                 <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`) </text>
                 <text> $('.background-evento').css('background-size', 'cover')</text>
             }
-      
+
 
         $('.header-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.icon-check-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
@@ -102,7 +107,7 @@
         }, function() {
             $(this).css('background-color', '@ViewBag.Configuracao.CorBotao')
             $(this).css('border-color', '@ViewBag.Configuracao.CorBotao')
-        })     
+        })
     })
 </script>
 

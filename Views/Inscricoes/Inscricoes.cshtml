@@ -350,6 +350,13 @@
 
 @section scripts {
     <script>
+    document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
+        $(window).on('load', function () {
+
+            /* Page Loader active
+           ========================================================*/
+            $('#preloader').fadeOut();
+        })
 
         var typingTimer;                //timer identifier
         var doneTypingInterval = 700;  //time in ms, 5 seconds for example

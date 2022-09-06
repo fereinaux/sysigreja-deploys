@@ -354,7 +354,7 @@
 
                             </div>
                         </a>
-                    </div>`)}
+                    </div>`).join().replace(/,/g, '') }
 
             `}
                 var eventosEncerrados = eventos.filter(evento => evento.Status == "Encerrado")
@@ -386,7 +386,7 @@
    <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
 
                             </div>
-                        </div>`)}
+                        </div>`).join().replace(/,/g, '') }
 `
                 }
 

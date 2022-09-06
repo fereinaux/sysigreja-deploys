@@ -283,12 +283,6 @@
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $('title').text(`IECB Eventos | ${isEquipe ? "Inscrições Equipe" : "Inscrições"}`)
 
-    $(window).on('load', function () {
-
-        /* Page Loader active
-       ========================================================*/
-        $('#preloader').fadeOut();
-    })
     function carregarEventos() {
         $.ajax({
             url: "/Inscricoes/GetEventosInscricao/",
@@ -367,7 +361,7 @@
 
                             </div>
                         </a>
-                    </div>`).join().replace(/>,/g, '') }
+                    </div>`).join().replace(/>,/g, '>') }
 
             `}
                 var eventosEncerrados = eventos.filter(evento => evento.Status == "Encerrado")
@@ -399,11 +393,12 @@
    <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
 
                             </div>
-                        </div>`).join().replace(/>,/g, '')}
+                        </div>`).join().replace(/>,/g, '>')}
 `
                 }
 
                 $('.row-eventos').html(html)
+                $('#preloader').fadeOut();
             }
         });
     }

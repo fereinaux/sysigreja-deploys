@@ -21,6 +21,7 @@
     @Styles.Render("~/Content/css")
     <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/main.css" />
     <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -252,6 +253,10 @@
 
         </div>
     </div>
+
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
+    </div>
 </body>
 </html>
 
@@ -274,8 +279,16 @@
 <script>
     let isEquipe = window.location.pathname.toLowerCase().includes('equipe')
     let action = isEquipe ? "Inscrições Equipe" : "Inscrições"
-
+    let corBotao = '@ViewBag.Configuracao.CorBotao'
+    document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $('title').text(`IECB Eventos | ${isEquipe ? "Inscrições Equipe" : "Inscrições"}`)
+
+    $(window).on('load', function () {
+
+        /* Page Loader active
+       ========================================================*/
+        $('#preloader').fadeOut();
+    })
     function carregarEventos() {
         $.ajax({
             url: "/Inscricoes/GetEventosInscricao/",
@@ -318,7 +331,7 @@
                     </a>
                 </div>`
                 }
-          
+
                 var eventosAbertos = eventos.filter(evento => evento.Status == "Aberto" || evento.Status == null)
 
                 if (eventosAbertos.length > 0 || isEquipe && !destaque) {
@@ -354,7 +367,7 @@
 
                             </div>
                         </a>
-                    </div>`).join().replace(/,/g, '') }
+                    </div>`).join().replace(/>,/g, '') }
 
             `}
                 var eventosEncerrados = eventos.filter(evento => evento.Status == "Encerrado")
@@ -386,7 +399,7 @@
    <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
 
                             </div>
-                        </div>`).join().replace(/,/g, '') }
+                        </div>`).join().replace(/>,/g, '')}
 `
                 }
 

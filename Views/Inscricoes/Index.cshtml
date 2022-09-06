@@ -294,9 +294,10 @@
             contentType: `application/json; charset=utf-8`,
             success: function (data) {
                 let eventos = data.Eventos
-                    html = ""
+                html = ""
+                let destaque = undefined
                 if (!isEquipe) {
-                    let destaque = eventos[0]
+                    destaque = eventos[0]
                     eventos = eventos.slice(1, eventos.length)
                     html += `       <div class="col-xs-12">.
                     <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
@@ -386,7 +387,7 @@
 
                         <div class="card-body">
                             <span style="display: block; color: #9b2125;">${evento.Data}</span>
-                              <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">
+                              <h3 style="font-size: 16px; destamargin-top: 4px; margin-bottom: 4px;">
                                         ${evento.Numeracao > 0 ? `${evento.Numeracao}º` : ""} ${evento.Titulo}
                                      </h3>
 

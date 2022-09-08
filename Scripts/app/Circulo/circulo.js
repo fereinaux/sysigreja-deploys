@@ -86,7 +86,7 @@ function FillDoc(doc,result) {
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
     doc.text(77, 15, $("#circulo-eventoid option:selected").text());
-    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);   
+    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);   
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 195, 38);
 

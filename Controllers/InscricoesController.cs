@@ -69,6 +69,7 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public ActionResult GetEventosInscricao(string type)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             var eventos = eventosBusiness.GetEventos().Where(x => x.DataEvento > System.DateTime.Today &&
             x.Configuracao.LogoId.HasValue &&
             x.Configuracao.BackgroundId.HasValue &&

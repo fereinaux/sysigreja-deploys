@@ -86,7 +86,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+
+
+        $(window).on('load', function () {
+
+            $('#preloader').fadeOut();
+        })
+
     let corBotao = '@ViewBag.Configuracao.CorBotao'
+    document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $(document).ready(function () {
 
             @if (ViewBag.Configuracao.BackgroundId != null)

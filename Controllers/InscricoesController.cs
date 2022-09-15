@@ -20,9 +20,9 @@ using System.Threading;
 using System.Web.Mvc;
 using Utils.Enums;
 using Utils.Extensions;
-using MercadoPago.Config;
-using MercadoPago.Client.Preference;
-using MercadoPago.Resource.Preference;
+//using MercadoPago.Config;
+//using MercadoPago.Client.Preference;
+//using MercadoPago.Resource.Preference;
 using System.Collections.Generic;
 
 namespace SysIgreja.Controllers
@@ -52,7 +52,7 @@ namespace SysIgreja.Controllers
             this.eventosBusiness = eventosBusiness;
             this.newsletterBusiness = newsletterBusiness;
             mapper = new MapperRealidade().mapper;
-            MercadoPagoConfig.AccessToken = "APP_USR-6615847238519666-091214-ae37fc001760151942cc1fa7ca689e3b-221658192";
+            //MercadoPagoConfig.AccessToken = "APP_USR-6615847238519666-091214-ae37fc001760151942cc1fa7ca689e3b-221658192";
         }
 
         public class GetEventosInscricaoViewModel

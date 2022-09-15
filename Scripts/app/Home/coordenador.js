@@ -34,7 +34,7 @@ function CarregarTela() {
             $('#reuniaoid').html(`${data.result.Reunioes.map(reuniao => `
 <option value="${reuniao.Id}">${reuniao.DataReuniao}</option>
 `)}`)
-            CarregarTabelaArquivos(data.result.EquipeEnum.Id, data.result.Configuracao.Id)
+            CarregarTabelaArquivos(data.result.EquipeEnum, data.result.Configuracao.Id)
             CarregarTabelaPresenca()
         }
     });

@@ -18,11 +18,9 @@ function CarregarTela() {
             $('.membros').html(`${data.result.Membros.map(membro => `
 <tr>
     <td data-label="Sexo"><span style="font-size:24px;" class="p-l-xs"> <i class="fa  ${membro.Sexo == "Masculino" ? "fa-male" : "fa-female"} " aria-hidden="true"></i></span></td>
-    <td data-label="Nome">${membro.Nome}</td>
+    <td data-label="Nome">${membro.Foto ? `<img src="data:image/png;base64,${membro.Foto}" class="avatar-membro"/>` : ''}${membro.Nome}</td>
     <td data-label="Idade">${membro.Idade}</td>
     <td data-label="Oferta"> <span style="font-size:24px;"> <i class="fa ${membro.Oferta ? "fa-check" : "fa-times"} " aria-hidden="true"></i></span></td>
-    <td data-label="Vacina"> <span style="font-size:24px;"> <i class="fa ${membro.Vacina ? "fa-check" : "fa-times"} " aria-hidden="true"></i></span></td>
-<td data-label="Foto"> ${membro.Foto ? `<img src="data:image/png;base64,${membro.Foto}" class="avatar-membro"/>` : `<span style="font-size:24px;"> <i class="fa   fa-times"} " aria-hidden="true"></i></span>`}</td>
     <td data-label="Faltas">${membro.Faltas}</td>
     <td data-label="Contato" class="membro-fone">${membro.Fone}</td>
 </tr>

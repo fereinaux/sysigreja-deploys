@@ -84,6 +84,23 @@
 <script src="~/Scripts/app/Util/mapa.js"></script>
 <script src="https://malsup.github.io/jquery.blockUI.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+
+<script>
+    const mp = new MercadoPago('APP_USR-4fba577e-117d-4ac4-ad7a-499a782b5268', {
+        locale: 'pt-BR'
+    });
+
+    mp.checkout({
+        preference: {
+            id: '221658192-b2623248-636a-44d3-a565-85c96706b5c4'
+        },
+        render: {
+            container: '.cho-container',
+            label: 'Pagar',
+        }
+    });
+</script>
 
 <script>
 

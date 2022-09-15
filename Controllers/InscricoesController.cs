@@ -20,6 +20,10 @@ using System.Threading;
 using System.Web.Mvc;
 using Utils.Enums;
 using Utils.Extensions;
+using MercadoPago.Config;
+using MercadoPago.Client.Preference;
+using MercadoPago.Resource.Preference;
+using System.Collections.Generic;
 
 namespace SysIgreja.Controllers
 {
@@ -48,6 +52,7 @@ namespace SysIgreja.Controllers
             this.eventosBusiness = eventosBusiness;
             this.newsletterBusiness = newsletterBusiness;
             mapper = new MapperRealidade().mapper;
+            MercadoPagoConfig.AccessToken = "APP_USR-6615847238519666-091214-ae37fc001760151942cc1fa7ca689e3b-221658192";
         }
 
         public class GetEventosInscricaoViewModel
@@ -81,7 +86,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
-                    Valor = type.Contains("Equipe") ? (x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa ) :
+                    Valor = type.Contains("Equipe") ? (x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa) :
                     x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                     Numeracao = x.Numeracao,
                     Status = x.Status.GetDescription(),
@@ -116,7 +121,7 @@ namespace SysIgreja.Controllers
             var json = Json(new { Eventos = eventos.OrderBy(x => x.DataEvento) }, JsonRequestBehavior.AllowGet);
             json.MaxJsonLength = Int32.MaxValue;
             return json;
-        }      
+        }
 
         public ActionResult Index()
         {
@@ -334,6 +339,23 @@ namespace SysIgreja.Controllers
 
             var evento = eventosBusiness.GetEventoById(model.EventoId);
 
+            //var request = new PreferenceRequest
+            //{
+            //    Items = new List<PreferenceItemRequest>
+            //        {
+            //            new PreferenceItemRequest
+            //            {
+            //                Title = evento.Configuracao.Titulo,
+            //                Quantity = 1,
+            //                CurrencyId = "BRL",
+            //                UnitPrice = evento.Valor,
+            //            },
+            //        },
+            //};
+
+            //var client = new PreferenceClient();
+            //Preference preference = client.Create(request);
+            //model.ReferenciaMercadoPago = preference.Id;
             if (evento != null && participantesBusiness.GetParticipantesByEvento(model.EventoId).Where(x => x.Status != StatusEnum.Cancelado).Count() >= evento.Capacidade)
             {
                 model.Status = "Espera";

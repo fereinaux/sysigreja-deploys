@@ -187,7 +187,6 @@ namespace SysIgreja.Controllers
                     Vacina = x.Equipante.HasVacina,
                     Faltas = reunioesBusiness.GetFaltasByEquipanteId(x.EquipanteId.Value, eventoId),
                     Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId.Value, x.EventoId.Value).Any(),
-                    Foto = x.Equipante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Equipante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
                 })
             };
 

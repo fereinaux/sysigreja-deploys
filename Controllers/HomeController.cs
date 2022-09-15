@@ -163,7 +163,7 @@ namespace SysIgreja.Controllers
             var result = new
             {
                 Equipe = equipanteEvento.Equipe.Nome,
-                EquipeEnum = equipanteEvento.Equipe.Id,
+                EquipeEnum = equipanteEvento.EquipeId,
                 QtdMembros = membrosEquipe.Count(),
                 Configuracao = new
                 {

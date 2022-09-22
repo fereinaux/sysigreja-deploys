@@ -149,6 +149,7 @@ namespace SysIgreja.Controllers
                     if (ConjugeId.HasValue)
                     {
                         Equipante equipante = equipantesBusiness.GetEquipanteById(ConjugeId.Value);
+                        ViewBag.Nome = equipante.Conjuge;
                         ViewBag.CEP = equipante.CEP;
                         ViewBag.Numero = equipante.Numero;
                         ViewBag.Complemento = equipante.Complemento;

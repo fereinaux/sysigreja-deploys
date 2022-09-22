@@ -12,6 +12,9 @@ namespace SysIgreja.ViewModels
         public string Sexo { get; set; }
         public string Email { get; set; }
         public string Fone { get; set; }
+        [DisplayName("Cônjuge")]
+        public string Conjuge { get; set; }
+        public string Instagram { get; set; }
         [DisplayName("Tamanho da Camisa")]
         public string Camisa { get; set; }
         public string CEP { get; set; }
@@ -51,8 +54,5 @@ namespace SysIgreja.ViewModels
         [DisplayName("Vacina")]
         public string HasVacina { get; set; }
         public string Parente { get; set; }
-        [DisplayName("Cônjuge")]
-        public string Conjuge { get; set; }
-
     }
 }

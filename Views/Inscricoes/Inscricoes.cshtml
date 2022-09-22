@@ -85,13 +85,7 @@
                             }
 
                         }
-                        @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
-                        {
-                            <div class="form-group">
-                                <label for="participante-conjuge" class="">Cônjuge</label>
-                                <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" value="@ViewBag.Conjuge" />
-                            </div>
-                        }
+
                         @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
                         {
                             <div class="form-group">
@@ -99,6 +93,15 @@
                                 <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
                             </div>
                         }
+
+                        @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
+                        {
+                            <div class="form-group">
+                                <label for="participante-conjuge" class="">Cônjuge</label>
+                                <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" value="@ViewBag.Conjuge" />
+                            </div>
+                        }
+
                         @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))
                         {
                             <div class="form-group">
@@ -492,89 +495,93 @@
                            verificaCep($('#participante-cep')[0])
                        }
 
-                       $('.i-checks-green').iCheck({
-                           checkboxClass: 'icheckbox_square-green',
-                           radioClass: 'iradio_square-green'
-                       });
-
-                       $('.i-checks-brown').iCheck({
-                           checkboxClass: 'icheckbox_square-brown',
-                           radioClass: 'iradio_square-brown'
-                       });
-
-
-                       $('#has-medicacao').on('ifChecked', function (event) {
-                           $('.medicacao').removeClass('d-none');
-                           $("#participante-medicacao").addClass('required');
-                       });
-
-                       $('#not-medicacao').on('ifChecked', function (event) {
-                           $('.medicacao').addClass('d-none');
-                           $("#participante-medicacao").removeClass('required');
-                       });
-
-                       $('#has-parente').on('ifChecked', function (event) {
-                           $('.parente').removeClass('d-none');
-                           $("#participante-parente").addClass('required');
-                       });
-
-                       $('#not-parente').on('ifChecked', function (event) {
-                           $('.parente').addClass('d-none');
-                           $("#participante-parente").removeClass('required');
-                       });
-
-                       $('#trindade').on('ifChecked', function (event) {
-                           $('.congregacao').addClass('d-none');
-                           $("#participante-congregacaodescricao").removeClass('required');
-                       });
-
-                       $('#recon').on('ifChecked', function (event) {
-                           $('.congregacao').addClass('d-none');
-                           $("#participante-congregacaodescricao").removeClass('required');
-                       });
-
-                       $('#outra').on('ifChecked', function (event) {
-                           $('.congregacao').removeClass('d-none');
-                           $("#participante-congregacaodescricao").addClass('required');
-                       });
-
-
-                       $('#has-alergia').on('ifChecked', function (event) {
-                           $('.alergia').removeClass('d-none');
-                           $("#participante-alergia").addClass('required');
-                       });
-
-                       $('#not-alergia').on('ifChecked', function (event) {
-                           $('.alergia').addClass('d-none');
-                           $("#participante-alergia").removeClass('required');
-                       });
-
-                       $('#has-restricaoalimentar').on('ifChecked', function (event) {
-                           $('.restricaoalimentar').removeClass('d-none');
-                           $("#participante-restricaoalimentar").addClass('required');
-                       });
-
-                       $('#not-restricaoalimentar').on('ifChecked', function (event) {
-                           $('.restricaoalimentar').addClass('d-none');
-                           $("#participante-restricaoalimentar").removeClass('required');
-                       });
-
-                       $('#has-convenio').on('ifChecked', function (event) {
-                           $('.convenio').removeClass('d-none');
-                           $("#participante-convenio").addClass('required');
-                           $("#participante-hospitais").addClass('required');
-                       });
-
-                       $('#not-convenio').on('ifChecked', function (event) {
-                           $('.convenio').addClass('d-none');
-                           $("#participante-convenio").removeClass('required');
-                           $("#participante-hospitais").removeClass('required');
-                       });
+                    
 
                    }
                })
 
-       }
+        }
+
+        $(document).ready(() => {
+            $('.i-checks-green').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+
+            $('.i-checks-brown').iCheck({
+                checkboxClass: 'icheckbox_square-brown',
+                radioClass: 'iradio_square-brown'
+            });
+
+
+            $('#has-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').removeClass('d-none');
+                $("#participante-medicacao").addClass('required');
+            });
+
+            $('#not-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').addClass('d-none');
+                $("#participante-medicacao").removeClass('required');
+            });
+
+            $('#has-parente').on('ifChecked', function (event) {
+                $('.parente').removeClass('d-none');
+                $("#participante-parente").addClass('required');
+            });
+
+            $('#not-parente').on('ifChecked', function (event) {
+                $('.parente').addClass('d-none');
+                $("#participante-parente").removeClass('required');
+            });
+
+            $('#trindade').on('ifChecked', function (event) {
+                $('.congregacao').addClass('d-none');
+                $("#participante-congregacaodescricao").removeClass('required');
+            });
+
+            $('#recon').on('ifChecked', function (event) {
+                $('.congregacao').addClass('d-none');
+                $("#participante-congregacaodescricao").removeClass('required');
+            });
+
+            $('#outra').on('ifChecked', function (event) {
+                $('.congregacao').removeClass('d-none');
+                $("#participante-congregacaodescricao").addClass('required');
+            });
+
+
+            $('#has-alergia').on('ifChecked', function (event) {
+                $('.alergia').removeClass('d-none');
+                $("#participante-alergia").addClass('required');
+            });
+
+            $('#not-alergia').on('ifChecked', function (event) {
+                $('.alergia').addClass('d-none');
+                $("#participante-alergia").removeClass('required');
+            });
+
+            $('#has-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').removeClass('d-none');
+                $("#participante-restricaoalimentar").addClass('required');
+            });
+
+            $('#not-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').addClass('d-none');
+                $("#participante-restricaoalimentar").removeClass('required');
+            });
+
+            $('#has-convenio').on('ifChecked', function (event) {
+                $('.convenio').removeClass('d-none');
+                $("#participante-convenio").addClass('required');
+                $("#participante-hospitais").addClass('required');
+            });
+
+            $('#not-convenio').on('ifChecked', function (event) {
+                $('.convenio').addClass('d-none');
+                $("#participante-convenio").removeClass('required');
+                $("#participante-hospitais").removeClass('required');
+            });
+        });
 
         function PostInscricao() {
             $('.btn-juventude').prop('disabled', true)

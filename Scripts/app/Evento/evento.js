@@ -70,6 +70,20 @@ function GetEvento(id) {
                 $("#evento-descricao").val(data.Evento.Descricao);
                 $("#evento-numeracao").val(data.Evento.Numeracao);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
+                $(`#evento-conteudo`).summernote({
+                    height: 300,
+                    lang: 'pt-BR',
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']],
+                        ['insert', ['link']],
+                        ['view', ['codeview']]],
+                   
+                }).summernote('code', data.Evento.Conteudo)
                 $("#evento-valor").val(data.Evento.Valor);
                 $('#evento-global').iCheck((data.Evento.Global ? 'check' : 'uncheck'))
                 $("#evento-taxa").val(data.Evento.ValorTaxa);
@@ -86,6 +100,20 @@ function GetEvento(id) {
         $("#evento-capacidade").val("");
         $("#evento-data").val("");
         $("#evento-valor").val("");
+        $(`#evento-conteudo`).summernote({
+            height: 300,
+            lang: 'pt-BR',
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['link']],
+                ['view', ['codeview']]],
+
+        }).summernote('code', "")
         $("#evento-taxa").val("");
     }
 }
@@ -209,6 +237,7 @@ function PostEvento() {
                     ConfiguracaoId: $("#evento-tipo").val(),
                     Numeracao: $("#evento-numeracao").val(),
                     Descricao: $("#evento-descricao").val(),
+                    Conteudo: $('#evento-conteudo').summernote('code'),
                     Capacidade: $("#evento-capacidade").val(),
                     Valor: $("#evento-valor").val(),
                     ValorTaxa: $("#evento-taxa").val(),

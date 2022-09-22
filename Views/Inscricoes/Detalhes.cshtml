@@ -130,9 +130,7 @@
                     <div class="row countdown justify-content-center">
                         <div id="clock" class="time-count"></div>
                     </div>
-                    <a href="@ViewBag.UrlDestino" class="btn btn-juventude">Inscreva-se já</a>
-                    <div class="social mt-4"></div>
-                    <a href="#services" class="target-scroll page-scroll">
+                    <a href="#services-end" class="target-scroll page-scroll">
                         <i class="lni-chevron-down"></i>
                     </a>
                 </div>
@@ -178,21 +176,13 @@
                         <p>@ViewBag.Evento.DataEvento.ToString("dd") de @ViewBag.Evento.DataEvento.ToString("MMMM") de @ViewBag.Evento.DataEvento.ToString("yyyy")</p>
                     </div>
                 </div>
-                @*<div class="col-lg-4 col-md-6 col-xs-12 fadeInUp"
-                         data-animation="fadeInUp"
-                         data-delay="600">
-                        <div class="services-item">
-                            <div class="icon">
-                                <i class="fas fa-map"></i>
-                            </div>
-                            <h3><a href="#">Local</a></h3>
-                            <p>
-                                Chalés de Aldeia Episcopal: Estr. p/ O
-                                Guanabara, 29 - Aldeia dos Camarás, Camaragibe - PE, 54789-205
-                            </p>
-                            <a target="_blank" href="https://goo.gl/maps/dZEyscQCDKVts5UX8">https://goo.gl/maps/dZEyscQCDKVts5UX8</a>
-                        </div>
-                    </div>*@
+                <div class="col-lg-12 col-md-12 col-xs-12 fadeInUp text-center" data-animation="fadeInUp" data-delay="300">
+                    @Html.Raw(ViewBag.Evento.Conteudo)
+                    <section id="services-end" class="section-padding">
+                        <a href="@ViewBag.UrlDestino" class="btn btn-juventude mt-5">Inscreva-se já</a>
+                    </section>
+                </div>
+
             </div>
         </div>
     </section>
@@ -322,12 +312,12 @@
     let corBotao = '@ViewBag.Configuracao.CorBotao'
         document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $(document).ready(function () {
-    
+
             @if (ViewBag.Configuracao.BackgroundId != null)
             {
                  <text> document.styleSheets[0].addRule('.intro:before', `background: url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed !important;`); </text>
             }
-    
+
 
 
         document.styleSheets[0].addRule('.intro:before', `background-size: cover !important;`);

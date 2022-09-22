@@ -657,6 +657,8 @@ function GetEquipante(id) {
                 $(`#equipante-alergia`).val(data.Equipante.Alergia);
                 $(`#equipante-convenio`).val(data.Equipante.Convenio);
                 $(`#equipante-hospitais`).val(data.Equipante.Hospitais);
+                console.log(data.Equipante.HasRestricaoAlimentar);
+                console.log(data.Equipante.Sexo);
                 $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
@@ -688,6 +690,74 @@ function GetEquipante(id) {
         $(`input[type=radio][name=equipante-hasmedicacao][value=false]`).iCheck('check');
         $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=false]`).iCheck('check');
     }
+
+
+    $('#has-medicacao').on('ifChecked', function (event) {
+        $('.medicacao').removeClass('d-none');
+        $("#equipante-medicacao").addClass('required');
+    });
+
+    $('#not-medicacao').on('ifChecked', function (event) {
+        $('.medicacao').addClass('d-none');
+        $("#equipante-medicacao").removeClass('required');
+    });
+
+    $('#has-convenio').on('ifChecked', function (event) {
+        $('.convenio').removeClass('d-none');
+        $("#equipante-convenio").addClass('required');
+    });
+
+    $('#not-convenio').on('ifChecked', function (event) {
+        $('.convenio').addClass('d-none');
+        $("#equipante-convenio").removeClass('required');
+    });
+
+
+    $('#has-alergia').on('ifChecked', function (event) {
+        $('.alergia').removeClass('d-none');
+        $("#equipante-alergia").addClass('required');
+    });
+
+    $('#not-alergia').on('ifChecked', function (event) {
+        $('.alergia').addClass('d-none');
+        $("#equipante-alergia").removeClass('required');
+    });
+
+    $('#has-restricaoalimentar').on('ifChecked', function (event) {
+        $('.restricaoalimentar').removeClass('d-none');
+        $("#equipante-restricaoalimentar").addClass('required');
+    });
+
+    $('#not-restricaoalimentar').on('ifChecked', function (event) {
+        $('.restricaoalimentar').addClass('d-none');
+        $("#equipante-restricaoalimentar").removeClass('required');
+    });
+
+
+    $('#has-parente').on('ifChecked', function (event) {
+        $('.parente').removeClass('d-none');
+        $("#equipante-parente").addClass('required');
+    });
+
+    $('#not-parente').on('ifChecked', function (event) {
+        $('.parente').addClass('d-none');
+        $("#equipante-parente").removeClass('required');
+    });
+
+    $('#trindade').on('ifChecked', function (event) {
+        $('.congregacao').addClass('d-none');
+        $("#equipante-congregacaodescricao").removeClass('required');
+    });
+
+    $('#recon').on('ifChecked', function (event) {
+        $('.congregacao').addClass('d-none');
+        $("#equipante-congregacaodescricao").removeClass('required');
+    });
+
+    $('#outra').on('ifChecked', function (event) {
+        $('.congregacao').removeClass('d-none');
+        $("#equipante-congregacaodescricao").addClass('required');
+    });
 }
 
 function EditEquipante(id) {
@@ -911,38 +981,6 @@ $(document).ready(function () {
     CarregarTabelaEquipante();
     loadCampos($("[id$='eventoid']").val());
 });
-
-
-$('#has-medicacao').on('ifChecked', function (event) {
-    $('.medicacao').removeClass('d-none');
-    $("#equipante-medicacao").addClass('required');
-});
-
-$('#not-medicacao').on('ifChecked', function (event) {
-    $('.medicacao').addClass('d-none');
-    $("#equipante-medicacao").removeClass('required');
-});
-
-$('#has-alergia').on('ifChecked', function (event) {
-    $('.alergia').removeClass('d-none');
-    $("#equipante-alergia").addClass('required');
-});
-
-$('#not-alergia').on('ifChecked', function (event) {
-    $('.alergia').addClass('d-none');
-    $("#equipante-alergia").removeClass('required');
-});
-
-$('#has-restricaoalimentar').on('ifChecked', function (event) {
-    $('.restricaoalimentar').removeClass('d-none');
-    $("#equipante-restricaoalimentar").addClass('required');
-});
-
-$('#not-restricaoalimentar').on('ifChecked', function (event) {
-    $('.restricaoalimentar').addClass('d-none');
-    $("#equipante-restricaoalimentar").removeClass('required');
-});
-
 
 function previous() {
     PostInfo(function () {
@@ -1492,74 +1530,6 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
 
 
             }
-
-
-            $('#has-medicacao').on('ifChecked', function (event) {
-                $('.medicacao').removeClass('d-none');
-                $("#equipante-medicacao").addClass('required');
-            });
-
-            $('#not-medicacao').on('ifChecked', function (event) {
-                $('.medicacao').addClass('d-none');
-                $("#equipante-medicacao").removeClass('required');
-            });
-
-            $('#has-convenio').on('ifChecked', function (event) {
-                $('.convenio').removeClass('d-none');
-                $("#equipante-convenio").addClass('required');
-            });
-
-            $('#not-convenio').on('ifChecked', function (event) {
-                $('.convenio').addClass('d-none');
-                $("#equipante-convenio").removeClass('required');
-            });
-
-
-            $('#has-alergia').on('ifChecked', function (event) {
-                $('.alergia').removeClass('d-none');
-                $("#equipante-alergia").addClass('required');
-            });
-
-            $('#not-alergia').on('ifChecked', function (event) {
-                $('.alergia').addClass('d-none');
-                $("#equipante-alergia").removeClass('required');
-            });
-
-            $('#has-restricaoalimentar').on('ifChecked', function (event) {
-                $('.restricaoalimentar').removeClass('d-none');
-                $("#equipante-restricaoalimentar").addClass('required');
-            });
-
-            $('#not-restricaoalimentar').on('ifChecked', function (event) {
-                $('.restricaoalimentar').addClass('d-none');
-                $("#equipante-restricaoalimentar").removeClass('required');
-            });
-
-
-            $('#has-parente').on('ifChecked', function (event) {
-                $('.parente').removeClass('d-none');
-                $("#equipante-parente").addClass('required');
-            });
-
-            $('#not-parente').on('ifChecked', function (event) {
-                $('.parente').addClass('d-none');
-                $("#equipante-parente").removeClass('required');
-            });
-
-            $('#trindade').on('ifChecked', function (event) {
-                $('.congregacao').addClass('d-none');
-                $("#equipante-congregacaodescricao").removeClass('required');
-            });
-
-            $('#recon').on('ifChecked', function (event) {
-                $('.congregacao').addClass('d-none');
-                $("#equipante-congregacaodescricao").removeClass('required');
-            });
-
-            $('#outra').on('ifChecked', function (event) {
-                $('.congregacao').removeClass('d-none');
-                $("#equipante-congregacaodescricao").addClass('required');
-            });
 
         }
     });

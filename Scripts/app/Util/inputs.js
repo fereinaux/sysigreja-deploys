@@ -25,9 +25,9 @@ function initInputs() {
 
     $('.full-date').each(function (i, element) {
         $(this).data('index', i)
-    })
 
-    $('.full-date').replaceWith(`<div style="position:relative">
+
+    $(this).replaceWith(`<div style="position:relative">
 
 <label tab-index="-1" style="position: absolute; top: 10px; right: 10px; cursor: pointer;" for="full-date-changer">
 
@@ -38,8 +38,9 @@ function initInputs() {
                                                                                     </label>
 
                                 
-                                ${$('.full-date').prop('outerHTML')}
+                                ${$(this).prop('outerHTML')}
                             </div>`)
+    })
 
 
     $('.full-date').each(function (i, element) {

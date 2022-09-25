@@ -297,8 +297,9 @@
                 html = ""
                 let destaque = undefined
                 if (!isEquipe) {
-                    destaque = eventos[0]
-                    eventos = eventos.slice(1, eventos.length)
+                    destaque = eventos.find(evento => evento.Status == 'Aberto' || !evento.Status)
+                    eventos = eventos.filter(evento => evento.UrlDestino != destaque.UrlDestino)
+                    console.log(eventos);
                     html += `       <div class="col-xs-12">.
                     <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
                 </div>
@@ -327,7 +328,7 @@
                 </div>`
                 }
 
-                var eventosAbertos = eventos.filter(evento => evento.Status == "Aberto" || evento.Status == null)
+                var eventosAbertos = eventos.filter(evento => (evento.Status == "Aberto" || evento.Status == null) || isEquipe)
 
                 if (eventosAbertos.length > 0 || isEquipe && !destaque) {
 
@@ -365,9 +366,9 @@
                     </div>`).join().replace(/>,/g, '>') }
 
             `}
-                var eventosEncerrados = eventos.filter(evento => evento.Status == "Encerrado")
+                var eventosEncerrados = eventos.filter(evento => evento.Status == "Em breve" && !isEquipe)
 
-                if (eventosEncerrados.length > 0 || isEquipe && !destaque) {
+                if (eventosEncerrados.length > 0) {
 
                     html += `     <div class="col-xs-12">
                     <h3 style="font-weight:900;font-size:22px">Inscrições em breve</h3>

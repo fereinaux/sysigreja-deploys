@@ -33,7 +33,19 @@ function CarregarTabelaEvento() {
             {
                 data: "Id", name: "Id", orderable: false, width: "30%",
                 "render": function (data, type, row) {
-                    var color = !(InscricoesAbertas == row.Status) ? 'red' : 'green';
+                    var color = 'green'
+
+                    switch (row.Status) {
+                        case InscricoesAbertas:
+                            color = 'green'
+                            break;
+                        case InscricoesEncerradas:
+                            color = 'red'
+                            break;
+                        default:
+                            color = 'yellow'
+                            break;
+                    }
 
                     return `${GetLabel('ToggleEventoStatus', data, color, row.Status)}
 ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}

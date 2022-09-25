@@ -78,6 +78,7 @@ namespace SysIgreja.Controllers
             var eventos = eventosBusiness.GetEventos().Where(x => x.DataEvento > System.DateTime.Today &&
             x.Configuracao.LogoId.HasValue &&
             x.Configuracao.BackgroundId.HasValue &&
+            (x.Status != StatusEnum.Encerrado || type == "Inscrições Equipe") &&
             !string.IsNullOrEmpty(x.Configuracao.MsgConclusao)
             ).ToList().Select(x =>
             {
@@ -134,7 +135,7 @@ namespace SysIgreja.Controllers
             ViewBag.Title = Tipo;
 
             ViewBag.Tipo = Tipo;
-            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && x.Status == StatusEnum.Aberto);
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && (x.Status == StatusEnum.Aberto || (Tipo == "Inscrições Equipe" && x.DataEvento > System.DateTime.Today)));
             if (evento == null)
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
             ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
@@ -180,7 +181,7 @@ namespace SysIgreja.Controllers
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             ViewBag.Title = Tipo;
             ViewBag.Tipo = Tipo;
-            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && x.Status == StatusEnum.Aberto);
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && (x.Status == StatusEnum.Aberto || (Tipo == "Inscrições Equipe" && x.DataEvento > System.DateTime.Today)));
             if (evento == null)
                 return RedirectToAction("InscricoesEncerradas", new
                 {

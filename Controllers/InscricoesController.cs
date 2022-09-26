@@ -194,6 +194,7 @@ namespace SysIgreja.Controllers
                 Tipo = Tipo
             });
             ViewBag.EventoId = Id;
+            evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : evento.Valor;
             ViewBag.Evento = evento;
 
             switch (Tipo)

@@ -100,8 +100,8 @@ function CarregarTabelaEquipante(callbackFunction) {
             { data: "Faltas", name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999 },
             {
                 data: "HasOferta", name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
-                    if (row.Status == "Em Espera") {
-                        return `<span style="font-size:13px" class="text-center label label-default}">Em Espera</span>`;
+                    if (row.Status == "Em espera") {
+                        return `<span style="font-size:13px" class="text-center label label-default}">Em espera</span>`;
                     }
                     return `<span style="font-size:13px" class="text-center label label-${row.HasOferta ? 'primary' : 'warning'}">${row.HasOferta ? 'Pago' : 'Pendente'}</span>`;
                 }

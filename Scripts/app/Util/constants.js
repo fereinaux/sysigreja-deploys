@@ -2,7 +2,7 @@
 const Ativo = "Ativo";
 const Inativo = "Inativo";
 const Inscrito = "Inscrito";
-const Espera = "Em Espera";
+const Espera = "Em espera";
 const Cancelado = "Cancelado";
 const Confirmado = "Confirmado";
 const Membro = "Membro";

@@ -236,10 +236,11 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
                     }
                 }).then(res => {
                     if (res) {
-                        const data = tableParticipanteConfig.ajax.data
+                        const data = getFiltros()
                         data.campos = $('#campos-excel:checked').map(function () {
                             return $(this).val();
                         }).get().join();
+                        console.log(data);
                         $.post(
                             tableParticipanteConfig.ajax.url + "?extract=excel",
                             data,

@@ -360,105 +360,106 @@ namespace SysIgreja.Controllers
         public ActionResult GetParticipantesDatatable(FilterModel model)
         {
             var extract = Request.QueryString["extract"];
+
+
+
+            var result = participantesBusiness
+            .GetParticipantesByEvento(model.EventoId.Value);
+
+            var totalResultsCount = result.Count();
+            var filteredResultsCount = totalResultsCount;
+
+            if (model.Etiquetas != null && model.Etiquetas.Count > 0)
+            {
+                model.Etiquetas.ForEach(etiqueta =>
+                result = result.Where(x => x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+
+            }
+
+            if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
+            {
+                model.NaoEtiquetas.ForEach(etiqueta =>
+             result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+            }
+
+            if (model.Status != null)
+            {
+
+                if (model.Status.Contains(StatusEnum.Checkin))
+                {
+                    result = result.Where(x => x.Checkin || (model.Status.Contains(x.Status)));
+                }
+                else
+                {
+                    result = result.Where(x => (model.Status.Contains(x.Status) && !x.Checkin));
+
+                }
+
+
+                filteredResultsCount = result.Count();
+            }
+
+            if (model.PadrinhoId != null)
+            {
+                if (model.PadrinhoId.Contains(0))
+                {
+                    result = result.Where(x => (!x.PadrinhoId.HasValue));
+                }
+                else
+                {
+                    result = result.Where(x => (model.PadrinhoId.Contains(x.PadrinhoId.Value)));
+                }
+                filteredResultsCount = result.Count();
+            }
+
+            if (model.CirculoId != null)
+            {
+                result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+                filteredResultsCount = result.Count();
+            }
+
+            if (model.search != null && model.search.value != null)
+            {
+                result = result.Where(x => (x.Nome.Contains(model.search.value)));
+                filteredResultsCount = result.Count();
+            }
+
+
             if (extract == "excel")
             {
                 Guid g = Guid.NewGuid();
-
-                var result = participantesBusiness
-                .GetParticipantesByEvento(model.EventoId.Value);
                 var data = mapper.Map<IEnumerable<ParticipanteExcelViewModel>>(result);
 
                 Session[g.ToString()] = datatableService.GenerateExcel(data.ToList(), model.Campos);
 
                 return Content(g.ToString());
             }
-            else
+
+            try
             {
+                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
+                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
+                result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+            }
+            catch (Exception)
+            {
+                result = result.OrderBy(x => x.Id);
+            }
 
-                var result = participantesBusiness
-                .GetParticipantesByEvento(model.EventoId.Value);
-
-                var totalResultsCount = result.Count();
-                var filteredResultsCount = totalResultsCount;
-
-                if (model.Etiquetas != null && model.Etiquetas.Count > 0)
-                {
-                    model.Etiquetas.ForEach(etiqueta =>
-                    result = result.Where(x => x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
-
-                }
-
-                if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
-                {
-                    model.NaoEtiquetas.ForEach(etiqueta =>
-                 result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
-                }
-
-                if (model.Status != null)
-                {
-
-                    if (model.Status.Contains(StatusEnum.Checkin))
-                    {
-                        result = result.Where(x => x.Checkin || (model.Status.Contains(x.Status)));
-                    } else
-                    {
-                        result = result.Where(x => (model.Status.Contains(x.Status) && !x.Checkin));
-
-                    }
+            filteredResultsCount = result.Count();
 
 
-                    filteredResultsCount = result.Count();
-                }
-
-                if (model.PadrinhoId != null)
-                {
-                    if (model.PadrinhoId.Contains(0))
-                    {
-                        result = result.Where(x => (!x.PadrinhoId.HasValue));
-                    }
-                    else
-                    {
-                        result = result.Where(x => (model.PadrinhoId.Contains(x.PadrinhoId.Value)));
-                    }
-                    filteredResultsCount = result.Count();
-                }
-
-                if (model.CirculoId != null)
-                {
-                    result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
-                    filteredResultsCount = result.Count();
-                }
-
-                if (model.search != null && model.search.value != null)
-                {
-                    result = result.Where(x => (x.Nome.Contains(model.search.value)));
-                    filteredResultsCount = result.Count();
-                }
-
-                try
-                {
-                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
-                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
-                    result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
-                }
-                catch (Exception)
-                {
-                    result = result.OrderBy(x => x.Id);
-                }
-
-                filteredResultsCount = result.Count();
-
-                result = result.Skip(model.Start.Value)
+            result = result.Skip(model.Start.Value)
                 .Take(model.Length.Value);
 
-                return Json(new
-                {
-                    data = mapper.Map<IEnumerable<ParticipanteListModel>>(result),
-                    recordsTotal = totalResultsCount,
-                    recordsFiltered = filteredResultsCount,
-                }, JsonRequestBehavior.AllowGet);
+            return Json(new
+            {
+                data = mapper.Map<IEnumerable<ParticipanteListModel>>(result),
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+            }, JsonRequestBehavior.AllowGet);
 
-            }
+
         }
 
         [HttpPost]

@@ -1163,7 +1163,7 @@ async function applyBulk() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        equipanteId: id,
+                        ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-m").val(),
                         tipo: 0
                     }),

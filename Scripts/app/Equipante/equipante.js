@@ -626,6 +626,7 @@ function GetEquipante(id) {
                 $(`#equipante-email`).val(data.Equipante.Email);
                 $(`#equipante-fone`).val(data.Equipante.Fone);
 
+                $(`#equipante-camisa`).val(data.Equipante.Camisa);
                 $(`#equipante-nome-pai`).val(data.Equipante.NomePai);
                 $(`#equipante-fone-pai`).val(data.Equipante.FonePai);
                 $(`#equipante-nome-mae`).val(data.Equipante.NomeMae);
@@ -915,6 +916,7 @@ function PostEquipante() {
                     Referencia: $(`#equipante-referencia`).val(),
                     Latitude: $(`#equipante-latitude`).val(),
                     Longitude: $(`#equipante-longitude`).val(),
+                    Camisa: $(`#equipante-camisa`).val(),
                     Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
                 }),
             success: function () {

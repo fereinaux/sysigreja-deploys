@@ -27,3 +27,13 @@ jobs:
         with:
           webhook_url: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=a3c1cf1d-51bc-b3b4-0849-9d63ad16798c"
           json: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
+      - name: PDC
+        uses: zzzze/webhook-trigger@v1.0.0
+        with:
+          webhook_url: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=e5a99bd6-8e2e-2ffe-b733-c90f91848c8e"
+          json: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
+      - name: Getsemani
+        uses: zzzze/webhook-trigger@v1.0.0
+        with:
+          webhook_url: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=843290be-8694-27e8-3314-1639bfa03bd6"
+          json: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'

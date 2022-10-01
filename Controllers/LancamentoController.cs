@@ -4,6 +4,7 @@ using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.CentroCusto;
 using Core.Business.Configuracao;
+using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
@@ -26,14 +27,16 @@ namespace SysIgreja.Controllers
     {
         private readonly IParticipantesBusiness participantesBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
+        private readonly IEquipesBusiness equipesBusiness;
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly ICentroCustoBusiness centroCustoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
         private readonly IDatatableService datatableService;
 
-        public LancamentoController(ILancamentoBusiness lancamentoBusiness, IArquivosBusiness arquivosBusiness, ICentroCustoBusiness centroCustoBusiness, IParticipantesBusiness participantesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public LancamentoController(ILancamentoBusiness lancamentoBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, ICentroCustoBusiness centroCustoBusiness, IParticipantesBusiness participantesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.centroCustoBusiness = centroCustoBusiness;
+            this.equipesBusiness = equipesBusiness;
             this.arquivosBusiness = arquivosBusiness;
             this.participantesBusiness = participantesBusiness;
             this.lancamentoBusiness = lancamentoBusiness;
@@ -51,6 +54,12 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult GetPagamentos(GetPagamentosModel model)
         {
+
+            if (model.EquipanteEventoId.HasValue)
+            {
+               var equipante = equipesBusiness.GetEquipanteEvento(model.EquipanteEventoId.Value);
+                model.EquipanteId = equipante.Id;
+            }
             var result = (model.ParticipanteId.HasValue ? lancamentoBusiness.GetPagamentosParticipante(model.ParticipanteId.Value) : lancamentoBusiness.GetPagamentosEquipante(model.EquipanteId.Value, model.EventoId.Value))
                 .ToList()
                 .Select(x => MapLancamentoViewModel(x));

@@ -133,7 +133,7 @@ function PostParticipante() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        Id: $("#equipante-id").val(),
+                        Id: equipanteId,
                         Nome: $(`#participante-nome`).val(),
                         Apelido: $(`#participante-apelido`).val(),
                         Instagram: $('#participante-instagram').val(),
@@ -175,7 +175,7 @@ function PostParticipante() {
                     }),
                 success: function () {
                     SuccessMesageOperation();
-                    GetEquipantes($("#equipante-id").val())
+                    GetEquipantes($("#equipantes").val())
 
                 }
             });
@@ -236,15 +236,6 @@ function GetParticipante() {
 
                 }
 
-                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
-                    $('.congregacao').removeClass('d-none');
-                    $("#participante-congregacaodescricao").addClass('required');
-                }
-
                 $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
                 $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
                 $(`#participante-nome-contato`).val(data.Participante.NomeContato);
@@ -262,6 +253,14 @@ function GetParticipante() {
                 $('.dados-participante-contato').removeClass('d-none');
                 $('.dados-participante-contato input[id*="nome"]').addClass('required');
                 $('.dados-participante-contato input[id*="fone"]').addClass('fone');
+                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
+                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
+                } else {
+                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
+                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
+                    $('.congregacao').removeClass('d-none');
+                    $("#participante-congregacaodescricao").addClass('required');
+                }
                 $('.dados-equipante').addClass('d-none');
                 $('.padrinho').text(data.Participante.Padrinho)
                 realista = data.Participante
@@ -353,7 +352,7 @@ function GetParticipante() {
 
 }
 
-
+equipanteId = null
 
 function GetEquipante() {
     AplicarCssPadrao($('input'));
@@ -370,16 +369,8 @@ function GetEquipante() {
                 $("#participantes").val("Pesquisar").trigger("chosen:updated");
                 $('#form-participante').removeClass('d-none');
                 $("#equipante-id").val(data.Equipante.Id);
+                equipanteId = data.Equipante.Id
                 $("#participante-id").val(0);
-
-                if (data.Equipante.Congregacao == 'Trindade' || data.Equipante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=participante-congregacao][value='${data.Equipante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                    $(`#participante-congregacaodescricao`).val(data.Equipante.Congregacao);
-                    $('.congregacao').removeClass('d-none');
-                    $("#participante-congregacaodescricao").addClass('required');
-                }
 
                 $("#participante-checkin").val(data.Equipante.Checkin);
                 $(`#participante-nome`).val(data.Equipante.Nome);
@@ -429,7 +420,14 @@ function GetEquipante() {
                 $('.dados-participante-contato input').removeClass('required');
                 $('.dados-participante-contato input[id*="fone"]').removeClass('fone');
                 $('#marcadores').html(data.Equipante.EtiquetasList.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
-
+                if (data.Equipante.Congregacao == 'Trindade' || data.Equipante.Congregacao == 'Recon') {
+                    $(`input[type=radio][name=participante-congregacao][value='${data.Equipante.Congregacao}']`).iCheck('check');
+                } else {
+                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
+                    $(`#participante-congregacaodescricao`).val(data.Equipante.Congregacao);
+                    $('.congregacao').removeClass('d-none');
+                    $("#participante-congregacaodescricao").addClass('required');
+                }
                 $('#participante-etiquetas').val(data.Equipante.EtiquetasList.map(etiqueta => etiqueta.Id))
                 $('.participante-etiquetas').select2()
                 if (data.Equipante.Foto) {
@@ -467,7 +465,7 @@ function GetEquipante() {
                     $('.btn-cancelarcheckin').removeClass('d-none');
                     $('.btn-checkin').addClass('d-none');
                 } else {
-                    $('.status').text("Confirmado");
+                    $('.status').text(data.Equipante.hasOferta ? "Confirmado" : "Inscrito");
                     $('.btn-cancelarcheckin').addClass('d-none');
                     $('.btn-checkin').removeClass('d-none');
                 }
@@ -774,7 +772,7 @@ function Checkin() {
             url: $("#participante-id").val() > 0 ? "/Participante/ToggleCheckin" : "/Equipante/ToggleCheckin",
             data: JSON.stringify(
                 {
-                    Id: $("#participante-id").val() > 0 ? $("#participante-id").val() : $("#equipante-id").val(),
+                    Id: $("#participante-id").val() > 0 ? $("#participante-id").val() : $("#equipantes").val(),
                     EventoId: $("#eventoid").val()
                 }),
 

@@ -483,18 +483,11 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipanteEvento(int Id, int eventoId)
         {
-            var result = equipantesBusiness.GetEquipanteById(Id);
+            var result = mapper.Map<PostEquipanteModel>(equipesBusiness.GetEquipanteEvento(Id));
 
-            result.Nome = UtilServices.CapitalizarNome(result.Nome);
-            result.Apelido = UtilServices.CapitalizarNome(result.Apelido);
-            var equipeAtual = equipesBusiness.GetEquipeAtual(eventoId, result.Id);
-            result.Equipe = equipeAtual.Equipe?.Nome;
-            result.Checkin = equipeAtual.Checkin;
-            result.Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "";
+            result.Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == result.EquipanteId).FirstOrDefault()?.Quarto?.Titulo ?? "";
 
-            var equipante = mapper.Map<PostEquipanteModel>(result);
-
-            return Json(new { Equipante = equipante }, JsonRequestBehavior.AllowGet);
+            return Json(new { Equipante = result }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -558,7 +551,7 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult ToggleCheckin(int Id, int eventoid)
         {
-            equipantesBusiness.ToggleCheckin(Id, eventoid);
+            equipantesBusiness.ToggleCheckin(Id);
 
             return new HttpStatusCodeResult(200);
         }

@@ -2,6 +2,7 @@
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Configuracao;
+using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.Arquivos;
 using SysIgreja.ViewModels;
@@ -17,11 +18,13 @@ namespace SysIgreja.Controllers
     public class ArquivoController : SysIgrejaControllerBase
     {
         private readonly IEventosBusiness eventosBusiness;
+        private readonly IEquipesBusiness equipesBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
 
-        public ArquivoController(IEventosBusiness eventosBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracoesBusiness) : base(eventosBusiness, accountBusiness, configuracoesBusiness)
+        public ArquivoController(IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracoesBusiness) : base(eventosBusiness, accountBusiness, configuracoesBusiness)
         {
             this.eventosBusiness = eventosBusiness;
+            this.equipesBusiness = equipesBusiness;
             this.arquivosBusiness = arquivosBusiness;
         }
 
@@ -49,9 +52,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetArquivosEquipanteEvento(int eventoid, int equipanteid)
+        public ActionResult GetArquivosEquipanteEvento(int eventoid, int? equipanteid, int? equipanteEventoId)
         {
-            var query = arquivosBusiness.GetArquivosByEquipanteEvento(equipanteid, eventoid);
+            if (equipanteEventoId.HasValue)
+            {
+                var equipanteEvento = equipesBusiness.GetEquipanteEvento(equipanteEventoId.Value);
+                equipanteid = equipanteEvento.EquipanteId;
+            }
+            var query = arquivosBusiness.GetArquivosByEquipanteEvento(equipanteid.Value, eventoid);
 
             return MapAqruivos(query);
         }
@@ -84,7 +92,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetArquivosComunEquipe(int EventoId)
         {
             var evento = eventosBusiness.GetEventoById(EventoId);
-            var query = arquivosBusiness.GetArquivosComunEquipe(evento.ConfiguracaoId.Value); 
+            var query = arquivosBusiness.GetArquivosComunEquipe(evento.ConfiguracaoId.Value);
 
             return MapAqruivos(query);
         }

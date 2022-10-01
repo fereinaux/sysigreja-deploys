@@ -152,13 +152,13 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantesByEventoSelect(int EventoId)
         {
-            var result = equipesBusiness.GetEquipantesByEvento(EventoId)
-                .OrderBy(x => x.Nome)
+            var result = equipesBusiness.GetEquipantesEvento(EventoId)
+                .OrderBy(x => x.Equipante.Nome)
                 .Select(x => new
                 {
                     Id = x.Id,
-                    Nome = UtilServices.CapitalizarNome(x.Nome),
-                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                    Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
                 });
 
             var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);

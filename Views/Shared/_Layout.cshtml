@@ -167,7 +167,9 @@
                     $("*[id*='configId']").val(globalConfigId)
                 }
                 if (globalEventoId != 999 && globalEventoId != null) {
-                    $("*[id*='eventoid']").val(globalEventoId)
+                 
+                    $("*[id*='eventoid']").val(globalEventoId).trigger("chosen:updated");
+                       
                 }
             }
             if ($("*[id*='eventoid']").val()) {

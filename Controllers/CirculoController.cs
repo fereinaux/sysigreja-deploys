@@ -152,6 +152,12 @@ namespace SysIgreja.Controllers
                 {
                     Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                     ParticipanteId = x.ParticipanteId,
+                    Latitude = x.Participante.Latitude,
+                    Longitude = x.Participante.Longitude,
+                    Endereco = $"{x.Participante.Logradouro} {x.Participante.Numero}",
+                    Bairro = x.Participante.Bairro,
+                    Cidade = x.Participante.Cidade,
+                    Referencia = x.Participante.Referencia,
                     CirculoId = x.CirculoId,
                     Cor = x.Circulo.Cor?.GetDescription(),
                     Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)) }),

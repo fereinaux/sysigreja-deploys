@@ -221,6 +221,12 @@
                         globalConfigId = config.Id
                         $('title').text(`${config.Titulo} | ${$('#title').text()}`)
 
+                        if (config.TipoCirculo == 'Endereco') {
+                            $('#ibox-mapa-circulo').css('display', 'block')
+                        } else {
+                            $('#ibox-mapa-circulo').css('display', 'none')
+                        }
+
                         $('.title-circulo').text(config.EquipeCirculo)
                         if (config.LogoId) {
                             $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)

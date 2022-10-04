@@ -1,4 +1,11 @@
-﻿let circuloId
+﻿const map = initMap('map')
+const markerLayer = createMarkerLayer(map)
+map.setView([-8.050000, -34.900002], 13);
+setInterval(function () {
+    map.invalidateSize();
+}, 100);
+
+let circuloId
 function CarregarTabelaCirculo() {
 
     var columnsTb = [
@@ -68,14 +75,14 @@ function PrintCirculo(row) {
             var doc = CriarPDFA4();
 
             FillDoc(doc, result)
-            
+
 
             printDoc(doc);
         }
     });
 }
 
-function FillDoc(doc,result) {
+function FillDoc(doc, result) {
     if (logoRelatorio) {
         var img = new Image();
         img.src = `data:image/png;base64,${logoRelatorio}`;
@@ -86,7 +93,7 @@ function FillDoc(doc,result) {
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
     doc.text(77, 15, $("#circulo-eventoid option:selected").text());
-    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);   
+    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 195, 38);
 
@@ -98,9 +105,9 @@ function FillDoc(doc,result) {
         height += 2
         doc.line(10, height, 195, height);
         height += 5
-    doc.setFont('helvetica', "normal")
+        doc.setFont('helvetica', "normal")
         $(result.data[0].Dirigentes).each((index, dirigente) => {
-            doc.text(12, height, dirigente.Nome);           
+            doc.text(12, height, dirigente.Nome);
             height += 6;
         });
     }
@@ -109,7 +116,7 @@ function FillDoc(doc,result) {
     doc.text(12, height, "Nome");
     doc.text(117, height, "Apelido");
     doc.text(152, height, "Whatsapp");
-    height+=2
+    height += 2
     doc.line(10, height, 195, height);
     height += 5
     doc.setFont('helvetica', "normal")
@@ -150,7 +157,7 @@ function GetCirculo(id, cor) {
 
 function EditCirculo(row) {
     GetCores();
-    GetCirculo(row.Id,row.Cor)
+    GetCirculo(row.Id, row.Cor)
     $("#modal-circulo").modal();
 }
 
@@ -272,15 +279,26 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     data.Circulos.forEach(function (circulo, index, array) {
+                        if (circulo.Latitude && circulo.Longitude) {
+                            addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo')
+                                .bindPopup(`<h4>Nome: ${circulo.Nome}</h4><div><span>${circulo.Endereco} - ${circulo.Bairro}</span></div>`);
+                        }
                         $(`#pg-${circulo.CirculoId}`).append($(`<tr><td class="participante" data-id="${circulo.ParticipanteId}">${circulo.Nome}</td></tr>`));
                     });
-
+                    $('.div-map').css('display', 'block')
                     DragDropg();
                 }
             });
         }
     });
 }
+
+function addMapa(lat, long, nome, cor, id, type) {
+    return L.marker([lat, long], { icon: getIcon(cor.toLowerCase().replaceAll(' ', '-')) }).addTo(markerLayer);
+
+
+}
+
 
 function DragDropg() {
     Drag();
@@ -346,7 +364,7 @@ function GetCores(id) {
             } else {
                 $("#circulo-cores").trigger("chosen:updated");
             }
-   
+
         }
     });
 }
@@ -463,7 +481,7 @@ function CarregarTabelaDirigentes(circuloId) {
         dom: domConfig,
         buttons: getButtonsConfig('Dirigentes'),
         columns: [
-            { data: "Nome", name: "Nome", autoWidth: true },           
+            { data: "Nome", name: "Nome", autoWidth: true },
             {
                 data: "Id", name: "Id", orderable: false, width: "35%",
                 "render": function (data, type, row) {
@@ -479,7 +497,7 @@ function CarregarTabelaDirigentes(circuloId) {
         ],
         ajax: {
             url: '/Circulo/GetDirigentes',
-            data: { CirculoId:circuloId },
+            data: { CirculoId: circuloId },
             datatype: "json",
             type: "POST"
         }

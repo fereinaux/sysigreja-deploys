@@ -182,6 +182,19 @@
 
         @@media (max-width: 768px) {
 
+            .col-select {
+                height: 70px !important;
+            }
+
+            .select-igreja {
+                margin-top: 15px !important;
+            }
+
+            .select-igreja h6{
+                
+                margin-left:0 !important;
+            }
+
             .button-destaque {
                 position: relative;
                 width: 100%;
@@ -252,31 +265,43 @@
 
     <div class="wrapper" style="display:flex;flex-direction:column">
         <div class="row-eventos">
-            <div class="col-xs-12" style="height:50px;margin-top:20px;display:flex">
-                <img style="height: 40px; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+            <div class="col-xs-12 col-select" style="height:50px;margin-top:20px;display:flex">
+                <div class="row">
+                    <div class="col-md-6 col-xs-12" style="display: flex">
+                        <img style="height: 40px; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
 
-                <h3 style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
+                        <h3 style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
 
-                @if (ViewBag.CountIgrejas > 0)
-                {
-                    <h6 style=" margin-left: auto; margin-top: auto; margin-bottom: auto; margin-right: 10px; font-weight: 700; font-size: 20px ">IGREJA</h6>
-                    <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja" onchange=" carregarEventos()">
-                            <option value="">Todas</option>
-                        @foreach (var igreja in ViewBag.Igrejas)
-                        {
-                            if (igreja == ViewBag.Configuracao.Identificador)
-                            {
-                                <option selected value="@igreja">@igreja</option>
-                            }
-                            else
-                            {
-                                <option value="@igreja">@igreja</option>
+                    </div>
 
-                            }
-                        }
-                    </select>
 
-                }
+
+
+
+                    @if (ViewBag.CountIgrejas > 0)
+                    {
+                        <div class="col-md-6 col-xs-12 select-igreja" style="display: flex">
+                            <h6 style=" margin-left: auto; margin-top: auto; margin-bottom: auto; margin-right: 10px; font-weight: 700; font-size: 20px ">IGREJA</h6>
+                            <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja" onchange=" carregarEventos()">
+                                <option value="">Todas</option>
+                                @foreach (var igreja in ViewBag.Igrejas)
+                                {
+                                    if (igreja == ViewBag.Configuracao.Identificador)
+                                    {
+                                        <option selected value="@igreja">@igreja</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@igreja">@igreja</option>
+
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                    }
+
+                </div>
             </div>
         </div>
         <div class="row row-eventos" id="row-eventos" style="">

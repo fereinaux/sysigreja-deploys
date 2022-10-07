@@ -75,7 +75,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetEventosInscricao(string type, string identificador)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && (identificador == x.Identificador || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
             {
                 Id = x.Id,
                 UrlDestino = $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",

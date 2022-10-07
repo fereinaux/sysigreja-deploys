@@ -72,61 +72,36 @@ namespace SysIgreja.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetEventosInscricao(string type)
+        public ActionResult GetEventosInscricao(string type, string identificador)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventos().Where(x => x.DataEvento > System.DateTime.Today &&
-            x.Configuracao.LogoId.HasValue &&
-            x.Configuracao.BackgroundId.HasValue &&
-            (x.Status != StatusEnum.Encerrado || type == "Inscrições Equipe") &&
-            !string.IsNullOrEmpty(x.Configuracao.MsgConclusao)
-            ).ToList().Select(x =>
-            {
-                var configuracao = configuracaoBusiness.GetConfiguracao(x.ConfiguracaoId);
-                return new GetEventosInscricaoViewModel
-                {
-                    Id = x.Id,
-                    Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
-                    Valor = type.Contains("Equipe") ? (x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa) :
-                    x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
-                    Numeracao = x.Numeracao,
-                    Status = x.Status.GetDescription(),
-                    DataEvento = x.DataEvento,
-                    Descricao = x.Descricao,
-                    UrlDestino = Url.Action("Detalhes", "Inscricoes", new
-                    {
-                        id = x.Id,
-                        Tipo = type
-                    }),
-                    Titulo = configuracao.Titulo,
-                    Logo = configuracao.Logo,
-                    Background = configuracao.Background
-                };
-            }).ToList();
-
-            eventos.AddRange(eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && !eventos.Any(y => y.Id == x.EventoId && x.Destino == System.Web.HttpContext.Current.Request.Url.Authority)).ToList().Select(x => new GetEventosInscricaoViewModel
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && (identificador == x.Identificador || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
             {
                 Id = x.Id,
                 UrlDestino = $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = type.Contains("Equipe") ? (x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa) :
-                    x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
+                     x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                 Numeracao = x.Numeracao,
                 DataEvento = x.DataEvento,
                 Descricao = x.Descricao,
                 Titulo = x.TituloEvento,
                 Background = Convert.ToBase64String(x.Background),
                 Logo = Convert.ToBase64String(x.Logo),
-            }).ToList());
+            }).OrderBy(x => x.DataEvento).ToList();
 
-            var json = Json(new { Eventos = eventos.OrderBy(x => x.DataEvento) }, JsonRequestBehavior.AllowGet);
+            var json = Json(new { Eventos = eventos }, JsonRequestBehavior.AllowGet);
             json.MaxJsonLength = Int32.MaxValue;
             return json;
         }
 
         public ActionResult Index()
         {
+            ViewBag.Action = ViewBag.Action ?? "Inscrições";
             ViewBag.Configuracao = configuracaoBusiness.GetLogin();
+            var igrejas = eventosBusiness.GetEventosGlobais().Where(x => !string.IsNullOrEmpty(x.Identificador)).Select(x => x.Identificador).Distinct().ToList();
+            ViewBag.Igrejas = igrejas;
+            ViewBag.CountIgrejas = igrejas.Count;
             return View("Index");
         }
 
@@ -235,6 +210,7 @@ namespace SysIgreja.Controllers
         public ActionResult Equipe()
         {
             ViewBag.Configuracao = configuracaoBusiness.GetLogin();
+            ViewBag.Action = "Inscrições Equipe";
             return View("Index");
         }
         private bool CapacidadeUltrapassada(Evento evento, StatusEnum[] arrStatus)

@@ -175,6 +175,13 @@
             color: #aa2428;
         }
 
+        .search-icon {
+            position: absolute;
+            top: 10px;
+            left: 25px;
+            font-size: 15px;
+        }
+
             .button-destaque:hover {
                 background-color: #aa2428;
                 color: #fff;
@@ -183,17 +190,16 @@
         @@media (max-width: 768px) {
 
             .col-select {
-                height: 70px !important;
+                height: 130px !important;
             }
 
             .select-igreja {
                 margin-top: 15px !important;
             }
 
-            .select-igreja h6{
-                
-                margin-left:0 !important;
-            }
+                .select-igreja h6 {
+                    margin-left: 0 !important;
+                }
 
             .button-destaque {
                 position: relative;
@@ -204,6 +210,14 @@
 
             .row-eventos {
                 width: 100%;
+            }
+
+            input {
+                margin-top: 20px !important
+            }
+
+            .row-eventos > div {
+                padding: 0
             }
 
             .card-destaque {
@@ -258,6 +272,17 @@
             .a-normal span, .a-normal p {
                 font-size: 12px;
             }
+
+            .div-cols > div {
+                padding: 0;
+            }
+
+            .search-icon {
+                position: absolute;
+                top: 30px;
+                left: 9px;
+                font-size: 15px;
+            }
         }
     </style>
 </head>
@@ -265,22 +290,24 @@
 
     <div class="wrapper" style="display:flex;flex-direction:column">
         <div class="row-eventos">
-            <div class="col-xs-12 col-select" style="height:50px;margin-top:20px;display:flex">
-                <div class="row" style="width:100%">
-                    <div class="col-md-6 col-xs-12" style="display: flex">
+            <div class="col-xs-12 col-select" style="height:50px;margin-top:20px;display:flex;padding:0">
+                <div class="div-cols" style="width:100%">
+                    <div class="col-md-4 col-xs-12" style="display: flex">
                         <img style="height: 40px; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
 
                         <h3 style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
 
                     </div>
 
-
-
-
+                    <div class="col-md-4 col-xs-12" style="display: flex;">
+                     
+                            <input type="text" placeholder="Pesquisar eventos, congressos, acampamentos..." class="form-control" style="padding-left:30px;margin-top: auto; margin-bottom: auto;" name="search-evento" id="search-evento" value="" />
+                            <i class="fas fa-search search-icon"></i>
+                    </div>
 
                     @if (ViewBag.CountIgrejas > 0)
                     {
-                        <div class="col-md-6 col-xs-12 select-igreja" style="display: flex">
+                        <div class="col-md-4 col-xs-12 select-igreja" style="display: flex">
                             <h6 style=" margin-left: auto; margin-top: auto; margin-bottom: auto; margin-right: 10px; font-weight: 700; font-size: 20px ">IGREJA</h6>
                             <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja" onchange=" carregarEventos()">
                                 <option value="">Todas</option>
@@ -338,12 +365,25 @@
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $('title').text(`IECB Eventos | ${isEquipe ? "Inscrições Equipe" : "Inscrições"}`)
 
+    function debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+    }
+
+    $('#search-evento').keyup(debounce(function () {
+        carregarEventos()
+    }, 500));
+
     function carregarEventos() {
         $.ajax({
             url: "/Inscricoes/GetEventosInscricao/",
             data: {
                 type: action,
-                identificador: $('#igreja').val()
+                identificador: $('#igreja').val(),
+                search: $('#search-evento').val()
             },
             datatype: "json",
             type: "GET",
@@ -352,10 +392,9 @@
                 let eventos = data.Eventos
                 html = ""
                 let destaque = undefined
-                if (!isEquipe) {
+                if (!isEquipe && eventos.length > 0) {
                     destaque = eventos.find(evento => evento.Status == 'Aberto' || !evento.Status)
                     eventos = eventos.filter(evento => evento.UrlDestino != destaque.UrlDestino)
-                    console.log(eventos);
                     html += `       <div class="col-xs-12">.
                     <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
                 </div>

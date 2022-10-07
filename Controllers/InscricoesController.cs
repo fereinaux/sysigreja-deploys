@@ -72,10 +72,10 @@ namespace SysIgreja.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetEventosInscricao(string type, string identificador)
+        public ActionResult GetEventosInscricao(string type, string identificador, string search)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && (string.IsNullOrEmpty(search) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
             {
                 Id = x.Id,
                 UrlDestino = $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",

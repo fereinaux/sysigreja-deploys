@@ -79,7 +79,7 @@ namespace SysIgreja.Controllers
             var eventos = eventosBusiness.GetEventosGlobais().Where(x => x.Status == StatusEnum.Aberto && (string.IsNullOrEmpty(search) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
             {
                 Id = x.Id,
-                UrlDestino = $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",
+                UrlDestino = x.UrlExterna ?? $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = type.Contains("Equipe") ? (x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa : x.ValorTaxa) :
                      x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,

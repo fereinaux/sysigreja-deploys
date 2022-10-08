@@ -80,6 +80,7 @@ function GetEvento(id) {
             success: function (data) {
                 $("#evento-id").val(data.Evento.Id);
                 $("#evento-descricao").val(data.Evento.Descricao);
+                $("#evento-urlexterna").val(data.Evento.UrlExterna);
                 $("#evento-numeracao").val(data.Evento.Numeracao);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
                 $(`#evento-conteudo`).summernote({
@@ -107,6 +108,7 @@ function GetEvento(id) {
     else {
         $("#evento-id").val(0);
         $("#evento-numeracao").val("");
+        $("#evento-urlexterna").val("");
         $('#evento-global').iCheck('uncheck')
         $("#evento-descricao").val("");
         $("#evento-capacidade").val("");
@@ -249,6 +251,7 @@ function PostEvento() {
                     ConfiguracaoId: $("#evento-tipo").val(),
                     Numeracao: $("#evento-numeracao").val(),
                     Descricao: $("#evento-descricao").val(),
+                    UrlExterna: $("#evento-urlexterna").val(),
                     Conteudo: $('#evento-conteudo').summernote('code'),
                     Capacidade: $("#evento-capacidade").val(),
                     Valor: $("#evento-valor").val(),

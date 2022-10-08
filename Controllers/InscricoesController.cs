@@ -68,6 +68,7 @@ namespace SysIgreja.Controllers
             public string Logo { get; set; }
             public string Background { get; set; }
             public string Status { get; set; }
+            public string Identificador { get; set; }
         }
 
         [HttpGet]
@@ -85,6 +86,7 @@ namespace SysIgreja.Controllers
                 Numeracao = x.Numeracao,
                 DataEvento = x.DataEvento,
                 Descricao = x.Descricao,
+                Identificador = x.Identificador ?? "Interdenominacional",
                 Titulo = x.TituloEvento,
                 Background = Convert.ToBase64String(x.Background),
                 Logo = Convert.ToBase64String(x.Logo),

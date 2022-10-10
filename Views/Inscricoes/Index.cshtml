@@ -168,6 +168,12 @@
             position: relative;
         }
 
+
+        .col-evento-select {
+            height: 280px;
+        }
+
+
         .button-destaque {
             position: absolute;
             bottom: 74px;
@@ -211,6 +217,11 @@
             .row-eventos {
                 width: 100%;
             }
+
+            .col-evento-select {
+                height: 125px;
+            }
+
 
             input {
                 margin-top: 20px !important
@@ -437,7 +448,7 @@
                 <div class="col-xs-12">
                     <h3 style="font-weight:900;font-size:22px">Inscrições Abertas</h3>
                 </div>
-                     ${eventosAbertos.map(evento => `<div class="col-md-3 col col-xs-12">
+                     ${eventosAbertos.map(evento => `<div class="col-md-3 col col-xs-12 col-evento-select">
                         <a href='${evento.UrlDestino}' class="a-normal">
 
                             <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');

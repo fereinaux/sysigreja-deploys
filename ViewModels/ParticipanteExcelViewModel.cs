@@ -27,6 +27,14 @@ namespace SysIgreja.ViewModels
         public string Complemento { get; set; }
         [DisplayName("Referência")]
         public string Referencia { get; set; }
+        [DisplayName("Nome do Pai")]
+        public string NomePai { get; set; }
+        [DisplayName("Fone do Pai")]
+        public string FonePai { get; set; }
+        [DisplayName("Nome da Mãe")]
+        public string NomeMae { get; set; }
+        [DisplayName("Fone da Mãe")]
+        public string FoneMae { get; set; }
         [DisplayName("Nome do Contato")]
         public string NomeContato { get; set; }
         [DisplayName("Fone do Contato")]

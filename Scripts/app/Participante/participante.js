@@ -179,6 +179,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
         }
     };
 
+
     tableParticipanteConfig.buttons.forEach(function (o) {
         if (o.extend === "excel") {
 
@@ -1653,7 +1654,7 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
 
             }
 
-            
+
 
         }
     });

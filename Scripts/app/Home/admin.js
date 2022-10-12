@@ -1,4 +1,4 @@
-﻿$(document).ready(() => {
+﻿+$(document).ready(() => {
     HideMenu();
     GetResultadosAdmin();
 });
@@ -242,6 +242,43 @@ function GetResultadosAdmin() {
             } else {
                 $('.evento-cobranca').css('display', 'none')
             }
+
+            var randomColorGenerator = function () {
+                return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+            };
+
+
+            const labels = result.InscritosHora.map(x => x.Hora)
+            const data2 = {
+                labels: labels,
+                datasets: [{
+                    label: 'Quantidade',
+                    backgroundColor:'#f8ac59',
+                    data: result.InscritosHora.map(x => x.Qtd)
+                }]
+            }
+
+            const config = {
+                type: 'bar',
+                data: data2,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+            };
+
+            let chartStatus = Chart.getChart("chart-hora"); // <canvas> id
+            if (chartStatus != undefined) {
+                chartStatus.destroy();
+            }
+            const myChart = new Chart(
+                document.getElementById('chart-hora'),
+                config
+            );
+      
         }
     });
 }

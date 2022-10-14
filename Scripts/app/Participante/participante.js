@@ -187,6 +187,8 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
                 selected = false
                 first = false
                 div.innerHTML = `<div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
+<div class="row">
+<div class="col-md-6 col-xs-12">
 <label style="display:block"> <input id="select-all" type="checkbox" onChange="selectAll()" value="all"> Selecionar Todos <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Nome"> Nome <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Apelido"> Apelido <i></i></label>
@@ -203,14 +205,17 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Cidade"> Cidade <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Estado"> Estado <i></i></label>
+
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Parente"> Parente <i></i></label>
+</div>
+<div class="col-md-6 col-xs-12">
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomePai"> Nome do Pai <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FonePai"> Fone do Pai <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeMae"> Nome do Mãe <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneMae"> Fone do Mãe <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeMae"> Nome da Mãe <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneMae"> Fone da Mãe <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
@@ -222,8 +227,10 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> Círculo <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Motorista <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="HasVacina"> Vacina <i></i></label>
-    </div>`;
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataCadastro"> Data/Hora Inscrição <i></i></label>
+</div>
+</div>
+</div>`;
                 CustomSwal({
                     title: "Excel de Participantes",
                     icon: "info",

@@ -59,8 +59,8 @@ namespace SysIgreja.ViewModels
         [DisplayName("Círculo")]
         public string Circulo { get; set; }
         public string Motorista { get; set; }
-        [DisplayName("Vacina")]
-        public string HasVacina { get; set; }
+        [DisplayName("Data/Hora Inscrição")]
+        public string DataCadastro { get; set; }
         public string Parente { get; set; }
     }
 }

@@ -165,6 +165,20 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-12 p-w-xs">
+                    <div class="widget-head-color-box yellow-bg p-lg text-center">
+                        <div class="m-b-md">
+                            <h2 class="font-bold no-margins">
+                                Inscritos por Hora
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="widget-text-box">
+                        <canvas id="chart-hora"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg-6 col-xs-12 p-w-xs">
             <div class="pointer">
@@ -277,6 +291,7 @@
 
 @section Scripts {
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="~/Scripts/app/Home/admin.js?@ViewBag.Numero"></script>
 
     <script>

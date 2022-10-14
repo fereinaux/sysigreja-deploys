@@ -99,6 +99,7 @@ namespace SysIgreja.Controllers
                     Valor = x.Valor
                 })
                 .OrderByDescending(x => x.Tipo),
+                InscritosHora = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.DataCadastro.HasValue).GroupBy(x => x.DataCadastro.Value.Hour).Select(x => new { Hora = x.Key, Qtd = x.Count() }).OrderBy(x => x.Hora).ToList(),
                 UltimosInscritos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status != StatusEnum.Cancelado)
                 .OrderByDescending(x => x.DataCadastro).Take(5).ToList().Select(x => new ParticipanteViewModel
                 {

@@ -356,6 +356,7 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult VerificaCadastro(string Email, int eventoId, string Tipo)
         {
+            var evento = eventosBusiness.GetEventoById(eventoId);
 
             switch (Tipo)
             {
@@ -363,30 +364,30 @@ namespace SysIgreja.Controllers
                     var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone == Email);
                     if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId))
                     {
-                        return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }));
+                        return Json(new { Participante = equipante.Nome, Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Url = Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }) }, JsonRequestBehavior.AllowGet);
                     }
                     else if (equipante != null)
                     {
-                        return Json(new { Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
+                        return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" ,Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
                     }
-                    return new HttpStatusCodeResult(200);
+                    return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
 
                 default:
                     var participante = participantesBusiness.GetParticipantesByEvento(eventoId).FirstOrDefault(x => x.Email == Email && (new StatusEnum[] { StatusEnum.Confirmado, StatusEnum.Inscrito, StatusEnum.Espera }).Contains(x.Status));
 
                     if (participante != null && participante.Status != StatusEnum.Espera)
-                        return Json(Url.Action("InscricaoConcluida", new { Id = participante.Id }));
+                        return Json(new { Participante = participante.Nome, Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Url = Url.Action("InscricaoConcluida", new { Id = participante.Id }) }, JsonRequestBehavior.AllowGet);
+
                     else if (participante != null && participante.Status == StatusEnum.Espera)
-                        return Json(Url.Action("InscricaoEspera", new { Id = participante.Id }));
+                        return Json(new { Url = Url.Action("InscricaoEspera", new { Id = participante.Id }) });
 
                     var participanteConsulta = participantesBusiness.GetParticipanteConsulta(Email);
 
                     if (participanteConsulta != null)
-                        return Json(new { Participante = participanteConsulta }, JsonRequestBehavior.AllowGet);
+                        return Json(new { Participante = participanteConsulta, Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
 
-                    return new HttpStatusCodeResult(200);
+                    return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
             }
-
         }
     }
 }

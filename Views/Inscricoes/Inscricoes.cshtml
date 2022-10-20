@@ -86,13 +86,13 @@
 
                         }
 
-                        @if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
+                        @*@if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
                         {
                             <div class="form-group">
                                 <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
                                 <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
                             </div>
-                        }
+                        }*@
 
                         @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
@@ -348,6 +348,100 @@
     .dtp table.dtp-picker-days tr > td > a.selected {
         background: @ViewBag.Configuracao.CorBotao !important;
     }
+
+
+    .btn-confirmar {
+        background-color: #23c6c8;
+        border-color: #23c6c8;
+        color: #FFFFFF;
+    }
+
+        .btn-confirmar:hover,
+        .btn-confirmar:focus,
+        .btn-confirmar:active,
+        .btn-confirmar.active,
+        .open .dropdown-toggle.btn-confirmar,
+        .btn-confirmar:active:focus,
+        .btn-confirmar:active:hover,
+        .btn-confirmar.active:hover,
+        .btn-confirmar.active:focus {
+            background-color: #21b9bb !important;
+            border-color: #21b9bb !important;
+            color: #FFFFFF;
+        }
+
+        .btn-confirmar:active,
+        .btn-confirmar.active,
+        .open .dropdown-toggle.btn-confirmar {
+            background-image: none;
+        }
+
+            .btn-confirmar.disabled,
+            .btn-confirmar.disabled:hover,
+            .btn-confirmar.disabled:focus,
+            .btn-confirmar.disabled:active,
+            .btn-confirmar.disabled.active,
+            .btn-confirmar[disabled],
+            .btn-confirmar[disabled]:hover,
+            .btn-confirmar[disabled]:focus,
+            .btn-confirmar[disabled]:active,
+            .btn-confirmar.active[disabled],
+            fieldset[disabled] .btn-confirmar,
+            fieldset[disabled] .btn-confirmar:hover,
+            fieldset[disabled] .btn-confirmar:focus,
+            fieldset[disabled] .btn-confirmar:active,
+            fieldset[disabled] .btn-confirmar.active {
+                background-color: #26d7d9;
+                border-color: #26d7d9;
+            }
+
+
+    .btn-cancelar {
+        background-color: #ed5565;
+        border-color: #ed5565;
+        color: #FFFFFF;
+    }
+
+        .btn-cancelar:hover,
+        .btn-cancelar:focus,
+        .btn-cancelar:active,
+        .btn-cancelar.active,
+        .open .dropdown-toggle.btn-cancelar,
+        .btn-cancelar:active:focus,
+        .btn-cancelar:active:hover,
+        .btn-cancelar.active:hover,
+        .btn-cancelar.active:focus {
+            background-color: #ec4758 !important;
+            border-color: #ec4758 !important;
+            color: #FFFFFF;
+        }
+
+        .btn-cancelar:active,
+        .btn-cancelar.active,
+        .open .dropdown-toggle.btn-cancelar {
+            background-image: none;
+        }
+
+            .btn-cancelar.disabled,
+            .btn-cancelar.disabled:hover,
+            .btn-cancelar.disabled:focus,
+            .btn-cancelar.disabled:active,
+            .btn-cancelar.disabled.active,
+            .btn-cancelar[disabled],
+            .btn-cancelar[disabled]:hover,
+            .btn-cancelar[disabled]:focus,
+            .btn-cancelar[disabled]:active,
+            .btn-cancelar.active[disabled],
+            fieldset[disabled] .btn-cancelar,
+            fieldset[disabled] .btn-cancelar:hover,
+            fieldset[disabled] .btn-cancelar:focus,
+            fieldset[disabled] .btn-cancelar:active,
+            fieldset[disabled] .btn-cancelar.active {
+                background-color: #ef6776;
+                border-color: #ef6776;
+            }
+
+
 </style>
 
 
@@ -355,7 +449,7 @@
     <script>
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
         $(window).on('load', function () {
-
+            $(`input`).val("");
             /* Page Loader active
            ========================================================*/
             $('#preloader').fadeOut();
@@ -460,7 +554,7 @@
                        eventoId: @ViewBag.EventoId
                    }),
                    success: function (data) {
-                       if (data.Participante) {
+                       if (data.Participante && typeof (data.Participante) != "string") {
                            if ('(@ViewBag.Tipo)'.includes('Equipe')) {
                                $('#EquipanteId').val(data.Participante.Id)
                            }
@@ -488,14 +582,14 @@
                            $('.dados-participante-contato input[id*="nome"]').addClass('required');
                            $('.dados-participante-contato input[id*="fone"]').addClass('fone');
                        }
-                       else if (data) {
-                           window.location.href = data;
+                       else if (data.Url) {
+                           window.location.href = data.Url;
                        }
                        if ($('#participante-cep').val()) {
                            verificaCep($('#participante-cep')[0])
                        }
 
-                    
+
 
                    }
                })
@@ -583,71 +677,179 @@
             });
         });
 
+        var evento = null
         function PostInscricao() {
             $('.btn-juventude').prop('disabled', true)
             if (ValidateForm(`#form-inscricao`)) {
                 $.ajax({
-                    url: '(@ViewBag.Tipo)'.includes('Equipe') ? "/Equipante/PostEquipante/" : "/Inscricoes/PostInscricao/",
+                    url: "/Inscricoes/VerificaCadastro",
                     datatype: "json",
                     type: "POST",
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(
-                        {
-                            Inscricao: true,
-                            EventoId: @ViewBag.EventoId,
-                            Id: '(@ViewBag.Tipo)'.includes('Equipe') ? $('#EquipanteId').val() : 0,
-                            Nome: $(`#participante-nome`).val(),
-                            Apelido: $(`#participante-apelido`).val(),
-                            Instagram: $('#participante-instagram').val(),
-                            DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
-                            Email: $(`#participante-email`).val(),
-                            Fone: $(`#participante-fone`).val(),
-                            Instagram: $(`#participante-instagram`).val(),
-                            Camisa: $(`#participante-camisa`).val(),
-                            Profissao: $(`#participante-profissao`).val(),
-                            CEP: $(`#participante-cep`).val(),
-                            Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
-                            Logradouro: $(`#participante-logradouro`).val(),
-                            Bairro: $(`#participante-bairro`).val(),
-                            Cidade: $(`#participante-cidade`).val(),
-                            EquipeId: $('#participante-equipe').val(),
-                            Estado: $(`#participante-estado`).val(),
-                            Numero: $(`#participante-numero`).val(),
-                            Complemento: $(`#participante-complemento`).val(),
-                            Conjuge: $(`#participante-conjuge`).val(),
-                            Referencia: $(`#participante-referencia`).val(),
-                            Latitude: $(`#participante-latitude`).val(),
-                            Longitude: $(`#participante-longitude`).val(),
-                            HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
-                            RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
-                            HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
-                            Medicacao: $(`#participante-medicacao`).val(),
-                            HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
-                            Alergia: $(`#participante-alergia`).val(),
-                            HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
-                            Convenio: $(`#participante-convenio`).val(),
-                            Hospitais: $(`#participante-hospitais`).val(),
-                            Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
-                            NomePai: $(`#participante-nome-pai`).val(),
-                            FonePai: $(`#participante-fone-pai`).val(),
-                            NomeMae: $(`#participante-nome-mae`).val(),
-                            FoneMae: $(`#participante-fone-mae`).val(),
-                            NomeConvite: $(`#participante-nome-convite`).val(),
-                            FoneConvite: $(`#participante-fone-convite`).val(),
-                            NomeContato: $(`#participante-nome-contato`).val(),
-                            FoneContato: $(`#participante-fone-contato`).val(),
-                        }),
-                    success: function (url) {
-                        window.location.href = url;
-                    },
-                    error: function () {
-                        $('.btn-juventude').prop("disabled", false);
+                    data: JSON.stringify({
+                        Email: '@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone`).val() : $(`#participante-email`).val(),
+                        Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
+                        eventoId: @ViewBag.EventoId
+                   }),
+                    success: function (data) {
+                        evento = data.Evento
+                        if (data.Participante && typeof (data.Participante) == "string") {
+
+                            var div = document.createElement("div");
+
+                            div.innerHTML = `<div><span>Já existe uma inscrição para o ${'(@ViewBag.Tipo)'.includes('Equipe') ? `telefone <strong>${$(`#participante-fone`).val()}</strong>` : `email <strong>${$(`#participante-email`).val()}</strong>`} no nome de <strong>${data.Participante}</strong> para o <strong>${data.Evento}</strong>. Prosseguir irá substituir a inscrição existente. Deseja continuar?</span> </div>`
+                            CustomSwal({
+                                title: "Inscrição Duplicada",
+                                icon: `logo`,
+                                content: div,
+                                className: "button-center",
+                                dangerMode: true,
+                                buttons: {
+                                    cancelar: {
+                                        text: "Cancelar",
+                                        value: false,
+                                        className: "w-150 btn-cancelar"
+                                    },
+                                    confirmar: {
+                                        text: "Seguinte",
+                                        value: true,
+                                        className: "w-150 btn-confirmar"
+                                    },
+
+                                }
+                            }).then(result => {
+                                if (result) {
+                                    executePostInscricao()
+                                } else {
+                                    $("body").scrollTop(0);
+                                    $('.btn-juventude').prop('disabled', false)
+                                }
+                            })
+                        } else {
+                            executePostInscricao()
+                        }
+
                     }
-                });
+                })
+
             } else {
                 $('.btn-juventude').prop("disabled", false);
             }
-       }
+        }
+
+        function mostrarTermo() {
+            if ($('#lertermo').text() == 'Ocultar o termo') {
+                $('#termo').css('display', 'none')
+                $('#lertermo').text('Ler o termo')
+            } else {
+
+            $('#termo').css('display', 'block')
+            $('#lertermo').text('Ocultar o termo')
+            }
+        }
+
+        function executePostInscricao() {
+            var div = document.createElement("div");
+
+            div.innerHTML = `<div><h4><strong>${$('#participante-nome').val()}</strong></h4> <p>Ao confirmar sua inscrição, você concorda que o <strong>${evento}</strong> proceda com o tratamento de seus dados.</p>
+    
+    <div id="termo" style="display:none">
+    <p>Entende-se por tratamento de acordo com o artigo 5º inciso X, a coleta, produção, recepção, classificação, utilização, acesso, reprodução, transmissão, distribuição, processamento, arquivamento, armazenamento, eliminação, avaliação ou controle da informação, modificação, comunicação, transferência, difusão ou extração.</p>
+    <p>A Controladora responsabiliza-se pela manutenção de medidas de segurança, técnicas e administrativas aptas a proteger os dados pessoais de acessos não autorizados e de situações acidentais ou ilícitas de destruição, perda, alteração, comunicação ou qualquer forma de tratamento inadequado ou ilícito.</p>
+    </div>
+    <a id="lertermo" style="cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;" onclick="mostrarTermo()">Ler o termo</a>
+    </div>`
+            CustomSwal({
+                title: "Confirmar Inscrição",
+                icon: "logo",
+                content: div,
+                className: "button-center",
+                dangerMode: true,
+                buttons: {
+                    cancelar: {
+                        text: "Cancelar",
+                        value: false,
+                        className: "btn-cancelar w-150 btn-cancelar"
+                    },
+                    confirmar: {
+                        text: "Li e confirmo",
+                        value: true,
+                        className: "btn-confirmar w-150 btn-confirmar"
+                    },
+
+
+                }
+            }).then(result => {
+                if (result) {
+
+
+                    $.ajax({
+                        url: '(@ViewBag.Tipo)'.includes('Equipe') ? "/Equipante/PostEquipante/" : "/Inscricoes/PostInscricao/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                Inscricao: true,
+                                EventoId: @ViewBag.EventoId,
+                                Id: '(@ViewBag.Tipo)'.includes('Equipe') ? $('#EquipanteId').val() : 0,
+                                Nome: $(`#participante-nome`).val(),
+                                Apelido: $(`#participante-apelido`).val(),
+                                Instagram: $('#participante-instagram').val(),
+                                DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                                Email: $(`#participante-email`).val(),
+                                Fone: $(`#participante-fone`).val(),
+                                Instagram: $(`#participante-instagram`).val(),
+                                Camisa: $(`#participante-camisa`).val(),
+                                Profissao: $(`#participante-profissao`).val(),
+                                CEP: $(`#participante-cep`).val(),
+                                Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
+                                Logradouro: $(`#participante-logradouro`).val(),
+                                Bairro: $(`#participante-bairro`).val(),
+                                Cidade: $(`#participante-cidade`).val(),
+                                EquipeId: $('#participante-equipe').val(),
+                                Estado: $(`#participante-estado`).val(),
+                                Numero: $(`#participante-numero`).val(),
+                                Complemento: $(`#participante-complemento`).val(),
+                                Conjuge: $(`#participante-conjuge`).val(),
+                                Referencia: $(`#participante-referencia`).val(),
+                                Latitude: $(`#participante-latitude`).val(),
+                                Longitude: $(`#participante-longitude`).val(),
+                                HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
+                                RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
+                                HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
+                                Medicacao: $(`#participante-medicacao`).val(),
+                                HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
+                                Alergia: $(`#participante-alergia`).val(),
+                                HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
+                                Convenio: $(`#participante-convenio`).val(),
+                                Hospitais: $(`#participante-hospitais`).val(),
+                                Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
+                                NomePai: $(`#participante-nome-pai`).val(),
+                                FonePai: $(`#participante-fone-pai`).val(),
+                                NomeMae: $(`#participante-nome-mae`).val(),
+                                FoneMae: $(`#participante-fone-mae`).val(),
+                                NomeConvite: $(`#participante-nome-convite`).val(),
+                                FoneConvite: $(`#participante-fone-convite`).val(),
+                                NomeContato: $(`#participante-nome-contato`).val(),
+                                FoneContato: $(`#participante-fone-contato`).val(),
+                            }),
+                        success: function (url) {
+                            window.location.href = url;
+                        },
+                        error: function () {
+                            $("body").scrollTop(0);
+                            $('.btn-juventude').prop("disabled", false);
+                        }
+                    });
+                } else {
+                    $("body").scrollTop(0);
+                    $('.btn-juventude').prop('disabled', false)
+                }
+            })
+        }
 
 
        $("#participante-email").on('keypress', function (e) {

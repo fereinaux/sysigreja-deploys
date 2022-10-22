@@ -18,8 +18,10 @@ using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Threading;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -359,7 +361,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetParticipantesDatatable(FilterModel model)
         {
             var extract = Request.QueryString["extract"];
-
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
 
 
             var result = participantesBusiness

@@ -21,7 +21,7 @@
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('A Receber'),
@@ -203,7 +203,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [

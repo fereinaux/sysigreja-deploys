@@ -171,7 +171,6 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Email, opt => opt.MapFrom(x => x.Equipante.Email))
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Equipante.Sexo.GetDescription()))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Equipante.Status.GetDescription()))
-                    .ForMember(dest => dest.HasVacina, opt => opt.MapFrom(x => x.Equipante.HasVacina ? "Sim" : "Não"))
                     .ForMember(dest => dest.HasOferta, opt => opt.MapFrom(x => x.Equipante.Lancamentos.Any(y => y.CentroCustoId == y.Evento.Configuracao.CentroCustoTaxaId && y.EventoId == x.EventoId)))
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
 

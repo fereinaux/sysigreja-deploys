@@ -532,13 +532,6 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-        [HttpPost]
-        public ActionResult ToggleVacina(int Id)
-        {
-            equipantesBusiness.ToggleVacina(Id);
-
-            return new HttpStatusCodeResult(200);
-        }
 
         [HttpPost]
         public ActionResult ToggleTeste(int Id)

@@ -16,7 +16,7 @@ function CarregarTabelaCracha() {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('Crachás'),

@@ -185,7 +185,6 @@ namespace SysIgreja.Controllers
                     Fone = x.Equipante.Fone,
                     Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                     Nome = x.Equipante.Nome,
-                    Vacina = x.Equipante.HasVacina,
                     Faltas = reunioesBusiness.GetFaltasByEquipanteId(x.EquipanteId.Value, eventoId),
                     Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId.Value, x.EventoId.Value).Any(),
                 })

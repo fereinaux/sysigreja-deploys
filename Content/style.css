@@ -10431,3 +10431,8 @@ label {
 .modal-xl {
     width: 1200px;
 }
+
+div.dt-button-collection {
+    width: 150px !important;
+}
+

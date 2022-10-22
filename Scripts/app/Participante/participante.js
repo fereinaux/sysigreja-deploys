@@ -61,29 +61,31 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
         language: languageConfig,
         searchDelay: 750,
         lengthMenu: [10, 30, 50, 100, 200],
-        colReorder: false,
+        colReorder: true,
         serverSide: true,
         scrollX: true,
         scrollXollapse: true,
-        deferloading: 0,
         orderCellsTop: true,
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig(`Participantes ${$("#participante-eventoid option:selected").text()}`),
+        colReorder: {
+            fixedColumnsLeft: 1
+        },
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%",
+                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
                 "render": function (data, type, row) {
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, row.Presenca) : '';
                 }
             },
-            { data: "Sexo", name: "Sexo", visible: false },
+            { data: "Sexo", name: "Sexo", title:"Sexo",visible: false, className: 'noVis' },
             {
-                data: "Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
+                data: "Sexo", orderData: 0, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {
                     if (data == "Masculino") {
                         icon = "fa-male";
@@ -105,6 +107,16 @@ ${row.Circulo ? (row.Circulo.match(/\p{Emoji}+/gu) ? row.Circulo.match(/\p{Emoji
                     </div>`
                 }
             },
+            { data: "Apelido", name: "Apelido", autoWidth: true, visible: false },
+            { data: "Conjuge", title: "Cônjuge", autoWidth: true, visible: false },
+            { data: "NomeMae", name: "NomeMae", autoWidth: true, visible: false },
+            { data: "FoneMae", name: "FoneMae", autoWidth: true, visible: false },
+            { data: "NomePai", name: "NomePai", autoWidth: true, visible: false },
+            { data: "FonePai", autoWidth: true, visible: false },
+            { data: "NomeContato", autoWidth: true, visible: false },
+            { data: "FoneContato", autoWidth: true, visible: false },
+            { data: "NomeConvite", autoWidth: true, visible: false },
+            { data: "FoneConvite", autoWidth: true, visible: false },
             { data: "Idade", name: "Idade", width: "5%", },
             { data: "Padrinho", name: "Padrinho", width: "25%" },
             {
@@ -124,18 +136,30 @@ ${row.Circulo ? (row.Circulo.match(/\p{Emoji}+/gu) ? row.Circulo.match(/\p{Emoji
                     return `<span style="font-size:13px" class="text-center label label-${cor}">${data}</span>`;
                 }
             },
-
+            { data: "Email", title: "Email", autoWidth: true, visible: false },
+            { data: "CEP", title: "CEP", autoWidth: true, visible: false },
+            { data: "Logradouro", title: "Logradouro", autoWidth: true, visible: false },
+            { data: "Bairro", title: "Bairro", autoWidth: true, visible: false },
+            { data: "Cidade", title: "Cidade", autoWidth: true, visible: false },
+            { data: "Estado", title: "Estado", autoWidth: true, visible: false },
+            { data: "Numero", title: "Numero", autoWidth: true, visible: false },
+          
+            { data: "Complemento", title: "Complemento", autoWidth: true, visible: false },
+            { data: "Referencia", title: "Referência", autoWidth: true, visible: false },
+            { data: "RestricaoAlimentar", title: "Restrição Alimentar", autoWidth: true, visible: false },
+            { data: "Medicacao", title: "Medicação", autoWidth: true, visible: false },
+            { data: "Convenio", title: "Convênio", autoWidth: true, visible: false },
+            { data: "Hospitais", title: "Hospitais", autoWidth: true, visible: false },
+            { data: "Parente", title: "Parente", autoWidth: true, visible: false },
+            { data: "DataCadastro",visible:false,title: "Data Inscrição", autoWidth: true },
             {
-                data: "Id", name: "Id", orderable: false, width: "25%",
+                data: "Id", name: "Id", orderable: false, width: "25%", className: 'noVis',
                 "render": function (data, type, row) {
                     return row.Status != Cancelado && row.Status != Espera ?
 
                         `<form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
 ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
-                        ${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
-                                <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>
-                                <input onchange='PostVacina(${data},${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="arquivo${data}" name="arquivo${data}" type="file" value="">
-                            </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleVacina(${data})"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>`}                        
+                                            
                         ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
                                 <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
                                 <input accept="image/*" onchange='Foto(${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
@@ -156,17 +180,9 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
         order: [
             [2, "asc"]
         ],
+       
         drawCallback: function () {
-            $('.i-checks-green').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
-            $('.i-checks-green').on('ifToggled', function (event) {
-                checkBulkActions()
-            });
-            $('#select-all').on('ifClicked', function (event) {
-                $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
-            });
+          
             if (callbackFunction) {
                 callbackFunction()
             }
@@ -190,40 +206,39 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <div class="row">
 <div class="col-md-6 col-xs-12">
 <label style="display:block"> <input id="select-all" type="checkbox" onChange="selectAll()" value="all"> Selecionar Todos <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Nome"> Nome <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Apelido"> Apelido <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataNascimento"> Data de Nascimento <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Idade"> Idade <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Sexo"> Sexo <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Instagram"> Instagram <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Camisa"> Tamanho da Camisa <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Cidade"> Cidade <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Estado"> Estado <i></i></label>
-
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Parente"> Parente <i></i></label>
+<label style="display:${ $('#participante-nome').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Nome"> Nome <i></i></label>
+<label style="display:${ $('#participante-apelido').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Apelido"> Apelido <i></i></label>
+<label style="display:${ $('#participante-datanascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataNascimento"> Data de Nascimento <i></i></label>
+<label style="display:${ $('#participante-datanascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Idade"> Idade <i></i></label>
+<label style="display:${ $('#participante-sexo').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Sexo"> Sexo <i></i></label>
+<label style="display:${ $('#participante-email').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
+<label style="display:${ $('#participante-fone').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
+<label style="display:${ $('#participante-conjuge').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
+<label style="display:${ $('#participante-instagram').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Instagram"> Instagram <i></i></label>
+<label style="display:${ $('#participante-camisa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Camisa"> Tamanho da Camisa <i></i></label>
+<label style="display:${ $('#participante-cep').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
+<label style="display:${ $('#participante-logradouro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
+<label style="display:${ $('#participante-bairro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
+<label style="display:${ $('#participante-cidade').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Cidade"> Cidade <i></i></label>
+<label style="display:${ $('#participante-estado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Estado"> Estado <i></i></label>
+<label style="display:${ $('#participante-numero').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
+<label style="display:${ $('#participante-complemento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
+<label style="display:${ $('#participante-referencia').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
+<label style="display:${ $('#participante-parente').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Parente"> Parente <i></i></label>
 </div>
 <div class="col-md-6 col-xs-12">
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomePai"> Nome do Pai <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FonePai"> Fone do Pai <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeMae"> Nome da Mãe <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneMae"> Fone da Mãe <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
+<label style="display:${ $('#participante-nomepai').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomePai"> Nome do Pai <i></i></label>
+<label style="display:${ $('#participante-fonepa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FonePai"> Fone do Pai <i></i></label>
+<label style="display:${ $('#participante-nomemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeMae"> Nome da Mãe <i></i></label>
+<label style="display:${ $('#participante-fonemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneMae"> Fone da Mãe <i></i></label>
+<label style="display:${ $('#participante-nomecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
+<label style="display:${ $('#participante-fonecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
+<label style="display:${ $('#participante-nomeconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
+<label style="display:${ $('#participante-foneconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
+<label style="display:${ $('#participante-hasrestricao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
+<label style="display:${ $('#participante-hasmedicacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
+<label style="display:${ $('#participante-hasconvenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
+<label style="display:${ $('#participante-hasconvenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> Círculo <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Motorista <i></i></label>
@@ -233,7 +248,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 </div>`;
                 CustomSwal({
                     title: "Excel de Participantes",
-                    icon: "info",
+                    icon: "logo",
                     text: "Escolha os campos que deseja exportar",
                     content: div,
                     className: "button-center",
@@ -266,6 +281,19 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
     });
 
     table = $("#table-participante").DataTable(tableParticipanteConfig);
+
+    table.on('draw', function () {
+        $('.i-checks-green').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $('.i-checks-green').on('ifToggled', function (event) {
+            checkBulkActions()
+        });
+        $('#select-all').on('ifClicked', function (event) {
+            $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
+        });
+    });
 }
 
 function ConfirmFoto() {
@@ -383,7 +411,7 @@ function GetAnexosLancamento(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -422,7 +450,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -475,43 +503,6 @@ function DeleteArquivo(id) {
     });
 }
 
-
-function PostVacina(id, realista) {
-    var dataToPost = new FormData($(`#frm-vacina${id}`)[0]);
-    dataToPost.set('ParticipanteId', id)
-    var filename = dataToPost.get(`arquivo${id}`).name
-    var arquivo = new File([dataToPost.get(`arquivo${id}`)], 'Vacina ' + realista.Nome + filename.substr(filename.indexOf('.')));
-    dataToPost.set('Arquivo', arquivo)
-    $.ajax(
-        {
-            processData: false,
-            contentType: false,
-            type: "POST",
-            data: dataToPost,
-            url: "Arquivo/PostArquivo",
-            success: function () {
-                $.ajax(
-                    {
-                        datatype: "json",
-                        type: "POST",
-                        contentType: 'application/json; charset=utf-8',
-                        url: "Participante/ToggleVacina",
-                        data: JSON.stringify(
-                            {
-                                Id: id
-                            }),
-
-                        success: function () {
-                            CarregarTabelaParticipante()
-
-                        }
-                    });
-
-            }
-        });
-}
-
-
 function toggleFoto(id) {
     ConfirmMessage("Essa ação removerá a foto, deseja continuar?").then((result) => {
         if (result) {
@@ -560,27 +551,6 @@ function MakeEquipante(id) {
     })
 }
 
-
-function toggleVacina(id) {
-    ConfirmMessage("Essa ação removerá a vacina, deseja continuar?").then((result) => {
-        $.ajax(
-            {
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                url: "Participante/ToggleVacina",
-                data: JSON.stringify(
-                    {
-                        Id: id
-                    }),
-
-                success: function () {
-                    CarregarTabelaParticipante()
-
-                }
-            });
-    })
-}
 
 function PostArquivo() {
 
@@ -735,7 +705,7 @@ function CarregarTabelaPagamentos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -1324,7 +1294,6 @@ function PostInfo(callback) {
             {
                 Id: realista.Id,
                 Observacao: $('#participante-obs').val(),
-                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
                 MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
                 MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
                 MsgGeral: $(`#participante-msggeral`).prop("checked"),
@@ -1386,6 +1355,32 @@ $("[id$='eventoid']").change(function () {
     loadCampos(this.value)
 })
 
+function onLoadCampos() {
+    $('button span:contains("Apelido")').parent().css('display', $('#participante-apelido').length > 0 ? 'block' : 'none')
+    $('button span:contains("Cônjuge")').parent().css('display', $('#participante-conjuge').length > 0 ? 'block' : 'none')
+    $('button span:contains("Idade")').parent().css('display', $('#participante-datanascimento').length > 0 ? 'block' : 'none')
+    $('button span:contains("CEP")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Logradouro")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Bairro")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Cidade")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Numero")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Complemento")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Referência")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Estado")').parent().css('display', $('#participante-cep').length > 0 ? 'block' : 'none')
+    $('button span:contains("Restrição Alimentar")').parent().css('display', $('#participante-hasrestricao').length > 0 ? 'block' : 'none')
+    $('button span:contains("Medicação")').parent().css('display', $('#participante-hasmedicacao').length > 0 ? 'block' : 'none')
+    $('button span:contains("Convênio")').parent().css('display', $('#participante-hasconvenio').length > 0 ? 'block' : 'none')
+    $('button span:contains("Parente")').parent().css('display', $('#participante-hasparente').length > 0 ? 'block' : 'none')
+    $('button span:contains("Hospitais")').parent().css('display', $('#participante-hasconvenio').length > 0 ? 'block' : 'none')
+    $('button span:contains("Nome da Mãe")').parent().css('display', $('#participante-nomemae').length > 0 ? 'block' : 'none')
+    $('button span:contains("Fone da Mãe")').parent().css('display', $('#participante-nomemae').length > 0 ? 'block' : 'none')
+    $('button span:contains("Nome do Pai")').parent().css('display', $('#participante-nomepai').length > 0 ? 'block' : 'none')
+    $('button span:contains("Fone do Pai")').parent().css('display', $('#participante-nomepai').length > 0 ? 'block' : 'none')
+    $('button span:contains("Nome do Contato")').parent().css('display', $('#participante-nomecontato').length > 0 ? 'block' : 'none')
+    $('button span:contains("Fone do Contato")').parent().css('display', $('#participante-nomecontato').length > 0 ? 'block' : 'none')
+    $('button span:contains("Nome do Convite")').parent().css('display', $('#participante-nomeconvite').length > 0 ? 'block' : 'none')
+    $('button span:contains("Fone do Convite")').parent().css('display', $('#participante-nomeconvite').length > 0 ? 'block' : 'none')
+}
 
 function loadCampos(id) {
     $.ajax({
@@ -1396,6 +1391,8 @@ function loadCampos(id) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             campos = data.Campos
+            $('button span:contains("Apelido")').parent().css('display', campos.find(x => x.Campo == "Apelido") ? 'block' : 'none')
+            $('button span:contains("CEP")').parent().css('display', campos.find(x => x.Campo == "CEP") ? 'block' : 'none')
             $('.contato-convite').css('display', campos.find(x => x.Campo == "Dados do Convite") ? 'block' : 'none')
             $('.contato-pai').css('display', campos.find(x => x.Campo == "Dados do Pai") ? 'block' : 'none')
             $('.contato-contato').css('display', campos.find(x => x.Campo == "Dados do Contato") ? 'block' : 'none')

@@ -57,13 +57,35 @@ const languageConfig = {
     }
 };
 
-const domConfig = '<"html5buttons"B>lfTgitpr';
+const domConfig = '<"html5buttons"B>lfTgitp';
 const domConfigNoButtons = 'lfTgitpr';
 const defaultLengthMenu = [100, 1000, 10000, 100000];
 const defaultScrollY = 400;
 
 function getButtonsConfig(fileName) {
     return [
-        { extend: 'excel', title: fileName }        
+        {
+            extend: 'colvis', text: 'Colunas', columns: ':not(.noVis)', action: function (e, dt, node, config) {
+                dt.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+                    
+                    if (node[0].className.includes('Visibility')) {
+                        dt.draw()
+                    }
+                });
+                $.fn.dataTable.ext.buttons.collection.action.call(this, e, dt, node, config);
+                if (typeof (onLoadCampos) == 'function') {
+                    onLoadCampos();
+                }
+            }
+        },
+        { extend: 'excel', title: fileName },
     ];
+}
+
+function stateSaveCallback(settings, data) {
+    localStorage.setItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val(), JSON.stringify(data))
+}
+
+function stateLoadCallback(settings) {
+    return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val()))
 }

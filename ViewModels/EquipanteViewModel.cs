@@ -10,7 +10,6 @@
         public string Equipe { get; set; }
         public string Sexo { get; set; }
         public bool Oferta { get; set; }
-        public bool Vacina { get; set; }
         public string Foto { get; set; }
         public int? Faltas { get; set; }
     }

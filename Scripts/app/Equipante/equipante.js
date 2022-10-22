@@ -52,7 +52,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         filter: true,
         orderMulti: false,
         responsive: true,
-        stateSave: true,
+        stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
         stateLoadParams: function (settings, data) {
@@ -60,17 +60,20 @@ function CarregarTabelaEquipante(callbackFunction) {
                 data.columns[i].visible = settings.aoColumns[i].visible != undefined ? settings.aoColumns[i].visible : true
             }
         },
+        colReorder: {
+            fixedColumnsLeft: 1
+        },
         buttons: getButtonsConfig('Equipantes'),
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%",
+                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
                 "render": function (data, type, row) {
                     return `${GetCheckBox(data, row.Presenca)}`;
                 }
             },
-            { data: "Sexo", name: "Sexo", visible: false },
+            { data: "Sexo", name: "Sexo", visible: false, className: 'noVis', },
             {
-                data: "Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
+                data: "Sexo", title:"Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {
                     if (data == "Masculino") {
                         icon = "fa-male";
@@ -96,8 +99,8 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             { data: "Idade", name: "Idade", },
-            { data: "Equipe", name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999 },
-            { data: "Faltas", name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999 },
+            { data: "Equipe", className: 'noVis', name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999 },
+            { data: "Faltas", className: 'noVis', name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999 },
             {
                 data: "HasOferta", name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {
@@ -118,10 +121,6 @@ ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                                 <input accept="image/*" onchange='Foto(${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
                         }
-${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
-                                <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>
-                                <input onchange='PostVacina(${data},${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="arquivo${data}" name="arquivo${data}" type="file" value="">
-                            </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleVacina(${data})"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>`}
                            
           ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
@@ -205,7 +204,7 @@ function GetAnexosLancamento(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -255,7 +254,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -435,45 +434,6 @@ function toggleFoto(id) {
     )
 }
 
-function PostVacina(id, realista) {
-    var dataToPost = new FormData($(`#frm-vacina${id}`)[0]);
-    dataToPost.set('EquipanteId', id)
-    var filename = dataToPost.get(`arquivo${id}`).name
-    var arquivo = new File([dataToPost.get(`arquivo${id}`)], 'Vacina ' + realista.Nome + filename.substr(filename.indexOf('.')));
-    dataToPost.set('Arquivo', arquivo)
-    $.ajax(
-        {
-            processData: false,
-            contentType: false,
-            type: "POST",
-            data: dataToPost,
-            url: "Arquivo/PostArquivo",
-            success: function () {
-                toggleVacina(id)
-
-            }
-        });
-}
-
-function toggleVacina(id) {
-    $.ajax(
-        {
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            url: "Equipante/ToggleVacina",
-            data: JSON.stringify(
-                {
-                    Id: id
-                }),
-
-            success: function () {
-                CarregarTabelaEquipante()
-
-            }
-        });
-}
-
 function PostArquivo() {
 
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
@@ -559,7 +519,7 @@ function CarregarTabelaPagamentos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [

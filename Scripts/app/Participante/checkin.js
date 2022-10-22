@@ -108,7 +108,6 @@ function PostParticipante() {
                             {
                                 Id: $("#participante-id").val(),
                                 Observacao: $('#participante-obs').val(),
-                                MsgVacina: $(`#participante-msgcovid`).prop("checked"),
                                 MsgPagamento: $(`#participante-msgpagamento`).prop("checked"),
                                 MsgNoitita: $(`#participante-msgnoitita`).prop("checked"),
                                 MsgGeral: $(`#participante-msggeral`).prop("checked"),
@@ -284,13 +283,6 @@ function GetParticipante() {
                 Pagamentos($("#participantes").val());
                 GetAnexos();
 
-                $('#vacina').html(`<form enctype="multipart/form-data" id="frm-vacina" method="post" novalidate="novalidate">
-                        ${!data.Participante.HasVacina ? ` <label for="input-vacina" class="inputFile" style="margin-bottom:0px">
-                            <span style="" class="text-mutted pointer p-l-xs"><i class="fa fa-syringe fa-3x" aria-hidden="true" title="Vacina"></i></span>
-                            <input onchange='PostVacina(${data.Participante.Id},${JSON.stringify(data.Participante)})' style="display: none;" class="custom-file-input inputFile" id="input-vacina" name="input-vacina" type="file" value="">
-                        </label>`: `<span class="text-success p-l-xs pointer" onclick="toggleVacina(${data.Participante.Id})"><i class="fa fa-syringe fa-3x" aria-hidden="true" title="Vacina"></i></span>`}
-                    </form>`)
-
                 $('#teste').html(`<form enctype="multipart/form-data" id="frm-teste" method="post" novalidate="novalidate">
                         ${!data.Participante.HasTeste ? ` <label for="input-teste" class="inputFile" style="margin-bottom:0px">
                             <span style="" class="text-mutted pointer p-l-xs"><i class="fa fa-microscope fa-3x" aria-hidden="true" title="Vacina"></i></span>
@@ -441,19 +433,6 @@ function GetEquipante() {
                 GetAnexos();
 
                 $(`.equipe`).text(data.Equipante.Equipe);
-                $('#vacina').html(`<form enctype="multipart/form-data" id="frm-vacina" method="post" novalidate="novalidate">
-                        ${!data.Equipante.HasVacina ? ` <label for="input-vacina" class="inputFile" style="margin-bottom:0px">
-                            <span style="" class="text-mutted pointer p-l-xs"><i class="fa fa-syringe fa-3x" aria-hidden="true" title="Vacina"></i></span>
-                            <input onchange='PostVacina(${data.Equipante.Id},${JSON.stringify(data.Equipante)})' style="display: none;" class="custom-file-input inputFile" id="input-vacina" name="input-vacina" type="file" value="">
-                        </label>`: `<span class="text-success p-l-xs pointer" onclick="toggleVacina(${data.Equipante.Id})"><i class="fa fa-syringe fa-3x" aria-hidden="true" title="Vacina"></i></span>`}
-                    </form>`)
-
-                $('#teste').html(`<form enctype="multipart/form-data" id="frm-teste" method="post" novalidate="novalidate">
-                        ${!data.Equipante.HasTeste ? ` <label for="input-teste" class="inputFile" style="margin-bottom:0px">
-                            <span style="" class="text-mutted pointer p-l-xs"><i class="fa fa-microscope fa-3x" aria-hidden="true" title="Vacina"></i></span>
-                            <input onchange='PostTeste(${data.Equipante.Id},${JSON.stringify(data.Equipante)})' style="display: none;" class="custom-file-input inputFile" id="input-teste" name="input-teste" type="file" value="">
-                        </label>`: `<span class="text-success p-l-xs pointer" onclick="toggleTeste(${data.Equipante.Id})"><i class="fa fa-microscope fa-3x" aria-hidden="true" title="Teste"></i></span>`}
-                    </form>`)
 
                 $(".participante-info").removeClass('d-none');
 
@@ -497,75 +476,6 @@ function toggleTeste(id) {
                 }
 
 
-
-            }
-        });
-}
-
-function toggleVacina(id) {
-    $.ajax(
-        {
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            url: $("#pagamentos-participanteid").val() > 0 ? "/Participante/ToggleVacina" : "/Equipante/ToggleVacina",
-            data: JSON.stringify(
-                {
-                    Id: id
-                }),
-
-            success: function () {
-                if ($("#pagamentos-participanteid").val() > 0) {
-
-                    GetParticipante()
-                } else {
-                    GetEquipante()
-                }
-
-
-
-            }
-        });
-}
-
-
-function PostTeste(id, realista) {
-    var dataToPost = new FormData($(`#frm-teste`)[0]);
-    dataToPost.set($("#pagamentos-participanteid").val() > 0 ? 'ParticipanteId' : 'EquipanteId', $("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : $("#pagamentos-equipanteid").val())
-    var filename = dataToPost.get(`input-teste`).name
-    var arquivo = new File([dataToPost.get(`input-teste`)], 'Teste COVID ' + realista.Nome + filename.substr(filename.indexOf('.')));
-    dataToPost.set('Arquivo', arquivo)
-    dataToPost.set('EventoId', $("#eventoid").val())
-    $.ajax(
-        {
-            processData: false,
-            contentType: false,
-            type: "POST",
-            data: dataToPost,
-            url: "/Arquivo/PostArquivo",
-            success: function () {
-                toggleTeste(id)
-
-            }
-        });
-}
-
-function PostVacina(id, realista) {
-    var dataToPost = new FormData($(`#frm-vacina`)[0]);
-    dataToPost.set($("#pagamentos-participanteid").val() > 0 ? 'ParticipanteId' : 'EquipanteId', $("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : $("#pagamentos-equipanteid").val())
-    var filename = dataToPost.get(`input-vacina`).name
-    var arquivo = new File([dataToPost.get(`input-vacina`)], 'Vacina ' + realista.Nome + filename.substr(filename.indexOf('.')));
-    dataToPost.set('Arquivo', arquivo)
-    dataToPost.set('EventoId', $("#eventoid").val())
-    $.ajax(
-        {
-            processData: false,
-            contentType: false,
-            type: "POST",
-            data: dataToPost,
-            url: "/Arquivo/PostArquivo",
-            success: function () {
-                toggleVacina(id)
 
             }
         });
@@ -646,7 +556,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -737,7 +647,7 @@ function CarregarTabelaPagamentos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        responsive: true, stateSave: true,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfigNoButtons,
         columns: [

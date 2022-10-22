@@ -124,7 +124,6 @@ namespace SysIgreja.Controllers
                 NomePai = x.NomePai,
                 HasParente = x.HasParente ?? false,
                 Parente = x.Parente,
-                HasVacina = x.HasVacina,
                 RestricaoAlimentar = x.RestricaoAlimentar,
                 Sexo = x.Sexo,
                 Status = x.Status.GetDescription(),
@@ -518,15 +517,6 @@ namespace SysIgreja.Controllers
         public ActionResult ToggleSexo(int Id)
         {
             participantesBusiness.ToggleSexo(Id);
-
-            return new HttpStatusCodeResult(200);
-        }
-
-
-        [HttpPost]
-        public ActionResult ToggleVacina(int Id)
-        {
-            participantesBusiness.ToggleVacina(Id);
 
             return new HttpStatusCodeResult(200);
         }

@@ -55,8 +55,8 @@
                         {
                             <div class="form-group">
                                 <label for="participante-sexo" class=" block">Gênero do @ViewBag.Sujeito</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="sexo-masculino" checked="" value="1" name="participante-sexo"> <i></i> Masculino </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="sexo-feminino" value="2" name="participante-sexo"> <i></i> Feminino </label></div>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="sexo-masculino" checked="" data-valor="1" name="participante-sexo"> <i></i> Masculino </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="sexo-feminino" data-valor="2" name="participante-sexo"> <i></i> Feminino </label></div>
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.DataNascimento.GetDescription()))
@@ -826,7 +826,7 @@
                                 HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
                                 Convenio: $(`#participante-convenio`).val(),
                                 Hospitais: $(`#participante-hospitais`).val(),
-                                Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
+                                Sexo: $("input[type=radio][name=participante-sexo]:checked").data('valor'),
                                 NomePai: $(`#participante-nome-pai`).val(),
                                 FonePai: $(`#participante-fone-pai`).val(),
                                 NomeMae: $(`#participante-nome-mae`).val(),

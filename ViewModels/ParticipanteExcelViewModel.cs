@@ -62,5 +62,6 @@ namespace SysIgreja.ViewModels
         [DisplayName("Data/Hora Inscrição")]
         public string DataCadastro { get; set; }
         public string Parente { get; set; }
+        public string Quarto { get; set; }
     }
 }

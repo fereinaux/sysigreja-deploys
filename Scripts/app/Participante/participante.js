@@ -151,6 +151,7 @@ ${row.Circulo ? (row.Circulo.match(/\p{Emoji}+/gu) ? row.Circulo.match(/\p{Emoji
             { data: "Convenio", title: "Convênio", name: "Convenio", autoWidth: true, visible: false },
             { data: "Hospitais", title: "Hospitais", name: "Hospitais", autoWidth: true, visible: false },
             { data: "Parente", title: "Parente", name: "Parente", autoWidth: true, visible: false },
+            { data: "Quarto", title: "Quarto", name: "Quarto", autoWidth: true, visible: false },
             { data: "DataCadastro", visible: false, title: "Data Inscrição", name: "DataCadastro", autoWidth: true },
             {
                 data: "Id", name: "Id", orderable: false, width: "25%", className: 'noVis',
@@ -241,6 +242,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:${ $('#participante-hasconvenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> Círculo <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Motorista <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataCadastro"> Data/Hora Inscrição <i></i></label>
 </div>

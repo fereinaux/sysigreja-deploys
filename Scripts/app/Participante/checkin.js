@@ -370,7 +370,7 @@ function GetEquipante() {
                 $("#participante-data-nascimento").val(moment(data.Equipante.DataNascimento).format('DD/MM/YYYY'));
                 $(`#participante-email`).val(data.Equipante.Email);
                 $(`#participante-fone`).val(data.Equipante.Fone);
-
+                $(`#participante-camisa`).val(data.Equipante.Camisa);
                 $(`#participante-nome-pai`).val(data.Equipante.NomePai);
                 $(`#participante-fone-pai`).val(data.Equipante.FonePai);
                 $(`#participante-nome-mae`).val(data.Equipante.NomeMae);

@@ -220,6 +220,7 @@ function GetParticipante() {
                 $(`#participante-logradouro`).val(data.Participante.Logradouro);
                 $(`#participante-bairro`).val(data.Participante.Bairro);
                 $(`#participante-cidade`).val(data.Participante.Cidade);
+                $(`#motorista`).val(data.DadosAdicionais.Motorista);
                 $(`#participante-estado`).val(data.Participante.Estado);
                 $(`#participante-numero`).val(data.Participante.Numero);
                 $(`#participante-complemento`).val(data.Participante.Complemento);

@@ -2,6 +2,7 @@
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
+using Core.Business.Caronas;
 using Core.Business.Circulos;
 using Core.Business.Configuracao;
 using Core.Business.Equipes;
@@ -42,12 +43,14 @@ namespace SysIgreja.Controllers
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
         private readonly IEventosBusiness eventosBusiness;
+        private readonly ICaronasBusiness caronasBusiness;
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
 
-        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, ICaronasBusiness caronasBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
+            this.caronasBusiness = caronasBusiness;   
             this.arquivoBusiness = arquivoBusiness;
             this.eventosBusiness = eventosBusiness;
             this.quartosBusiness = quartosBusiness;
@@ -150,6 +153,7 @@ namespace SysIgreja.Controllers
                 Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Cor?.GetDescription() ?? "",
                 Status = result.Status.GetDescription(),
                 Quarto = quartosBusiness.GetQuartosComParticipantes(result.EventoId, TipoPessoaEnum.Participante).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "",
+                Motorista = caronasBusiness.GetCaronasComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id).FirstOrDefault().Carona.Motorista.Nome,
                 QuartoAtual = new
                 {
                     Quarto = mapper.Map<PostQuartoModel>(quartoAtual),

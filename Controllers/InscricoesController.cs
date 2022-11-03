@@ -68,6 +68,7 @@ namespace SysIgreja.Controllers
             public string Logo { get; set; }
             public string Background { get; set; }
             public string Status { get; set; }
+            public string StatusEquipe { get; set; }
             public string Identificador { get; set; }
         }
 
@@ -76,7 +77,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetEventosInscricao(string type, string identificador, string search)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventosGlobais().Where(x => (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) && (string.IsNullOrEmpty(search) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x => (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve) && (string.IsNullOrEmpty(search) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
             {
                 Id = x.Id,
                 UrlDestino = x.UrlExterna ?? $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",
@@ -88,6 +89,8 @@ namespace SysIgreja.Controllers
                 Descricao = x.Descricao,
                 Identificador = x.Identificador ?? "Interdenominacional",
                 Titulo = x.TituloEvento,
+                Status = x.Status.GetDescription(),
+                StatusEquipe = x.StatusEquipe.GetDescription(),
                 Background = Convert.ToBase64String(x.Background),
                 Logo = Convert.ToBase64String(x.Logo),
             }).OrderBy(x => x.DataEvento).ToList();
@@ -158,8 +161,8 @@ namespace SysIgreja.Controllers
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             ViewBag.Title = Tipo;
             ViewBag.Tipo = Tipo;
-            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && (x.Status == StatusEnum.Aberto || (Tipo == "Inscrições Equipe" && x.DataEvento > System.DateTime.Today)));
-            if (evento == null)
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
+            if ((evento.Status == StatusEnum.Encerrado && Tipo == "Inscrições") || (evento.StatusEquipe == StatusEnum.Encerrado && Tipo == "Inscrições Equipe"))
                 return RedirectToAction("InscricoesEncerradas", new
                 {
                     Id = Id

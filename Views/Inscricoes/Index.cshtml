@@ -439,9 +439,9 @@
                 </div>`
                 }
 
-                var eventosAbertos = eventos.filter(evento => (evento.Status == "Aberto" || evento.Status == null) || isEquipe)
+                var eventosAbertos = eventos.filter(evento => ((evento.Status == "Aberto" || evento.Status == null) && !isEquipe) || (isEquipe && evento.StatusEquipe == "Aberto"))
 
-                if (eventosAbertos.length > 0 || isEquipe && !destaque) {
+                if (eventosAbertos.length > 0) {
 
                     html += `
 
@@ -478,7 +478,7 @@
                     </div>`).join().replace(/>,/g, '>') }
 
             `}
-                var eventosEncerrados = eventos.filter(evento => evento.Status == "Em breve" && !isEquipe)
+                var eventosEncerrados = eventos.filter(evento => (evento.Status == "Em breve" && !isEquipe) || (evento.StatusEquipe == "Em breve" && isEquipe))
 
                 if (eventosEncerrados.length > 0) {
 

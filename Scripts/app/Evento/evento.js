@@ -30,11 +30,12 @@ function CarregarTabelaEvento() {
                     return `${moment(data).format('DD/MM/YYYY')} `;
                 }
             },
-            {
-                data: "Id", name: "Id", orderable: false, width: "30%",
+         
+             {
+                 data: "Id", name: "Id", orderable: false, autoWidth: true,
                 "render": function (data, type, row) {
                     var color = 'green'
-
+  
                     switch (row.Status) {
                         case InscricoesAbertas:
                             color = 'green'
@@ -46,8 +47,38 @@ function CarregarTabelaEvento() {
                             color = 'yellow'
                             break;
                     }
+    
+                    return `${GetLabel('ToggleEventoStatus', data, color, row.Status)}`
+                }
+            },
+            {
+                data: "Id", name: "Id", orderable: false, autoWidth: true,
+                "render": function (data, type, row) {
 
-                    return `${GetLabel('ToggleEventoStatus', data, color, row.Status)}
+                    var colorEquipe = 'green'
+
+
+                    switch (row.StatusEquipe) {
+                        case InscricoesAbertas:
+                            colorEquipe = 'green'
+                            break;
+                        case InscricoesEncerradas:
+                            colorEquipe = 'red'
+                            break;
+                        default:
+                            colorEquipe = 'yellow'
+                            break;
+                    }
+
+                    return `
+${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe,row.StatusEquipe)}`;
+                }
+            },
+            {
+                data: "Id", name: "Id", orderable: false, width: "30%",
+                "render": function (data, type, row) { 
+
+                    return `
 ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
                             ${GetButton('Lotes', data, 'green', 'far fa-calendar-check', 'Editar')}
                             ${GetAnexosButton('AnexosEvento', data, row.QtdAnexos)}
@@ -200,6 +231,25 @@ function Lotes(id) {
 function ToggleEventoStatus(id) {
     $.ajax({
         url: "/Evento/ToggleEventoStatus/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                Id: id
+            }),
+        success: function () {
+            CarregarTabelaEvento();
+        },
+        error: function (error) {
+            ErrorMessage(error.statusText);
+        }
+    });
+}
+
+function ToggleEventoStatusEquipe(id) {
+    $.ajax({
+        url: "/Evento/ToggleEventoStatusEquipe/",
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',

@@ -23,6 +23,7 @@ namespace SysIgreja.Controllers
     public class PadrinhoController : SysIgrejaControllerBase
     {
         private readonly IPadrinhosBusiness padrinhosBusiness;
+        private readonly IAccountBusiness accountBusiness;
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IEquipantesBusiness equipantesBusiness;
         private readonly IMapper mapper;
@@ -31,6 +32,7 @@ namespace SysIgreja.Controllers
         {
             this.padrinhosBusiness = padrinhosBusiness;
             this.equipesBusiness = equipesBusiness;
+            this.accountBusiness = accountBusiness;
             this.equipantesBusiness = equipantesBusiness;
             mapper = new MapperRealidade().mapper;
         }
@@ -113,9 +115,28 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostPadrinho(PostPadrinhoModel model)
         {
-            padrinhosBusiness.PostPadrinho(model);
+            var user = padrinhosBusiness.PostPadrinho(model);
+            var padrinho = padrinhosBusiness.GetPadrinhos().FirstOrDefault(x => x.EquipanteEventoId == model.EquipanteEventoId);
+            var evento = equipesBusiness.GetEquipanteEvento(padrinho.EquipanteEventoId.Value).Evento;
 
-            return new HttpStatusCodeResult(200);
+            return Json(new
+                {
+                    User = accountBusiness.GetUsuarios().Where(x => x.Id == user.Id).ToList().Select(x => new
+                    {
+                        Id = x.Id,
+                        Senha = x.Senha,
+                        hasChangedPassword = x.HasChangedPassword,
+                        EquipanteId = x.EquipanteId,
+                        UserName = x.UserName,
+                        Fone = x.Equipante.Fone,
+                        Nome = x.Equipante.Nome,
+                        Evento = new { Titulo = evento.Configuracao.Titulo, Numeracao = evento.Numeracao },
+                        Perfil = "Coordenador"
+
+                    }
+                ).FirstOrDefault()
+                }, JsonRequestBehavior.AllowGet);
+            
         }
 
         [HttpPost]

@@ -287,6 +287,20 @@ namespace SysIgreja.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult GetEquipe(int id)
+        {
+
+            return Json(new
+            {
+                Equipe = equipesBusiness.GetEquipesConfig().Select(x => new
+                {
+                    x.Id,
+                    x.Nome,
+                }).FirstOrDefault(x => x.Id == id)
+            }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpPost]
         public ActionResult PostEquipe(PostEquipeModel model)

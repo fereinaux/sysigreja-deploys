@@ -71,7 +71,7 @@ function PadrinhoRefresh() {
 
     CarregarTabelaPadrinho();
     GetParticipantesSemPadrinho();
-    
+
 }
 
 function PrintPadrinho(row) {
@@ -163,22 +163,46 @@ function DeletePadrinho(id) {
 
 function PostPadrinho() {
     if (ValidateForm(`#form-padrinho`)) {
-        $.ajax({
-            url: "/Padrinho/PostPadrinho/",
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                {
-                    Id: $("#padrinho-id").val(),
-                    EquipanteEventoId: $("#padrinho-equipante").val(),
-                }),
-            success: function () {
-                SuccessMesageOperation();
-                PadrinhoRefresh();
-                $("#modal-padrinho").modal("hide");
+        CustomSwal({
+            title: "Você tem certeza?",
+            icon: "logo",
+            text: `Um usuário com acesso "Padrinho" para ${$("#padrinho-equipante option:selected").text()} será criado`,
+            className: "button-center",
+            buttons: {
+                cancelar: {
+                    text: "Cancelar",
+                    value: false,
+                    className: "w-150 btn-cancelar"
+                },
+                confirmar: {
+                    text: "Confirmar",
+                    value: true,
+                    className: "w-150 btn-confirmar"
+                },
+
             }
-        });
+        }).then(result => {
+            var windowReference = window.open('_blank');
+            if (result) {
+                $.ajax({
+                    url: "/Padrinho/PostPadrinho/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(
+                        {
+                            Id: $("#padrinho-id").val(),
+                            EquipanteEventoId: $("#padrinho-equipante").val(),
+                        }),
+                    success: function (data) {
+                        windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
+                        SuccessMesageOperation();
+                        PadrinhoRefresh();
+                        $("#modal-padrinho").modal("hide");
+                    }
+                });
+            }
+        })
     }
 }
 

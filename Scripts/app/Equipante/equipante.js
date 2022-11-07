@@ -159,6 +159,89 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
         }
     };
 
+    tableEquipanteConfig.buttons.forEach(function (o) {
+        if (o.extend === "excel") {
+
+            o.action = function (e, dt, button, config) {
+                var div = document.createElement("div");
+                selected = false
+                first = false
+                div.innerHTML = `<div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
+<div class="row">
+<div class="col-md-6 col-xs-12">
+<label style="display:block"> <input id="select-all" type="checkbox" onChange="selectAll()" value="all"> Selecionar Todos <i></i></label>
+<label style="display:${$('#equipante-nome').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Nome"> Nome <i></i></label>
+<label style="display:${$('#equipante-apelido').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Apelido"> Apelido <i></i></label>
+<label style="display:${$('#equipante-data-nascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataNascimento"> Data de Nascimento <i></i></label>
+<label style="display:${$('#equipante-data-nascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Idade"> Idade <i></i></label>
+<label style="display:${$('#equipante-sexo').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Sexo"> Sexo <i></i></label>
+<label style="display:${$('#equipante-email').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
+<label style="display:${$('#equipante-fone').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
+<label style="display:${$('#equipante-conjuge').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
+<label style="display:${$('#equipante-instagram').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Instagram"> Instagram <i></i></label>
+<label style="display:${$('#equipante-camisa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Camisa"> Tamanho da Camisa <i></i></label>
+<label style="display:${$('#equipante-cep').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
+<label style="display:${$('#equipante-logradouro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
+<label style="display:${$('#equipante-bairro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
+<label style="display:${$('#equipante-cidade').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Cidade"> Cidade <i></i></label>
+<label style="display:${$('#equipante-estado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Estado"> Estado <i></i></label>
+<label style="display:${$('#equipante-numero').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
+<label style="display:${$('#equipante-complemento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
+<label style="display:${$('#equipante-referencia').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
+<label style="display:${$('#equipante-parente').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Parente"> Parente <i></i></label>
+</div>
+<div class="col-md-6 col-xs-12">
+<label style="display:${$('#equipante-nomepai').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomePai"> Nome do Pai <i></i></label>
+<label style="display:${$('#equipante-fonepa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FonePai"> Fone do Pai <i></i></label>
+<label style="display:${$('#equipante-nomemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeMae"> Nome da Mãe <i></i></label>
+<label style="display:${$('#equipante-fonemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneMae"> Fone da Mãe <i></i></label>
+<label style="display:${$('#equipante-nomecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
+<label style="display:${$('#equipante-fonecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
+<label style="display:${$('#equipante-nomeconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
+<label style="display:${$('#equipante-foneconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
+<label style="display:${$('#has-restricaoalimentar').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
+<label style="display:${$('#has-medicacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
+<label style="display:${$('#has-convenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
+<label style="display:${$('#has-convenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Equipe"> Equipe <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
+</div>
+</div>
+</div>`;
+                CustomSwal({
+                    title: "Excel de Equipantes",
+                    icon: "logo",
+                    text: "Escolha os campos que deseja exportar",
+                    content: div,
+                    className: "button-center",
+                    dangerMode: true,
+                    buttons: {
+                        export: {
+                            text: "Exportar",
+                            value: "export",
+                            className: "btn-primary w-150 btn-all"
+                        }
+                    }
+                }).then(res => {
+                    if (res) {
+                        const data = getFiltros()
+                        data.campos = $('#campos-excel:checked').map(function () {
+                            return $(this).val();
+                        }).get().join();
+                        $.post(
+                            tableEquipanteConfig.ajax.url + "?extract=excel",
+                            data,
+                            function (o) {
+                                window.location = `/Equipante/DownloadTempFile?fileName=Equipantes ${$("#equipante-eventoid-filtro option:selected").text()}.xlsx&g=` + o;
+                            }
+                        );
+                    };
+                })
+            }
+        }
+    });
+
     table = $("#table-equipantes").DataTable(tableEquipanteConfig);
 }
 
@@ -183,6 +266,22 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
 <option value=999>Selecione</option>`)
     }
 }
+
+function selectAll() {
+    selected = !selected
+    $('.campos-excel').attr('checked', selected)
+}
+
+$('body').on('DOMNodeInserted', '.swal-overlay', function () {
+    tippy('.btn-export', {
+        content: `Exporta os campos selecionados`,
+        interactive: true,
+        allowHTML: true,
+        zIndex: 10005,
+        trigger: 'mouseenter'
+    });
+});
+
 
 function Anexos(id) {
     $("#EquipanteIdModal").val(id);

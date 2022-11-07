@@ -81,6 +81,7 @@ namespace SysIgreja.Controllers
                     Capacidade = x.Capacidade,
                     TipoEvento = x.Configuracao.Titulo,
                     Status = x.Status.GetDescription(),
+                    StatusEquipe = x.StatusEquipe.GetDescription(),
                     Valor = x.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
                     ValorTaxa = x.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
                     QtdAnexos = arquivosBusiness.GetArquivosByEvento(x.Id).Count()
@@ -134,15 +135,17 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
+        public ActionResult ToggleEventoStatusEquipe(int Id)
+        {
+            eventosBusiness.ToggleEventoStatusEquipe(Id);
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
         public ActionResult ToggleEventoStatus(int Id)
         {
-            if (eventosBusiness.ToggleEventoStatus(Id))
-            {
-                return new HttpStatusCodeResult(200);
-            }
-
-            return new HttpStatusCodeResult(400, Mensagens.EventoAberto);
-
+            eventosBusiness.ToggleEventoStatus(Id);
+            return new HttpStatusCodeResult(200);
         }
 
         [HttpPost]

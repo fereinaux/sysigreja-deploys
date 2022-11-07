@@ -63,7 +63,7 @@ namespace SysIgreja.Controllers
             mapper = new MapperRealidade().mapper;
         }
 
-
+        
         public ActionResult Checkin()
         {
             ViewBag.Title = "Check-in";
@@ -76,7 +76,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Participantes";
-            GetEventos();
+            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
             GetConfiguracao();
 
             return View();

@@ -432,16 +432,17 @@
                                 <h3 style="font-size: 28px; margin-top: 4px; margin-bottom: 4px;">
                                    ${destaque.Numeracao > 0 ? `${destaque.Numeracao}º` : ""} ${destaque.Titulo}
                                 </h3>
-                            <p style="display: block; color: #686464;">${destaque.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
+${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>` : "" }
+                            
                             <span class="button-destaque btn btn-outline">VER DETALHES</span>
                         </div>
                     </a>
                 </div>`
                 }
 
-                var eventosAbertos = eventos.filter(evento => (evento.Status == "Aberto" || evento.Status == null) || isEquipe)
+                var eventosAbertos = eventos.filter(evento => ((evento.Status == "Aberto" || evento.Status == null) && !isEquipe) || (isEquipe && evento.StatusEquipe == "Aberto"))
 
-                if (eventosAbertos.length > 0 || isEquipe && !destaque) {
+                if (eventosAbertos.length > 0) {
 
                     html += `
 
@@ -470,15 +471,16 @@
 
 
 
+${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>` : ""}
 
-                                    <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
+                                   
 
                             </div>
                         </a>
                     </div>`).join().replace(/>,/g, '>') }
 
             `}
-                var eventosEncerrados = eventos.filter(evento => evento.Status == "Em breve" && !isEquipe)
+                var eventosEncerrados = eventos.filter(evento => (evento.Status == "Em breve" && !isEquipe) || (evento.StatusEquipe == "Em breve" && isEquipe))
 
                 if (eventosEncerrados.length > 0) {
 
@@ -505,7 +507,7 @@
                                         ${evento.Numeracao > 0 ? `${evento.Numeracao}º` : ""} ${evento.Titulo}
                                      </h3>
 
-   <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>
+   ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}</p>` : ""}
 
                             </div>
                         </div>`).join().replace(/>,/g, '>')}

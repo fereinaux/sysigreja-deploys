@@ -14,6 +14,7 @@ using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
 using Core.Business.Mensagem;
 using Core.Business.Newsletter;
+using Core.Business.Notificacao;
 using Core.Business.Padrinhos;
 using Core.Business.Participantes;
 using Core.Business.Quartos;
@@ -40,6 +41,7 @@ namespace Web
             container.RegisterType<IGenericRepositoryConsulta<EventoConsulta>, GenericRepositoryConsulta<EventoConsulta>>();
             container.RegisterType<IGenericRepositoryConsulta<EventoLoteConsulta>, GenericRepositoryConsulta<EventoLoteConsulta>>();
             container.RegisterType<IGenericRepository<Evento>, GenericRepository<Evento>>();
+            container.RegisterType<IGenericRepository<Notificacao>, GenericRepository<Notificacao>>();
             container.RegisterType<IGenericRepository<ApplicationUser>, GenericRepository<ApplicationUser>>();
             container.RegisterType<IGenericRepository<Participante>, GenericRepository<Participante>>();
             container.RegisterType<IGenericRepository<Login>, GenericRepository<Login>>();
@@ -76,6 +78,7 @@ namespace Web
             container.RegisterType<IDatatableService, DatatableService>();
 
             container.RegisterType<IPadrinhosBusiness, PadrinhosBusiness>();
+            container.RegisterType<INotificacaoBusiness, NotificacaoBusiness>();
             container.RegisterType<IArquivosBusiness, ArquivosBusiness>();
             container.RegisterType<ILancamentoBusiness, LancamentoBusiness>();
             container.RegisterType<ICentroCustoBusiness, CentroCustoBusiness>();

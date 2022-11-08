@@ -5,6 +5,12 @@
     .menu-user {
         position: relative;
         display: inline-block;
+        padding: 10px;
+    }
+
+    .menu-notification {
+        position: relative;
+        display: inline-block;
     }
 
     .img-avatar:hover {
@@ -14,8 +20,8 @@
     .dropdown-content {
         display: none;
         position: absolute;
-        top: 50px;
-        right: -25px;
+        top: 60px;
+        right: -10px;
         background-color: #f9f9f9;
         min-width: 160px;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -31,8 +37,69 @@
                 background-color: #d3d4d5;
             }
 
-    .menu-user:hover .dropdown-content {
-        display: block;
+        .dropdown-content ul li.hover-menu-notification {
+            width: 100%;
+            height: 50px;
+        }
+
+    .hover-menu-notification, .hover-menu {
+        background: #e4e6e9;
+    }
+
+    .dropdown-content ul li.hover-menu-notification:hover {
+        background-color: #d3d4d5;
+    }
+
+    .menu-notification {
+        font-size: 20px;
+        padding: 20px 10px;
+    }
+
+    .navbar-right {
+        display: flex;
+    }
+
+    .text-muted {
+        color: #888888 !important;
+        font-size: 10px !important;
+    }
+
+    .dropdown-item {
+        color: #000000 !important;
+        font-size: 11px !important;
+    }
+
+    .item-notificacao {
+        border-bottom: 1px solid #bdbbbb;
+    }
+
+    .label-notificacao {
+        font-size: 10px;
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        text-shadow: none;
+        border-radius: 0.25em;
+        white-space: nowrap;
+        line-height: 12px;
+        padding: 2px 5px;
+        position: absolute;
+        right: 6px;
+        top: 12px;
+    }
+
+        .label-notificacao.label-primary {
+            background-color: #1ab394;
+            color: #FFFFFF;
+        }
+
+    .dropdown-toggle {
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 500px) {
+        .menu-user {
+            margin-right: 15px !important;
+        }
     }
 </style>
 
@@ -42,50 +109,176 @@
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
 
         </div>
+
         @if (Request.IsAuthenticated)
         {
             using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "frm-upload-avatar", @class = "navbar-right" }))
             {
                 @Html.AntiForgeryToken()
-                <div class="menu-user" style="margin-right: 40px; display: flex;height:50px">
-                    <img class="img-avatar inputFile" style="margin: auto; width: 40px; height: 40px; border-radius: 50%; margin-left: 10px; cursor: pointer " src="~/Images/profile.jpg" />
-                    <div class="dropdown-content">
-                        <ul class="nav navbar-top-links">
 
-                            <li>
-                                <a href="#">
+                <ul class="navbar-right" style="margin-left: auto">
 
-                                    @UtilServices.CapitalizarNome(User.Identity.GetUserName())
+                    <li class="menu-notification" style="margin-right: 5px; display: flex; height: 50px">
+                        <a class="dropdown-toggle count-info" href="#">
+                            <span class="label label-primary label-notificacao" id="contador-notificacoes" style="cursor: pointer; display: none">3</span>
+                        </a>
+                        <i class="fa fa-bell" style="cursor: pointer"></i>
 
+                        <div class="dropdown-content">
+                            <ul class="nav navbar-top-links" id="panel-notificao">
+                                <li class="hover-menu">
+                                    <a href="/Notificacao" class="dropdown-item">
+                                        <div>
+                                            <strong>Todas as notificações</strong>
+                                            <i class="fa fa-angle-right"></i>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
-                                </a>
-                            </li>
-                            <li class="hover-menu">
-                                <a href="#" >
-                                    <label for="user-avatar-arquivo" style="cursor: pointer;width: 100%; color: #a7b1c2; font-weight: 600 !important; margin-bottom: 0px; font-size: 14px " class="inputFile">
-                                        Mudar Foto
-                                        <input style="display: none;" class="custom-file-input inputFile" id="user-avatar-arquivo" name="user-avatar-arquivo" type="file" value="">
-                                    </label>
-                                </a>
-                            </li>
-                            <li class="hover-menu">
-                                <a href="#" onclick="changePass()">
+                    <li class="menu-user" style="margin-right: 40px; display: flex;height:50px">
+                        <img class="img-avatar inputFile" style="margin: auto; width: 40px; height: 40px; border-radius: 50%; margin-left: 10px; cursor: pointer " src="~/Images/profile.jpg" />
+                        <div class="dropdown-content">
+                            <ul class="nav navbar-top-links">
 
-                                    Trocar Senha
+                                <li class="hover-menu">
+                                    <a href="#" style="color: #000000;">
 
+                                        @UtilServices.CapitalizarNome(User.Identity.GetUserName())
 
-                                    <i style="float:right" class="fas fa-key"></i>
-                                </a>
-                            </li>
-                            <li class="hover-menu"><a href="javascript:document.getElementById('frm-upload-avatar').submit()">Sair<i style="float:right" class="fas fa-sign-out-alt"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
+                                    </a>
+                                </li>
+                                <li class="hover-menu">
+                                    <a href="#">
+                                        <label for="user-avatar-arquivo" style="cursor: pointer;width: 100%; color: #000000; font-weight: 600 !important; margin-bottom: 0px; font-size: 12px " class="inputFile">
+                                            Mudar Foto
+                                            <i style="float: right; padding-right: 5px" class="fas fa-camera"></i>
+                                            <input style="display: none;" class="custom-file-input inputFile" id="user-avatar-arquivo" name="user-avatar-arquivo" type="file" value="">
+                                        </label>
+                                    </a>
+                                </li>
+                                <li class="hover-menu">
+                                    <a href="#" onclick="changePass()">
+                                        <label for="user-password" style="cursor: pointer;width: 100%; color: #000000; font-weight: 600 !important; margin-bottom: 0px; font-size: 12px ">
+                                            Trocar Senha
+                                            <i style="float: right; padding-right: 5px" class="fas fa-key"></i>
+                                        </label>
+                                    </a>
+                                </li>
+                                <li class="hover-menu">
+                                    <a href="javascript:document.getElementById('frm-upload-avatar').submit()">
+                                        <label for="user-logout" style="cursor: pointer;width: 100%; color: #000000; font-weight: 600 !important; margin-bottom: 0px; font-size: 12px ">
+                                            Sair
+                                            <i style="float:right; padding-right: 5px" class="fas fa-sign-out-alt"></i>
+                                        </label>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
             }
         }
     </nav>
 </div>
 
 <script>
+    const divBase = (tipo, quantidade) => {
+        const { titulo, link, icon } = handleTipo(tipo, quantidade);
+        return `
+        <li class="hover-menu-notification item-notificacao">
+            <a href="${link}" class="dropdown-item">
+                <div>
+                   ${icon}
+                   ${titulo}
+                </div>
+            </a>
+        </li>
+        `
+    }
+
+    const handleTipo = (tipo, quantidade) => {
+        switch (tipo) {
+            case "Inscrição":
+                return {
+                    titulo: `${quantidade} ${quantidade > 1 ? "novas inscrições" : "nova inscrição"}`,
+                    link: "/Participante",
+                    icon: '<i class="fas fa-user-plus"></i>'
+                }
+            default:
+                return null
+        }
+    }
+
+    window.onload = function () {
+        consultarNotificacoes()
+        setInterval(consultarNotificacoes, 60000)
+
+        $('.menu-user, .menu-notification').on('click', (event) => {
+            $(event.target).parent().find('.dropdown-content').css('display', 'block')
+            if ($(event.target).parent().hasClass('menu-notification')) {
+                $('.fa-bell').css("color", "#1c84c6")
+                $.ajax({
+                    url: "/Notificacao/SetNotificacoesLidas/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function () {
+                        $('#contador-notificacoes').css('display', 'none')
+                    }
+                });
+            } else {
+                $('.img-avatar ').css('opacity',0.7)
+            }
+        })
+
+        window.onclick = (event) => {
+            if ($(event.target).parents('.dropdown-content').length == 0 && $(event.target).parent('.menu-user, .menu-notification').length == 0) {
+                $('.dropdown-content').css('display', 'none')
+                $('.img-avatar ').css('opacity', 1)
+                $('.fa-bell').css("color", "#676a6c")
+            } else if ($('.menu-user .dropdown-content').css('display') == 'block' && $(event.target).parent('.menu-notification').length > 0) {
+                $('.menu-user .dropdown-content').css('display', 'none')
+                $('.img-avatar ').css('opacity', 1)
+            } else if ($('.menu-notification .dropdown-content').css('display') == 'block' && $(event.target).parent('.menu-user').length > 0) {
+                $('.menu-notification .dropdown-content').css('display', 'none')
+                $('.fa-bell').css("color", "#676a6c")
+            }
+        }
+    };
+
+    const consultarNotificacoes = () => {
+        $.ajax({
+            url: "/Notificacao/GetNotificacoesNaoLidas/",
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                const { Notificacoes } = data
+
+                const qtdNofitificacoes = Notificacoes.length;
+
+                $('#contador-notificacoes').text(qtdNofitificacoes);
+
+                $('#contador-notificacoes').css('display', qtdNofitificacoes > 0 ? 'block' : 'none')
+
+                $('.item-notificacao').remove()
+
+                Notificacoes.forEach(notificacao => {
+                    $('#panel-notificao').prepend(divBase(notificacao.Titulo, notificacao.Quantidade))
+                })
+            }
+        })
+
+
+    }
+
+
+
+
+
+
 
 </script>

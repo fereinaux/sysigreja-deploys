@@ -24,6 +24,7 @@ using Utils.Extensions;
 //using MercadoPago.Client.Preference;
 //using MercadoPago.Resource.Preference;
 using System.Collections.Generic;
+using Core.Business.Notificacao;
 
 namespace SysIgreja.Controllers
 {
@@ -31,6 +32,7 @@ namespace SysIgreja.Controllers
     {
         private readonly IParticipantesBusiness participantesBusiness;
         private readonly ICategoriaBusiness categoriaBusiness;
+        private readonly INotificacaoBusiness notificacaoBusiness;
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly ILancamentoBusiness lancamentoBusiness;
         private readonly IEquipesBusiness equipesBusiness;
@@ -40,9 +42,10 @@ namespace SysIgreja.Controllers
         private readonly INewsletterBusiness newsletterBusiness;
         private readonly IMapper mapper;
 
-        public InscricoesController(IParticipantesBusiness participantesBusiness, ICategoriaBusiness categoriaBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
+        public InscricoesController(IParticipantesBusiness participantesBusiness, INotificacaoBusiness notificacaoBusiness, ICategoriaBusiness categoriaBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
+            this.notificacaoBusiness = notificacaoBusiness;
             this.categoriaBusiness = categoriaBusiness;
             this.equipesBusiness = equipesBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
@@ -340,6 +343,7 @@ namespace SysIgreja.Controllers
             //var client = new PreferenceClient();
             //Preference preference = client.Create(request);
             //model.ReferenciaMercadoPago = preference.Id;
+
             if (evento != null && participantesBusiness.GetParticipantesByEvento(model.EventoId).Where(x => x.Status != StatusEnum.Cancelado).Count() >= evento.Capacidade)
             {
                 model.Status = "Espera";

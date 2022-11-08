@@ -65,7 +65,7 @@ namespace SysIgreja.Controllers
                 .Select(x => new
                 {
                     x.Titulo,
-                    DataCadastro = x.DataCadastro.Value.ToString("MM/dd/yyyy hh:mm:ss"),
+                    DataCadastro = x.DataCadastro.Value.ToString("MM/dd/yyyy HH:mm:ss"),
                     x.Link
                 });
 

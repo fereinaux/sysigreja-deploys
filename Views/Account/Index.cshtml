@@ -46,6 +46,11 @@
                     <div class="row p-h-xs">
                         <input type="hidden" id="usuario-id" />
                         <input type="hidden" id="usuario-oldsenha" />
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Equipante</h5>
+
+                            <select class="form-control chosen-select" id="usuario-equipanteid"></select>
+                        </div>
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Login</h5>
 
@@ -63,15 +68,13 @@
                         </div>
                         <div class="col-sm-8 col-sm-offset-2 p-h-md">
                             <div class="form-group">
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="usuario-perfil" checked="" value="Geral" name="usuario-perfil"> <i></i> Administrador Geral </label>
-                                                                         <label> <input type="radio" id="usuario-perfil" value="Admin" name="usuario-perfil"> <i></i> Administrador de Eventos </label></div>
+                                <div class="radio i-checks-green inline">
+                                    <label> <input type="radio" id="usuario-perfil" checked="" value="Geral" name="usuario-perfil"> <i></i> Administrador Geral </label>
+                                    <label> <input type="radio" id="usuario-perfil" value="Admin" name="usuario-perfil"> <i></i> Administrador de Eventos </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 p-w-md text-center">
-                            <h5>Equipante</h5>
 
-                            <select class="form-control chosen-select" id="usuario-equipanteid"></select>
-                        </div>
                         <div class="col-sm-12 p-w-md text-center eventos">
                             <h5>Eventos</h5>
                             <select class="form-control" id="usuario-eventos" multiple></select>

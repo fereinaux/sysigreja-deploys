@@ -46,6 +46,9 @@
 }
 
 function GetUsuario(id) {
+    $("#usuario-login").prop('disabled', false);
+    $("#usuario-senha").prop('disabled', false);
+    $('.password-click').css('display', 'block')
     if (id) {
         $.ajax({
             url: "/Account/GetUsuario/",
@@ -181,7 +184,7 @@ function GetEquipantes(id) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             data.Equipantes.forEach(function (equipante, index, array) {
-                $('#usuario-equipanteid').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
+                $('#usuario-equipanteid').append($(`<option data-userId="${equipante.UerId}" data-username="${equipante.UserName}" value="${equipante.Id}">${equipante.Nome}</option>`));
             });
             GetUsuario(id);
         }
@@ -189,6 +192,24 @@ function GetEquipantes(id) {
 
 }
 
+$('#usuario-equipanteid').on("change", function () {
+    console.log($('#usuario-equipanteid option:selected'));
+    if ($('#usuario-equipanteid option:selected').data("username")) {
+        $("#usuario-login").val($('#usuario-equipanteid option:selected').data("username"));
+        $("#usuario-id").val($('#usuario-equipanteid option:selected').data("userId"));
+        $("#usuario-senha").val("********");
+        $("#usuario-login").prop('disabled', true);
+        $("#usuario-senha").prop('disabled', true);
+        $('.password-click').css('display','none')
+    } else {
+        $("#usuario-login").val("");
+        $("#usuario-id").val("");
+        $("#usuario-senha").val("");
+        $("#usuario-login").prop('disabled', false);
+        $("#usuario-senha").prop('disabled', false);
+        $('.password-click').css('display', 'block')
+    }
+})
 
 
 function GetTipos() {

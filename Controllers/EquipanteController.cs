@@ -547,5 +547,18 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
+
+        [HttpPost]
+        public ActionResult GetHistorico(int id)
+        {
+            var equipante = equipantesBusiness.GetEquipanteById(id);
+            var result = equipante.Equipes.ToList().Select(x => new
+            {
+                Evento = $"{x.Evento.Numeracao}º {x.Evento.Configuracao.Titulo}",
+                Equipe = x.Equipe.Nome,
+                Coordenador = x.Tipo.GetDescription()
+            });
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

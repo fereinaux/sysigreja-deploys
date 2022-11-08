@@ -121,7 +121,7 @@ ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                                 <input accept="image/*" onchange='Foto(${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
                         }
-                           
+                           ${GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico')}
           ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
                             ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
@@ -1629,4 +1629,49 @@ function verificaCep(input) {
             }
         })
     }
+}
+
+function GetHistorico(id) {
+
+    CarregarTabelaHistorico(id);
+    $("#modal-historico").modal();
+
+}
+
+function CarregarTabelaHistorico(id) {
+    const tableHistoricoConfig = {
+        language: languageConfig,
+        lengthMenu: [200, 500, 1000],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+        destroy: true,
+        dom: domConfig,
+        buttons: getButtonsConfig('Histórico'),
+        columns: [
+            { data: "Evento", name: "Evento", autoWidth: true },
+            {
+                data: "Equipe", name: "Equipe", autoWidth: true, render: function (data, type, row) {
+                    return `<i class="fas fa-${row.Coordenador == "Coordenador" ? "star" : "user"}"></i> ${data}`
+                }
+            },
+        ],
+
+        order: [
+            [0, "asc"]
+        ],
+        ajax: {
+            data: {id:id},
+            url: '/Equipante/GetHistorico',
+            datatype: "json",
+            type: "POST"
+        }
+    };
+
+    $("#table-historico").DataTable(tableHistoricoConfig);
 }

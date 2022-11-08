@@ -133,7 +133,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantes(string Id)
         {
-            var result = accountBusiness.GetEquipantesUsuario(Id).Select(x => new { x.Id, x.Nome }).OrderBy(x => x.Nome);
+            var result = accountBusiness.GetEquipantesUsuario(Id).Select(x => new { x.Id, x.Nome, UserId = x.Usuario != null ? x.Usuario.Id : "", UserName = x.Usuario != null ? x.Usuario.UserName : ""}).OrderBy(x => x.Nome);
 
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
@@ -331,18 +331,24 @@ namespace SysIgreja.Controllers
 
                 UserManager.Update(user);
                 UserManager.ChangePassword(model.Id, model.OldPassword, model.Password);
-                var claims = UserManager.GetClaims(user.Id);
-                UserManager.RemoveClaim(user.Id, claims.Where(x => x.Type == "Permissões").FirstOrDefault());
+                var claims = UserManager.GetClaims(user.Id);           
                 UserManager.RemoveClaim(user.Id, claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault());
             }
 
 
+            List<Permissoes> permissoes = new List<Permissoes>();
+            if (user != null)
+            {
+                permissoes = user.Claims.Any(y => y.ClaimType == "Permissões") ? JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue) : permissoes;
+                var claims = UserManager.GetClaims(user.Id);
+                if (claims.Any(x => x.Type == "Permissões"))
+                {
+                    UserManager.RemoveClaim(user.Id, claims.Where(x => x.Type == "Permissões").FirstOrDefault());
+                }
+            }
 
-            //var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões").Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue)).ToList().FirstOrDefault();
-            var permissoes = new List<Permissoes>();
             if (model.Perfil == "Admin")
             {
-
                 model.Eventos.ForEach(evento =>
                 {
                     permissoes.Add(new Permissoes

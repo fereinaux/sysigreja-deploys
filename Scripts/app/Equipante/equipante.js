@@ -203,6 +203,7 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
 <label style="display:${$('#has-medicacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
 <label style="display:${$('#has-convenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
 <label style="display:${$('#has-convenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
+<label style="display:${$('#is-casado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataCasamento"> Data de Casamento <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Equipe"> Equipe <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
@@ -682,6 +683,7 @@ function GetEquipante(id) {
                 $(`#equipante-nome`).val(data.Equipante.Nome);
                 $(`#equipante-apelido`).val(data.Equipante.Apelido);
                 $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento).format('DD/MM/YYYY'));
+                $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento).format('DD/MM/YYYY'));
                 $(`#equipante-email`).val(data.Equipante.Email);
                 $(`#equipante-fone`).val(data.Equipante.Fone);
 
@@ -720,6 +722,7 @@ function GetEquipante(id) {
                 console.log(data.Equipante.HasRestricaoAlimentar);
                 console.log(data.Equipante.Sexo);
                 $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-iscasado][value=${data.Equipante.IsCasado}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasconvenio][value=${data.Equipante.HasConvenio}]`).iCheck('check');
@@ -749,6 +752,8 @@ function GetEquipante(id) {
         $(`input[type=radio][name=equipante-hasalergia][value=false]`).iCheck('check');
         $(`input[type=radio][name=equipante-hasmedicacao][value=false]`).iCheck('check');
         $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=false]`).iCheck('check');
+        $(`input[type=radio][name=equipante-iscasado][value=false]`).iCheck('check');
+        $("#equipante-data-casamento").val("");
     }
 
 
@@ -817,6 +822,18 @@ function GetEquipante(id) {
     $('#outra').on('ifChecked', function (event) {
         $('.congregacao').removeClass('d-none');
         $("#equipante-congregacaodescricao").addClass('required');
+    });
+
+
+
+    $('#is-casado').on('ifChecked', function (event) {
+        $('.casado').removeClass('d-none');
+        $("#equipante-data-casamento").addClass('required');
+    });
+
+    $('#not-casado').on('ifChecked', function (event) {
+        $('.casado').addClass('d-none');
+        $("#equipante-data-casamento").removeClass('required');
     });
 }
 
@@ -1539,6 +1556,20 @@ ${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-12 p-w-md m-t-
                                     <input type="text" class="form-control" id="equipante-convenio" data-field="Convênio" />
                      <h5>Quais hospitais atendem?</h5>
                                 <input type="text" class="form-control" id="equipante-hospitais" data-field="Hospitais" />
+                                </div>
+                            </div>` : ''}
+
+
+${campos.find(x => x.Campo == 'Casamento') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>É casado(a)?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="is-casado" value="true" name="equipante-iscasado"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-casado" checked="" value="false" name="equipante-iscasado"> <i></i> Não </label></div>
+
+                                <div class="casado d-none">
+                                    <h5>Qual a sua data de casamento?</h5>
+                                   <input type="text" class="form-control full-date" id="equipante-data-casamento" data-field="Data de Casamento" />
+                    
                                 </div>
                             </div>` : ''}
 

@@ -33,7 +33,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Title = "Customização de Crachás";
+            ViewBag.Title = "Customização de Credenciais";
             GetConfiguracoes(new string[] { "Admin" });
             return View();
         }

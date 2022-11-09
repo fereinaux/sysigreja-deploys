@@ -86,6 +86,8 @@ function PostParticipante() {
                         HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
                         Convenio: $(`#participante-convenio`).val(),
                         Hospitais: $(`#participante-hospitais`).val(),
+                        IsCasado: $("input[type=radio][name=participante-iscasado]:checked").val(),
+                        DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
                         Alergia: $(`#participante-alergia`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
@@ -170,6 +172,8 @@ function PostParticipante() {
                         HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
                         Convenio: $(`#participante-convenio`).val(),
                         Hospitais: $(`#participante-hospitais`).val(),
+                        IsCasado: $("input[type=radio][name=participante-iscasado]:checked").val(),
+                        DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Etiquetas: $('.participante-etiquetas').val()
                     }),
                 success: function () {
@@ -210,6 +214,7 @@ function GetParticipante() {
                 $(`#participante-nome`).val(data.Participante.Nome);
                 $(`#participante-apelido`).val(data.Participante.Apelido);
                 $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
+            
                 $(`#participante-email`).val(data.Participante.Email);
                 $(`#participante-fone`).val(data.Participante.Fone);
                 $(`#participante-nome-pai`).val(data.Participante.NomePai);
@@ -245,7 +250,10 @@ function GetParticipante() {
                 $(`#participante-convenio`).val(data.Participante.Convenio);
                 $(`#participante-hospitais`).val(data.Participante.Hospitais);
                 $(`#participante-alergia`).val(data.Participante.Alergia);
+
                 $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
+                $(`input[type=radio][name=participante-iscasado][value=${data.Participante.IsCasado}]`).iCheck('check');
+                $("#participante-data-casamento").val(moment(data.Participante.DataCasamento).format('DD/MM/YYYY'));
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasconvenio][value=${data.Participante.HasConvenio}]`).iCheck('check');
@@ -403,6 +411,8 @@ function GetEquipante() {
                 $(`#participante-alergia`).val(data.Equipante.Alergia);
                 $(`#participante-convenio`).val(data.Equipante.Convenio);
                 $(`#participante-hospitais`).val(data.Equipante.Hospitais);
+                $(`input[type=radio][name=participante-iscasado][value=${data.Equipante.IsCasado}]`).iCheck('check');
+                $("#participante-data-casamento").val(moment(data.Equipante.DataCasamento).format('DD/MM/YYYY'));
                 $(`input[type=radio][name=participante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
@@ -1064,6 +1074,19 @@ ${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-6 p-w-md m-t-m
                                 </div>
                             </div>` : ''}
 
+${campos.find(x => x.Campo == 'Casamento') ? ` <div class="col-sm-6 p-w-md m-t-md text-center">
+                                <h5>É casado(a)?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="is-casado" value="true" name="participante-iscasado"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-casado" checked="" value="false" name="participante-iscasado"> <i></i> Não </label></div>
+
+                                <div class="casado d-none">
+                                    <h5>Qual a sua data de casamento?</h5>
+                                   <input type="text" class="form-control full-date" id="participante-data-casamento" data-field="Data de Casamento" />
+                    
+                                </div>
+                            </div>` : ''}
+
 ${campos.find(x => x.Campo == 'Medicação') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
                             <h5>Toma alguma medicação?</h5>
 
@@ -1179,6 +1202,16 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
             $('#outra').on('ifChecked', function (event) {
                 $('.congregacao').removeClass('d-none');
                 $("#participante-congregacaodescricao").addClass('required');
+            });
+
+            $('#is-casado').on('ifChecked', function (event) {
+                $('.casado').removeClass('d-none');
+                $("#participante-data-casamento").addClass('required');
+            });
+
+            $('#not-casado').on('ifChecked', function (event) {
+                $('.casado').addClass('d-none');
+                $("#participante-data-casamento").removeClass('required');
             });
         }
     });

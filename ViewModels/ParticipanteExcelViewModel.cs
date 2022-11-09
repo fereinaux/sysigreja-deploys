@@ -51,6 +51,9 @@ namespace SysIgreja.ViewModels
         [DisplayName("Convênio")]
         public string Convenio { get; set; }
 
+        [DisplayName("Data de Casamento")]
+        public string DataCasamento { get; set; }
+
         [DisplayName("Hospitais")]
         public string Hospitais { get; set; }
 

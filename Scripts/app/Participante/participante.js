@@ -149,6 +149,7 @@ ${row.Circulo ? (row.Circulo.match(/\p{Emoji}+/gu) ? row.Circulo.match(/\p{Emoji
             { data: "RestricaoAlimentar", title: "Restrição Alimentar", name: "RestricaoAlimentar", autoWidth: true, visible: false },
             { data: "Medicacao", title: "Medicação", name: "Medicacao", autoWidth: true, visible: false },
             { data: "Convenio", title: "Convênio", name: "Convenio", autoWidth: true, visible: false },
+            { data: "DataCasamento", title: "Data de Casamento", name: "DataCasamento", autoWidth: true, visible: false },
             { data: "Hospitais", title: "Hospitais", name: "Hospitais", autoWidth: true, visible: false },
             { data: "Parente", title: "Parente", name: "Parente", autoWidth: true, visible: false },
             { data: "Quarto", title: "Quarto", name: "Quarto", autoWidth: true, visible: false },
@@ -236,10 +237,11 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:${ $('#participante-fonecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
 <label style="display:${ $('#participante-nomeconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
 <label style="display:${ $('#participante-foneconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
-<label style="display:${ $('#participante-hasrestricao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
-<label style="display:${ $('#participante-hasmedicacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
-<label style="display:${ $('#participante-hasconvenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
-<label style="display:${ $('#participante-hasconvenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
+<label style="display:${$('#has-restricaoalimentar').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
+<label style="display:${$('#has-medicacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
+<label style="display:${$('#has-convenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
+<label style="display:${$('#has-convenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Hospitais"> Hospitais <i></i></label>
+<label style="display:${$('#is-casado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataCasamento"> Data de Casamento <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> Círculo <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
@@ -979,6 +981,8 @@ function GetParticipanteContato(id) {
             $(`#participante-medicacao`).val(data.Participante.Medicacao);
             $(`#participante-convenio`).val(data.Participante.Convenio);
             $(`#participante-hospitais`).val(data.Participante.Hospitais);
+            $(`input[type=radio][name=participante-iscasado][value=${data.Participante.IsCasado}]`).iCheck('check');
+            $("#participante-data-casamento").val(moment(data.Participante.DataCasamento).format('DD/MM/YYYY'));
             $(`#participante-alergia`).val(data.Participante.Alergia);
             $(`#participante-parente`).val(data.Participante.Parente);
             if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
@@ -1051,6 +1055,8 @@ function GetParticipante(id) {
                 }
                 $(`#participante-convenio`).val(data.Participante.Convenio);
                 $(`#participante-hospitais`).val(data.Participante.Hospitais);
+                $(`input[type=radio][name=participante-iscasado][value=${data.Participante.IsCasado}]`).iCheck('check');
+                $("#participante-data-casamento").val(moment(data.Participante.DataCasamento).format('DD/MM/YYYY'));
                 $(`#participante-alergia`).val(data.Participante.Alergia);
                 $(`#participante-parente`).val(data.Participante.Parente);
                 if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
@@ -1091,6 +1097,7 @@ function GetParticipante(id) {
         $(`#participante-nome`).val("");
         $(`#participante-apelido`).val("");
         $("#participante-data-nascimento").val("");
+ 
         $(`#participante-email`).val("");
         $(`#participante-fone`).val("");
         $(`#participante-restricaoalimentar`).val("");
@@ -1116,6 +1123,8 @@ function GetParticipante(id) {
         $(`#participante-conjuge`).val('');
         $(`#participante-referencia`).val('');
         $(`input[type=radio][name=participante-sexo][value=1]`).iCheck('check');
+        $(`input[type=radio][name=participante-iscasado][value=false]`).iCheck('check');
+        $("#participante-data-casamento").val("");
         $(`input[type=radio][name=participante-hasalergia][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-congregacao][value='Trindade']`).iCheck('check');
         $(`input[type=radio][name=participante-parente][value=false]`).iCheck('check');
@@ -1190,6 +1199,16 @@ function GetParticipante(id) {
         $('.congregacao').removeClass('d-none');
         $("#participante-congregacaodescricao").addClass('required');
     });
+
+    $('#is-casado').on('ifChecked', function (event) {
+        $('.casado').removeClass('d-none');
+        $("#participante-data-casamento").addClass('required');
+    });
+
+    $('#not-casado').on('ifChecked', function (event) {
+        $('.casado').addClass('d-none');
+        $("#participante-data-casamento").removeClass('required');
+    });
 }
 
 function EditParticipante(id) {
@@ -1244,6 +1263,8 @@ function PostParticipante() {
                     HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
                     Convenio: $(`#participante-convenio`).val(),
                     Hospitais: $(`#participante-hospitais`).val(),
+                    IsCasado: $("input[type=radio][name=participante-iscasado]:checked").val(),
+                    DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     HasParente: $("input[type=radio][name=participante-hasparente]:checked").val(),
                     Parente: $(`#participante-parente`).val(),
                     Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
@@ -1371,6 +1392,7 @@ function onLoadCampos() {
     $('button span:contains("Restrição Alimentar")').parent().css('display', $('#participante-hasrestricao').length > 0 ? 'block' : 'none')
     $('button span:contains("Medicação")').parent().css('display', $('#participante-hasmedicacao').length > 0 ? 'block' : 'none')
     $('button span:contains("Convênio")').parent().css('display', $('#participante-hasconvenio').length > 0 ? 'block' : 'none')
+    $('button span:contains("Casado")').parent().css('display', $('#participante-iscasado').length > 0 ? 'block' : 'none')
     $('button span:contains("Parente")').parent().css('display', $('#participante-hasparente').length > 0 ? 'block' : 'none')
     $('button span:contains("Hospitais")').parent().css('display', $('#participante-hasconvenio').length > 0 ? 'block' : 'none')
     $('button span:contains("Nome da Mãe")').parent().css('display', $('#participante-nomemae').length > 0 ? 'block' : 'none')
@@ -1610,6 +1632,19 @@ ${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-12 p-w-md m-t-
                                     <input type="text" class="form-control" id="participante-convenio" data-field="Convênio" />
                      <h5>Quais hospitais atendem?</h5>
                                 <input type="text" class="form-control" id="participante-hospitais" data-field="Hospitais" />
+                                </div>
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Casamento') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>É casado(a)?</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="is-casado" value="true" name="participante-iscasado"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="not-casado" checked="" value="false" name="participante-iscasado"> <i></i> Não </label></div>
+
+                                <div class="casado d-none">
+                                    <h5>Qual a sua data de casamento?</h5>
+                                   <input type="text" class="form-control full-date" id="participante-data-casamento" data-field="Data de Casamento" />
+                    
                                 </div>
                             </div>` : ''}
 

@@ -92,6 +92,8 @@ namespace SysIgreja.Controllers
                 Checkin = x.Checkin,
                 Padrinho = x.Padrinho?.EquipanteEvento.Equipante.Nome,
                 Congregacao = x.Congregacao,
+                IsCasado = x.IsCasado,
+                DataCasamento = x.DataCasamento,
                 DataNascimento = x.DataNascimento,
                 Email = x.Email,
                 EventoId = x.EventoId,

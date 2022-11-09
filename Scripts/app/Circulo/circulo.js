@@ -9,11 +9,7 @@ let circuloId
 function CarregarTabelaCirculo() {
 
     var columnsTb = [
-        {
-            data: "Id", name: "Id", autoWidth: true, "render": function (data, type, row) {
-                return `${row.Titulo || row.Cor}`;
-            }
-        },
+        { data: "Titulo", name: "Titulo", autoWidth: true },
         { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
         {
             data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
@@ -38,11 +34,23 @@ function CarregarTabelaCirculo() {
         orderMulti: false,
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
+        searchDelay: 750,
         dom: domConfigNoButtons,
         columns: columnsTb,
         order: [
             [0, "asc"]
         ],
+        drawCallback: function (settings) {
+            if (settings.aoData.length > 0) {
+
+                let column = settings.aoColumns[settings.aaSorting[0][0]].data
+                let dir = settings.aaSorting[0][1]
+                let search = settings.oPreviousSearch.sSearch
+
+                GetCirculosComParticipantes(column, dir, search);
+            }
+
+        },
         ajax: {
             url: '/Circulo/GetCirculos',
             datatype: "json",
@@ -245,13 +253,13 @@ function GetParticipantesSemCirculo() {
 }
 
 
-function GetCirculosComParticipantes() {
+function GetCirculosComParticipantes(column, dir, search) {
     $("#circulos").empty();
 
     $.ajax({
         url: '/Circulo/GetCirculos',
         datatype: "json",
-        data: { EventoId: $("#circulo-eventoid").val() },
+        data: { EventoId: $("#circulo-eventoid").val(), columnName: column, columnDir: dir, search },
         type: "POST",
         success: function (data) {
             data.data.forEach(function (circulo, index, array) {

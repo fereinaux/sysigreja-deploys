@@ -72,6 +72,7 @@ namespace SysIgreja.Controllers
           .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)))          
             .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))
             .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
+            .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.DataCasamento.HasValue ? x.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
             .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                         .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Quartos.Any() ? x.Quartos.Select(y => y.Quarto).First().Titulo : ""))
                          .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Cor.HasValue ? x.Circulos.LastOrDefault().Circulo.Cor.Value.GetDescription() : x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
@@ -84,6 +85,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()))
                     .ForMember(dest => dest.HasFoto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto)))
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
+                            .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.DataCasamento.HasValue ? x.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.Padrinho, opt => opt.MapFrom(x => x.PadrinhoId.HasValue ? x.Padrinho.EquipanteEvento.Equipante.Nome : null))
                     .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Cor.HasValue ? x.Circulos.LastOrDefault().Circulo.Cor.Value.GetDescription() : x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
                     .ForMember(dest => dest.Etiquetas, opt => opt.MapFrom(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta)))
@@ -151,6 +153,8 @@ namespace SysIgreja.Controllers
                .ForMember(dest => dest.HasParente, opt => opt.MapFrom(x => x.Equipante.HasParente))
               .ForMember(dest => dest.Parente, opt => opt.MapFrom(x => x.Equipante.Parente))
                .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
+               .ForMember(dest => dest.IsCasado, opt => opt.MapFrom(x => x.Equipante.IsCasado))
+               .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.DataCasamento))
               .ForMember(dest => dest.NomePai, opt => opt.MapFrom(x => x.Equipante.NomePai))
                .ForMember(dest => dest.FonePai, opt => opt.MapFrom(x => x.Equipante.FonePai))
               .ForMember(dest => dest.NomeMae, opt => opt.MapFrom(x => x.Equipante.NomeMae))
@@ -193,6 +197,7 @@ namespace SysIgreja.Controllers
                 .ForMember(dest => dest.RestricaoAlimentar, opt => opt.MapFrom(x => x.Equipante.RestricaoAlimentar))
                 .ForMember(dest => dest.Medicacao, opt => opt.MapFrom(x => x.Equipante.Medicacao))
                 .ForMember(dest => dest.Convenio, opt => opt.MapFrom(x => x.Equipante.Convenio))
+                .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.IsCasado.HasValue && x.Equipante.IsCasado.Value ? x.Equipante.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                 .ForMember(dest => dest.Hospitais, opt => opt.MapFrom(x => x.Equipante.Hospitais));                    
 
 

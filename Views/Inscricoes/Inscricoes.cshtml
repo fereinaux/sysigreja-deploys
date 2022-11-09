@@ -87,12 +87,12 @@
                         }
 
                         @*@if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
-                        {
-                            <div class="form-group">
-                                <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
-                                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
-                            </div>
-                        }*@
+        {
+            <div class="form-group">
+                <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
+                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
+            </div>
+        }*@
 
                         @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
@@ -234,8 +234,8 @@
                         {
                             <div class="form-group">
                                 <label for="participante-hasparente" class=" block">Tem algum parente fazendo o @ViewBag.Configuracao.Titulo?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-parente" data-valor="true" name="participante-hasparente"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-parente" checked="" data-valor="false" name="participante-hasparente"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group parente d-none">
                                 <label for="participante-parente" class="">Nome do parente</label>
@@ -246,9 +246,9 @@
                         {
                             <div class="form-group">
                                 <label for="participante-congregacao" class=" block">Participa de qual congregação?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="trindade" checked="" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="recon" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="outra" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="trindade" checked="" data-valor="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="recon" data-valor="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="outra" data-valor="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
                             </div>
                             <div class="form-group congregacao d-none">
                                 <label for="participante-congregacaodescricao" class="">Qual?</label>
@@ -258,9 +258,9 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Convenio.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-hasmedicacao" class=" block">Possui convênio médico?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-convenio" value="true" name="participante-hasconvenio"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-convenio" checked="" value="false" name="participante-hasconvenio"> <i></i> Não </label></div>
+                                <label for="participante-hasconvenio" class=" block">Possui convênio médico?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-convenio" data-valor="true" name="participante-hasconvenio"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-convenio" checked="" data-valor="false" name="participante-hasconvenio"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group convenio d-none">
                                 <label for="participante-convenio" class="">Qual?</label>
@@ -269,12 +269,24 @@
                                 <input type="text" class="form-control" id="participante-hospitais" data-field="Hospitais" />
                             </div>
                         }
+                        @if (ViewBag.Campos.Contains(CamposEnum.Casamento.GetDescription()))
+                        {
+                            <div class="form-group">
+                                <label for="participante-iscasado" class=" block">É casado?</label>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="is-casado" data-valor="true" name="participante-iscasado"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-casado" checked="" data-valor="false" name="participante-iscasado"> <i></i> Não </label></div>
+                            </div>
+                            <div class="form-group casado d-none">
+                                <label for="participante-data-casamento" class="">Data de casamento</label>
+                                <input type="text" class="form-control full-date" id="participante-data-casamento" data-field="Data de casamento" />
+                            </div>
+                        }
                         @if (ViewBag.Campos.Contains(CamposEnum.Medicacao.GetDescription()))
                         {
                             <div class="form-group">
                                 <label for="participante-hasmedicacao" class=" block">Toma alguma medicação?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-medicacao" value="true" name="participante-hasmedicacao"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-medicacao" checked="" value="false" name="participante-hasmedicacao"> <i></i> Não </label></div>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-medicacao" data-valor="true" name="participante-hasmedicacao"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-medicacao" checked="" data-valor="false" name="participante-hasmedicacao"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group medicacao d-none">
                                 <label for="participante-medicacao" class="">Qual?</label>
@@ -285,8 +297,8 @@
                         {
                             <div class="form-group">
                                 <label for="participante-hasalergia" class=" block">Tem alguma alergia?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-alergia" value="true" name="participante-hasalergia"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-alergia" checked="" value="false" name="participante-hasalergia"> <i></i> Não </label></div>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-alergia" data-valor="true" name="participante-hasalergia"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-alergia" checked="" data-valor="false" name="participante-hasalergia"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group alergia d-none">
                                 <label for="participante-alergia" class="">Qual?</label>
@@ -297,8 +309,8 @@
                         {
                             <div class="form-group">
                                 <label for="participante-hasrestricaoalimentar" class=" block">Tem alguma restrição alimentar?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-restricaoalimentar" value="true" name="participante-hasrestricaoalimentar"> <i></i> Sim </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-restricaoalimentar" checked="" value="false" name="participante-hasrestricaoalimentar"> <i></i> Não </label></div>
+                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-restricaoalimentar" data-valor="true" name="participante-hasrestricaoalimentar"> <i></i> Sim </label></div>
+                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-restricaoalimentar" checked="" data-valor="false" name="participante-hasrestricaoalimentar"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group restricaoalimentar d-none">
                                 <label for="participante-restricaoalimentar" class="">Qual?</label>
@@ -670,10 +682,20 @@
                 $("#participante-hospitais").addClass('required');
             });
 
+            $('#is-casado').on('ifChecked', function (event) {
+                $('.casado').removeClass('d-none');
+                $("#participante-data-casamento").addClass('required');
+            });
+
             $('#not-convenio').on('ifChecked', function (event) {
                 $('.convenio').addClass('d-none');
                 $("#participante-convenio").removeClass('required');
                 $("#participante-hospitais").removeClass('required');
+            });
+
+            $('#not-casado').on('ifChecked', function (event) {
+                $('.casado').addClass('d-none');
+                $("#participante-data-casamento").removeClass('required');
             });
         });
 
@@ -805,7 +827,7 @@
                                 Camisa: $(`#participante-camisa`).val(),
                                 Profissao: $(`#participante-profissao`).val(),
                                 CEP: $(`#participante-cep`).val(),
-                                Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
+                                Congregacao: $("input[type=radio][name=participante-congregacao]:checked").data("valor") != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).data("valor"),
                                 Logradouro: $(`#participante-logradouro`).val(),
                                 Bairro: $(`#participante-bairro`).val(),
                                 Cidade: $(`#participante-cidade`).val(),
@@ -817,15 +839,17 @@
                                 Referencia: $(`#participante-referencia`).val(),
                                 Latitude: $(`#participante-latitude`).val(),
                                 Longitude: $(`#participante-longitude`).val(),
-                                HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
+                                HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").data('valor'),
                                 RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
-                                HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
+                                HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").data('valor'),
                                 Medicacao: $(`#participante-medicacao`).val(),
-                                HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").val(),
+                                HasAlergia: $("input[type=radio][name=participante-hasalergia]:checked").data('valor'),
                                 Alergia: $(`#participante-alergia`).val(),
-                                HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
+                                HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").data('valor'),
                                 Convenio: $(`#participante-convenio`).val(),
                                 Hospitais: $(`#participante-hospitais`).val(),
+                                IsCasado: $("input[type=radio][name=participante-iscasado]:checked").data('valor'),
+                                DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                 Sexo: $("input[type=radio][name=participante-sexo]:checked").data('valor'),
                                 NomePai: $(`#participante-nome-pai`).val(),
                                 FonePai: $(`#participante-fone-pai`).val(),

@@ -6,6 +6,7 @@ using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Reunioes;
 using Core.Models.Circulos;
+using System.Linq.Dynamic;
 using Core.Models.Reunioes;
 using SysIgreja.ViewModels;
 using System.Linq;
@@ -41,22 +42,32 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCirculos(int EventoId)
+        public ActionResult GetCirculos(int EventoId, string columnName, string columndir, string search)
         {
-            var result = circulosBusiness
+            var query = circulosBusiness
                 .GetCirculos()
-                .Where(x => x.EventoId == EventoId)
-                .ToList()
-                .Select(x => new CirculoViewModel
+                .Where(x => x.EventoId == EventoId).ToList().Select(x => new CirculoViewModel
                 {
                     Id = x.Id,
                     Dirigentes = x.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }).ToList(),
                     QtdParticipantes = circulosBusiness.GetParticipantesByCirculos(x.Id).Count(),
-                    Titulo = x.Titulo,
+                    Titulo = x.Titulo ?? x.Cor?.GetDescription(),
                     Cor = x.Cor?.GetDescription()
                 });
 
-            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.Titulo.ToLower().Contains(search.ToLower()) || x.Cor.ToLower().Contains(search.ToLower())).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(columnName))
+            {
+                query = query.OrderBy(columnName + " " + columndir);
+            }
+
+
+            return Json(new { data = query }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -64,14 +75,14 @@ namespace SysIgreja.Controllers
         public ActionResult GetDirigentes(int CirculoId)
         {
             var result = circulosBusiness
-                .GetDirigentes()       
+                .GetDirigentes()
                 .Where(x => x.CirculoId == CirculoId)
                 .ToList()
-                .Select(x =>  new
+                .Select(x => new
                 {
                     Id = x.Id,
                     Nome = UtilServices.CapitalizarNome(x.Equipante.Equipante.Nome)
-                });                
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -124,7 +135,7 @@ namespace SysIgreja.Controllers
             var evento = eventosBusiness.GetEventoById(EventoId);
             if (evento.Configuracao.EquipeCirculoId.HasValue)
             {
-            var dirigentes = circulosBusiness.GetDirigentes().Select(x => x.EquipanteId).ToList();
+                var dirigentes = circulosBusiness.GetDirigentes().Select(x => x.EquipanteId).ToList();
                 var pgList = equipesBusiness.GetMembrosEquipe(EventoId, evento.Configuracao.EquipeCirculoId.Value).Where(x => !dirigentes.Contains(x.Id)).Select(x => new { x.Id, Nome = x.Equipante.Nome }).ToList();
 
                 return Json(new { Equipantes = pgList }, JsonRequestBehavior.AllowGet);

@@ -36,6 +36,7 @@ function CarregarTabelaQuarto() {
         lengthMenu: [200, 500, 1000],
         colReorder: false,
         serverSide: false,
+        searchDelay: 750,
         deferloading: 0,
         orderCellsTop: true,
         fixedHeader: true,

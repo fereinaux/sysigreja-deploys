@@ -19,7 +19,7 @@ function CarregarTabelaCracha() {
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
-        buttons: getButtonsConfig('Crachás'),
+        buttons: getButtonsConfig('Credenciais'),
         columns: [
             { data: "Titulo", name: "Titulo", autoWidth: true },
             {
@@ -131,9 +131,9 @@ function GetCracha(id) {
         $('.equipe-font #font-color').val('#FFFFFF')
         Align('left', 'equipe')
         $('#cracha').html(`<img src="./Images/profile.jpg" class="background" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0" />
-                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
-                                <span style="display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
-                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>`)
+                                <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
+                                <span style="white-space:normal;display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
+                                <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>`)
         renderCracha()
         dragResize()
     }
@@ -251,7 +251,7 @@ function Align(side, type) {
 
 function print() {
     $('span.nome-cracha').text('Felipe Reinaux')
-    $('span.apelido-cracha').text('Mago')
+    $('span.apelido-cracha').text('Felipe Reinaux de Adrielly Souza')
     $('span.equipe-cracha').text('Secretaria')
     $('#cracha').toggleClass('moldura-modal')
     html2canvas($("#cracha")[0]).then(canvas => {

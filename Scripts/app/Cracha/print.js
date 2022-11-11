@@ -60,7 +60,6 @@ async function printSome(evt) {
 async function print(linha,col) {
 
     const results = await loadCrachaImprimir(modelo.Background == 'foto')
-
     $("#container-cracha").height(modelo.Altura * razao)
     $("#cracha").height(modelo.Altura * razao)
     $("#cracha").width(modelo.Largura * razao)
@@ -96,7 +95,7 @@ async function renderCracha(data) {
     var imgData = canvas.toDataURL(
         'image/png');
 
-    doc.addImage(imgData, 'PNG', modelo.MargemVertical + (atualCol * modelo.Largura), modelo.MargemHorizontal + (atualRow * modelo.Altura));
+    doc.addImage(imgData, 'PNG', modelo.MargemVertical + (atualCol * modelo.Largura), modelo.MargemHorizontal + (atualRow * modelo.Altura), (modelo.Largura), (modelo.Altura));
     $('#cracha').toggleClass('moldura-modal')
     $('span.nome-cracha').text('{Nome}')
     $('span.apelido-cracha').text('{Apelido}')

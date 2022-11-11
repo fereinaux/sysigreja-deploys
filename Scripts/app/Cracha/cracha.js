@@ -251,7 +251,7 @@ function Align(side, type) {
 
 function print() {
     $('span.nome-cracha').text('Felipe Reinaux')
-    $('span.apelido-cracha').text('Felipe Reinaux de Adrielly Souza')
+    $('span.apelido-cracha').text('Renô')
     $('span.equipe-cracha').text('Secretaria')
     $('#cracha').toggleClass('moldura-modal')
     html2canvas($("#cracha")[0]).then(canvas => {

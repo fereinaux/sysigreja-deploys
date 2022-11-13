@@ -282,17 +282,3 @@ function GetResultadosAdmin() {
         }
     });
 }
-
-function ofertar() {
-    $.ajax({
-        url: "/Evento/OfertaEvento/",
-        datatype: "json",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(
-            { Id: $("#eventoid").val() }),
-        success: (data) => {
-            window.location.reload()
-        }
-    });
-}

@@ -23,7 +23,7 @@
         top: 60px;
         right: -10px;
         background-color: #f9f9f9;
-        min-width: 160px;
+        min-width: 200px;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
     }
@@ -185,11 +185,11 @@
 </div>
 
 <script>
-    const divBase = (tipo, quantidade) => {
-        const { titulo, link, icon } = handleTipo(tipo, quantidade);
+    const divBase = (tipo, quantidade,valor) => {
+        const { titulo, link, icon, onClick } = handleTipo(tipo, quantidade, valor);
         return `
         <li class="hover-menu-notification item-notificacao">
-            <a href="${link}" class="dropdown-item">
+            <a ${link ? `href="${link}"` : `onclick="${onClick}"` }  class="dropdown-item">
                 <div>
                    ${icon}
                    ${titulo}
@@ -199,7 +199,29 @@
         `
     }
 
-    const handleTipo = (tipo, quantidade) => {
+    function pagarSistema(id,valor) {
+        let input = document.createElement("input");
+        input.type = 'number';
+        input.value = valor;
+        input.className = 'swal-content__input';
+        CustomSwal({
+            title: "Oferta do Sistema",
+            text: "Quanto você deseja ofertar?",
+            icon: "info",
+            content: input,
+            button: {
+                text: "Ofertar"
+            },
+            className: "button-center",
+          
+        }).then(result => {            
+            if (result)
+                ofertar(id, input.value)
+       
+        })
+    }
+
+    const handleTipo = (tipo, quantidade, valor) => {
         switch (tipo) {
             case "Inscrição":
                 return {
@@ -208,7 +230,11 @@
                     icon: '<i class="fas fa-user-plus"></i>'
                 }
             default:
-                return null
+                return {
+                    titulo: `Oferta do ${tipo}`,
+                    onClick: `pagarSistema(${quantidade},${valor})`,
+                    icon: '<i class="fas fa-money-bill-alt"></i>'
+                }      
         }
     }
 
@@ -256,9 +282,9 @@
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
-                const { Notificacoes } = data
+                const { Notificacoes, Eventos } = data
 
-                const qtdNofitificacoes = Notificacoes.length;
+                const qtdNofitificacoes = Notificacoes.length + Eventos.length;
 
                 $('#contador-notificacoes').text(qtdNofitificacoes);
 
@@ -269,16 +295,40 @@
                 Notificacoes.forEach(notificacao => {
                     $('#panel-notificao').prepend(divBase(notificacao.Titulo, notificacao.Quantidade))
                 })
+
+                Eventos.forEach(evento => {
+                    $('#panel-notificao').prepend(divBase(evento.Evento, evento.Id, evento.Valor))
+                })
             }
         })
 
 
     }
 
+    function ofertar(id, valor) {
 
 
+        $.ajax({
+            url: "/Evento/OfertaEvento/",
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                { Id: id, Valor: valor }),
+            success: (data) => {
+                consultarNotificacoes()
 
+                let div = document.createElement("div");
 
-
+                $(div).html(`<h4>Informações para transferência</h4><p>PIX CPF: <strong>100.778.704-09</strong> - Felipe Reinaux </p><p>Enviar comprovante para <strong>(81)9.9718-7441</strong></p>`)
+                swal({
+                    className: "button-center",
+                    title: "Oferta Computada",
+                    icon: "success",
+                    content: div 
+                });
+            }
+        });
+    }
 
 </script>

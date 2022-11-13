@@ -173,9 +173,9 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult OfertaEvento(int Id)
+        public ActionResult OfertaEvento(int Id, int Valor)
         {
-            eventosBusiness.OfertaEvento(Id);
+            eventosBusiness.OfertaEvento(Id, Valor);
 
             return new HttpStatusCodeResult(200);
         }

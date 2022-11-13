@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -29,11 +30,14 @@ namespace SysIgreja.Controllers
     public class NotificacaoController : Controller
     {
         private readonly INotificacaoBusiness notificacaoBusiness;
+        private readonly IAccountBusiness account;
+        private readonly IEventosBusiness eventosBusiness;
 
-
-        public NotificacaoController(INotificacaoBusiness notificacaoBusiness)
+        public NotificacaoController(INotificacaoBusiness notificacaoBusiness, IAccountBusiness account, IEventosBusiness eventosBusiness)
         {
             this.notificacaoBusiness = notificacaoBusiness;
+            this.account = account;
+            this.eventosBusiness = eventosBusiness;
         }
 
         public ActionResult Index()
@@ -53,8 +57,18 @@ namespace SysIgreja.Controllers
                     Titulo = group.Key,
                     Quantidade = group.Count()
                 }).ToList();
+            var userId = Thread.CurrentPrincipal.Identity.GetUserId();
+            var configs = account.GetUsuarios().Where(x => x.Id == userId).ToList().Select(x => x.Claims
+                .Where(y => y.ClaimType == "Permissões")
+                .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                .FirstOrDefault()?.Select(z =>
+                    z.ConfiguracaoId)
+            ).FirstOrDefault().ToList();
 
-            return Json(new { Notificacoes = result }, JsonRequestBehavior.AllowGet);
+            var eventos = eventosBusiness.GetEventos().Where(x => x.ConfiguracaoId.HasValue && configs.Contains(x.ConfiguracaoId.Value) && x.IsPendente).ToList().Select(x => new { Id = x.Id, Valor = x.Valor, Evento = $"{x.Numeracao}º {x.Configuracao.Titulo}" }
+            );
+
+            return Json(new { Notificacoes = result, Eventos = eventos }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

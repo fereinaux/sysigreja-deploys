@@ -83,7 +83,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, row.Presenca) : '';
                 }
             },
-            { data: "Sexo", name: "Sexo", title:"Sexo",visible: false, className: 'noVis' },
+            { data: "Sexo", name: "Sexo", title: "Sexo", visible: false, className: 'noVis' },
             {
                 data: "Sexo", orderData: 0, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {
@@ -108,14 +108,14 @@ ${row.Circulo ? (row.Circulo.match(/\p{Emoji}+/gu) ? row.Circulo.match(/\p{Emoji
                 }
             },
             { data: "Apelido", name: "Apelido", autoWidth: true, visible: false },
-            { data: "Conjuge", title: "Cônjuge", name:"Conjuge", autoWidth: true, visible: false },
+            { data: "Conjuge", title: "Cônjuge", name: "Conjuge", autoWidth: true, visible: false },
             { data: "NomeMae", name: "NomeMae", autoWidth: true, visible: false },
             { data: "FoneMae", name: "FoneMae", autoWidth: true, visible: false },
             { data: "NomePai", name: "NomePai", autoWidth: true, visible: false },
             { data: "FonePai", name: "FonePai", autoWidth: true, visible: false },
-            { data: "NomeContato",name: "NomeContato", autoWidth: true, visible: false },
-            { data: "FoneContato",name: "FoneContato", autoWidth: true, visible: false },
-            { data: "NomeConvite",name: "NomeConvite", autoWidth: true, visible: false },
+            { data: "NomeContato", name: "NomeContato", autoWidth: true, visible: false },
+            { data: "FoneContato", name: "FoneContato", autoWidth: true, visible: false },
+            { data: "NomeConvite", name: "NomeConvite", autoWidth: true, visible: false },
             { data: "FoneConvite", name: "FoneConvite", autoWidth: true, visible: false },
             { data: "Idade", name: "Idade", width: "5%", },
             { data: "Padrinho", name: "Padrinho", width: "25%" },
@@ -139,13 +139,13 @@ ${row.Circulo ? (row.Circulo.match(/\p{Emoji}+/gu) ? row.Circulo.match(/\p{Emoji
             { data: "Email", title: "Email", name: "Email", autoWidth: true, visible: false },
             { data: "CEP", title: "CEP", name: "CEP", autoWidth: true, visible: false },
             { data: "Logradouro", title: "Logradouro", name: "Logradouro", autoWidth: true, visible: false },
-            { data: "Bairro", title: "Bairro",name: "Bairro", autoWidth: true, visible: false },
-            { data: "Cidade", title: "Cidade",name: "Cidade", autoWidth: true, visible: false },
-            { data: "Estado", title: "Estado",name: "Estado", autoWidth: true, visible: false },
+            { data: "Bairro", title: "Bairro", name: "Bairro", autoWidth: true, visible: false },
+            { data: "Cidade", title: "Cidade", name: "Cidade", autoWidth: true, visible: false },
+            { data: "Estado", title: "Estado", name: "Estado", autoWidth: true, visible: false },
             { data: "Numero", title: "Numero", name: "Numero", autoWidth: true, visible: false },
-          
+
             { data: "Complemento", title: "Complemento", name: "Complemento", autoWidth: true, visible: false },
-            { data: "Referencia", title: "Referência", name: "Referencia",autoWidth: true, visible: false },
+            { data: "Referencia", title: "Referência", name: "Referencia", autoWidth: true, visible: false },
             { data: "RestricaoAlimentar", title: "Restrição Alimentar", name: "RestricaoAlimentar", autoWidth: true, visible: false },
             { data: "Medicacao", title: "Medicação", name: "Medicacao", autoWidth: true, visible: false },
             { data: "Convenio", title: "Convênio", name: "Convenio", autoWidth: true, visible: false },
@@ -182,9 +182,9 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
         order: [
             [2, "asc"]
         ],
-       
+
         drawCallback: function () {
-          
+
             if (callbackFunction) {
                 callbackFunction()
             }
@@ -208,35 +208,35 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <div class="row">
 <div class="col-md-6 col-xs-12">
 <label style="display:block"> <input id="select-all" type="checkbox" onChange="selectAll()" value="all"> Selecionar Todos <i></i></label>
-<label style="display:${ $('#participante-nome').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Nome"> Nome <i></i></label>
-<label style="display:${ $('#participante-apelido').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Apelido"> Apelido <i></i></label>
-<label style="display:${ $('#participante-datanascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataNascimento"> Data de Nascimento <i></i></label>
-<label style="display:${ $('#participante-datanascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Idade"> Idade <i></i></label>
-<label style="display:${ $('#participante-sexo').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Sexo"> Sexo <i></i></label>
-<label style="display:${ $('#participante-email').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
-<label style="display:${ $('#participante-fone').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
-<label style="display:${ $('#participante-conjuge').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
-<label style="display:${ $('#participante-instagram').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Instagram"> Instagram <i></i></label>
-<label style="display:${ $('#participante-camisa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Camisa"> Tamanho da Camisa <i></i></label>
-<label style="display:${ $('#participante-cep').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
-<label style="display:${ $('#participante-logradouro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
-<label style="display:${ $('#participante-bairro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
-<label style="display:${ $('#participante-cidade').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Cidade"> Cidade <i></i></label>
-<label style="display:${ $('#participante-estado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Estado"> Estado <i></i></label>
-<label style="display:${ $('#participante-numero').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
-<label style="display:${ $('#participante-complemento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
-<label style="display:${ $('#participante-referencia').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
-<label style="display:${ $('#participante-parente').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Parente"> Parente <i></i></label>
+<label style="display:${$('#participante-nome').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Nome"> Nome <i></i></label>
+<label style="display:${$('#participante-apelido').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Apelido"> Apelido <i></i></label>
+<label style="display:${$('#participante-datanascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataNascimento"> Data de Nascimento <i></i></label>
+<label style="display:${$('#participante-datanascimento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Idade"> Idade <i></i></label>
+<label style="display:${$('#participante-sexo').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Sexo"> Sexo <i></i></label>
+<label style="display:${$('#participante-email').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
+<label style="display:${$('#participante-fone').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
+<label style="display:${$('#participante-conjuge').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
+<label style="display:${$('#participante-instagram').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Instagram"> Instagram <i></i></label>
+<label style="display:${$('#participante-camisa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Camisa"> Tamanho da Camisa <i></i></label>
+<label style="display:${$('#participante-cep').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
+<label style="display:${$('#participante-logradouro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
+<label style="display:${$('#participante-bairro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Bairro"> Bairro <i></i></label>
+<label style="display:${$('#participante-cidade').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Cidade"> Cidade <i></i></label>
+<label style="display:${$('#participante-estado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Estado"> Estado <i></i></label>
+<label style="display:${$('#participante-numero').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Numero"> Número <i></i></label>
+<label style="display:${$('#participante-complemento').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Complemento"> Complemento <i></i></label>
+<label style="display:${$('#participante-referencia').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Referencia"> Referência <i></i></label>
+<label style="display:${$('#participante-parente').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Parente"> Parente <i></i></label>
 </div>
 <div class="col-md-6 col-xs-12">
-<label style="display:${ $('#participante-nomepai').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomePai"> Nome do Pai <i></i></label>
-<label style="display:${ $('#participante-fonepa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FonePai"> Fone do Pai <i></i></label>
-<label style="display:${ $('#participante-nomemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeMae"> Nome da Mãe <i></i></label>
-<label style="display:${ $('#participante-fonemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneMae"> Fone da Mãe <i></i></label>
-<label style="display:${ $('#participante-nomecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
-<label style="display:${ $('#participante-fonecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
-<label style="display:${ $('#participante-nomeconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
-<label style="display:${ $('#participante-foneconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
+<label style="display:${$('#participante-nomepai').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomePai"> Nome do Pai <i></i></label>
+<label style="display:${$('#participante-fonepa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FonePai"> Fone do Pai <i></i></label>
+<label style="display:${$('#participante-nomemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeMae"> Nome da Mãe <i></i></label>
+<label style="display:${$('#participante-fonemae').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneMae"> Fone da Mãe <i></i></label>
+<label style="display:${$('#participante-nomecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeContato"> Nome do Contato <i></i></label>
+<label style="display:${$('#participante-fonecontato').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneContato"> Fone do Contato <i></i></label>
+<label style="display:${$('#participante-nomeconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="NomeConvite"> Nome de quem Convidou <i></i></label>
+<label style="display:${$('#participante-foneconvite').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="FoneConvite"> Fone de quem Convidou <i></i></label>
 <label style="display:${$('#has-restricaoalimentar').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="RestricaoAlimentar"> Restrição Alimentar <i></i></label>
 <label style="display:${$('#has-medicacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Medicacao"> Medicação<i></i></label>
 <label style="display:${$('#has-convenio').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Convenio"> Convênio <i></i></label>
@@ -1097,7 +1097,7 @@ function GetParticipante(id) {
         $(`#participante-nome`).val("");
         $(`#participante-apelido`).val("");
         $("#participante-data-nascimento").val("");
- 
+
         $(`#participante-email`).val("");
         $(`#participante-fone`).val("");
         $(`#participante-restricaoalimentar`).val("");
@@ -1422,6 +1422,11 @@ function loadCampos(id) {
             $('.contato-mae').css('display', campos.find(x => x.Campo == "Dados da Mãe") ? 'block' : 'none')
             $('.campos-cadastro').html(`
           <input type="hidden" id="participante-id" />
+<div class="col-sm-12" style="display: flex">
+<img id="logo-relatorio-participante" style="max-width: 60%;
+display:none;
+    max-height: 100px;        margin: 20px auto auto auto;" src="">
+ </div>
 ${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Nome</h5>
 
@@ -1697,7 +1702,7 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
 
             }
 
-            
+
 
         }
     });
@@ -1991,4 +1996,25 @@ async function applyBulk() {
     await Promise.all(arrPromises);
     SuccessMesageOperation();
     CarregarTabelaParticipante()
+}
+
+
+async function printFicha() {
+    var element = document.getElementById('form-participante');
+    $('#form-participante').find('.col-sm-12').addClass('col-sm-6')
+    $('#logo-relatorio-participante').attr('src', `data:image/png;base64,${logoRelatorio}`)
+    $('#logo-relatorio-participante').css('display', 'block')
+    changeMap = $('#map').css('display') == 'block'
+    $('#map').css('display', 'none')
+    html2pdf().set({ margin: 0.5, jsPDF: { unit: 'cm' } }).from(element).toPdf().get('pdf').then(function (pdfObj) {
+        // pdfObj has your jsPDF object in it, use it as you please!
+        // For instance (untested):
+        pdfObj.autoPrint();
+        if (changeMap) {
+            $('#map').css('display', 'block')
+        }
+        $('#logo-relatorio-participante').css('display', 'none')
+        $('#form-participante').find('.col-sm-12').removeClass('col-sm-6')
+        window.open(pdfObj.output('bloburl'), '_blank');
+    });
 }

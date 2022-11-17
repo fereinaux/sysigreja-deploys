@@ -51,7 +51,11 @@
                 dom: domConfig,
                 buttons: getButtonsConfig('Notificações'),
                 columns: [
-                    { data: "Titulo", name: "Titulo", autoWidth: true },
+                   { 
+	                    data: "Titulo", name: "Titulo", autoWidth: true, render: function(data,type, row) {
+		                    return `<a href="${row.Link}">${data}</a>`		
+	                    }
+                    },
                     {
                         data: "DataCadastro", name: "DataCadastro", autoWidth: true, render: function (data) {
                             return moment(data).locale('pt-br').fromNow()

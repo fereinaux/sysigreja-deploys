@@ -739,7 +739,11 @@ $(document).ready(function () {
     HideMenu()
     CarregarTabelaParticipante();
     loadCampos($("[id$='eventoid']").val());
-
+    const searchParams = new URLSearchParams(window.location.search)
+    const queryId = searchParams.get('Id')
+    if (queryId) {
+        Opcoes({ Id: queryId })
+    }
 });
 
 

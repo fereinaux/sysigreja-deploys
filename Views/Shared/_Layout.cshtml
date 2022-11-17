@@ -167,6 +167,7 @@
         var campos = []
         let isAdm = @User.IsInRole(Usuario.Admin).ToString().ToLower();
         let logoRelatorio;
+        let logoLogin;
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
 
@@ -206,6 +207,17 @@
                 $('#home-button-logo img').attr('src', `../Images/logo-iecb.png`)
                 $('#home-button-logo').css('display', 'block')
             }
+
+            $.ajax({
+                url: "/Configuracao/GetLogin/",
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    var login = data.Login
+                    logoLogin = login.Logo
+                }
+            })
         })
 
 
@@ -234,6 +246,8 @@
                         $('#pagamentos-valor').data('valor-equipante', data)
                     }
                 })
+          
+                
 
                 $.ajax({
                     url: "/Configuracao/GetConfiguracaoByEventoId/",
@@ -256,6 +270,7 @@
                         if (config.LogoId) {
                             $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
                             $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
+                      
                             $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
 
                                 $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
@@ -265,8 +280,7 @@
                         }
                         $('#home-button-logo').css('display', 'block')
                         if (config.LogoRelatorioId) {
-                            logoRelatorio = config.LogoRelatorio
-                           
+                            logoRelatorio = config.LogoRelatorio                          
                         }
 
                         if (config.MeioPagamentos.length > 0) {
@@ -358,7 +372,6 @@
             var dataToPost = new FormData($('#frm-upload-avatar')[0]);
             dataToPost.set('Arquivo', dataToPost.get('user-avatar-arquivo'))
 
-                console.log(dataToPost);
             $.ajax(
                 {
                     processData: false,

@@ -256,9 +256,46 @@
 
 
 
+<div class="modal inmodal" id="modal-qrcode" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs">
+                    <div class="row p-md">
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Perfil</h5>
+                            <div class="form-group">
+                                <div class="radio i-checks-green inline">
+                                    <label> <input type="radio" id="qrcode-tipo-0" checked="" value="0" name="qrcode-tipo"> <i></i> Padrão </label>
+                                    <label> <input type="radio" id="qrcode-tipo-2" value="2" name="qrcode-tipo"> <i></i> Logo </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row p-md" style="display:flex;position:relative">
+
+                        <canvas id="canvas"></canvas>
+                        <div style="margin:auto" id="qrcode"></div>
+                        <img style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70px" id="logoqr" src="" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary pull-right m-l-sm" onclick="downloadQR()">Download</button>
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 @section Scripts {
 
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.min.js"></script>
     <script src="~/Scripts/app/Evento/evento.js"></script>
 
 }

@@ -30,12 +30,12 @@ function CarregarTabelaEvento() {
                     return `${moment(data).format('DD/MM/YYYY')} `;
                 }
             },
-         
-             {
-                 data: "Id", name: "Id", orderable: false, autoWidth: true,
+
+            {
+                data: "Id", name: "Id", orderable: false, autoWidth: true,
                 "render": function (data, type, row) {
                     var color = 'green'
-  
+
                     switch (row.Status) {
                         case InscricoesAbertas:
                             color = 'green'
@@ -47,7 +47,7 @@ function CarregarTabelaEvento() {
                             color = 'yellow'
                             break;
                     }
-    
+
                     return `${GetLabel('ToggleEventoStatus', data, color, row.Status)}`
                 }
             },
@@ -71,15 +71,16 @@ function CarregarTabelaEvento() {
                     }
 
                     return `
-${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe,row.StatusEquipe)}`;
+${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe, row.StatusEquipe)}`;
                 }
             },
             {
                 data: "Id", name: "Id", orderable: false, width: "30%",
-                "render": function (data, type, row) { 
+                "render": function (data, type, row) {
 
                     return `
 ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
+                            ${GetButton('exibirQrCode', data, '', 'fas fa-qrcode', 'QR Code')}
                             ${GetButton('Lotes', data, 'green', 'far fa-calendar-check', 'Editar')}
                             ${GetAnexosButton('AnexosEvento', data, row.QtdAnexos)}
                             ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}
@@ -126,7 +127,7 @@ function GetEvento(id) {
                         ['height', ['height']],
                         ['insert', ['link']],
                         ['view', ['codeview']]],
-                   
+
                 }).summernote('code', data.Evento.Conteudo)
                 $("#evento-valor").val(data.Evento.Valor);
                 $('#evento-global').iCheck((data.Evento.Global ? 'check' : 'uncheck'))
@@ -592,3 +593,152 @@ function PostLote() {
         });
     }
 }
+
+function exibirQrCode(id) {
+    eventoId = id
+    loadQRCode(eventoId)
+}
+
+function loadQRCode(id) {
+    $.ajax({
+        url: "/Configuracao/GetConfiguracaoByEventoId/",
+        data: { Id: id },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            $('#qrcode').empty()
+            switch ($("input[type=radio][name=qrcode-tipo]:checked").val()) {
+                case '0':
+                    const qrCode = new QRCodeStyling({
+                        width: 300,
+                        height: 300,
+                        data: `https://${window.location.host}/Inscricoes/Detalhes/${id}?Tipo=Inscrições`,
+                    });
+
+                    qrCode.append(document.getElementById("qrcode"));
+                    break;
+                case '2':
+                    logoRelatorio = data.Configuracao.LogoRelatorio
+                    buildColors(`data:image/png;base64,${logoRelatorio}`).then(colors => {
+                        const qrCode = new QRCodeStyling(
+                            {
+                                "width": 300,
+                                "height": 300,
+                                "data": `https://${window.location.host}/Inscricoes/Detalhes/${id}?Tipo=Inscrições`,
+                                "margin": 0,
+                                "qrOptions": {
+                                    "typeNumber": "0",
+                                    "mode": "Byte",
+                                    "errorCorrectionLevel": "Q"
+                                },
+                                "imageOptions": {
+                                    "hideBackgroundDots": true,
+                                    "imageSize": 0.3,
+                                    "margin": 0
+                                },
+                                "dotsOptions": {
+                                    "type": "square",
+                                    "color": colors[0],
+                                    "gradient": {
+                                        "type": "linear",
+                                        "rotation": 1.5707963267948966, "colorStops": [
+                                            {
+                                                "offset": 0,
+                                                "color": colors[0]
+                                            }, {
+                                                "offset": 1,
+                                                "color": colors[2]
+                                            }]
+                                    }
+                                }, "backgroundOptions": {
+                                    "color": "#ffffff",
+                                    "gradient": null
+                                }, "image": `data:image/png;base64,${logoRelatorio}`,
+                                "dotsOptionsHelper": {
+                                    "colorType": {
+                                        "single": true,
+                                        "gradient": false
+                                    }, "gradient":
+                                    {
+                                        "linear": true,
+                                        "radial": false,
+                                        "color1": "#6a1a4c",
+                                        "color2": "#6a1a4c",
+                                        "rotation": "0"
+                                    }
+                                }, "cornersSquareOptions": {
+                                    "type": "square",
+                                    "color": colors[2],
+                                    "gradient": null
+                                }, "cornersSquareOptionsHelper": {
+                                    "colorType": {
+                                        "single": true,
+                                        "gradient": false
+                                    }, "gradient": {
+                                        "linear": true,
+                                        "radial": false,
+                                        "color1": "#000000",
+                                        "color2": "#000000",
+                                        "rotation": "0"
+                                    }
+                                }, "cornersDotOptions": {
+                                    "type": "",
+                                    "color": colors[0]
+                                }, "cornersDotOptionsHelper": {
+                                    "colorType": {
+                                        "single": true,
+                                        "gradient": false
+                                    }, "gradient": {
+                                        "linear": true,
+                                        "radial": false,
+                                        "color1": "#000000",
+                                        "color2": "#000000",
+                                        "rotation": "0"
+                                    }
+                                }, "backgroundOptionsHelper": {
+                                    "colorType": {
+                                        "single": true,
+                                        "gradient": false
+                                    }, "gradient": {
+                                        "linear": true,
+                                        "radial": false,
+                                        "color1": "#ffffff",
+                                        "color2": "#ffffff",
+                                        "rotation": "0"
+                                    }
+                                }
+                            })
+                        qrCode.append(document.getElementById("qrcode"));
+
+                    })
+                    break;
+            }
+            $("#canvas").css("display", "none")
+            $("#modal-qrcode").modal();
+        }
+    })
+}
+
+function downloadQR() {
+    const a = document.createElement("a");
+    a.href = $('#qrcode img').attr('src');
+    a.download = "QRCode.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+$('#qrcode-tipo-0').on('ifChecked', function (event) {
+    exibirQrCode(eventoId)
+});
+
+$('#qrcode-tipo-1').on('ifChecked', function (event) {
+    exibirQrCode(eventoId)
+
+});
+
+$('#qrcode-tipo-2').on('ifChecked', function (event) {
+    exibirQrCode(eventoId)
+});
+

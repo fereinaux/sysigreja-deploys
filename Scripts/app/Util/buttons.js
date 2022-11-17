@@ -8,7 +8,7 @@
         case 'green': button = 'text-success'; break;
         case 'verde': button = 'text-verde'; break;
         case 'cinza': button = 'text-mutted'; break;
-        default: button = 'text-info'; break;
+        default: button = ''; break;
     }
 
     return `<span onclick='${functionClick}(${functionParameter})' style="font-size:18px" class="${button} pointer p-l-xs"><i class="${(!icon.includes('far') && !icon.includes('fab')) ? 'fa' : ''} ${icon}" aria-hidden="true" title="${title}"></i></span>`;

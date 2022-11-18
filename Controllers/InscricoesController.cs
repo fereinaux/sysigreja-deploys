@@ -25,6 +25,8 @@ using Utils.Extensions;
 //using MercadoPago.Resource.Preference;
 using System.Collections.Generic;
 using Core.Business.Notificacao;
+using Utils.Services;
+using System.Drawing.Imaging;
 
 namespace SysIgreja.Controllers
 {
@@ -40,12 +42,14 @@ namespace SysIgreja.Controllers
         private readonly IEventosBusiness eventosBusiness;
         private readonly IEquipantesBusiness equipantesBusiness;
         private readonly INewsletterBusiness newsletterBusiness;
+        private readonly IImageService imageService;
         private readonly IMapper mapper;
 
-        public InscricoesController(IParticipantesBusiness participantesBusiness, INotificacaoBusiness notificacaoBusiness, ICategoriaBusiness categoriaBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
+        public InscricoesController(IParticipantesBusiness participantesBusiness, IImageService imageService, INotificacaoBusiness notificacaoBusiness, ICategoriaBusiness categoriaBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
             this.notificacaoBusiness = notificacaoBusiness;
+            this.imageService = imageService;
             this.categoriaBusiness = categoriaBusiness;
             this.equipesBusiness = equipesBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
@@ -77,7 +81,7 @@ namespace SysIgreja.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetEventosInscricao(string type, string identificador, string search)
+        public ActionResult GetEventosInscricao(string type, string identificador, string search, bool isMobile)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             var eventos = eventosBusiness.GetEventosGlobais().Where(x => ((x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)) && (string.IsNullOrEmpty(search) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
@@ -94,8 +98,8 @@ namespace SysIgreja.Controllers
                 Titulo = x.TituloEvento,
                 Status = x.Status.GetDescription(),
                 StatusEquipe = x.StatusEquipe.GetDescription(),
-                Background = Convert.ToBase64String(x.Background),
-                Logo = Convert.ToBase64String(x.Logo),
+                Background = isMobile ? imageService.ResizeImage(x.Background, 300) : imageService.ResizeImage(x.Background, 600),
+                Logo = isMobile ? imageService.ResizeImage(x.Logo, 130) : imageService.ResizeImage(x.Logo, 200),
             }).OrderBy(x => x.DataEvento).ToList();
 
             var json = Json(new { Eventos = eventos }, JsonRequestBehavior.AllowGet);
@@ -375,7 +379,7 @@ namespace SysIgreja.Controllers
                     }
                     else if (equipante != null)
                     {
-                        return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" ,Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
+                        return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
                     }
                     return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
 

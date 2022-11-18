@@ -188,12 +188,20 @@
             font-size: 15px;
         }
 
-            .button-destaque:hover {
-                background-color: #aa2428;
-                color: #fff;
-            }
+        .button-destaque:hover {
+            background-color: #aa2428;
+            color: #fff;
+        }
+
+        .bloco-normal > .img-logo {
+            max-height: 70%;
+        }
 
         @@media (max-width: 768px) {
+
+            .bloco-normal > .img-logo {
+               padding-top:10px;
+            }
 
             .col-select {
                 height: 130px !important;
@@ -267,9 +275,7 @@
                 height: 100px !important;
             }
 
-                .bloco-normal > .img-logo {
-                    max-height: 90%;
-                }
+          
 
             .a-normal h3 {
                 font-size: 14px
@@ -315,9 +321,9 @@
                     </div>
 
                     <div class="col-md-4 col-xs-12" style="display: flex;">
-                     
-                            <input type="text" placeholder="Pesquisar eventos, congressos, acampamentos..." class="form-control" style="padding-left:30px;margin-top: auto; margin-bottom: auto;" name="search-evento" id="search-evento" value="" />
-                            <i class="fas fa-search search-icon"></i>
+
+                        <input type="text" placeholder="Pesquisar eventos, congressos, acampamentos..." class="form-control" style="padding-left:30px;margin-top: auto; margin-bottom: auto;" name="search-evento" id="search-evento" value="" />
+                        <i class="fas fa-search search-icon"></i>
                     </div>
 
                     @if (ViewBag.CountIgrejas > 0)
@@ -398,7 +404,8 @@
             data: {
                 type: action,
                 identificador: $('#igreja').val(),
-                search: $('#search-evento').val()
+                search: $('#search-evento').val(),
+                isMobile
             },
             datatype: "json",
             type: "GET",
@@ -433,7 +440,7 @@
                                    ${destaque.Numeracao > 0 ? `${destaque.Numeracao}º` : ""} ${destaque.Titulo}
                                 </h3>
 ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>` : "" }
-                            
+
                             <span class="button-destaque btn btn-outline">VER DETALHES</span>
                         </div>
                     </a>
@@ -473,7 +480,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
 
 ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' }) }</p>` : ""}
 
-                                   
+
 
                             </div>
                         </a>

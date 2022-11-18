@@ -81,7 +81,7 @@ namespace SysIgreja.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult GetEventosInscricao(string type, string identificador, string search, bool isMobile)
+        public ActionResult GetEventosInscricao(string type, string identificador, string search, bool? isMobile)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             var eventos = eventosBusiness.GetEventosGlobais().Where(x => ((x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)) && (string.IsNullOrEmpty(search) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
@@ -98,8 +98,8 @@ namespace SysIgreja.Controllers
                 Titulo = x.TituloEvento,
                 Status = x.Status.GetDescription(),
                 StatusEquipe = x.StatusEquipe.GetDescription(),
-                Background = isMobile ? imageService.ResizeImage(x.Background, 300) : imageService.ResizeImage(x.Background, 600),
-                Logo = isMobile ? imageService.ResizeImage(x.Logo, 200) : imageService.ResizeImage(x.Logo, 250),
+                Background = isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Background, 400) : imageService.ResizeImage(x.Background, 700),
+                Logo = isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Logo, 360) : imageService.ResizeImage(x.Logo, 630),
             }).OrderBy(x => x.DataEvento).ToList();
 
             var json = Json(new { Eventos = eventos }, JsonRequestBehavior.AllowGet);

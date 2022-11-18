@@ -47,7 +47,7 @@ function CarregarTabelaCirculo() {
                 let dir = settings.aaSorting[0][1]
                 let search = settings.oPreviousSearch.sSearch
 
-                GetCirculosComParticipantes(column, dir, search);
+                //GetCirculosComParticipantes(column, dir, search);
             }
 
         },

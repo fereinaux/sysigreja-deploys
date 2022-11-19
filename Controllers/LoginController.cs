@@ -74,36 +74,7 @@ namespace SysIgreja.Controllers
 
             return View("Index", model);
         }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult> ExternalLogin(LoginViewModel model)
-        {
-
-            var user = await UserManager.FindAsync(model.UserName.ToLower(), model.Password.ToLower());
-            if ((user != null) && (user.Status == StatusEnum.Ativo))
-            {
-                await SignInAsync(user, true);
-                var equipante = equipantesBusiness.GetEquipanteById(user.EquipanteId.Value);
-                return Json(new
-                {
-                    User = new
-                    {
-                        Id = user.Id,
-                        EquipanteId = user.EquipanteId,
-                        Nome = equipante.Nome,
-                        Fone = equipante.Fone,
-                        DataNascimento = equipante.DataNascimento.Value.ToString("dd/MM/yyyy"),
-                        Sexo = equipante.Sexo.GetDescription(),
-                        Email = equipante.Email
-                    }
-                }, JsonRequestBehavior.AllowGet);
-
-            }
-            else
-                return new HttpStatusCodeResult(401, "Unauthorized");
-
-        }
+        
 
 
         private const string XsrfKey = "XsrfId";

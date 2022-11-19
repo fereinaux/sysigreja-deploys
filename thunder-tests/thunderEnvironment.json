@@ -5,7 +5,7 @@
     "default": true,
     "sortNum": 10000,
     "created": "2022-11-19T01:27:50.999Z",
-    "modified": "2022-11-19T14:47:42.956Z",
+    "modified": "2022-11-19T15:08:28.714Z",
     "data": [
       {
         "name": "url",
@@ -32,6 +32,29 @@
       {
         "name": "testeId",
         "value": "f2cf7985-5092-4e4a-bd92-908139820fc0"
+      }
+    ]
+  },
+  {
+    "_id": "84bc8adc-7328-490b-beeb-d715a0e888b7",
+    "name": "(Global Env)",
+    "default": false,
+    "global": true,
+    "sortNum": -2,
+    "created": "2022-11-19T15:07:39.442Z",
+    "modified": "2022-11-19T15:08:11.467Z",
+    "data": [
+      {
+        "name": "account",
+        "value": "{{url}}account"
+      },
+      {
+        "name": "evento",
+        "value": "{{url}}evento"
+      },
+      {
+        "name": "arquivo",
+        "value": "{{url}}arquivo"
       }
     ]
   }

@@ -245,7 +245,7 @@ namespace SysIgreja.Controllers
             var user = GetApplicationUser();
             var permissoes = JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue);
            
-            if (permissoes.Any(x => new string[] { "Admin", "Geral", }.Contains(x.Role) || x.Eventos.Any(y => new string[] { "Admin", "Geral", "Administrativo", "Financeiro" }.Contains(y.Role))))
+            if (permissoes.Any(x => new string[] { "Admin", "Geral", }.Contains(x.Role) || (x.Eventos != null && x.Eventos.Any(y => new string[] { "Admin", "Geral", "Administrativo", "Financeiro" }.Contains(y.Role)))))
             {
                 return RedirectToAction("Admin", "Home");
             }

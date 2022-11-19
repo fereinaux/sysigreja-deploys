@@ -52,6 +52,12 @@
             text-decoration: none !important;
             color: inherit !important;
         }
+
+        @@media (max-width: 768px) {
+            .row-top-mobile {
+                padding-top: 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -120,7 +126,7 @@
     <!-- Intro Section Start -->
     <section class="intro">
         <div class="container">
-            <div class="row text-center">
+            <div class="row text-center row-top-mobile">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="heading-count">
                         @if (ViewBag.Evento.Numeracao > 0)

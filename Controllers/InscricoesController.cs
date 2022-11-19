@@ -131,7 +131,7 @@ namespace SysIgreja.Controllers
             switch (Tipo)
             {
                 case "Inscrições Equipe":
-                    ViewBag.Sujeito = "equipante";
+                    ViewBag.Sujeito = "voluntário";
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
                     ViewBag.Equipes = equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
                     if (ConjugeId.HasValue)

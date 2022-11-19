@@ -40,7 +40,7 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            if (Request.UserHostAddress == "189.13.116.151" || Request.UserHostAddress == "::1")
+            if (Request.UserHostAddress == Request.ServerVariables["LOCAL_ADDR"] || Request.UserHostAddress == "::1")
             {
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
                 accountBusiness.Seed();

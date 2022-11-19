@@ -61,12 +61,12 @@
     "method": "POST",
     "sortNum": 20000,
     "created": "2022-11-19T03:18:44.091Z",
-    "modified": "2022-11-19T03:40:04.968Z",
+    "modified": "2022-11-19T14:48:00.655Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Id\": \"0056d9fa-cbbc-4f87-aba8-451e08b75d55\",\n  \"Username\":\"teste\",\n  \"Password\":\"teste2\",\n  \"Nome\": \"Testinho da silva\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"testinho@gmail.com\",\n  \"Sexo\":\"Masculino\",\n  \"DataNascimento\":\"11/01/1995\"\n}",
+      "raw": "{\n   \"Id\": \"{{testeId}}\",\n  \"Username\":\"teste\",\n  \"Password\":\"teste2\",\n  \"Nome\": \"Testinho da silva\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"testinho@gmail.com\",\n  \"Sexo\":\"Masculino\",\n  \"DataNascimento\":\"11/01/1995\"\n}",
       "form": []
     },
     "tests": []
@@ -94,12 +94,12 @@
     "method": "POST",
     "sortNum": 15000,
     "created": "2022-11-19T03:54:55.684Z",
-    "modified": "2022-11-19T04:48:29.685Z",
+    "modified": "2022-11-19T15:00:29.453Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"dsa\"\n}",
+      "raw": "{\n  \"Username\":\"teste\",\n  \"Password\":\"teste2\"\n}",
       "form": []
     },
     "tests": []

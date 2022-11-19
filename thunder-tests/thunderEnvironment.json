@@ -2,28 +2,36 @@
   {
     "_id": "eeaa5cff-1c53-4555-8e1c-f085e24efcee",
     "name": "local",
-    "default": false,
+    "default": true,
     "sortNum": 10000,
     "created": "2022-11-19T01:27:50.999Z",
-    "modified": "2022-11-19T01:28:21.174Z",
+    "modified": "2022-11-19T14:47:42.956Z",
     "data": [
       {
         "name": "url",
         "value": "http://localhost:58893/"
+      },
+      {
+        "name": "testeId",
+        "value": "acd1f528-e44b-4883-9174-415f24e480d1"
       }
     ]
   },
   {
     "_id": "704af09c-e410-4493-8954-50e8fa705ea5",
     "name": "prod",
-    "default": true,
+    "default": false,
     "sortNum": 20000,
     "created": "2022-11-19T01:27:54.097Z",
-    "modified": "2022-11-19T04:41:02.536Z",
+    "modified": "2022-11-19T14:47:29.643Z",
     "data": [
       {
         "name": "url",
         "value": "https://trindade.iecbeventos.com.br/"
+      },
+      {
+        "name": "testeId",
+        "value": "f2cf7985-5092-4e4a-bd92-908139820fc0"
       }
     ]
   }

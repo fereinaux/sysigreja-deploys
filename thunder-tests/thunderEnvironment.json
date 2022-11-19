@@ -1,0 +1,25 @@
+[
+  {
+    "_id": "eeaa5cff-1c53-4555-8e1c-f085e24efcee",
+    "name": "local",
+    "default": true,
+    "sortNum": 10000,
+    "created": "2022-11-19T01:27:50.999Z",
+    "modified": "2022-11-19T01:28:21.174Z",
+    "data": [
+      {
+        "name": "url",
+        "value": "http://localhost:58893/"
+      }
+    ]
+  },
+  {
+    "_id": "704af09c-e410-4493-8954-50e8fa705ea5",
+    "name": "prod",
+    "default": false,
+    "sortNum": 20000,
+    "created": "2022-11-19T01:27:54.097Z",
+    "modified": "2022-11-19T01:27:54.097Z",
+    "data": []
+  }
+]

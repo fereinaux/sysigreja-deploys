@@ -1,0 +1,21 @@
+[
+  {
+    "_id": "e1136026-113c-40be-aade-031c8feee883",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "External Login",
+    "url": "{{url}}/login/ExternalLogin",
+    "method": "POST",
+    "sortNum": 10000,
+    "created": "2022-11-19T01:27:27.552Z",
+    "modified": "2022-11-19T01:28:35.779Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
+      "form": []
+    },
+    "tests": []
+  }
+]

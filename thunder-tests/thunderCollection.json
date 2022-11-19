@@ -1,0 +1,17 @@
+[
+  {
+    "_id": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "colName": "iecbeventos",
+    "created": "2022-11-19T01:27:27.549Z",
+    "sortNum": 10000,
+    "folders": [
+      {
+        "_id": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+        "name": "login",
+        "containerId": "",
+        "created": "2022-11-19T01:27:37.512Z",
+        "sortNum": 10000
+      }
+    ]
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "_id": "874f428b-ac6d-4ec3-a579-19cc00c9bd47",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://localhost:58893/login/ExternalLogin",
+    "url": "http://localhost:58893/login/ExternalLogin",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2022-11-18T15:12:12.666Z",
+    "modified": "2022-11-18T15:12:12.666Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "325c10f6-7d23-4903-b281-75ef9fb13dde",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://localhost:58893/login/ExternalLogin",
+    "url": "http://localhost:58893/login/ExternalLogin",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2022-11-18T15:12:15.605Z",
+    "modified": "2022-11-18T15:12:15.605Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
+      "form": []
+    },
+    "tests": []
+  }
+]

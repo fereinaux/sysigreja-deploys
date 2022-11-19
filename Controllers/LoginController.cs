@@ -41,20 +41,18 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
 
-            ViewBag.Configuracao = configuracaoBusiness.GetLogin();
-            ViewBag.UserHostAddress = Request.UserHostAddress;
-            accountBusiness.Seed();
-            return View();
-            //if (Request.UserHostAddress != "::1")
-            //{
-            //    Response.SuppressFormsAuthenticationRedirect = true;
-            //    return new HttpStatusCodeResult(401, "Não autorizado");
-            //}
-            //else
-            //{
+            if (Request.UserHostAddress != "::1")
+            {
+                Response.SuppressFormsAuthenticationRedirect = true;
+                return new HttpStatusCodeResult(401, "Não autorizado");
+            }
+            else
+            {
 
-              
-            //}
+                ViewBag.Configuracao = configuracaoBusiness.GetLogin();
+                accountBusiness.Seed();
+                return View();
+            }
         }
 
         [HttpPost]

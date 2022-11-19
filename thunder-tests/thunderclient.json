@@ -94,12 +94,12 @@
     "method": "POST",
     "sortNum": 15000,
     "created": "2022-11-19T03:54:55.684Z",
-    "modified": "2022-11-19T03:56:01.098Z",
+    "modified": "2022-11-19T04:41:21.250Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"teste\",\n  \"Password\":\"teste3\"\n}",
+      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"dsds\"\n}",
       "form": []
     },
     "tests": []

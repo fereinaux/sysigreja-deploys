@@ -447,7 +447,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
                 </div>`
                 }
 
-                var eventosAbertos = eventos.filter(evento => ((evento.Status == "Aberto" || evento.Status == null) && !isEquipe) || (isEquipe && evento.StatusEquipe == "Aberto"))
+                var eventosAbertos = eventos.filter(evento => (evento.Status == "Aberto" || evento.StatusEquipe == "Aberto"))
 
                 if (eventosAbertos.length > 0) {
 
@@ -487,7 +487,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
                     </div>`).join().replace(/>,/g, '>') }
 
             `}
-                var eventosEncerrados = eventos.filter(evento => (evento.Status == "Em breve" && !isEquipe) || (evento.StatusEquipe == "Em breve" && isEquipe))
+                var eventosEncerrados = eventos.filter(evento => (evento.Status == "Em breve" || evento.StatusEquipe == "Em breve"))
 
                 if (eventosEncerrados.length > 0) {
 

@@ -21,15 +21,15 @@ namespace SysIgreja
             UnityConfig.RegisterComponents();
         }
 
-        //protected void Application_EndRequest()
-        //{
-        //    var context = new HttpContextWrapper(this.Context);
-        //    if (context.Response.StatusCode == 302
-        //        && context.Response.SuppressFormsAuthenticationRedirect && context.Request.UserHostAddress != "::1")
-        //    {
-        //        context.Response.Clear();
-        //        context.Response.StatusCode = 401;
-        //    }
-        //}
+        protected void Application_EndRequest()
+        {
+            var context = new HttpContextWrapper(this.Context);
+            if (context.Response.StatusCode == 302
+                && context.Response.SuppressFormsAuthenticationRedirect && context.Request.UserHostAddress != "::1")
+            {
+                context.Response.Clear();
+                context.Response.StatusCode = 401;
+            }
+        }
     }
 }

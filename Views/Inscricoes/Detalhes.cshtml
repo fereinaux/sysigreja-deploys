@@ -188,8 +188,12 @@
                 <div class="col-lg-12 col-md-12 col-xs-12 fadeInUp text-center" data-animation="fadeInUp" data-delay="300">
                     @Html.Raw(ViewBag.Evento.Conteudo)
                     <section id="services-end" class="section-padding">
-                        <a href="@ViewBag.UrlDestino" class="btn btn-juventude mt-5">Inscreva-se já</a>
-                        @if ((int)ViewBag.Evento.StatusEquipe == 4){
+                        @if ((int)ViewBag.Evento.Status == 4)
+                        {
+                            <a href="@ViewBag.UrlDestino" class="btn btn-juventude mt-5">Inscreva-se já</a>
+                        }
+                        @if ((int)ViewBag.Evento.StatusEquipe == 4)
+                        {
                             <a href="/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe" class="btn btn-juventude mt-5 ml-2">Sirva conosco</a>
                         }
                     </section>

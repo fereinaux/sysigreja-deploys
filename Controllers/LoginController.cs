@@ -40,17 +40,17 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            if (Request.UserHostAddress == Request.ServerVariables["LOCAL_ADDR"] || Request.UserHostAddress == "::1")
-            {
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
                 accountBusiness.Seed();
                 return View();
-            }
-            else
-            {
-                Response.SuppressFormsAuthenticationRedirect = true;
-                return new HttpStatusCodeResult(401, "Não autorizado");
-            }
+            //if (Request.UserHostAddress == Request.ServerVariables["LOCAL_ADDR"] || Request.UserHostAddress == "::1")
+            //{
+            //}
+            //else
+            //{
+            //    Response.SuppressFormsAuthenticationRedirect = true;
+            //    return new HttpStatusCodeResult(401, "Não autorizado");
+            //}
         }
 
         [HttpPost]

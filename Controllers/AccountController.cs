@@ -77,15 +77,15 @@ namespace SysIgreja.Controllers
         {
             var query = accountBusiness
                 .GetUsuarios()
-                .ToList().Where(x => x.EquipanteId.HasValue && x.Claims.Any(y => y.ClaimType == "Permissões") && JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue).Any(z => z.Eventos != null && z.Eventos.Any(a => a.EventoId == eventoid))).Select(x => new 
-                 {
-                     Id = x.Id,
-                     UserName = UtilServices.CapitalizarNome(x.UserName),
-                     Status = x.Status.GetDescription(),
-                     Nome = x.Equipante.Nome,
-                     EquipanteId = x.EquipanteId,
-                     Perfil = JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue)
-                 });
+                .ToList().Where(x => x.EquipanteId.HasValue && x.Claims.Any(y => y.ClaimType == "Permissões") && JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue).Any(z => z.Eventos != null && z.Eventos.Any(a => a.EventoId == eventoid))).Select(x => new
+                {
+                    Id = x.Id,
+                    UserName = UtilServices.CapitalizarNome(x.UserName),
+                    Status = x.Status.GetDescription(),
+                    Nome = x.Equipante.Nome,
+                    EquipanteId = x.EquipanteId,
+                    Perfil = JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue)
+                });
 
             return Json(new { data = query }, JsonRequestBehavior.AllowGet);
         }
@@ -133,7 +133,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantes(string Id)
         {
-            var result = accountBusiness.GetEquipantesUsuario(Id).Select(x => new { x.Id, x.Nome, UserId = x.Usuario != null ? x.Usuario.Id : "", UserName = x.Usuario != null ? x.Usuario.UserName : ""}).OrderBy(x => x.Nome);
+            var result = accountBusiness.GetEquipantesUsuario(Id).Select(x => new { x.Id, x.Nome, UserId = x.Usuario != null ? x.Usuario.Id : "", UserName = x.Usuario != null ? x.Usuario.UserName : "" }).OrderBy(x => x.Nome);
 
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
@@ -268,7 +268,7 @@ namespace SysIgreja.Controllers
             var user = accountBusiness
                 .GetUsuarios().FirstOrDefault(x => x.EquipanteId == EquipanteId);
             var evento = eventosBusiness.GetEventoById(EventoId);
-            List<Permissoes> permissoes = JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue)  ;
+            List<Permissoes> permissoes = JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue);
             var claims = UserManager.GetClaims(user.Id);
             if (claims.Any(x => x.Type == "Permissões"))
             {
@@ -331,7 +331,7 @@ namespace SysIgreja.Controllers
 
                 UserManager.Update(user);
                 UserManager.ChangePassword(model.Id, model.OldPassword, model.Password);
-                var claims = UserManager.GetClaims(user.Id);           
+                var claims = UserManager.GetClaims(user.Id);
                 UserManager.RemoveClaim(user.Id, claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault());
             }
 
@@ -386,6 +386,94 @@ namespace SysIgreja.Controllers
                     UserName = x.UserName,
                     Perfil = model.Perfil,
                     Eventos = model.Eventos
+                }
+                ).FirstOrDefault()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult ExternalRegister(RegisterExternalViewModel model)
+        {
+            ApplicationUser user = null;
+
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                var equipante = equipantesBusiness.PostEquipante(new Core.Models.Equipantes.PostEquipanteModel
+                {
+                    Nome = model.Nome,
+                    Sexo = model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
+                    Apelido = model.Nome,
+                    Fone = model.Fone,
+                    DataNascimento = DateTime.ParseExact(model.DataNascimento, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                    Email = model.Email
+                });
+
+
+                user = new ApplicationUser()
+                {
+                    UserName = model.UserName.ToLower(),
+                    EquipanteId = equipante.Id,
+                    Status = StatusEnum.Ativo,
+                    Senha = model.Password,
+                    HasChangedPassword = false
+                };
+                UserManager.Create(user, model.Password);
+                user = UserManager.FindByName(user.UserName);
+
+                
+            }
+            else
+            {
+                user = UserManager.FindById(model.Id);
+
+                equipantesBusiness.PostEquipante(new Core.Models.Equipantes.PostEquipanteModel
+                {
+                    Id = user.EquipanteId.Value,
+                    Nome = model.Nome,
+                    Sexo = model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
+                    Apelido = model.Nome,
+                    Fone = model.Fone,
+                    DataNascimento = DateTime.ParseExact(model.DataNascimento, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                    Email = model.Email
+                });
+                var claims = UserManager.GetClaims(user.Id);
+                UserManager.RemoveClaim(user.Id, claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault());
+            }
+
+            List<Permissoes> permissoes = new List<Permissoes>();
+            if (user != null)
+            {
+                permissoes = user.Claims.Any(y => y.ClaimType == "Permissões") ? JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue) : permissoes;
+                var claims = UserManager.GetClaims(user.Id);
+                if (claims.Any(x => x.Type == "Permissões"))
+                {
+                    UserManager.RemoveClaim(user.Id, claims.Where(x => x.Type == "Permissões").FirstOrDefault());
+                }
+            }
+
+
+            permissoes.Add(new Permissoes
+            {
+                ConfiguracaoId = 0,
+                Role = "Membro"
+            });
+
+
+            UserManager.AddClaim(user.Id, new Claim(ClaimTypes.Role, "Membro"));
+            UserManager.AddClaim(user.Id, new Claim("Permissões", JsonConvert.SerializeObject(permissoes)));
+
+            return Json(new
+            {
+                User = accountBusiness.GetUsuarios().Where(x => x.Id == user.Id).ToList().Select(x => new
+                {
+                    Id = x.Id,
+                    EquipanteId = x.EquipanteId,
+                    Nome = x.Equipante.Nome,
+                    Fone = x.Equipante.Fone,
+                    DataNascimento = x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy"),
+                    Sexo = x.Equipante.Sexo.GetDescription(),
+                    Email = x.Equipante.Email
                 }
                 ).FirstOrDefault()
             }, JsonRequestBehavior.AllowGet);
@@ -451,7 +539,6 @@ namespace SysIgreja.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();

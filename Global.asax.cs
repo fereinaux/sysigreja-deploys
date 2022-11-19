@@ -1,5 +1,6 @@
 ﻿using Data.Context;
 using System.Data.Entity;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -18,6 +19,17 @@ namespace SysIgreja
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             UnityConfig.RegisterComponents();
+        }
+
+        protected void Application_EndRequest()
+        {
+            var context = new HttpContextWrapper(this.Context);
+            if (context.Response.StatusCode == 302
+                && context.Response.SuppressFormsAuthenticationRedirect)
+            {
+                context.Response.Clear();
+                context.Response.StatusCode = 401;
+            }
         }
     }
 }

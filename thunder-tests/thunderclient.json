@@ -3,17 +3,147 @@
     "_id": "e1136026-113c-40be-aade-031c8feee883",
     "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
     "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
-    "name": "External Login",
-    "url": "{{url}}/login/ExternalLogin",
+    "name": "Change Pass",
+    "url": "{{url}}Account/ChangePass",
     "method": "POST",
     "sortNum": 10000,
     "created": "2022-11-19T01:27:27.552Z",
-    "modified": "2022-11-19T01:28:35.779Z",
+    "modified": "2022-11-19T03:55:28.955Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
+      "raw": "{\n  \"senha\": \"teste3\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "4fa69c7b-bd7c-4b23-b819-32056b9850dd",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "5de19fb4-c969-4fd3-9d5f-8634372f51ad",
+    "name": "GetTipos",
+    "url": "{{url}}Evento/GetTipos",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2022-11-19T02:21:22.644Z",
+    "modified": "2022-11-19T02:22:48.799Z",
+    "headers": [
+      {
+        "name": "__RequestVerificationToken",
+        "value": "ngGfjUm3H0mXkblAvlg-UzjaXwo22QqAGZ3f5OaMtPaRMZW78r1Ebq2X2dz3mJvefKFrR1nrz1O8rT0ayCGWLuiIM5q-QfiOi9wOlVFKbM41",
+        "isDisabled": true
+      }
+    ],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "a8565033-ac45-4d45-9a85-944b8d6e262c",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "LogOff",
+    "url": "{{url}}Account/LogOff",
+    "method": "POST",
+    "sortNum": 30000,
+    "created": "2022-11-19T02:23:40.178Z",
+    "modified": "2022-11-19T02:23:57.582Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "7bad19c5-fb13-43c9-9a5a-07e84f10a058",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "Register",
+    "url": "{{url}}/Account/ExternalRegister",
+    "method": "POST",
+    "sortNum": 20000,
+    "created": "2022-11-19T03:18:44.091Z",
+    "modified": "2022-11-19T03:40:04.968Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"Id\": \"0056d9fa-cbbc-4f87-aba8-451e08b75d55\",\n  \"Username\":\"teste\",\n  \"Password\":\"teste2\",\n  \"Nome\": \"Testinho da silva\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"testinho@gmail.com\",\n  \"Sexo\":\"Masculino\",\n  \"DataNascimento\":\"11/01/1995\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "052f9b81-19ac-49a8-bfa3-7bb0880eef14",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "GetAvatar",
+    "url": "{{url}}Account/GetAvatar",
+    "method": "GET",
+    "sortNum": 50000,
+    "created": "2022-11-19T03:50:26.699Z",
+    "modified": "2022-11-19T03:50:35.432Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "5921ec48-74b8-4881-854e-4b7be35acb90",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "Login",
+    "url": "{{url}}/login/ExternalLogin",
+    "method": "POST",
+    "sortNum": 15000,
+    "created": "2022-11-19T03:54:55.684Z",
+    "modified": "2022-11-19T03:56:01.098Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"Username\":\"teste\",\n  \"Password\":\"teste3\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "215d990b-7fff-463f-9ade-d337ebbe8923",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "b643a056-ae0d-41a2-908c-cdbb02f96e33",
+    "name": "Post",
+    "url": "{{url}}Arquivo/PostArquivo",
+    "method": "POST",
+    "sortNum": 10000,
+    "created": "2022-11-19T03:56:42.917Z",
+    "modified": "2022-11-19T04:00:44.290Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "formdata",
+      "raw": "",
+      "form": [],
+      "files": [
+        {
+          "name": "Arquivo",
+          "value": "..\\..\\..\\..\\Pictures\\3220315.png"
+        }
+      ]
+    },
+    "tests": []
+  },
+  {
+    "_id": "69935f1d-5239-4593-ac57-fb809a400eba",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "setAvatar",
+    "url": "{{url}}Account/setAvatar",
+    "method": "POST",
+    "sortNum": 17500,
+    "created": "2022-11-19T03:59:06.440Z",
+    "modified": "2022-11-19T04:00:49.266Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"arquivoId\": 2061\n}",
       "form": []
     },
     "tests": []

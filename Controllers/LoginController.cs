@@ -41,7 +41,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
 
-            if (Request.UserHostAddress != "::1")
+            if (Request.UserHostAddress != "189.13.116.151")
             {
                 Response.SuppressFormsAuthenticationRedirect = true;
                 return new HttpStatusCodeResult(401, "Não autorizado");

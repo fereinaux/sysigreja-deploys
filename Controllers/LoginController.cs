@@ -22,7 +22,7 @@ namespace SysIgreja.Controllers
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IEquipantesBusiness equipantesBusiness;
 
-        public LoginController(IAccountBusiness accountBusiness, IEquipantesBusiness equipantesBusiness,IConfiguracaoBusiness configuracaoBusiness)
+        public LoginController(IAccountBusiness accountBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness)
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
             this.accountBusiness = accountBusiness;
@@ -40,18 +40,16 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-
-            if (Request.UserHostAddress != "189.13.116.151" || Request.UserHostAddress != "::1")
+            if (Request.UserHostAddress == "189.13.116.151" || Request.UserHostAddress == "::1")
             {
-                Response.SuppressFormsAuthenticationRedirect = true;
-                return new HttpStatusCodeResult(401, "Não autorizado");
-            }
-            else
-            {
-
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
                 accountBusiness.Seed();
                 return View();
+            }
+            else
+            {
+                Response.SuppressFormsAuthenticationRedirect = true;
+                return new HttpStatusCodeResult(401, "Não autorizado");
             }
         }
 

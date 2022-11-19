@@ -169,7 +169,7 @@ namespace SysIgreja.Controllers
             ViewBag.Title = Tipo;
             ViewBag.Tipo = Tipo;
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
-            if (evento.Status == StatusEnum.Encerrado && evento.StatusEquipe == StatusEnum.Encerrado)
+            if ((evento.Status == StatusEnum.Encerrado || evento.Status == StatusEnum.EmBreve) && (evento.StatusEquipe == StatusEnum.Encerrado || evento.StatusEquipe == StatusEnum.EmBreve))
                 return RedirectToAction("InscricoesEncerradas", new
                 {
                     Id = Id

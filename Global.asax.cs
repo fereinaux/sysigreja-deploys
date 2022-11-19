@@ -25,7 +25,7 @@ namespace SysIgreja
         {
             var context = new HttpContextWrapper(this.Context);
             if (context.Response.StatusCode == 302
-                && context.Response.SuppressFormsAuthenticationRedirect && context.Request.UserHostAddress != "::1")
+                && context.Response.SuppressFormsAuthenticationRedirect)
             {
                 context.Response.Clear();
                 context.Response.StatusCode = 401;

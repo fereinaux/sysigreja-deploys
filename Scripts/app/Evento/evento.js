@@ -727,12 +727,10 @@ function loadQRCode(id) {
 }
 
 function downloadQR() {
-    const a = document.createElement("a");
-    a.href = $('#qrcode img').attr('src');
-    a.download = "QRCode.png";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    var link = document.createElement('a');
+    link.download = 'QRCode.png';
+    link.href = document.getElementById('canvas').toDataURL()
+    link.click();
 }
 
 $('#qrcode-tipo-0').on('ifChecked', function (event) {

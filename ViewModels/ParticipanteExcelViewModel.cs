@@ -59,6 +59,9 @@ namespace SysIgreja.ViewModels
 
         [DisplayName("Situação")]
         public string Situacao { get; set; }
+
+        [DisplayName("Congregação")]
+        public string Congregacao { get; set; }
         [DisplayName("Círculo")]
         public string Circulo { get; set; }
         public string Motorista { get; set; }

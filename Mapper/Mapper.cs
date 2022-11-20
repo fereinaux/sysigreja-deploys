@@ -197,6 +197,7 @@ namespace SysIgreja.Controllers
                 .ForMember(dest => dest.RestricaoAlimentar, opt => opt.MapFrom(x => x.Equipante.RestricaoAlimentar))
                 .ForMember(dest => dest.Medicacao, opt => opt.MapFrom(x => x.Equipante.Medicacao))
                 .ForMember(dest => dest.Convenio, opt => opt.MapFrom(x => x.Equipante.Convenio))
+                .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
                 .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.IsCasado.HasValue && x.Equipante.IsCasado.Value ? x.Equipante.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                 .ForMember(dest => dest.Hospitais, opt => opt.MapFrom(x => x.Equipante.Hospitais));                    
 

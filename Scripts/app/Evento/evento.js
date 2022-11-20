@@ -729,7 +729,7 @@ function loadQRCode(id) {
 function downloadQR() {
     var link = document.createElement('a');
     link.download = 'QRCode.png';
-    link.href = document.getElementById('canvas').toDataURL()
+    link.href = $('canvas')[0].toDataURL()
     link.click();
 }
 

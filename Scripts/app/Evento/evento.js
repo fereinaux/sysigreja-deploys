@@ -114,6 +114,8 @@ function GetEvento(id) {
                 $("#evento-descricao").val(data.Evento.Descricao);
                 $("#evento-urlexterna").val(data.Evento.UrlExterna);
                 $("#evento-numeracao").val(data.Evento.Numeracao);
+                $("#evento-nomelocal").val(data.Evento.NomeLocal);
+                $("#evento-linklocal").val(data.Evento.LinkLocal);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
                 $(`#evento-conteudo`).summernote({
                     height: 300,
@@ -143,6 +145,8 @@ function GetEvento(id) {
         $("#evento-urlexterna").val("");
         $('#evento-global').iCheck('uncheck')
         $("#evento-descricao").val("");
+        $("#evento-nomelocal").val("");
+        $("#evento-linklocal").val("");
         $("#evento-capacidade").val("");
         $("#evento-data").val("");
         $("#evento-valor").val("");
@@ -301,6 +305,8 @@ function PostEvento() {
                     Global: $('#evento-global:checked').length > 0,
                     ConfiguracaoId: $("#evento-tipo").val(),
                     Numeracao: $("#evento-numeracao").val(),
+                    NomeLocal: $("#evento-nomelocal").val(),
+                    LinkLocal: $("#evento-linklocal").val(),
                     Descricao: $("#evento-descricao").val(),
                     UrlExterna: $("#evento-urlexterna").val(),
                     Conteudo: $('#evento-conteudo').summernote('code'),

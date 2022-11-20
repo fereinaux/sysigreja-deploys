@@ -167,45 +167,63 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-xs-12 fadeInUp"
-                     data-animation="fadeInUp">
-                    <div class="services-item">
-                        <div class="icon">
-                            <i class="fas fa-money-bill-wave"></i>
+            <div class="row justify-content-center">
+                @if ((ViewBag.Evento.Valor > 0))
+                {
+                    <div class="col-lg-4 col-md-4 col-xs-12 fadeInUp"
+                         data-animation="fadeInUp">
+                        <div class="services-item">
+                            <div class="icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <h3><a href="#">Investimento</a></h3>
+                            <p>
+                                Preço: @string.Format("{0:C}", ViewBag.Evento.Valor)
+                            </p>
                         </div>
-                        <h3><a href="#">Investimento</a></h3>
-                        <p>
-                            Preço: @string.Format("{0:C}", ViewBag.Evento.Valor)
-                        </p>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-xs-12 fadeInUp"
-                     data-animation="fadeInUp"
-                     data-delay="300">
-                    <div class="services-item">
-                        <div class="icon">
-                            <i class="fas fa-calendar-alt"></i>
+                }
+                    <div class="col-lg-4 col-md-4 col-xs-12 fadeInUp"
+                         data-animation="fadeInUp"
+                         data-delay="300">
+                        <div class="services-item">
+                            <div class="icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h3><a href="#">Data</a></h3>
+                            <p>@ViewBag.Evento.DataEvento.ToString("dd") de @ViewBag.Evento.DataEvento.ToString("MMMM") de @ViewBag.Evento.DataEvento.ToString("yyyy")</p>
                         </div>
-                        <h3><a href="#">Data</a></h3>
-                        <p>@ViewBag.Evento.DataEvento.ToString("dd") de @ViewBag.Evento.DataEvento.ToString("MMMM") de @ViewBag.Evento.DataEvento.ToString("yyyy")</p>
                     </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-xs-12 fadeInUp text-center" data-animation="fadeInUp" data-delay="300">
-                    @Html.Raw(ViewBag.Evento.Conteudo)
-                    <section id="services-end" class="section-padding">
-                        @if ((int)ViewBag.Evento.Status == 4)
-                        {
-                            <a href="@ViewBag.UrlDestino" class="btn btn-juventude mt-5">Inscreva-se já</a>
-                        }
-                        @if ((int)ViewBag.Evento.StatusEquipe == 4)
-                        {
-                            <a href="/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe" class="btn btn-juventude mt-5 ml-2">Sirva conosco</a>
-                        }
-                    </section>
-                </div>
+                    @if (!string.IsNullOrEmpty(ViewBag.Evento.NomeLocal))
+                    {
 
-            </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12 fadeInUp"
+                             data-animation="fadeInUp"
+                             data-delay="300">
+                            <div class="services-item">
+                                <div class="icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <h3><a href="#">Local</a></h3>
+                                <a style="text-decoration: underline;" class="link-local" href="@ViewBag.Evento.LinkLocal" target="_blank">@ViewBag.Evento.NomeLocal</a>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-lg-12 col-md-12 col-xs-12 fadeInUp text-center" data-animation="fadeInUp" data-delay="300">
+                        @Html.Raw(ViewBag.Evento.Conteudo)
+                        <section id="services-end" class="section-padding">
+                            @if ((int)ViewBag.Evento.Status == 4)
+                            {
+                                <a href="@ViewBag.UrlDestino" class="btn btn-juventude mt-5">Inscreva-se já</a>
+                            }
+                            @if ((int)ViewBag.Evento.StatusEquipe == 4)
+                            {
+                                <a href="/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe" class="btn btn-juventude mt-5 ml-2">Sirva conosco</a>
+                            }
+                        </section>
+                    </div>
+
+                </div>
         </div>
     </section>
 
@@ -348,6 +366,7 @@
         $('.navbar-expand-lg .navbar-nav .nav-link i').css('color', '@ViewBag.Configuracao.CorBotao')
         $('a.back-to-top i').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.footer-area .footer-text p a').css('color', '@ViewBag.Configuracao.CorBotao')
+        $('.link-local').css('color', '@ViewBag.Configuracao.CorBotao')
         $('#services .icon i').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('#services .icon i').css('border-color', '@ViewBag.Configuracao.CorBotao')
         $('.btn-juventude').css('background-color', '@ViewBag.Configuracao.CorBotao')

@@ -286,8 +286,11 @@ const quantization = (rgbValues, depth) => {
     ];
 };
 
-const buildColors = (src) => {
+const buildColors = (src, loadedColors) => {
     return new Promise(function (resolve, reject) {
+        if (loadedColors && loadedColors.length > 0) {
+            resolve(loadedColors)
+        }
         var image = new Image();
         var colors = []
         // Whenever file & image is loaded procced to extract the information from the image

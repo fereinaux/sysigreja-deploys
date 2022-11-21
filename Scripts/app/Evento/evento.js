@@ -601,11 +601,16 @@ function PostLote() {
 }
 
 function exibirQrCode(id) {
+    if (id != eventoId) {
+        loadedColors = []
+    }
     eventoId = id
     loadQRCode(eventoId)
 }
 
-function loadQRCode(id) {
+let loadedColors = []
+
+function loadQRCode(id, color1, color2) {
     $.ajax({
         url: "/Configuracao/GetConfiguracaoByEventoId/",
         data: { Id: id },
@@ -626,7 +631,33 @@ function loadQRCode(id) {
                     break;
                 case '2':
                     logoRelatorio = data.Configuracao.LogoRelatorio
-                    buildColors(`data:image/png;base64,${logoRelatorio}`).then(colors => {
+                    buildColors(`data:image/png;base64,${logoRelatorio}`, loadedColors).then(colors => {
+                        $('.colors').css("display", "flex")
+                        $('.color-handler').css("display", "flex")
+                        if (colors.length != loadedColors.length) {
+                            loadedColors = colors
+                            loadedColors.forEach(color => $('.colors').append(`<div onclick="selecionaCor(this)" style="cursor:pointer;margin:4px;height:40px;width:40px;background-color:${color}"></div>`))
+                            $('.colors').append(`<div  style="cursor:pointer;margin:4px;height:40px;width:40px;border: 3px solid #b9abab;background:#222"><label class="label-input-color"><input class="input-color" type="color"></label></div>`)
+                            $(document).on('change', 'input[type=color]', function () {
+                                this.parentNode.parentNode.style.backgroundColor = this.value;
+                                if (this.parentNode.parentNode.parentNode.id == 'colors1') {
+                                    $('#colors1 div').removeClass('selected')
+                                } else {
+
+                                    $('#colors2 div').removeClass('selected')
+                                }
+                                $(this.parentNode.parentNode).addClass('selected')
+                                loadCor()
+                            });
+                            $('.colors div').removeClass('selected')
+                  
+                        }
+                        if (!color1 && !color2) {
+                            $($('#colors1 div')[0]).addClass('selected')
+                            $($('#colors2 div')[2]).addClass('selected')
+                            color1 = loadedColors[0]
+                            color2 = loadedColors[2]
+                        }
                         const qrCode = new QRCodeStyling(
                             {
                                 "width": 300,
@@ -645,16 +676,16 @@ function loadQRCode(id) {
                                 },
                                 "dotsOptions": {
                                     "type": "square",
-                                    "color": colors[0],
+                                    "color": color1,
                                     "gradient": {
                                         "type": "linear",
                                         "rotation": 1.5707963267948966, "colorStops": [
                                             {
                                                 "offset": 0,
-                                                "color": colors[0]
+                                                "color": color1
                                             }, {
                                                 "offset": 1,
-                                                "color": colors[2]
+                                                "color": color2
                                             }]
                                     }
                                 }, "backgroundOptions": {
@@ -675,7 +706,7 @@ function loadQRCode(id) {
                                     }
                                 }, "cornersSquareOptions": {
                                     "type": "square",
-                                    "color": colors[2],
+                                    "color": color2,
                                     "gradient": null
                                 }, "cornersSquareOptionsHelper": {
                                     "colorType": {
@@ -690,7 +721,7 @@ function loadQRCode(id) {
                                     }
                                 }, "cornersDotOptions": {
                                     "type": "",
-                                    "color": colors[0]
+                                    "color": color1
                                 }, "cornersDotOptionsHelper": {
                                     "colorType": {
                                         "single": true,
@@ -729,20 +760,33 @@ function loadQRCode(id) {
 function downloadQR() {
     var link = document.createElement('a');
     link.download = 'QRCode.png';
-    link.href = $('canvas')[0].toDataURL()
+    link.href = $('canvas')[1].toDataURL()
     link.click();
 }
 
 $('#qrcode-tipo-0').on('ifChecked', function (event) {
+    $('.colors').css("display", "none")
+    $('.colors div').removeClass('selected')
+    $('.color-handler').css("display", "none")
     exibirQrCode(eventoId)
-});
-
-$('#qrcode-tipo-1').on('ifChecked', function (event) {
-    exibirQrCode(eventoId)
-
 });
 
 $('#qrcode-tipo-2').on('ifChecked', function (event) {
     exibirQrCode(eventoId)
+
 });
 
+function loadCor() {
+    loadQRCode(eventoId, $('#colors1 input').val() !== "#000000" ? $('#colors1 input').val() : $('#colors1 .selected').css("background-color"), $('#colors2 input').val() !== "#000000" ? $('#colors2 input').val() : $('#colors2 .selected').css("background-color"))
+}
+
+function selecionaCor(event) {
+    if ($(event).parent().attr('id') == 'colors1') {
+        $('#colors1 div').removeClass('selected')
+    } else {
+
+        $('#colors2 div').removeClass('selected')
+    }
+    $(event).addClass('selected')
+    loadCor()
+}

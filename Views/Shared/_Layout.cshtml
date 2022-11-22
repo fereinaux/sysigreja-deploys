@@ -37,6 +37,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/av01d/fontpicker-jquery-plugin@1.5/dist/jquery.fontpicker.min.css" integrity="sha256-urFh3EMgi9s3j3w+TsAP1TfUQiE0yUZmmLX7JRyvjqE=" crossorigin="anonymous">
     <!-- Add local styles, mostly for plugins css file -->
     @if (IsSectionDefined("Styles"))
@@ -79,11 +80,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.6/css/colReorder.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" type="text/css" />
-          @Styles.Render("~/plugins/sweetalert")
-          @Styles.Render("~/plugins/dataPickerStyles")
-          @Styles.Render("~/Content/plugins/iCheck/iCheckStyles")
-          @Styles.Render("~/Content/plugins/chosen/chosenStyles")
-          @Styles.Render("~/bundle/jasny")
+    @Styles.Render("~/plugins/sweetalert")
+    @Styles.Render("~/plugins/dataPickerStyles")
+    @Styles.Render("~/Content/plugins/iCheck/iCheckStyles")
+    @Styles.Render("~/Content/plugins/chosen/chosenStyles")
+    @Styles.Render("~/bundle/jasny")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css" integrity="sha512-zxBiDORGDEAYDdKLuYU9X/JaJo/DPzE42UubfBw9yg8Qvb2YRRIQ8v4KsGHOx2H1/+sdSXyXxLXv5r7tHc9ygg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -156,6 +157,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
 
 
 
@@ -246,8 +249,8 @@
                         $('#pagamentos-valor').data('valor-equipante', data)
                     }
                 })
-          
-                
+
+
 
                 $.ajax({
                     url: "/Configuracao/GetConfiguracaoByEventoId/",
@@ -270,7 +273,7 @@
                         if (config.LogoId) {
                             $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
                             $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
-                      
+
                             $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
 
                                 $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
@@ -280,7 +283,7 @@
                         }
                         $('#home-button-logo').css('display', 'block')
                         if (config.LogoRelatorioId) {
-                            logoRelatorio = config.LogoRelatorio                          
+                            logoRelatorio = config.LogoRelatorio
                         }
 
                         if (config.MeioPagamentos.length > 0) {

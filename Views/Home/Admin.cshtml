@@ -5,6 +5,29 @@
 }
 
 <div class="wrapper wrapper-content">
+    @*@if (User.IsInRole("Geral"))
+    {
+        <div class="row bloco-adm-geral">
+            <div class="col-lg-3 col-xs-12 p-w-xs">
+                <div class="row">
+                    <div id="calendario-bloco">
+                        <div class="col-xs-12 p-w-xs">
+                            <div class="widget-head-color-box navy-bg p-lg text-center">
+                                <div class="m-b-md">
+                                    <h2 class="font-bold no-margins">
+                                        Calendário de Eventos
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="widget-text-box">
+                                <div id='calendar'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }*@
     <div class="row">
         <div class="col-lg-12 col-sm-12" style="padding:5px">
             <select class="form-control" id="eventoid" onchange="GetResultadosAdmin()">
@@ -253,6 +276,112 @@
     <style>
         .bloco {
             max-height: 160px;
+        }
+
+        .fc-event-title {
+            color: #fff !important;
+        }
+
+        .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+            position: absolute !important;
+            top: 0
+        }
+
+        .fc-button {
+            padding: 0 6px !important;
+        }
+
+    
+
+        .fc .fc-list-event:hover td {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        .fc-button-primary {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            color: gray !important;
+        }
+
+            .fc-button-primary:hover {
+                background-color: transparent !important;
+                border-color: transparent !important;
+            }
+
+        .fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
+            box-shadow: none;
+        }
+
+        .fc-today-button {
+            display: none !important;
+        }
+
+        .fc .fc-list-day-cushion, .fc .fc-list-table td {
+            color: gray;
+        }
+
+        .fc .fc-list-table td {            
+            padding: 0;
+        }
+
+        .img-calendar {
+            width: 50px;
+            position: absolute;
+            z-index: 99;
+            left: 52.5px;
+            transform: translate(-25px,0);
+        }
+
+        .overlay-calendar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: #000;
+            height: 60px;
+            width: 105px;
+            opacity: 0.4;
+        }
+
+        .bg-calendar {
+            height: 60px;
+            width: 105px;
+        }
+
+        .div-calendar {
+            position:relative;
+            display: flex;
+            align-items: center;
+            height: 60px
+        }
+
+        .span-calendar {
+            
+        }
+
+        .span-container-calendar {
+            padding-left: 20px;
+            width: calc(100% - 105px);
+        }
+
+        .fc-list-event-graphic, .fc-list-event-time {
+            display: none;
+        }
+
+
+        .fc-list-day-text, .fc-list-day-side-text {
+            color: #444546 !important
+        }
+
+            .fc-list-day-text:hover, .fc-list-day-side-text:hover {
+                color: #1f2020 !important
+            }
+
+
+        .fc .fc-daygrid-day-number {
+            color: white;
+            z-index: 99;
         }
     </style>
 }

@@ -30,14 +30,16 @@ namespace SysIgreja.Controllers
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IParticipantesBusiness participantesBusiness;
         private readonly ILancamentoBusiness lancamentoBusiness;
+        private readonly IImageService imageService;
         private readonly IReunioesBusiness reunioesBusiness;
         private readonly IEventosBusiness eventosBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
         private readonly IAccountBusiness accountBusiness;
 
-        public HomeController(IEquipesBusiness equipesBusiness, IParticipantesBusiness participantesBusiness, IArquivosBusiness arquivosBusiness, ILancamentoBusiness lancamentoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public HomeController(IEquipesBusiness equipesBusiness, IImageService imageService, IParticipantesBusiness participantesBusiness, IArquivosBusiness arquivosBusiness, ILancamentoBusiness lancamentoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.lancamentoBusiness = lancamentoBusiness;
+            this.imageService = imageService;
             this.participantesBusiness = participantesBusiness;
             this.equipesBusiness = equipesBusiness;
             this.eventosBusiness = eventosBusiness;
@@ -53,6 +55,30 @@ namespace SysIgreja.Controllers
 
             GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo" });
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetResultadosGeral()
+        {
+            var eventos = eventosBusiness.GetEventosComImagens().ToList().Select(x => new
+            {
+                Id = x.Id,
+                Evento = $"{(x.Numeracao > 0 ? $"{x.Numeracao}º " : string.Empty)}{x.Configuracao.Titulo}",
+                Logo = x.Configuracao?.Logo != null ? imageService.ResizeImage(x.Configuracao?.Logo?.Conteudo, 50) : "",
+                Background = x.Configuracao?.Background != null ? imageService.ResizeImage(x.Configuracao?.Background?.Conteudo, 150) : "",
+                Cor = x.Configuracao.CorBotao,
+                CorHover = x.Configuracao.CorHoverBotao,
+                Data = x.DataEvento.ToString("yyyy-MM-dd")
+            });
+
+            var result = new
+            {
+                Eventos = eventos
+            };
+            return Json(new
+            {
+                result
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -116,7 +142,7 @@ namespace SysIgreja.Controllers
                     QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Count()
                 }).ToList(),
                 Reunioes = reunioesBusiness.GetReunioes(EventoId).ToList().Select(x => new ReuniaoViewModel
-                { 
+                {
                     Id = x.Id,
                     DataReuniao = x.DataReuniao,
                     Titulo = x.Titulo,
@@ -157,7 +183,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult CoordenadorGet(int eventoId)
         {
-        
+
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
             var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipanteEvento.EquipeId.Value);
@@ -193,7 +219,7 @@ namespace SysIgreja.Controllers
 
             var jsonRes = Json(new { result }, JsonRequestBehavior.AllowGet);
             jsonRes.MaxJsonLength = Int32.MaxValue;
-            return jsonRes;            
+            return jsonRes;
         }
         public ActionResult Coordenador()
         {
@@ -244,7 +270,7 @@ namespace SysIgreja.Controllers
         {
             var user = GetApplicationUser();
             var permissoes = JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue);
-           
+
             if (permissoes.Any(x => new string[] { "Admin", "Geral", }.Contains(x.Role) || (x.Eventos != null && x.Eventos.Any(y => new string[] { "Admin", "Geral", "Administrativo", "Financeiro" }.Contains(y.Role)))))
             {
                 return RedirectToAction("Admin", "Home");

@@ -26,7 +26,6 @@
           type="text/css" />
 
     <link rel="icon" type="image/png" sizes="16x16" href="~/Images/logo-iecb.png" />
-
     @Styles.Render("~/Content/css")
     <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
@@ -36,6 +35,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
 
@@ -200,16 +200,18 @@
         @@media (max-width: 768px) {
 
             .bloco-normal > .img-logo {
-               padding-top:10px;
+                padding-top: 10px;
+            }
+
+            #calendar {
+                width: 300px !important;
+                left: calc(100vw - 350px) !important;
+                top: 60px !important;
             }
 
             .col-select {
-                height: 130px !important;
-            }
-
-            .select-igreja {
-                margin-top: 15px !important;
-            }
+                height: fit-content !important;
+            }        
 
                 .select-igreja h6 {
                     margin-left: 0 !important;
@@ -275,7 +277,7 @@
                 height: 100px !important;
             }
 
-          
+
 
             .a-normal h3 {
                 font-size: 14px
@@ -305,6 +307,146 @@
                 font-size: 15px;
             }
         }
+
+        .fc-event-title {
+            color: #fff !important;
+        }
+
+        .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+            position: absolute !important;
+            top: 0
+        }
+
+        .fc-button {
+            padding: 0 6px !important;
+        }
+
+
+
+        .fc .fc-list-event:hover td {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        .fc-button-primary {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            color: gray !important;
+        }
+
+            .fc-button-primary:hover {
+                background-color: transparent !important;
+                border-color: transparent !important;
+            }
+
+        .fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
+            box-shadow: none;
+        }
+
+        .fc-today-button {
+            display: none !important;
+        }
+
+        .fc .fc-list-day-cushion, .fc .fc-list-table td {
+            color: gray;
+        }
+
+        .fc .fc-list-table td {
+            padding: 0;
+        }
+
+        .img-calendar {
+            width: 50px;
+            position: absolute;
+            z-index: 99;
+            left: 52.5px;
+            transform: translate(-25px,0);
+        }
+
+        .overlay-calendar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: #000;
+            height: 60px;
+            width: 105px;
+            opacity: 0.4;
+        }
+
+        .bg-calendar {
+            height: 60px;
+            width: 105px;
+        }
+
+        .div-calendar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 60px
+        }
+
+        .span-calendar {
+        }
+
+        .span-container-calendar {
+            padding-left: 20px;
+            width: calc(100% - 105px);
+        }
+
+        .fc-list-event-graphic, .fc-list-event-time {
+            display: none;
+        }
+
+
+        .fc-list-day-text, .fc-list-day-side-text {
+            color: #444546 !important
+        }
+
+            .fc-list-day-text:hover, .fc-list-day-side-text:hover {
+                color: #1f2020 !important
+            }
+
+
+        .fc .fc-daygrid-day-number {
+            color: white;
+            z-index: 99;
+        }
+
+        #calendar {
+            top: 40px;
+            position: absolute;
+            z-index: 9999999;
+            width: 400px;
+            height: 400px;
+            background: #fff;
+            border-radius: 16px;
+            padding-top: 1.5em;
+            box-shadow: rgb(25 31 40 / 59%) 0px 6px 24px 0px;
+        }
+
+        .fc-list-empty {
+            background-color: transparent !important;
+        }
+
+        .fc-toolbar-chunk {
+            padding-left: 10px
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.25em;
+        }
+
+        .fc .fc-view-harness {
+            background-color: #fff;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        .fc .fc-view-harness-active > .fc-view {
+            border: none;
+            height: 400px;
+        }
     </style>
 </head>
 <body>
@@ -316,19 +458,53 @@
                     <div class="col-md-4 col-xs-12" style="display: flex">
                         <img style="height: 40px; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
 
-                        <h3 style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
+                        <h3 class="desktop" style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
 
+                        @if (ViewBag.CountIgrejas > 0)
+                        {
+                            <div class="col-md-4 col-xs-12 select-igreja mobile" style="display: none;padding-left:0;align-items:center">
+                            <i style="margin-left: auto; font-size: 25px;margin-right:5px" class="fas fa-church"></i>
+
+
+                                <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja" onchange=" carregarEventos()">
+                                    <option value="">Todas</option>
+                                    @foreach (var igreja in ViewBag.Igrejas)
+                                    {
+                                        if (igreja == ViewBag.Configuracao.Identificador)
+                                        {
+                                            <option selected value="@igreja">@igreja</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@igreja">@igreja</option>
+
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+                        }
                     </div>
 
-                    <div class="col-md-4 col-xs-12" style="display: flex;">
+                    <div class="col-md-4 col-xs-12" style="display: flex;align-items:center">
 
                         <input type="text" placeholder="Pesquisar eventos, congressos, acampamentos..." class="form-control" style="padding-left:30px;margin-top: auto; margin-bottom: auto;" name="search-evento" id="search-evento" value="" />
                         <i class="fas fa-search search-icon"></i>
+                        <div class="container-calendar" style="cursor: pointer; margin-left: 10px; margin-top: auto;">
+
+                            <i style="font-size: 30px;border:15px" class="far fa-calendar-alt"></i>
+
+                            <div style="display:none" id="calendar">
+
+                            </div>
+                        </div>
                     </div>
 
                     @if (ViewBag.CountIgrejas > 0)
                     {
-                        <div class="col-md-4 col-xs-12 select-igreja" style="display: flex">
+                        <div class="col-md-4 col-xs-12 select-igreja desktop" style="display: none;padding-left:0">
+                        
+
                             <h6 style=" margin-left: auto; margin-top: auto; margin-bottom: auto; margin-right: 10px; font-weight: 700; font-size: 20px ">IGREJA</h6>
                             <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja" onchange=" carregarEventos()">
                                 <option value="">Todas</option>
@@ -379,12 +555,23 @@
 <script src="https://malsup.github.io/jquery.blockUI.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="~/Scripts/app/Util/forms.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
 <script>
     let isEquipe = window.location.pathname.toLowerCase().includes('equipe')
     let action = isEquipe ? "Inscrições Equipe" : "Inscrições"
     let corBotao = '@ViewBag.Configuracao.CorBotao'
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $('title').text(`IECB Eventos | ${isEquipe ? "Inscrições Equipe" : "Inscrições"}`)
+
+    if (isMobile) {
+        $('.mobile').css('display', 'flex')
+        $('.desktop').css('display', 'none')
+    } else {
+        $('.desktop').css('display', 'flex')
+        $('.mobile').css('display', 'none')
+    }
+    
 
     function debounce(func, timeout = 300) {
         let timer;
@@ -412,16 +599,17 @@
             contentType: `application/json; charset=utf-8`,
             success: function (data) {
                 let eventos = data.Eventos
+                let eventsCalendar = data.Eventos
                 html = ""
                 let destaque = undefined
                 if (!isEquipe && eventos.length > 0) {
                     destaque = eventos.find(evento => evento.Status == 'Aberto' || !evento.Status)
                     eventos = eventos.filter(evento => evento.UrlDestino != destaque.UrlDestino)
-                    html += `       <div class="col-xs-12">.
+                    html += `       <div class="col-xs-12">
                     <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
                 </div>
                 <div class="col col-xs-12">
-                    <a href='${destaque.UrlDestino}' class="destaque-a" style="margin-bottom: 25px;">
+                    <a target="_blank" href='${destaque.UrlDestino}' class="destaque-a" style="margin-bottom: 25px;">
 
                         <div class="bloco bloco-destaque" style=" background: url('data:image/png;base64,${destaque.Background}');
             background-size: cover;
@@ -457,7 +645,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
                     <h3 style="font-weight:900;font-size:22px">Inscrições Abertas</h3>
                 </div>
                      ${eventosAbertos.map(evento => `<div class="col-md-3 col col-xs-12 col-evento-select">
-                        <a href='${evento.UrlDestino}' class="a-normal">
+                        <a target="_blank" href='${evento.UrlDestino}' class="a-normal">
 
                             <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');
         background-size: cover;
@@ -521,15 +709,99 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
 `
                 }
 
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'listMonth',
+                    locale: 'pt-br',
+                    height: 400,
+                    buttons: {
+                        today: false
+                    },
+                    events: eventsCalendar.map(e => {
+                        return {
+                            title: `${e.Numeracao > 0 ? `${e.Numeracao}º ` : ""}${e.Titulo}`,
+                            start: e.DataCalendar,
+                            color: 'transparent',                           
+                            extendedProps: {
+                                url: e.UrlDestino,
+                                logo: e.Logo,
+                                bg: e.Background,
+                                id: e.Id
+                            }
+                        }
+                    }),
+                    eventContent: function (arg) {
+                        let div = document.createElement('div')
+                        let overlay = document.createElement('div')
+                        let spanContainer = document.createElement('div')
+                        let span = document.createElement('span')
+                        let img = document.createElement('img')
+                        let bg = document.createElement('img')
+                        img.classList.add('img-calendar')
+                        bg.classList.add('bg-calendar')
+                        div.classList.add('div-calendar')
+                        overlay.classList.add('overlay-calendar')
+                        div.dataset.id = arg.event.extendedProps.id
+                        div.dataset.url = arg.event.extendedProps.url
+                        span.classList.add('span-calendar')
+                        spanContainer.classList.add('span-container-calendar')
+                        span.innerHTML = arg.event.title
+                        img.src = `data:image/png;base64,${arg.event.extendedProps.logo}`
+                        bg.src = `data:image/png;base64,${arg.event.extendedProps.bg}`
+                        if (arg.event.extendedProps.logo) {
+
+                            div.append(img)
+                        }
+                        if (arg.event.extendedProps.bg) {
+
+                            div.append(bg)
+                            div.append(overlay)
+                        }
+                        spanContainer.append(span)
+                        div.append(spanContainer)
+                        return { domNodes: [div] }
+                    }
+                });
+                calendar.render();
+
                 $('#row-eventos').html(html)
                 $('#preloader').fadeOut();
             }
         });
     }
 
+    $('body').on('DOMNodeInserted', '.div-calendar', function () {
+        var element = $(this)
+        element.parent().parent().css('cursor', 'pointer')
+        element.parent().parent().css('background-color', 'transparent')
+        element.parent().parent().css('border-color', 'transparent')
+
+
+        element.parent().parent().click(function () {
+            window.open($(this).find('.div-calendar').data('url'),"_blank")
+
+        })
+
+    });
+
     $(document).ready(function () {
         carregarEventos()
 
     })
+
+
+    $('.container-calendar').on('click', function (event) {
+        if ($(event.target).hasClass('fa-calendar-alt')) {
+            $('#calendar').css('display', $('#calendar').css('display') == 'block' ? 'none' : 'block')
+            $('.fa-calendar-alt').css('color', $('#calendar').css('display') == 'block' ? '#2a6be3' : '#323232')
+        }
+    })
+
+    window.onclick = (event) => {
+        if ($(event.target).parents('.container-calendar').length == 0) {
+            $('#calendar').css('display', 'none')
+            $('.fa-calendar-alt').css('color','#323232')
+        } 
+    }
 
 </script>

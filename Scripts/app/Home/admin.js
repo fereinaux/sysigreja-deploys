@@ -1,6 +1,7 @@
 ﻿+$(document).ready(() => {
     HideMenu();
     GetResultadosAdmin();
+    //GetResultadosGeral();
 });
 
 function getEquipantesExcel() {
@@ -17,6 +18,105 @@ function getEquipantesExcel() {
         }
     });
 }
+
+function GetResultadosGeral() {
+    if ($('.bloco-adm-geral').length > 0) {
+
+
+        $.ajax({
+            url: '/Home/GetResultadosGeral',
+            datatype: "json",
+            data: { EventoId: $("#eventoid").val() },
+            type: "GET",
+            success: (data) => {
+                result = data.result;
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'listMonth',
+                    locale: 'pt-br',
+                    height: 400,
+                    buttons: {
+                        today: false
+                    },
+                    events: result.Eventos.map(e => {
+                        return {
+                            title: e.Evento,
+                            start: e.Data,
+                            color: 'transparent',
+                            extendedProps: {
+                                logo: e.Logo,
+                                bg: e.Background,
+                                cor: e.Cor,
+                                hover: e.CorHover,
+                                id: e.Id
+                            }
+                        }
+                    }),
+                    eventContent: function (arg) {
+                        let div = document.createElement('div')
+                        let overlay = document.createElement('div')
+                        let spanContainer = document.createElement('div')
+                        let span = document.createElement('span')
+                        let img = document.createElement('img')
+                        let bg = document.createElement('img')
+                        img.classList.add('img-calendar')
+                        bg.classList.add('bg-calendar')
+                        div.classList.add('div-calendar')
+                        overlay.classList.add('overlay-calendar')
+                        div.dataset.id = arg.event.extendedProps.id
+                        span.classList.add('span-calendar')
+                        spanContainer.classList.add('span-container-calendar')
+                        span.innerHTML = arg.event.title
+                        img.src = `data:image/png;base64,${arg.event.extendedProps.logo}`
+                        bg.src = `data:image/png;base64,${arg.event.extendedProps.bg}`
+                        if (arg.event.extendedProps.logo) {
+
+                            div.append(img)
+                        }
+                        if (arg.event.extendedProps.bg) {
+
+                            div.append(bg)
+                            div.append(overlay)
+                        }
+                        spanContainer.append(span)
+                        div.append(spanContainer)
+                        return { domNodes: [div] }
+                    }
+                    //eventContent: function (arg) {
+                    //    console.log(arg);
+                    //    var element = $(arg.el);
+                    //    console.log(element);
+
+                    //    let img = document.createElement('img')
+
+                    //    img.src = `data:image/png;base64,${arg.event.extendedProps.logo}`
+                    //    element.append(img)
+                    //}
+
+                });
+                calendar.render();
+            }
+        })
+
+
+    }
+}
+
+$('body').on('DOMNodeInserted', '.div-calendar', function () {
+    var element = $(this)
+    element.parent().parent().css('cursor', 'pointer')
+    element.parent().parent().css('background-color', 'transparent')
+    element.parent().parent().css('border-color', 'transparent')
+
+    element.parent().parent().click(function () {
+        $('#eventoid').val($(this).find('.div-calendar').data('id')).trigger('change');
+
+    })
+
+
+});
+
+
 
 function GetResultadosAdmin() {
     $.ajax({
@@ -247,38 +347,6 @@ function GetResultadosAdmin() {
                 return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
             };
 
-
-            const labels = result.InscritosHora.map(x => x.Hora)
-            const data2 = {
-                labels: labels,
-                datasets: [{
-                    label: 'Quantidade',
-                    backgroundColor:'#f8ac59',
-                    data: result.InscritosHora.map(x => x.Qtd)
-                }]
-            }
-
-            const config = {
-                type: 'bar',
-                data: data2,
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                },
-            };
-
-            let chartStatus = Chart.getChart("chart-hora"); // <canvas> id
-            if (chartStatus != undefined) {
-                chartStatus.destroy();
-            }
-            const myChart = new Chart(
-                document.getElementById('chart-hora'),
-                config
-            );
-      
         }
     });
 }

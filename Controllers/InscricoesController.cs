@@ -66,6 +66,7 @@ namespace SysIgreja.Controllers
         {
             public int Id { get; set; }
             public string Data { get; set; }
+            public string DataCalendar { get; set; }
             public DateTime DataEvento { get; set; }
             public int Valor { get; set; }
             public int Numeracao { get; set; }
@@ -93,6 +94,7 @@ namespace SysIgreja.Controllers
                      x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : x.Valor,
                 Numeracao = x.Numeracao,
                 DataEvento = x.DataEvento,
+                DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
                 Descricao = x.Descricao,
                 Identificador = x.Identificador ?? "Interdenominacional",
                 Titulo = x.TituloEvento,

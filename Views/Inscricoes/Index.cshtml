@@ -203,6 +203,10 @@
                 padding-top: 10px;
             }
 
+            #search-evento {
+                font-size: 13px !important;
+            }
+
             #calendar {
                 width: 300px !important;
                 left: calc(100vw - 350px) !important;
@@ -467,7 +471,7 @@
 
 
                                 <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja" onchange=" carregarEventos()">
-                                    <option value="">Todas</option>
+                                    <option value="">Selecione a igreja</option>
                                     @foreach (var igreja in ViewBag.Igrejas)
                                     {
                                         if (igreja == ViewBag.Configuracao.Identificador)
@@ -507,7 +511,7 @@
 
                             <h6 style=" margin-left: auto; margin-top: auto; margin-bottom: auto; margin-right: 10px; font-weight: 700; font-size: 20px ">IGREJA</h6>
                             <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja" onchange=" carregarEventos()">
-                                <option value="">Todas</option>
+                                <option value="">Selecione</option>
                                 @foreach (var igreja in ViewBag.Igrejas)
                                 {
                                     if (igreja == ViewBag.Configuracao.Identificador)

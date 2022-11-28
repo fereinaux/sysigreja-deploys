@@ -171,7 +171,6 @@ ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt',
                             ${GetIconWhatsApp(row.Fone)}
                             ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}                               
                             ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}                            
-                            ${$("#participante-eventoid option:selected").data('status') == 'Encerrado' ? GetButton('MakeEquipante', data, 'green', 'fa-broom', 'Equipante') : ""}
                             ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
                         : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
@@ -937,7 +936,7 @@ function Opcoes(row) {
                 getMensagensByTipo(["Participante"])
             }
 
-            $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
+            $('#participante-etiquetas').val(data.Participante.EtiquetasList.map(etiqueta => etiqueta.Id))
             $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
 
             arrayData = table.data().toArray()

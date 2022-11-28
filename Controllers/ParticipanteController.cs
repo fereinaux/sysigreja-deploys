@@ -135,7 +135,7 @@ namespace SysIgreja.Controllers
                 Sexo = x.Sexo,
                 Status = x.Status.GetDescription(),
                 Observacao = x.Observacao,
-                Etiquetas = etiquetasBusiness.GetEtiquetasByParticipante(x.Id)?.Select(y => new PostEtiquetaModel { Id = y.Id, Cor = y.Cor, Nome = y.Nome }),
+                EtiquetasList = etiquetasBusiness.GetEtiquetasByParticipante(x.Id)?.Select(y => new PostEtiquetaModel { Id = y.Id, Cor = y.Cor, Nome = y.Nome }),
                 Foto = x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
             };
         }
@@ -551,15 +551,5 @@ namespace SysIgreja.Controllers
             return Json(new { Padrinhos = participantesBusiness.GetParticipantesByEvento(eventoId).Select(x => new { Id = x.PadrinhoId, Nome = x.PadrinhoId.HasValue ? x.Padrinho.EquipanteEvento.Equipante.Nome : "Sem Padrinho" }).Distinct().ToList() }, JsonRequestBehavior.AllowGet);
 
         }
-
-        [HttpPost]
-        public ActionResult MakeEquipante(int Id)
-        {
-            participantesBusiness.MakeEquipante(Id);
-
-            return new HttpStatusCodeResult(200);
-        }
-
-
     }
 }

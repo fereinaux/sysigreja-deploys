@@ -429,7 +429,7 @@ namespace SysIgreja.Controllers
 
             if (string.IsNullOrEmpty(model.Id))
             {
-                var equipante = equipantesBusiness.PostEquipante(new Core.Models.Equipantes.PostEquipanteModel
+                var equipante = equipantesBusiness.PostEquipante(new Core.Models.Participantes.PostInscricaoModel
                 {
                     Nome = model.Nome,
                     Sexo = model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
@@ -457,7 +457,7 @@ namespace SysIgreja.Controllers
             {
                 user = UserManager.FindById(model.Id);
 
-                equipantesBusiness.PostEquipante(new Core.Models.Equipantes.PostEquipanteModel
+                equipantesBusiness.PostEquipante(new Core.Models.Participantes.PostInscricaoModel
                 {
                     Id = user.EquipanteId.Value,
                     Nome = model.Nome,

@@ -1705,5 +1705,35 @@ function CarregarTabelaHistorico(id) {
         }
     };
 
+    const tableHistoricoParticipacaoConfig = {
+        language: languageConfig,
+        lengthMenu: [200, 500, 1000],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+        destroy: true,
+        dom: domConfig,
+        buttons: getButtonsConfig('Histórico'),
+        columns: [
+            { data: "Evento", name: "Evento", autoWidth: true },  
+        ],
+
+        order: [
+            [0, "asc"]
+        ],
+        ajax: {
+            data: { id: id },
+            url: '/Equipante/GetHistoricoParticipacao',
+            datatype: "json",
+            type: "POST"
+        }
+    };
+
     $("#table-historico").DataTable(tableHistoricoConfig);
+    $("#table-historico-participacao").DataTable(tableHistoricoParticipacaoConfig);
 }

@@ -13,6 +13,7 @@ using Core.Business.MeioPagamento;
 using Core.Business.Quartos;
 using Core.Business.Reunioes;
 using Core.Models.Equipantes;
+using Core.Models.Participantes;
 using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
@@ -91,7 +92,7 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCracha(FilterModel model)
+        public ActionResult GetCracha(Core.Models.Equipantes.FilterModel model)
         {
             var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
                         .IncludeOptimized(x => x.Equipante)
@@ -242,7 +243,7 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetEquipantesDataTable(FilterModel model)
+        public ActionResult GetEquipantesDataTable(Core.Models.Equipantes.FilterModel model)
         {
 
             var extract = Request.QueryString["extract"];
@@ -491,7 +492,7 @@ namespace SysIgreja.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult PostEquipante(PostEquipanteModel model)
+        public ActionResult PostEquipante(PostInscricaoModel model)
         {
             var equipante = equipantesBusiness.PostEquipante(model);
 
@@ -552,13 +553,34 @@ namespace SysIgreja.Controllers
         public ActionResult GetHistorico(int id)
         {
             var equipante = equipantesBusiness.GetEquipanteById(id);
-            var result = equipante.Equipes.ToList().Select(x => new
+            var result = equipante.Equipes.ToList().Select(x => new HistoricoModel
             {
                 Evento = $"{x.Evento.Numeracao}º {x.Evento.Configuracao.Titulo}",
                 Equipe = x.Equipe.Nome,
                 Coordenador = x.Tipo.GetDescription()
-            });
+            }).ToList();
+
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetHistoricoParticipacao(int id)
+        {
+            var equipante = equipantesBusiness.GetEquipanteById(id);
+            var result = equipante.Participantes.Where(x => x.Status == StatusEnum.Confirmado || x.Status == StatusEnum.Checkin).ToList().Select(x => new HistoricoModel
+            {
+                Evento = $"{x.Evento.Numeracao}º {x.Evento.Configuracao.Titulo}",
+            }).ToList();
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        public class HistoricoModel
+        {
+            public string Evento { get; set; }
+            public string Equipe { get; set; }
+            public string Data { get; set; }
+            public string Coordenador { get; set; }
         }
     }
 }

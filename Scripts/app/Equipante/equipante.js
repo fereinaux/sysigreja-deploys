@@ -101,6 +101,7 @@ function CarregarTabelaEquipante(callbackFunction) {
             { data: "Idade", name: "Idade", },
             { data: "Equipe", className: 'noVis', name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999 },
             { data: "Faltas", className: 'noVis', name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999 },
+            { data: "Congregacao", name: "Congregacao", autoWidth: true, visible: false },
             {
                 data: "HasOferta", name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {

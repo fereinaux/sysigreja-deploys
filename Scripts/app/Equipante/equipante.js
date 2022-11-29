@@ -720,8 +720,8 @@ function GetEquipante(id) {
                 $(`#equipante-alergia`).val(data.Equipante.Alergia);
                 $(`#equipante-convenio`).val(data.Equipante.Convenio);
                 $(`#equipante-hospitais`).val(data.Equipante.Hospitais);
-                console.log(data.Equipante.HasRestricaoAlimentar);
-                console.log(data.Equipante.Sexo);
+
+
                 $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-iscasado][value=${data.Equipante.IsCasado}]`).iCheck('check');
                 $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');

@@ -875,7 +875,7 @@ function enviar() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome);
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome equipante}', equipante.Nome);
             windowReference.location = GetLinkWhatsApp(equipante.Fone, text)
         }
     });
@@ -971,18 +971,22 @@ function PostEquipante() {
             data: JSON.stringify(
                 {
                     Id: $("#equipante-id").val(),
+                    EventoId: $("#equipante-eventoid").val(),
                     Nome: $(`#equipante-nome`).val(),
                     Apelido: $(`#equipante-apelido`).val(),
+                    Instagram: $('#equipante-instagram').val(),
                     DataNascimento: moment($("#equipante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#equipante-email`).val(),
                     Fone: $(`#equipante-fone`).val(),
-                    Instagram: $('#equipante-instagram').val(),
-                    HasRestricaoAlimentar: $("input[type=radio][name=equipante-hasrestricaoalimentar]:checked").val(),
-                    RestricaoAlimentar: $(`#equipante-restricaoalimentar`).val(),
-                    HasMedicacao: $("input[type=radio][name=equipante-hasmedicacao]:checked").val(),
-                    Medicacao: $(`#equipante-medicacao`).val(),
-                    HasAlergia: $("input[type=radio][name=equipante-hasalergia]:checked").val(),
-                    Alergia: $(`#equipante-alergia`).val(),
+                    NomePai: $(`#equipante-nomepai`).val(),
+                    FonePai: $(`#equipante-fonepai`).val(),
+                    NomeMae: $(`#equipante-nomemae`).val(),
+                    FoneMae: $(`#equipante-fonemae`).val(),
+                    NomeConvite: $(`#equipante-nomeconvite`).val(),
+                    FoneConvite: $(`#equipante-foneconvite`).val(),
+                    NomeContato: $(`#equipante-nomecontato`).val(),
+                    FoneContato: $(`#equipante-fonecontato`).val(),
+                    Camisa: $(`#equipante-camisa`).val(),
                     CEP: $(`#equipante-cep`).val(),
                     Logradouro: $(`#equipante-logradouro`).val(),
                     Bairro: $(`#equipante-bairro`).val(),
@@ -990,10 +994,24 @@ function PostEquipante() {
                     Estado: $(`#equipante-estado`).val(),
                     Numero: $(`#equipante-numero`).val(),
                     Complemento: $(`#equipante-complemento`).val(),
+                    Conjuge: $(`#equipante-conjuge`).val(),
                     Referencia: $(`#equipante-referencia`).val(),
                     Latitude: $(`#equipante-latitude`).val(),
                     Longitude: $(`#equipante-longitude`).val(),
-                    Camisa: $(`#equipante-camisa`).val(),
+                    HasRestricaoAlimentar: $("input[type=radio][name=equipante-hasrestricaoalimentar]:checked").val(),
+                    RestricaoAlimentar: $(`#equipante-restricaoalimentar`).val(),
+                    HasMedicacao: $("input[type=radio][name=equipante-hasmedicacao]:checked").val(),
+                    Medicacao: $(`#equipante-medicacao`).val(),
+                    HasAlergia: $("input[type=radio][name=equipante-hasalergia]:checked").val(),
+                    Alergia: $(`#equipante-alergia`).val(),
+                    HasConvenio: $("input[type=radio][name=equipante-hasconvenio]:checked").val(),
+                    Convenio: $(`#equipante-convenio`).val(),
+                    Hospitais: $(`#equipante-hospitais`).val(),
+                    IsCasado: $("input[type=radio][name=equipante-iscasado]:checked").val(),
+                    DataCasamento: moment($("#equipante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                    HasParente: $("input[type=radio][name=equipante-hasparente]:checked").val(),
+                    Parente: $(`#equipante-parente`).val(),
+                    Congregacao: $("input[type=radio][name=equipante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=equipante-congregacao]:checked").val() : $(`#equipante-congregacaodescricao`).val(),
                     Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
                 }),
             success: function () {
@@ -1242,7 +1260,7 @@ async function applyBulk() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        ParticipanteId: id,
+                        equipanteId: id,
                         DestinoId: $("#bulk-quarto-m").val(),
                         tipo: 0
                     }),

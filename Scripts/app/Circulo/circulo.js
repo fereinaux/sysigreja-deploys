@@ -307,7 +307,7 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
 }
 
 function addMapa(lat, long, nome, cor, id, type) {
-    return L.marker([lat, long], { icon: getIcon(cor.toLowerCase().replaceAll(' ', '-')) }).addTo(markerLayer);
+    return L.marker([lat, long], { icon: getIcon(cor.trim()) }).addTo(markerLayer);
 
 
 }

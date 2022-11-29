@@ -379,6 +379,25 @@ namespace SysIgreja.Controllers
                         }
 
                     }
+                    else if (model.columns[model.order[0].column].name == "Idade")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => new
+                            {
+                                Order = x.Equipante.DataNascimento
+                            });
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => new
+                            {
+                                Order = x.Equipante.DataNascimento
+                            });
+                        }
+
+                    }
                     else
                     {
                         if (model.order[0].dir == "asc")

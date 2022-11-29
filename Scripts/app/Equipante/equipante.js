@@ -875,7 +875,7 @@ function enviar() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante} ', equipante.Nome);
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome);
             windowReference.location = GetLinkWhatsApp(equipante.Fone, text)
         }
     });

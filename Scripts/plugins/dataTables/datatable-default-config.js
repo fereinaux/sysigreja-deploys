@@ -86,6 +86,6 @@ function stateSaveCallback(settings, data) {
     localStorage.setItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val(), JSON.stringify(data))
 }
 
-function stateLoadCallback(settings) {
-    return JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val()))
+function stateLoadCallback(settings, callback) {
+    callback(localStorage.getItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val()))
 }

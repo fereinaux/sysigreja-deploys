@@ -9,7 +9,14 @@ let circuloId
 function CarregarTabelaCirculo() {
 
     var columnsTb = [
-        { data: "Titulo", name: "Titulo", autoWidth: true },
+        {
+            data: "Titulo", name: "Titulo", autoWidth: true, render: function (data, type, row) {
+                return `<div>
+<span style="background-color:${row.Cor}" class="dot"></span>
+                        <span>${row.Titulo}</br></span>
+                       
+                    </div>`
+            } },
         { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
         {
             data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
@@ -47,7 +54,7 @@ function CarregarTabelaCirculo() {
                 let dir = settings.aaSorting[0][1]
                 let search = settings.oPreviousSearch.sSearch
 
-                //GetCirculosComParticipantes(column, dir, search);
+                GetCirculosComParticipantes(column, dir, search);
             }
 
         },
@@ -138,7 +145,7 @@ function FillDoc(doc, result) {
     AddCount(doc, result.data, height);
 }
 
-function GetCirculo(id, cor) {
+function GetCirculo(id) {
     if (id > 0) {
         $.ajax({
             url: "/Circulo/GetCirculo/",
@@ -148,9 +155,7 @@ function GetCirculo(id, cor) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $("#circulo-id").val(data.Circulo.Id);
-
-                $('#circulo-cores').append($(`<option value="${data.Circulo.Cor}">${cor}</option>`));
-                $("#circulo-cores").val(data.Circulo.Cor).trigger("chosen:updated");
+                $("#circulo-cores").val(data.Circulo.Cor.trim())
                 $("#circulo-titulo").val(data.Circulo.Titulo)
 
 
@@ -160,12 +165,13 @@ function GetCirculo(id, cor) {
     }
     else {
         $("#circulo-id").val(0);
+        $("#circulo-titulo").val("");
+        $("#circulo-cores").val("#bada55");    
     }
 }
 
 function EditCirculo(row) {
-    GetCores();
-    GetCirculo(row.Id, row.Cor)
+    GetCirculo(row.Id)
     $("#modal-circulo").modal();
 }
 
@@ -208,7 +214,6 @@ function PostCirculo() {
             success: function () {
                 SuccessMesageOperation();
                 CarregarTabelaCirculo();
-                GetCirculosComParticipantes();
                 $("#modal-circulo").modal("hide");
             }
         });
@@ -267,7 +272,7 @@ function GetCirculosComParticipantes(column, dir, search) {
                 htmlCaecalhoCirculo = circulo.Dirigentes.map(dirigente => `<h4 style="padding-top:5px">${dirigente.Nome}</h4>`).join().replace(/,/g, '')
 
 
-                $("#circulos").append($(`<div data-id="${circulo.Id}" style="margin-bottom:25px;background-color:${GetCor(circulo.Cor)};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
+                $("#circulos").append($(`<div data-id="${circulo.Id}" style="margin-bottom:25px;background-color:${circulo.Cor};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
                        ${htmlCaecalhoCirculo}
 ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                                     <table class="table">
@@ -352,32 +357,6 @@ function ChangeCirculo(participanteId, destinoId) {
         }
     });
 }
-
-function GetCores(id) {
-    $("#circulo-cores").empty();
-
-    $.ajax({
-        url: "/Circulo/GetCores/",
-        data: { EventoId: $("#circulo-eventoid").val() },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            $('#circulo-cores').append($(`<option value="null">Selecione</option>`));
-            data.Cores.forEach(function (cor, index, array) {
-                $('#circulo-cores').append($(`<option value="${cor.Id}">${cor.Description}</option>`));
-            });
-            if (id == 0) {
-                $("#circulo-cores").val($("#circulo-cores option:first").val()).trigger("chosen:updated");
-            } else {
-                $("#circulo-cores").trigger("chosen:updated");
-            }
-
-        }
-    });
-}
-
-
 function PrintAll() {
     var doc = CriarPDFA4()
     $.ajax({
@@ -461,7 +440,6 @@ function DeleteDirigente(id) {
 $("#modal-dirigentes").on('hidden.bs.modal', function () {
     CarregarTabelaCirculo();
     GetParticipantesSemCirculo();
-    GetCirculosComParticipantes();
 });
 
 function ListarDirigentes(row) {
@@ -539,5 +517,4 @@ function GetDirigentes() {
 function loadCirculo() {
     CarregarTabelaCirculo();
     GetParticipantesSemCirculo();
-    GetCirculosComParticipantes();
 }

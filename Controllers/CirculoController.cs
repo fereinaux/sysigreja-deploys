@@ -51,8 +51,8 @@ namespace SysIgreja.Controllers
                     Id = x.Id,
                     Dirigentes = x.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }).ToList(),
                     QtdParticipantes = circulosBusiness.GetParticipantesByCirculos(x.Id).Count(),
-                    Titulo = x.Titulo ?? x.Cor?.GetDescription(),
-                    Cor = x.Cor?.GetDescription()
+                    Titulo = x.Titulo ?? x.Cor,
+                    Cor = x.Cor
                 });
 
 
@@ -170,7 +170,7 @@ namespace SysIgreja.Controllers
                     Cidade = x.Participante.Cidade,
                     Referencia = x.Participante.Referencia,
                     CirculoId = x.CirculoId,
-                    Cor = x.Circulo.Cor?.GetDescription(),
+                    Cor = x.Circulo.Cor,
                     Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)) }),
                 }).ToList()
             }, JsonRequestBehavior.AllowGet);
@@ -183,17 +183,6 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
-
-        [HttpGet]
-        public ActionResult GetCores(int EventoId)
-        {
-            var circuloList = circulosBusiness.GetCirculos().Where(x => x.EventoId == EventoId).ToList().Select(x => x.Cor?.GetDescription());
-
-            var coresList = circulosBusiness.GetCores(EventoId).ToList().Where(x => !circuloList.Contains(x.Description));
-
-            return Json(new { Cores = coresList }, JsonRequestBehavior.AllowGet);
-        }
-
 
         [HttpPost]
         public ActionResult AddDirigente(int EquipanteId, int CirculoId)

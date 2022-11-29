@@ -1075,8 +1075,6 @@ function PostPagamento() {
 
 $(document).ready(function () {
     loadEquipes()
-    checkEvento()
-    CarregarTabelaEquipante();
     loadCampos($("[id$='eventoid']").val());
 });
 

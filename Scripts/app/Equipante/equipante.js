@@ -711,10 +711,10 @@ function GetEquipante(id) {
                     montarMapa()
 
                 }
-                $(`#equipante-nome-convite`).val(data.Equipante.NomeConvite);
-                $(`#equipante-fone-convite`).val(data.Equipante.FoneConvite);
-                $(`#equipante-nome-contato`).val(data.Equipante.NomeContato);
-                $(`#equipante-fone-contato`).val(data.Equipante.FoneContato);
+                $(`#equipante-nomeconvite`).val(data.Equipante.NomeConvite);
+                $(`#equipante-foneconvite`).val(data.Equipante.FoneConvite);
+                $(`#equipante-nomecontato`).val(data.Equipante.NomeContato);
+                $(`#equipante-fonecontato`).val(data.Equipante.FoneContato);
                 $(`#equipante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
                 $(`#equipante-medicacao`).val(data.Equipante.Medicacao);
                 $(`#equipante-alergia`).val(data.Equipante.Alergia);

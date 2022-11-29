@@ -723,11 +723,11 @@ function GetEquipante(id) {
 
 
                 $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');
-                $(`input[type = radio][name = equipante - iscasado][value = ${data.Equipante.IsCasado}]`).iCheck('check');
-                $(`input[type = radio][name = equipante - hasalergia][value = ${data.Equipante.HasAlergia}]`).iCheck('check');
-                $(`input[type = radio][name = equipante - hasmedicacao][value = ${data.Equipante.HasMedicacao}]`).iCheck('check');
-                $(`input[type = radio][name = equipante - hasconvenio][value = ${data.Equipante.HasConvenio}]`).iCheck('check');
-                $(`input[type = radio][name = equipante - hasrestricaoalimentar][value = ${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-iscasado][value=${data.Equipante.IsCasado}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasconvenio][value=${data.Equipante.HasConvenio}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
             }
         });
     }

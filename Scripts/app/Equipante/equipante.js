@@ -73,7 +73,7 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
             { data: "Sexo", name: "Sexo", visible: false, className: 'noVis', },
             {
-                data: "Sexo", title:"Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
+                data: "Sexo", title: "Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {
                     if (data == "Masculino") {
                         icon = "fa-male";
@@ -722,38 +722,38 @@ function GetEquipante(id) {
                 $(`#equipante-hospitais`).val(data.Equipante.Hospitais);
 
 
-                $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-iscasado][value=${data.Equipante.IsCasado}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-hasconvenio][value=${data.Equipante.HasConvenio}]`).iCheck('check');
-                $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
+                $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');
+                $(`input[type = radio][name = equipante - iscasado][value = ${data.Equipante.IsCasado}]`).iCheck('check');
+                $(`input[type = radio][name = equipante - hasalergia][value = ${data.Equipante.HasAlergia}]`).iCheck('check');
+                $(`input[type = radio][name = equipante - hasmedicacao][value = ${data.Equipante.HasMedicacao}]`).iCheck('check');
+                $(`input[type = radio][name = equipante - hasconvenio][value = ${data.Equipante.HasConvenio}]`).iCheck('check');
+                $(`input[type = radio][name = equipante - hasrestricaoalimentar][value = ${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
             }
         });
     }
     else {
         $("#equipante-id").val(0);
-        $(`#equipante-nome`).val("");
-        $(`#equipante-apelido`).val("");
+        $(`#equipante - nome`).val("");
+        $(`#equipante - apelido`).val("");
         $("#equipante-data-nascimento").val("");
-        $(`#equipante-email`).val("");
-        $(`#equipante-fone`).val("");
-        $(`#equipante-restricaoalimentar`).val("");
-        $(`#equipante-medicacao`).val("");
-        $(`#equipante-alergia`).val("");
-        $(`#equipante-cep`).val("");
-        $(`#equipante-logradouro`).val("");
-        $(`#equipante-bairro`).val('');
-        $(`#equipante-cidade`).val('');
-        $(`#equipante-estado`).val('');
-        $(`#equipante-numero`).val('');
-        $(`#equipante-complemento`).val('');
-        $(`#equipante-referencia`).val('');
-        $(`input[type=radio][name=equipante-sexo][value=1]`).iCheck('check');
-        $(`input[type=radio][name=equipante-hasalergia][value=false]`).iCheck('check');
-        $(`input[type=radio][name=equipante-hasmedicacao][value=false]`).iCheck('check');
-        $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=false]`).iCheck('check');
-        $(`input[type=radio][name=equipante-iscasado][value=false]`).iCheck('check');
+        $(`#equipante - email`).val("");
+        $(`#equipante - fone`).val("");
+        $(`#equipante - restricaoalimentar`).val("");
+        $(`#equipante - medicacao`).val("");
+        $(`#equipante - alergia`).val("");
+        $(`#equipante - cep`).val("");
+        $(`#equipante - logradouro`).val("");
+        $(`#equipante - bairro`).val('');
+        $(`#equipante - cidade`).val('');
+        $(`#equipante - estado`).val('');
+        $(`#equipante - numero`).val('');
+        $(`#equipante - complemento`).val('');
+        $(`#equipante - referencia`).val('');
+        $(`input[type = radio][name = equipante - sexo][value = 1]`).iCheck('check');
+        $(`input[type = radio][name = equipante - hasalergia][value = false]`).iCheck('check');
+        $(`input[type = radio][name = equipante - hasmedicacao][value = false]`).iCheck('check');
+        $(`input[type = radio][name = equipante - hasrestricaoalimentar][value = false]`).iCheck('check');
+        $(`input[type = radio][name = equipante - iscasado][value = false]`).iCheck('check');
         $("#equipante-data-casamento").val("");
     }
 
@@ -875,7 +875,7 @@ function enviar() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome);
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante} ', equipante.Nome);
             windowReference.location = GetLinkWhatsApp(equipante.Fone, text)
         }
     });
@@ -1171,7 +1171,8 @@ async function openBulkActions() {
         url: '/Quarto/GetQuartos',
         datatype: "json",
         data: {
-            EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val(), Tipo: 0 },
+            EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val(), Tipo: 0
+        },
         type: "POST"
     })
 
@@ -1716,7 +1717,7 @@ function CarregarTabelaHistorico(id) {
             [0, "asc"]
         ],
         ajax: {
-            data: {id:id},
+            data: { id: id },
             url: '/Equipante/GetHistorico',
             datatype: "json",
             type: "POST"
@@ -1738,7 +1739,7 @@ function CarregarTabelaHistorico(id) {
         dom: domConfig,
         buttons: getButtonsConfig('Histórico'),
         columns: [
-            { data: "Evento", name: "Evento", autoWidth: true },  
+            { data: "Evento", name: "Evento", autoWidth: true },
         ],
 
         order: [

@@ -43,8 +43,9 @@
             <li class="@Html.IsSelected(action: "Index", controller: "Relatorio")"><a href="@Url.Action("Index", "Relatorio")"><i class="fa fa-chart-area"></i><span class="nav-label">Relatórios</span></a></li>
             <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Evento","Reuniao","Mensagem"}, actions: new List<string> { "Index" })">
                 <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Cadastros</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Evento","Reuniao","Etiqueta","Mensagem"}, actions: new List<string> { "Index" }, cssClass: "in")">
+                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Evento","Reuniao","Etiqueta","Mensagem"}, actions: new List<string> { "Index","Informativo" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller:"Evento")"><a href="@Url.Action("Index", "Evento")">Eventos</a></li>
+                    <li class="@Html.IsSelected(action: "Informativos", controller:"Evento")"><a href="@Url.Action("Informativos", "Evento")">Informativos</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Reuniao")"><a href="@Url.Action("Index", "Reuniao")">Reuniões</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Etiqueta")"><a href="@Url.Action("Index", "Etiqueta")">Marcadores</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Mensagem")"><a href="@Url.Action("Index", "Mensagem")">Mensagens</a></li>

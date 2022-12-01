@@ -20,7 +20,16 @@
 
         <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,@ViewBag.Configuracao.Logo" />
     }
-    <title>@ViewBag.Configuracao.Titulo | Inscrições</title>
+    @if (ViewBag.Evento.ConfiguracaoId != null)
+    {
+
+        <title>@ViewBag.Configuracao.Titulo | Inscrições</title>
+    }
+    else
+    {
+
+        <title>@ViewBag.Evento.Descricao</title>
+    }
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport"
@@ -59,6 +68,20 @@
             }
         }
     </style>
+    @if (ViewBag.Evento.ConfiguracaoId == null)
+    {
+        <style>
+
+            .footer-area {
+                margin-top: auto
+            }
+
+            .min-height-config-null {
+                min-height: 500px
+            }
+        </style>
+    }
+
 </head>
 <body>
     <!-- Header Area wrapper Starts -->
@@ -67,9 +90,12 @@
             <div class="menu navbar">
                 <div class="menu-list navbar-collapse">
                     <ul class="onepage-nev navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#header-wrap">Início</a>
-                        </li>
+                        @if (ViewBag.Evento.ConfiguracaoId != null)
+                        {
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#header-wrap">Início</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" href="#services">Informações</a>
                         </li>
@@ -111,9 +137,12 @@
 
             <!-- Mobile Menu Start -->
             <ul class="mobile-menu">
-                <li>
-                    <a href="#header-wrap">Início</a>
-                </li>
+                @if (ViewBag.Evento.ConfiguracaoId != null)
+                {
+                    <li>
+                        <a href="#header-wrap">Início</a>
+                    </li>
+                }
                 <li>
                     <a href="#services">Informações</a>
                 </li>
@@ -124,34 +153,39 @@
     </header>
 
     <!-- Intro Section Start -->
-    <section class="intro">
-        <div class="container">
-            <div class="row text-center row-top-mobile">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="heading-count">
-                        @if (ViewBag.Evento.Numeracao > 0)
-                        {
+    @if (ViewBag.Evento.ConfiguracaoId != null)
+    {
+        <section class="intro">
+            <div class="container">
+                <div class="row text-center row-top-mobile">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="heading-count">
+                            @if (ViewBag.Evento.Numeracao > 0)
+                            {
 
-                            <h2>O <span>@(ViewBag.Evento.Numeracao)</span>º @(ViewBag.Configuracao.Titulo) está chegando</h2>
-                        }
-                        else
-                        {
-                            <h2>O @(ViewBag.Configuracao.Titulo) está chegando</h2>
-                        }
-                        <p>Prepare-se para viver algo inesquecível...</p>
+                                <h2>O <span>@(ViewBag.Evento.Numeracao)</span>º @(ViewBag.Configuracao.Titulo) está chegando</h2>
+                            }
+                            else
+                            {
+                                <h2>O @(ViewBag.Configuracao.Titulo) está chegando</h2>
+                            }
+                            <p>Prepare-se para viver algo inesquecível...</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="row countdown justify-content-center">
-                        <div id="clock" class="time-count"></div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+
+                        <div class="row countdown justify-content-center">
+                            <div id="clock" class="time-count"></div>
+                        </div>
+
+                        <a href="#services-end" class="target-scroll page-scroll">
+                            <i class="lni-chevron-down"></i>
+                        </a>
                     </div>
-                    <a href="#services-end" class="target-scroll page-scroll">
-                        <i class="lni-chevron-down"></i>
-                    </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    }
     <!-- Intro Section End -->
 
     <section id="services" class="section-padding">
@@ -167,7 +201,7 @@
                 </div>
             </div>
 
-            <div class="row justify-content-center">
+            <div class="row justify-content-center min-height-config-null">
                 @if ((ViewBag.Evento.Valor > 0))
                 {
                     <div class="col-lg-4 col-md-4 col-xs-12 fadeInUp"
@@ -366,6 +400,8 @@
         $('.navbar-expand-lg .navbar-nav .nav-link i').css('color', '@ViewBag.Configuracao.CorBotao')
         $('a.back-to-top i').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.footer-area .footer-text p a').css('color', '@ViewBag.Configuracao.CorBotao')
+        $('.close-button').css('color', '@ViewBag.Configuracao.CorBotao')
+        $('.navbar li.active a.nav-link').css('color', '@ViewBag.Configuracao.CorBotao !important')
         $('.link-local').css('color', '@ViewBag.Configuracao.CorBotao')
         $('#services .icon i').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('#services .icon i').css('border-color', '@ViewBag.Configuracao.CorBotao')

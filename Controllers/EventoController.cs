@@ -44,6 +44,15 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        public ActionResult Informativos()
+        {
+            GetConfiguracoes();
+            ViewBag.Title = "Informativos";
+
+            return View();
+        }
+
+
         [HttpGet]
         public ActionResult GetTipos()
         {
@@ -71,7 +80,7 @@ namespace SysIgreja.Controllers
 
 
             var result = eventosBusiness.GetEventos()
-                .Where(x => configId.Contains(x.ConfiguracaoId.Value))
+                .Where(x => configId.Contains(x.ConfiguracaoId.Value) && x.ConfiguracaoId.HasValue)
                 .ToList()
                 .Select(x => new EventoViewModel
                 {
@@ -90,13 +99,27 @@ namespace SysIgreja.Controllers
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult GetInformativos()
+        {
+            var result = eventosBusiness.GetEventos()
+                .Where(x => !x.ConfiguracaoId.HasValue)
+                .ToList()
+                .Select(x => new EventoViewModel
+                {
+                    Id = x.Id,
+                    DataEvento = x.DataEvento,
+                    Descricao = x.Descricao,
+                    ArteId = x.ArteId
+                });
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public ActionResult GetEvento(int Id)
         {
             var result = eventosBusiness.GetEventoById(Id);
-
-
-
             return Json(new { Evento = mapper.Map<PostEventoModel>(result) }, JsonRequestBehavior.AllowGet);
         }
 
@@ -152,6 +175,22 @@ namespace SysIgreja.Controllers
         public ActionResult PostEvento(PostEventoModel model)
         {
             eventosBusiness.PostEvento(model);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult PostInformativo(PostEventoModel model)
+        {
+            eventosBusiness.PostInformativo(model);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult PostArte(PostArteModel model)
+        {
+            eventosBusiness.PostArte(model);
 
             return new HttpStatusCodeResult(200);
         }

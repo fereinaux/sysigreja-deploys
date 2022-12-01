@@ -85,7 +85,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetEventosInscricao(string type, string identificador, string search, bool? isMobile)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventosGlobais().Where(x => ((x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)) && (string.IsNullOrEmpty(search) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x => (((x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve) || x.DataEvento > DateTime.Today) && (string.IsNullOrEmpty(search)) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
             {
                 Id = x.Id,
                 UrlDestino = x.UrlExterna ?? $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",
@@ -100,8 +100,8 @@ namespace SysIgreja.Controllers
                 Titulo = x.TituloEvento,
                 Status = x.Status.GetDescription(),
                 StatusEquipe = x.StatusEquipe.GetDescription(),
-                Background = isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Background, 400) : imageService.ResizeImage(x.Background, 700),
-                Logo = isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Logo, 360) : imageService.ResizeImage(x.Logo, 630),
+                Background = x.Background != null ? (isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Background, 400) : imageService.ResizeImage(x.Background, 700)) : "",
+                Logo = x.Logo != null ? (isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Logo, 360) : imageService.ResizeImage(x.Logo, 630)) : "",
             }).OrderBy(x => x.DataEvento).ToList();
 
             var json = Json(new { Eventos = eventos }, JsonRequestBehavior.AllowGet);
@@ -171,12 +171,14 @@ namespace SysIgreja.Controllers
             ViewBag.Title = Tipo;
             ViewBag.Tipo = Tipo;
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
-            if ((evento.Status == StatusEnum.Encerrado || evento.Status == StatusEnum.EmBreve) && (evento.StatusEquipe == StatusEnum.Encerrado || evento.StatusEquipe == StatusEnum.EmBreve))
-                return RedirectToAction("InscricoesEncerradas", new
-                {
-                    Id = Id
-                });
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            if (evento.ConfiguracaoId.HasValue)
+            {
+                ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            }
+            else
+            {
+                ViewBag.Configuracao = configuracaoBusiness.GetLogin();
+            }
             ViewBag.UrlDestino = Url.Action("Inscricoes", "Inscricoes", new
             {
                 id = Id,
@@ -335,7 +337,7 @@ namespace SysIgreja.Controllers
             if (equipante != null)
             {
                 model.EquipanteId = equipante.Id;
-            }          
+            }
 
             if (evento != null && participantesBusiness.GetParticipantesByEvento(model.EventoId).Where(x => x.Status != StatusEnum.Cancelado).Count() >= evento.Capacidade)
             {

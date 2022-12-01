@@ -5,11 +5,9 @@
 
 .menu-wrap a:hover,
 .menu-wrap a:focus{
-	color: #e92762;
 }
 .menu-wrap .navbar-nav li .active,
 .menu-wrap .navbar-nav li .active:before{
-	color: #e92762; 
 	-webkit-transform: scale(1);
 	transform: scale(1);
 }

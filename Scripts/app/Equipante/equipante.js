@@ -44,9 +44,10 @@ function CarregarTabelaEquipante(callbackFunction) {
         language: languageConfig,
         searchDelay: 750,
         lengthMenu: [10, 30, 50, 100, 200],
-        colReorder: false,
+        colReorder: true,
         serverSide: true,
-        deferloading: 0,
+        scrollX: true,
+        scrollXollapse: true,
         orderCellsTop: true,
         fixedHeader: true,
         filter: true,
@@ -55,15 +56,10 @@ function CarregarTabelaEquipante(callbackFunction) {
         stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
-        stateLoadParams: function (settings, data) {
-            for (var i = 0; i < data.columns.length; i++) {
-                data.columns[i].visible = settings.aoColumns[i].visible != undefined ? settings.aoColumns[i].visible : true
-            }
-        },
         colReorder: {
             fixedColumnsLeft: 1
         },
-        buttons: getButtonsConfig('Equipantes'),
+        buttons: getButtonsConfig(`Participantes ${$("#equipante-eventoid-filtro option:selected").text()}`),
         columns: [
             {
                 data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
@@ -99,11 +95,15 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             { data: "Idade", name: "Idade", },
-            { data: "Equipe", className: 'noVis', name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999 },
-            { data: "Faltas", className: 'noVis', name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999 },
+            {
+                data: "Equipe", className: 'hide-tipoevento', name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999
+            },
+            {
+                data: "Faltas", className: 'hide-tipoevento', name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999
+            },
             { data: "Congregacao", name: "Congregacao", autoWidth: true, visible: false },
             {
-                data: "HasOferta", name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
+                data: "HasOferta", className: 'hide-tipoevento', name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {
                         return `<span style="font-size:13px" class="text-center label label-default}">Em espera</span>`;
                     }
@@ -111,7 +111,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Id", name: "Id", orderable: false, width: "20%",
+                data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis',
                 "render": function (data, type, row) {
                     return `   
 
@@ -151,6 +151,7 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
             if (callbackFunction) {
                 callbackFunction()
             }
+            checkEvento()
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',

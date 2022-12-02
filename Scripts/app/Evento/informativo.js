@@ -214,7 +214,7 @@ function Arte(row) {
             $("#modal-arte").modal();
             var boundaryWidth = $("#artecontent").width();
 
-            var boundaryHeight = boundaryWidth * 0.60;
+            var boundaryHeight = boundaryWidth * 0.40;
 
             var viewportWidth = boundaryWidth - (boundaryWidth / 100 * 25);
 
@@ -242,7 +242,7 @@ function ConfirmArte() {
     $("#main-cropper")
         .croppie("result", {
             type: "canvas",
-            size: { height: 410, width: 895 }
+            size: { height: 400, width: 1000 }
         })
         .then(function (resp) {
             var dataToPost = new FormData();

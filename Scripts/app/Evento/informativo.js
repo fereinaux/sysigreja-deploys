@@ -29,12 +29,14 @@ function CarregarTabelaEvento() {
                 "render": function (data, type, row) {
 
                     return `
+       <form enctype="multipart/form-data" id="frm-arte${data}" method="post" novalidate="novalidate">
 <label for="arte${data}" class="inputFile">
                                 <span style="font-size:18px" class="${row.ArteId ? 'text-success' : ""} pointer p-l-xs"><i class="fas fa-image" aria-hidden="true" title="Arte"></i></span>
                                 <input accept="image/*" onchange='Arte(${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="arte${data}" name="arte${data}" type="file" value="">
                             </label>
                             ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}
-                            ${GetButton('DeleteEvento', data, 'red', 'fa-trash', 'Excluir')}`;
+                            ${GetButton('DeleteEvento', data, 'red', 'fa-trash', 'Excluir')}
+</form>`;
                 }
             }
         ],
@@ -182,112 +184,33 @@ $("#arquivo").change(function () {
 function Arte(row) {
 
     evento = row
-
-    var input = $(`#arte${evento.Id}`)[0]
-
-    const file = input.files[0];
-
-
-    if (!file) {
-        return;
-    }
-
-    new Compressor(file, {
-        quality: 1,
-        // The compression process is asynchronous,
-        // which means you have to access the `result` in the `success` hook function.
-        success(result) {
-
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $("#main-cropper").croppie("bind", {
-                    url: e.target.result
-                });
-
-            };
-
-            reader.readAsDataURL(result);
-
-
-            $("#modal-arte").modal();
-            var boundaryWidth = $("#artecontent").width();
-
-            var boundaryHeight = boundaryWidth * 0.40;
-
-            var viewportWidth = boundaryWidth - (boundaryWidth / 100 * 25);
-
-            var viewportHeight = boundaryHeight - (boundaryHeight / 100 * 25);
-
-            $("#main-cropper").croppie({
-
-                viewport: { width: viewportWidth, height: viewportHeight },
-                boundary: { width: boundaryWidth, height: boundaryHeight },
-                enableOrientation: true,
-                showZoomer: true,
-                enableExif: true,
-                enableResize: false,
-
-            });
-        },
-        error(err) {
-            console.log(err.message);
-        },
-    });
-}
-
-function ConfirmArte() {
-
-    $("#main-cropper")
-        .croppie("result", {
-            type: "canvas",
-            size: { height: 400, width: 1000 }
-        })
-        .then(function (resp) {
-            var dataToPost = new FormData();
-            dataToPost.set('Arquivo', dataURLtoFile(resp, `Arte ${evento.Descricao}.jpg`))
-            dataToPost.set('EventoId', evento.Id)
-            $.ajax(
-                {
-                    processData: false,
-                    contentType: false,
+    var dataToPost = new FormData($(`#frm-arte${evento.Id}`)[0]);
+    dataToPost.set('Arquivo', dataToPost.get('arte${evento.Id}'))
+    dataToPost.set('EventoId', evento.Id)
+    $.ajax(
+        {
+            processData: false,
+            contentType: false,
+            type: "POST",
+            data: dataToPost,
+            url: "/Arquivo/PostArquivo",
+            success: function (data) {
+                $.ajax({
+                    url: "/Evento/PostArte/",
+                    datatype: "json",
                     type: "POST",
-                    data: dataToPost,
-                    url: "/Arquivo/PostArquivo",
-                    success: function (data) {
-                        $.ajax({
-                            url: "/Evento/PostArte/",
-                            datatype: "json",
-                            type: "POST",
-                            contentType: 'application/json; charset=utf-8',
-                            data: JSON.stringify(
-                                {
-                                    EventoId: evento.Id,
-                                    ArteId: data
-                                }),
-                            success: function () {
-                                SuccessMesageOperation();
-                                $("#modal-arte").modal("hide");
-                            }
-                        });
-
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(
+                        {
+                            EventoId: evento.Id,
+                            ArteId: data
+                        }),
+                    success: function () {
+                        SuccessMesageOperation();
+                        $("#modal-arte").modal("hide");
                     }
                 });
+
+            }
         });
-}
-
-function dataURLtoFile(dataurl, filename) {
-
-    var arr = dataurl.split(','),
-        mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]),
-        n = bstr.length,
-        u8arr = new Uint8Array(n);
-
-    while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    return new File([u8arr], filename, { type: mime })
-
 }

@@ -85,7 +85,24 @@ namespace SysIgreja.Controllers
         public ActionResult GetEventosInscricao(string type, string identificador, string search, bool? isMobile)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventosGlobais().Where(x => (((x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve) || x.DataEvento > DateTime.Today) && (string.IsNullOrEmpty(search)) || x.TituloEvento.ToLower().Contains(search.ToLower())) && ((identificador == x.Identificador || x.Global) || string.IsNullOrEmpty(identificador))).ToList().Select(x => new GetEventosInscricaoViewModel
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x => 
+            (
+              (
+                (
+                  (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || 
+                  (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)
+                ) || 
+              x.DataEvento > DateTime.Today
+              ) && 
+              (
+                (string.IsNullOrEmpty(search)) || 
+                x.TituloEvento.ToLower().Contains(search.ToLower())
+              ) && 
+              (
+                (identificador == x.Identificador || x.Global) ||
+                string.IsNullOrEmpty(identificador)
+              )
+            )).ToList().Select(x => new GetEventosInscricaoViewModel
             {
                 Id = x.Id,
                 UrlDestino = x.UrlExterna ?? $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}?Tipo={type}",

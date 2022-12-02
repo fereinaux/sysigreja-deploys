@@ -185,7 +185,7 @@ function Arte(row) {
 
     evento = row
     var dataToPost = new FormData($(`#frm-arte${evento.Id}`)[0]);
-    dataToPost.set('Arquivo', dataToPost.get('arte${evento.Id}'))
+    dataToPost.set('Arquivo', dataToPost.get(`arte${evento.Id}`))
     dataToPost.set('EventoId', evento.Id)
     $.ajax(
         {

@@ -619,10 +619,13 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;">
-                            <div class="overlay"></div>
+ ${destaque.Logo ?
+                            `<div class="overlay"></div>
 <span  class="badge m-r-xs" style="position:absolute; top:5px;left:5px;z-index:999999;   background: #ffffff;color:#000">${destaque.Identificador}</span>
-                           ${destaque.Logo ? `<img class="img-desatque" src="data:image/png;base64,${destaque.Logo}" />` : ""} 
+                           <img class="img-desatque" src="data:image/png;base64,${destaque.Logo}" />
                         </div>
+` : ""
+                }
 
                         <div class="card-body card-destaque">
                             <span style="display: block; color: #9b2125; font-size: 16px;">${destaque.Data}</span>
@@ -679,7 +682,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
                     </div>`).join().replace(/>,/g, '>') }
 
             `}
- 
+
 
                 var informativos = eventos.filter(evento => !(evento.Status == "Em breve" || evento.StatusEquipe == "Em breve") && !(evento.Status == "Aberto" || evento.StatusEquipe == "Aberto"))
 
@@ -697,10 +700,6 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
         background-position: center;
         background-repeat: no-repeat;
 ">
-                            <div class="overlay"></div>
-<span  class="badge m-r-xs" style="position:absolute; top:5px;left:5px; z-index:999999;  background: #ffffff;color:#000">${evento.Identificador}</span>
-                        </div>
-
                         <div class="card-body">
                             <span style="display: block; color: #9b2125;">${evento.Data}</span>
                               <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">

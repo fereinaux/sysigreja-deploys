@@ -193,8 +193,7 @@ function Arte(row) {
     }
 
     new Compressor(file, {
-        quality: 0.6,
-        convertSize: 1000000,
+        quality: 1,
         // The compression process is asynchronous,
         // which means you have to access the `result` in the `success` hook function.
         success(result) {

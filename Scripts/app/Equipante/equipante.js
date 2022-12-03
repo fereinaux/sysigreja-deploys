@@ -151,7 +151,11 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
             if (callbackFunction) {
                 callbackFunction()
             }
-            checkEvento()
+            if ($("#equipante-eventoid-filtro").val() != 999) {
+                $('.hide-tipoevento').removeClass('d-none')
+            } else {
+                $('.hide-tipoevento').addClass('d-none')
+            }
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',

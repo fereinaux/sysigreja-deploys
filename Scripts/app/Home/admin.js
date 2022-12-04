@@ -335,14 +335,6 @@ function GetResultadosAdmin() {
             }
             $('#tb-reunioes').html(htmlReunioes);
 
-            if ($('#eventoid option:selected').data('pendente') == "True") {
-                $('.event-title').text($('#eventoid option:selected').text())
-                $('.event-value').text(`R$ ${result.EventoOferta.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
-                $('.evento-cobranca').css('display', 'block')
-            } else {
-                $('.evento-cobranca').css('display', 'none')
-            }
-
             var randomColorGenerator = function () {
                 return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
             };

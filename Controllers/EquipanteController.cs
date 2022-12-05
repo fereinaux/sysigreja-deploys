@@ -307,6 +307,28 @@ namespace SysIgreja.Controllers
                     filteredResultsCount = result.Count();
                 }
 
+                for (int i = 0; i < model.columns.Count; i++)
+                {
+                    if (model.columns[i].search.value != null)
+                    {
+
+                        var searchValue = model.columns[i].search.value.ToLower();
+                        if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
+                        {
+                            result = result.Where(x => (x.Equipante.Nome.ToLower().Contains(searchValue)));
+                        }
+                        if (model.columns[i].name == "Equipe" && model.columns[i].search.value != null)
+                        {
+                            result = result.Where(x => (x.Equipe.Nome.ToLower().Contains(searchValue)));
+                        }
+
+                        if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
+                        {
+                            result = result.Where(x => (x.Equipante.Congregacao.ToLower().Contains(searchValue)));
+                        }
+                    }
+                }
+
 
                 filteredResultsCount = result.Count();
 

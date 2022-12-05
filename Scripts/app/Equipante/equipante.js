@@ -1,8 +1,12 @@
 ﻿var realista;
 let table
 
+var oldEventoId
+var newEventoId
+
 
 function checkEvento() {
+    newEventoId = $("#equipante-eventoid-filtro").val()
     if ($("#equipante-eventoid-filtro").val() != 999) {
         $('.hide-tipoevento').removeClass('d-none')
 
@@ -26,9 +30,12 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
     } else {
         $('.hide-tipoevento').addClass('d-none')
     }
+
+
 }
 
 function loadEquipes() {
+    $("#table-equipantes").DataTable().destroy()
     checkEvento()
 
     getEquipes()
@@ -42,7 +49,7 @@ function CarregarTabelaEquipante(callbackFunction) {
 
     const tableEquipanteConfig = {
         language: languageConfig,
-        searchDelay: 750,
+        searchDelay: 1000,
         lengthMenu: [10, 30, 50, 100, 200],
         colReorder: true,
         serverSide: true,
@@ -62,14 +69,14 @@ function CarregarTabelaEquipante(callbackFunction) {
         buttons: getButtonsConfig(`Participantes ${$("#equipante-eventoid-filtro option:selected").text()}`),
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
+                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis noSearch',
                 "render": function (data, type, row) {
                     return `${GetCheckBox(data, row.Presenca)}`;
                 }
             },
-            { data: "Sexo", name: "Sexo", visible: false, className: 'noVis', },
+            { data: "Sexo", name: "Sexo", visible: false, className: 'noVis noSearch', },
             {
-                data: "Sexo", title: "Sexo", orderData: 0, name: "Sexo", className: "text-center", width: "5%",
+                data: "Sexo", title: "Sexo", orderData: 0, name: "Sexo", className: "text-center noSearch", width: "5%",
                 "render": function (data, type, row) {
                     if (data == "Masculino") {
                         icon = "fa-male";
@@ -94,16 +101,16 @@ function CarregarTabelaEquipante(callbackFunction) {
                     </div>`
                 }
             },
-            { data: "Idade", name: "Idade", },
+            { data: "Idade", name: "Idade", class: "noSearch" },
             {
                 data: "Equipe", className: 'hide-tipoevento', name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999
             },
             {
-                data: "Faltas", className: 'hide-tipoevento', name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999
+                data: "Faltas", className: 'hide-tipoevento noSearch', name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999
             },
             { data: "Congregacao", name: "Congregacao", autoWidth: true, visible: false },
             {
-                data: "HasOferta", className: 'hide-tipoevento', name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
+                data: "HasOferta", className: 'hide-tipoevento noSearch', name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {
                         return `<span style="font-size:13px" class="text-center label label-default}">Em espera</span>`;
                     }
@@ -111,7 +118,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis',
+                data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch',
                 "render": function (data, type, row) {
                     return `   
 
@@ -156,6 +163,38 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
             } else {
                 $('.hide-tipoevento').addClass('d-none')
             }
+
+            changeEvento = false
+            var idx = 0
+            var api = this.api()
+            api
+                .columns()
+                .every(function (colIdx) {
+                    var column = this;
+                    if (!$(column.header()).hasClass('noSearch')) {
+                        var input = $($($($(column.header()).parents('thead').find('tr')[1]).find('th')[idx]).find('input'))
+                            .on('change keyup clear', _.debounce(function () {
+                                if (column.search() !== this.value) {
+                                    column.search(this.value).draw();
+                                }
+                            }, 500))
+
+                        if (oldEventoId != newEventoId) {
+                            input.val(api.state().columns[colIdx].search.search)
+                            changeEvento = true
+                        }
+
+
+                    }
+                    if (column.visible()) {
+                        idx++
+                    }
+
+                });
+            if (changeEvento) {
+                oldEventoId = newEventoId
+            }
+            newEventoId = $("#equipante-eventoid-filtro").val()
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
@@ -1081,6 +1120,7 @@ function PostPagamento() {
 $(document).ready(function () {
     loadEquipes()
     loadCampos($("[id$='eventoid']").val());
+
 });
 
 function previous() {

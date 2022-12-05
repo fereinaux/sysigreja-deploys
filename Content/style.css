@@ -815,8 +815,8 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     .btn-juventude.active:hover,
     .btn-juventude.active:focus {
         color: #FFFFFF !important;
-        background-color: #18a689 ;
-        border-color: #18a689 ;
+        background-color: #18a689;
+        border-color: #18a689;
     }
 
 .btn-primary {
@@ -10436,3 +10436,6 @@ div.dt-button-collection {
     width: 150px !important;
 }
 
+.dataTable thead tr th input {
+    display: block
+}

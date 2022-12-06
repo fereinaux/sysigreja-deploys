@@ -35,10 +35,26 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        public ActionResult Boletim()
+        {
+            ViewBag.Title = "Boletins";
+            GetConfiguracoes();
+            return View();
+        }
+
+
         [HttpPost]
         public ActionResult GetArquivos()
         {
             var query = arquivosBusiness.GetArquivos();
+
+            return MapAqruivos(query);
+        }
+
+        [HttpPost]
+        public ActionResult GetBoletins()
+        {
+            var query = arquivosBusiness.GetArquivos().Where(x => x.Categoria == "Boletim").OrderBy(x => x.DataCadastro);
 
             return MapAqruivos(query);
         }
@@ -104,7 +120,8 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Nome = x.Nome,
-                    Extensao = x.Extensao
+                    Extensao = x.Extensao,
+                    Data = x.DataCadastro?.ToString("dd/MM/yyyy")
                 });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

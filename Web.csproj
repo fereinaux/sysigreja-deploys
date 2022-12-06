@@ -1023,6 +1023,7 @@
     <Content Include="Content\landing\header_one.jpg" />
     <Content Include="Content\landing\header_two.jpg" />
     <Content Include="Content\landing\word_map.png" />
+    <Content Include="Scripts\app\Arquivo\boletim.js" />
     <Content Include="Scripts\app\Carona\carona.js" />
     <Content Include="Scripts\app\Cracha\print.js" />
     <Content Include="Scripts\app\Cracha\cracha.js" />
@@ -1233,6 +1234,7 @@
     <Content Include="Views\Categoria\Index.cshtml" />
     <Content Include="Views\Notificacao\Index.cshtml" />
     <Content Include="Views\Evento\Informativos.cshtml" />
+    <Content Include="Views\Arquivo\Boletim.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

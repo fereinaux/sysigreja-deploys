@@ -43,9 +43,10 @@
             <li class="@Html.IsSelected(action: "Index", controller: "Relatorio")"><a href="@Url.Action("Index", "Relatorio")"><i class="fa fa-chart-area"></i><span class="nav-label">Relatórios</span></a></li>
             <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Evento","Reuniao","Mensagem"}, actions: new List<string> { "Index" })">
                 <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Cadastros</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Evento","Reuniao","Etiqueta","Mensagem"}, actions: new List<string> { "Index","Informativo" }, cssClass: "in")">
+                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Evento","Reuniao","Etiqueta","Mensagem", "Arquivo"}, actions: new List<string> { "Index","Informativo","Boletim" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller:"Evento")"><a href="@Url.Action("Index", "Evento")">Eventos</a></li>
                     <li class="@Html.IsSelected(action: "Informativos", controller:"Evento")"><a href="@Url.Action("Informativos", "Evento")">Informativos</a></li>
+                    <li class="@Html.IsSelected(action: "Boletim", controller: "Arquivo")"><a href="@Url.Action("Boletim", "Arquivo")">Boletins</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Reuniao")"><a href="@Url.Action("Index", "Reuniao")">Reuniões</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Etiqueta")"><a href="@Url.Action("Index", "Etiqueta")">Marcadores</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Mensagem")"><a href="@Url.Action("Index", "Mensagem")">Mensagens</a></li>
@@ -54,13 +55,12 @@
 
             <li class="@Html.IsSelectedMenuItem(controller: new string[] { "MeioPagamento","Categoria", "Account", "ContaBancaria", "CentroCusto", "Arquivo", "Configuracao","Cracha" }, actions: new List<string> { "Login","Index", "Equipe" })">
                 <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">Configurações</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] { "MeioPagamento", "Account","Categoria", "ContaBancaria", "CentroCusto", "Arquivo", "Configuracao", }, actions: new List<string> { "Index", "Equipe","Boletim" }, cssClass: "in")">
+                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] { "MeioPagamento", "Account","Categoria", "ContaBancaria", "CentroCusto", "Arquivo", "Configuracao", }, actions: new List<string> { "Index", "Equipe" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller: "MeioPagamento")"><a href="@Url.Action("Index", "MeioPagamento")">Formas de Pagamento</a></li>
                     <li class="@Html.IsSelected(action: "Equipe", controller: "Configuracao")"><a href="@Url.Action("Equipe", "Configuracao")">Equipes</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "CentroCusto")"><a href="@Url.Action("Index", "CentroCusto")">Centros de Custo</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "Account")"><a href="@Url.Action("Index", "Account")">Administradores</a></li>
-                    <li class="@Html.IsSelected(action: "Index", controller: "Arquivo")"><a href="@Url.Action("Index", "Arquivo")">Arquivos</a></li>
-                    <li class="@Html.IsSelected(action: "Boletim", controller: "Arquivo")"><a href="@Url.Action("Boletim", "Arquivo")">Boletins</a></li>
+                    <li class="@Html.IsSelected(action: "Index", controller: "Arquivo")"><a href="@Url.Action("Index", "Arquivo")">Arquivos</a></li>                    
                     <li class="@Html.IsSelected(action: "Index", controller: "Cracha")"><a href="@Url.Action("Index", "Cracha")">Credenciais</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "Categoria")"><a href="@Url.Action("Index", "Categoria")">Categorias</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "Configuracao")"><a href="@Url.Action("Index", "Configuracao")">Parâmetros</a></li>

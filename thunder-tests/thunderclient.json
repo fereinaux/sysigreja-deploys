@@ -181,11 +181,11 @@
     "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
     "containerId": "346752b8-faf9-425a-90b8-c70c6d5f7e3f",
     "name": "Download",
-    "url": "{{arquivo}}/GetArquivo/2062",
+    "url": "{{arquivo}}/GetArquivo/1429",
     "method": "GET",
     "sortNum": 18750,
     "created": "2022-12-06T18:32:56.228Z",
-    "modified": "2022-12-06T18:33:01.370Z",
+    "modified": "2022-12-06T18:38:05.364Z",
     "headers": [],
     "params": [],
     "tests": []

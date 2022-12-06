@@ -120,7 +120,6 @@ ol li {
   bottom: 10px;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
-  background-color: rgb(209, 150, 102);
 }
 
 .section-info {
@@ -161,7 +160,6 @@ ol li {
 }
 
 .btn-common {
-  background-color: rgb(209, 150, 102);
   position: relative;
   z-index: 1;
   border-radius: 4px;
@@ -200,7 +198,6 @@ button:focus {
 }
 
 .close-button {
-  color: rgb(209, 150, 102);
 }
 
 /* ScrollToTop */
@@ -219,7 +216,6 @@ a.back-to-top i {
   height: 40px;
   line-height: 40px;
   color: #fff;
-  background: rgb(209, 150, 102);
   border-radius: 2px;
   text-align: center;
   transition: all 0.2s ease-in-out;
@@ -375,7 +371,6 @@ a.back-to-top:focus {
 
 .navbar-expand-lg .navbar-nav .nav-link i {
   font-size: 28px;
-  color: rgb(209, 150, 102);
   vertical-align: middle;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
@@ -383,7 +378,6 @@ a.back-to-top:focus {
 }
 
 .navbar-expand-lg .navbar-nav .nav-link i:hover {
-  color: rgb(209, 150, 102);
 }
 
 .navbar-expand-lg .navbar-nav .nav-link {
@@ -404,7 +398,6 @@ a.back-to-top:focus {
 .navbar-expand-lg .navbar-nav li a:hover,
 .navbar-expand-lg .navbar-nav li .active > a,
 .navbar-expand-lg .navbar-nav li a:focus {
-  color: rgb(209, 150, 102);
   outline: none;
 }
 
@@ -413,7 +406,6 @@ a.back-to-top:focus {
 }
 
 .navbar li.active a.nav-link {
-  color: rgb(209, 150, 102);
 }
 
 .dropdown-toggle::after {
@@ -497,7 +489,6 @@ a.back-to-top:focus {
 .dropdown .dropdown-item:focus,
 .dropdown .dropdown-item:hover,
 .dropdown .dropdown-item.active {
-  color: rgb(209, 150, 102);
 }
 
 .dropdown-item.active,
@@ -511,11 +502,9 @@ a.back-to-top:focus {
 }
 
 .slicknav_btn {
-  /*border-color: rgb(209, 150, 102);*/
 }
 
 .slicknav_menu .slicknav_icon-bar {
-  background: rgb(209, 150, 102);
 }
 
 /* only small tablets */
@@ -556,13 +545,11 @@ a.back-to-top:focus {
     display: block;
   }
   .slicknav_nav .active a {
-    background: rgb(209, 150, 102);
     color: #fff;
   }
   .slicknav_nav a:hover,
   .slicknav_nav a:focus,
   .slicknav_nav .active {
-    color: rgb(209, 150, 102);
     outline: none;
     background: #f8f9fa;
   }
@@ -772,7 +759,6 @@ a.back-to-top:focus {
   border-radius: 4px;
   font-size: 14px;
   text-align: center;
-  background: rgb(209, 150, 102);
   box-shadow: 0 5px 50px -10px #fff;
 }
 
@@ -872,8 +858,6 @@ a.back-to-top:focus {
   line-height: 50px;
   font-size: 20px;
   text-align: center;
-  background: rgb(209, 150, 102);
-  border: 1px solid rgb(209, 150, 102);
   color: #fff;
   border-radius: 50%;
   -webkit-transform: scale(1);
@@ -904,7 +888,6 @@ a.back-to-top:focus {
 }
 
 #services .services-item h3 a:hover {
-  color: rgb(209, 150, 102);
 }
 
 .services-item:hover .icon i {
@@ -1030,7 +1013,6 @@ a.back-to-top:focus {
 }
 
 .team-item .info-text h3 a:hover {
-  color: rgb(209, 150, 102);
 }
 
 .team-item .info-text p {
@@ -1081,7 +1063,6 @@ a.back-to-top:focus {
 }
 
 .contact-right .contact-box p a:hover {
-  color: rgb(209, 150, 102);
 }
 
 /* Subscribe Form */
@@ -1118,7 +1099,6 @@ a.back-to-top:focus {
 .subscribe-inner .form-control:focus {
   color: #333;
   background-color: #fff;
-  border-color: rgb(209, 150, 102);
   outline: 0;
 }
 
@@ -1178,19 +1158,16 @@ a.back-to-top:focus {
 }
 
 .form-control:focus {
-  border-color: rgb(209, 150, 102);
   outline: 0;
 }
 
 .pagination .page-item .page-link {
   margin: 3px;
   padding: 15px 20px;
-  color: rgb(209, 150, 102);
   background: #fff;
 }
 
 .pagination .page-item .page-link:hover {
-  background: rgb(209, 150, 102);
   color: #fff;
 }
 
@@ -1255,7 +1232,6 @@ a.back-to-top:focus {
 }
 
 .footer-area .footer-text p a {
-  color: rgb(209, 150, 102);
 }
 
 .footer-area .footer-text .nav-inline .nav-link {
@@ -1264,7 +1240,6 @@ a.back-to-top:focus {
 }
 
 .footer-area .footer-text .nav-inline .nav-link:hover {
-  color: rgb(209, 150, 102);
 }
 
 .footer-2 {
@@ -1298,7 +1273,6 @@ a.back-to-top:focus {
 }
 
 .footer-2 ul li a:hover {
-  color: rgb(209, 150, 102);
 }
 
 #copyright {
@@ -1316,5 +1290,4 @@ a.back-to-top:focus {
 }
 
 #copyright p a:hover {
-  color: rgb(209, 150, 102);
 }

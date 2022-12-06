@@ -168,7 +168,7 @@
                                     </a>
                                 </li>
                                 <li class="hover-menu">
-                                    <a href="javascript:document.getElementById('frm-upload-avatar').submit()">
+                                    <a href="javascript:logoff()">
                                         <label for="user-logout" style="cursor: pointer;width: 100%; color: #000000; font-weight: 600 !important; margin-bottom: 0px; font-size: 12px ">
                                             Sair
                                             <i style="float:right; padding-right: 5px" class="fas fa-sign-out-alt"></i>
@@ -197,6 +197,12 @@
             </a>
         </li>
         `
+    }
+
+    function logoff() {
+        localStorage.removeItem('UserName')
+        localStorage.removeItem('Password')
+        document.getElementById('frm-upload-avatar').submit()
     }
 
     function pagarSistema(id,valor) {

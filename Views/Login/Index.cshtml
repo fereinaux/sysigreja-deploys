@@ -71,13 +71,14 @@
 <script src="~/Scripts/app/Util/forms.js"></script>
 <script>
     $(document).ready(() => {
-    
+
+
             @if (ViewBag.Configuracao.BackgroundId != null)
             {
                 <text> $('.background-evento').css('background', `url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed`) </text>
                 <text> $('.background-evento').css('background-size', 'cover')</text>
             }
-      
+
 
         $('.btn-juventude').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
@@ -93,6 +94,17 @@
          var corLoginBox = '@ViewBag.Configuracao.CorLoginBox';
         var rgbLoginBox = corLoginBox.convertToRGB()
         $('.loginscreen.middle-box').css('background-color', `rgba(${rgbLoginBox[0]},${rgbLoginBox[1]},${rgbLoginBox[2]},0.7)`)
+
+        if (localStorage.getItem('UserName') && localStorage.getItem('Password') && window.location.pathname != '/Login/Login') {
+
+            $('input[name="UserName"]').val(localStorage.getItem('UserName'))
+            $('input[name="Password"]').val(localStorage.getItem('Password'))
+            $('form').submit()
+        }
+    })
+
+    $('input').on('keyup change', function () {
+        localStorage.setItem(this.name, $(this).val())
     })
 </script>
 

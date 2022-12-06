@@ -62,7 +62,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         responsive: true,
         stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
-        dom: domConfig,
+        dom: '<"html5buttons"B>lTgitp',
         colReorder: {
             fixedColumnsLeft: 1
         },

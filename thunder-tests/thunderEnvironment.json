@@ -55,6 +55,10 @@
       {
         "name": "arquivo",
         "value": "{{url}}arquivo"
+      },
+      {
+        "name": "boletim",
+        "value": "{{url}}boletim"
       }
     ]
   }

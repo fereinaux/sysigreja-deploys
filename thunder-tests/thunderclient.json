@@ -94,12 +94,12 @@
     "method": "POST",
     "sortNum": 7500,
     "created": "2022-11-19T03:54:55.684Z",
-    "modified": "2022-11-19T15:09:18.488Z",
+    "modified": "2022-12-06T18:27:18.821Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"teste\",\n  \"Password\":\"teste3\"\n}",
+      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
       "form": []
     },
     "tests": []
@@ -146,6 +146,48 @@
       "raw": "{\n  \"arquivoId\": 2058\n}",
       "form": []
     },
+    "tests": []
+  },
+  {
+    "_id": "5a6d8ef5-0c9d-4aab-9205-9b47c054f99c",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "b643a056-ae0d-41a2-908c-cdbb02f96e33",
+    "name": "Download",
+    "url": "{{arquivo}}/GetArquivo/2062",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2022-12-06T18:27:27.622Z",
+    "modified": "2022-12-06T18:28:29.639Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "8c067924-b6fc-48bb-a5ef-f42750b3c207",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "346752b8-faf9-425a-90b8-c70c6d5f7e3f",
+    "name": "GetBoletins",
+    "url": "{{arquivo}}/GetBoletins",
+    "method": "POST",
+    "sortNum": 37500,
+    "created": "2022-12-06T18:29:38.392Z",
+    "modified": "2022-12-06T18:30:23.711Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "0dd84452-27cf-40c1-b031-d3b3c399b955",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "346752b8-faf9-425a-90b8-c70c6d5f7e3f",
+    "name": "Download",
+    "url": "{{arquivo}}/GetArquivo/2062",
+    "method": "GET",
+    "sortNum": 18750,
+    "created": "2022-12-06T18:32:56.228Z",
+    "modified": "2022-12-06T18:33:01.370Z",
+    "headers": [],
+    "params": [],
     "tests": []
   }
 ]

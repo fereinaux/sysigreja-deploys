@@ -995,12 +995,6 @@ function GetParticipanteContato(id) {
             $("#participante-data-casamento").val(moment(data.Participante.DataCasamento).format('DD/MM/YYYY'));
             $(`#participante-alergia`).val(data.Participante.Alergia);
             $(`#participante-parente`).val(data.Participante.Parente);
-            if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
-                $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
-            } else {
-                $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
-            }
             $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
             $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
             $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
@@ -1069,14 +1063,7 @@ function GetParticipante(id) {
                 $("#participante-data-casamento").val(moment(data.Participante.DataCasamento).format('DD/MM/YYYY'));
                 $(`#participante-alergia`).val(data.Participante.Alergia);
                 $(`#participante-parente`).val(data.Participante.Parente);
-                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
-                    $('.congregacao').removeClass('d-none');
-                    $("#participante-congregacaodescricao").addClass('required');
-                }
+                $(`#participante-congregacao`).val(data.Participante.Congregacao);
                 $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasparente][value=${data.Participante.HasParente}]`).iCheck('check');
                 $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
@@ -1136,7 +1123,6 @@ function GetParticipante(id) {
         $(`input[type=radio][name=participante-iscasado][value=false]`).iCheck('check');
         $("#participante-data-casamento").val("");
         $(`input[type=radio][name=participante-hasalergia][value=false]`).iCheck('check');
-        $(`input[type=radio][name=participante-congregacao][value='Trindade']`).iCheck('check');
         $(`input[type=radio][name=participante-parente][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasmedicacao][value=false]`).iCheck('check');
         $(`input[type=radio][name=participante-hasconvenio][value=false]`).iCheck('check');
@@ -1193,21 +1179,6 @@ function GetParticipante(id) {
     $('#not-parente').on('ifChecked', function (event) {
         $('.parente').addClass('d-none');
         $("#participante-parente").removeClass('required');
-    });
-
-    $('#trindade').on('ifChecked', function (event) {
-        $('.congregacao').addClass('d-none');
-        $("#participante-congregacaodescricao").removeClass('required');
-    });
-
-    $('#recon').on('ifChecked', function (event) {
-        $('.congregacao').addClass('d-none');
-        $("#participante-congregacaodescricao").removeClass('required');
-    });
-
-    $('#outra').on('ifChecked', function (event) {
-        $('.congregacao').removeClass('d-none');
-        $("#participante-congregacaodescricao").addClass('required');
     });
 
     $('#is-casado').on('ifChecked', function (event) {
@@ -1277,7 +1248,7 @@ function PostParticipante() {
                     DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     HasParente: $("input[type=radio][name=participante-hasparente]:checked").val(),
                     Parente: $(`#participante-parente`).val(),
-                    Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
+                    Congregacao: $(`#participante-congregacao`).val(),
                     Sexo: $("input[type=radio][name=participante-sexo]:checked").val()
                 }),
             success: function () {
@@ -1626,14 +1597,7 @@ ${campos.find(x => x.Campo == 'Parente') ? ` <div class="col-sm-12 p-w-md m-t-md
 
 ${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Participa de qual Congregação?</h5>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="trindade" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="recon" checked="" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="outra" checked="" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
-
-                                <div class="congregacao d-none">
-                                    <h5>Qual?</h5>
-                                    <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
-                                </div>
+                                    <input type="text" class="form-control" id="participante-congregacao" data-field="Congregação" />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">

@@ -716,15 +716,7 @@ function GetEquipante(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $("#equipante-id").val(data.Equipante.Id);
-                if (data.Equipante.Congregacao == 'Trindade' || data.Equipante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=equipante-congregacao][value='${data.Equipante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`input[type=radio][name=equipante-congregacao][value='Outra']`).iCheck('check');
-                    $(`#equipante-congregacaodescricao`).val(data.Equipante.Congregacao);
-                    $('.congregacao').removeClass('d-none');
-                    $("#equipante-congregacaodescricao").addClass('required');
-                }
-
+                $("#equipante-congregacao").val(data.Equipante.Congregacao);
                 $("#equipante-checkin").val(data.Equipante.Checkin);
                 $(`#equipante-nome`).val(data.Equipante.Nome);
                 $(`#equipante-apelido`).val(data.Equipante.Apelido);
@@ -854,23 +846,6 @@ function GetEquipante(id) {
         $('.parente').addClass('d-none');
         $("#equipante-parente").removeClass('required');
     });
-
-    $('#trindade').on('ifChecked', function (event) {
-        $('.congregacao').addClass('d-none');
-        $("#equipante-congregacaodescricao").removeClass('required');
-    });
-
-    $('#recon').on('ifChecked', function (event) {
-        $('.congregacao').addClass('d-none');
-        $("#equipante-congregacaodescricao").removeClass('required');
-    });
-
-    $('#outra').on('ifChecked', function (event) {
-        $('.congregacao').removeClass('d-none');
-        $("#equipante-congregacaodescricao").addClass('required');
-    });
-
-
 
     $('#is-casado').on('ifChecked', function (event) {
         $('.casado').removeClass('d-none');
@@ -1056,7 +1031,7 @@ function PostEquipante() {
                     DataCasamento: moment($("#equipante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     HasParente: $("input[type=radio][name=equipante-hasparente]:checked").val(),
                     Parente: $(`#equipante-parente`).val(),
-                    Congregacao: $("input[type=radio][name=equipante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=equipante-congregacao]:checked").val() : $(`#equipante-congregacaodescricao`).val(),
+                    Congregacao: $(`#equipante-congregacao`).val(),
                     Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
                 }),
             success: function () {
@@ -1599,14 +1574,7 @@ ${campos.find(x => x.Campo == 'Parente') ? ` <div class="col-sm-12 p-w-md m-t-md
 
 ${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Participa de qual Congregação?</h5>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="trindade" value="Trindade" name="equipante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="recon" checked="" value="Recon" name="equipante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="outra" checked="" value="Outra" name="equipante-congregacao"> <i></i> Outra </label></div>
-
-                                <div class="congregacao d-none">
-                                    <h5>Qual?</h5>
-                                    <input type="text" class="form-control" id="equipante-congregacaodescricao" data-field="Congregação" />
-                                </div>
+                          <input type="text" class="form-control" id="equipante-congregacao" data-field="Congregação" />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">

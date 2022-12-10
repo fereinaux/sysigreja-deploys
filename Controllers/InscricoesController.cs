@@ -85,19 +85,19 @@ namespace SysIgreja.Controllers
         public ActionResult GetEventosInscricao(string type, string identificador, string search, bool? isMobile)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventosGlobais().Where(x => 
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x =>
             (
               (
                 (
-                  (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) || 
+                  (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) ||
                   (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)
-                ) || 
+                ) ||
               x.DataEvento > DateTime.Today
-              ) && 
+              ) &&
               (
-                (string.IsNullOrEmpty(search)) || 
+                (string.IsNullOrEmpty(search)) ||
                 x.TituloEvento.ToLower().Contains(search.ToLower())
-              ) && 
+              ) &&
               (
                 (identificador == x.Identificador || x.Global) ||
                 string.IsNullOrEmpty(identificador)
@@ -144,9 +144,10 @@ namespace SysIgreja.Controllers
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && (x.Status == StatusEnum.Aberto || (Tipo == "Inscrições Equipe" && x.DataEvento > System.DateTime.Today)));
             if (evento == null)
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            ViewBag.Configuracao = config;
             ViewBag.EventoId = Id;
-
+            ViewBag.Igrejas = configuracaoBusiness.GetIgrejas(evento.ConfiguracaoId.Value);
             switch (Tipo)
             {
                 case "Inscrições Equipe":

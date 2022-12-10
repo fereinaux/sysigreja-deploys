@@ -200,6 +200,14 @@ namespace SysIgreja.Controllers
             return Json(new { Equipes = result }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult GetIgrejas(int id)
+        {
+            var result = configuracaoBusiness.GetIgrejas(id);
+
+            return Json(new { Igrejas = result }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public ActionResult GetCamposEnum()
@@ -229,6 +237,14 @@ namespace SysIgreja.Controllers
         public ActionResult PostEquipes(List<EquipesModel> equipes, int id)
         {
             configuracaoBusiness.PostEquipes(equipes, id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult PostIgrejas(List<IgrejasModel> igrejas, int id)
+        {
+            configuracaoBusiness.PostIgrejas(igrejas, id);
 
             return new HttpStatusCodeResult(200);
         }

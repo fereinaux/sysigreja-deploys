@@ -777,6 +777,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Controllers\IgrejaController.cs" />
     <Compile Include="Controllers\NotificacaoController.cs" />
     <Compile Include="Controllers\CrachaController.cs" />
     <Compile Include="Controllers\CategoriaController.cs" />
@@ -1235,6 +1236,7 @@
     <Content Include="Views\Notificacao\Index.cshtml" />
     <Content Include="Views\Evento\Informativos.cshtml" />
     <Content Include="Views\Arquivo\Boletim.cshtml" />
+    <Content Include="Views\Igreja\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -10,6 +10,7 @@ using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
+using Core.Business.Igrejas;
 using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
 using Core.Business.Mensagem;
@@ -41,6 +42,7 @@ namespace Web
             container.RegisterType<IGenericRepositoryConsulta<EventoConsulta>, GenericRepositoryConsulta<EventoConsulta>>();
             container.RegisterType<IGenericRepositoryConsulta<EventoLoteConsulta>, GenericRepositoryConsulta<EventoLoteConsulta>>();
             container.RegisterType<IGenericRepository<Evento>, GenericRepository<Evento>>();
+            container.RegisterType<IGenericRepository<Igreja>, GenericRepository<Igreja>>();
             container.RegisterType<IGenericRepository<Notificacao>, GenericRepository<Notificacao>>();
             container.RegisterType<IGenericRepository<ApplicationUser>, GenericRepository<ApplicationUser>>();
             container.RegisterType<IGenericRepository<Participante>, GenericRepository<Participante>>();
@@ -57,6 +59,7 @@ namespace Web
             container.RegisterType<IGenericRepository<PresencaReuniao>, GenericRepository<PresencaReuniao>>();
             container.RegisterType<IGenericRepository<Equipe>, GenericRepository<Equipe>>();
             container.RegisterType<IGenericRepository<ConfiguracaoEquipes>, GenericRepository<ConfiguracaoEquipes>>();
+            container.RegisterType<IGenericRepository<ConfiguracaoIgrejas>, GenericRepository<ConfiguracaoIgrejas>>();
             container.RegisterType<IGenericRepository<CentroCusto>, GenericRepository<CentroCusto>>();
             container.RegisterType<IGenericRepository<Lancamento>, GenericRepository<Lancamento>>();
             container.RegisterType<IGenericRepository<Arquivo>, GenericRepository<Arquivo>>();
@@ -85,6 +88,7 @@ namespace Web
             container.RegisterType<ICentroCustoBusiness, CentroCustoBusiness>();
             container.RegisterType<IEquipantesBusiness, EquipantesBusiness>();
             container.RegisterType<IEquipesBusiness, EquipesBusiness>();
+            container.RegisterType<IIgrejasBusiness, IgrejasBusiness>();
             container.RegisterType<IEventosBusiness, EventosBusiness>();
             container.RegisterType<INewsletterBusiness, NewsletterBusiness>();
             container.RegisterType<IParticipantesBusiness, ParticipantesBusiness>();

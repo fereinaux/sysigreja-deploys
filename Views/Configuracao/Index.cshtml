@@ -121,8 +121,22 @@
 
                                                 }),
                                             success: function () {
-                                                SuccessMesageOperation()
-                                                carregarConfiguracoes()
+                                                $.ajax({
+                                                    url: "/Configuracao/PostIgrejas/",
+                                                    datatype: "json",
+                                                    type: "POST",
+                                                    contentType: `application/json; charset=utf-8`,
+                                                    data: JSON.stringify(
+                                                        {
+                                                            id: id,
+                                                            igrejas: $(`#config-igreja${tipoEvento}`).val().map(igreja => { return { IgrejaId: igreja } })
+
+                                                        }),
+                                                    success: function () {
+                                                        SuccessMesageOperation()
+                                                        carregarConfiguracoes()
+                                                    }
+                                                })
                                             }
                                         });
                                     }
@@ -154,325 +168,362 @@
                         contentType: `application/json; charset=utf-8`,
                         success: function (data) {
                             equipes = data.data
+
                             $.ajax({
-                                url: "/Configuracao/GetConfiguracoesSelect/",
+                                url: "/Igreja/GetIgrejas/",
                                 datatype: "json",
-                                type: "GET",
+                                type: "POST",
                                 contentType: `application/json; charset=utf-8`,
                                 success: function (data) {
-                                    html = ``
+                                    igrejas = data.data
+                                    $.ajax({
+                                        url: "/Configuracao/GetConfiguracoesSelect/",
+                                        datatype: "json",
+                                        type: "GET",
+                                        contentType: `application/json; charset=utf-8`,
+                                        success: function (data) {
+                                            html = ``
 
-                                    data.data.forEach(config => {
-                                        html += `<div class="ibox">
-                                                                    <div class="ibox-title" style="display: flex;justify-content: space-between;">
-                                                                        <h4>${config.Titulo}</h4>
-                                                                        <div class="ibox-tools">
-                                                                            <a data-id=${config.Id} class="collapse-link">
-                                                                                <i class="fa fa-chevron-up"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="ibox-content" id="ibox-${config.Id}">
+                                            data.data.forEach(config => {
+                                                html += `<div class="ibox">
+                                                                                            <div class="ibox-title" style="display: flex;justify-content: space-between;">
+                                                                                                <h4>${config.Titulo}</h4>
+                                                                                                <div class="ibox-tools">
+                                                                                                    <a data-id=${config.Id} class="collapse-link">
+                                                                                                        <i class="fa fa-chevron-up"></i>
+                                                                                                    </a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="ibox-content" id="ibox-${config.Id}">
 
-                                                                    </div>
-                                                                </div>`
-
-
-                                    })
+                                                                                            </div>
+                                                                                        </div>`
 
 
-                                    $(`.wrapper-config`).html(html)
+                                            })
 
-                                    carregarChevron()
-                                    $('.collapse-link').click()
-                                    $('.collapse-link').on("click", function () {
-                                        if ($($(this)[0]).find('.fa-chevron-up').length == 1) {
-                                            $.ajax({
-                                                url: "/Configuracao/GetConfiguracao/",
-                                                data: { Id: $(this).data('id') },
-                                                datatype: "json",
-                                                type: "GET",
-                                                contentType: `application/json; charset=utf-8`,
-                                                success: function (data) {
-                                                    var config = data.Configuracao
-                                                    html = `<div class="row p-h-xs" id="form-config">
-                                                                            <div class="col-sm-12 p-w-md m-t-md text-center">
-                                                                                <h5>Título</h5>
 
-                                                                                <input type="text" class="form-control required" id="config-titulo${config.Id}" data-field="Título" />
-                                                                            </div>
+                                            $(`.wrapper-config`).html(html)
 
-                                                                            <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                <h5>Cor Botão</h5>
+                                            carregarChevron()
+                                            $('.collapse-link').click()
+                                            $('.collapse-link').on("click", function () {
+                                                if ($($(this)[0]).find('.fa-chevron-up').length == 1) {
+                                                    $.ajax({
+                                                        url: "/Configuracao/GetConfiguracao/",
+                                                        data: { Id: $(this).data('id') },
+                                                        datatype: "json",
+                                                        type: "GET",
+                                                        contentType: `application/json; charset=utf-8`,
+                                                        success: function (data) {
+                                                            var config = data.Configuracao
+                                                            html = `<div class="row p-h-xs" id="form-config">
+                                                                                                    <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                                                        <h5>Título</h5>
 
-                                                                                <input type="color" style="padding:0" class="form-control" id="config-corbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Botão">
-                                                                            </div>
+                                                                                                        <input type="text" class="form-control required" id="config-titulo${config.Id}" data-field="Título" />
+                                                                                                    </div>
 
-                                                                            <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                <h5>Cor Hover Botão</h5>
+                                                                                                    <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                        <h5>Cor Botão</h5>
 
-                                                                                <input type="color" style="padding:0" class="form-control" id="config-corhoverbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Hover Botão">
-                                                                            </div>
+                                                                                                        <input type="color" style="padding:0" class="form-control" id="config-corbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Botão">
+                                                                                                    </div>
 
-                                                                            <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                <h5>Campos</h5>
+                                                                                                    <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                        <h5>Cor Hover Botão</h5>
 
-                                                                                <select class="form-control config-campos" id="config-campos${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos">
-                                                                                </select>
-                                                                            </div>
+                                                                                                        <input type="color" style="padding:0" class="form-control" id="config-corhoverbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Hover Botão">
+                                                                                                    </div>
 
-             <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                <h5>Campos Equipe</h5>
+                                                                                                    <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                        <h5>Campos</h5>
 
-                                                                                <select class="form-control config-campos" id="config-camposequipe${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos">
-                                                                                </select>
-                                                                            </div>
+                                                                                                        <select class="form-control config-campos" id="config-campos${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos">
+                                                                                                        </select>
+                                                                                                    </div>
 
-                              <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                <h5>Equipes</h5>
+                                     <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                        <h5>Campos Equipe</h5>
 
-                                                                                <select class="form-control config-equipes" id="config-equipes${config.Id}" multiple="multiple" style="width: 100%" data-field="Equipes">
-                                                                                </select>
-                                                                            </div>
-                           <div class="col-sm-6 p-w-md m-t-md text-center">
-                        <h5>Equipe de Círculo</h5>
+                                                                                                        <select class="form-control config-campos" id="config-camposequipe${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos">
+                                                                                                        </select>
+                                                                                                    </div>
 
-                                                                                <select class="form-control config-equipes" id="config-equipecirculo${config.Id}" style="width: 100%" data-field="Equipe Círculo">
-                                                                                </select>
-                             </div>
+                                                      <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                        <h5>Equipes</h5>
 
-                   <div class="col-sm-6 p-w-md m-t-md text-center">
-                        <h5>Divisão dos Círculo</h5>
+                                                                                                        <select class="form-control config-equipes" id="config-equipes${config.Id}" multiple="multiple" style="width: 100%" data-field="Equipes">
+                                                                                                        </select>
+                                                                                                    </div>
 
-                                                                                <select class="form-control" id="config-tipocirculo${config.Id}" style="width: 100%" data-field="Divisão Círculo">
-                <option value="0">Endereço</option>
-                <option value="1">Aleatório</option>
-                <option value="2">Idade</option>
-                                                                                </select>
-                             </div>
-                          <div class="col-sm-6 p-w-md m-t-md text-center">
-                        <h5>Centro de Custo para Inscrições</h5>
-                                                                                  <select class="form-control centro-custos${config.Id}" id="config-centrocustoinscricao${config.Id}" style="width: 100%" data-field="Centro de Custo para Inscrições">
-                                                                                </select>
-                             </div>
-                          <div class="col-sm-6 p-w-md m-t-md text-center">
-                        <h5>Centro de Custo para Taxa de Equipante</h5>
-                           <select class="form-control centro-custos${config.Id}" id="config-centrocustoequipe${config.Id}" style="width: 100%" data-field="Centro de Custo para Taxa de Equipante">
-                                                                                </select>
-                                                                            </div>
+                               <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                        <h5>Congregações Participantes</h5>
 
-                                                                            <div class="col-sm-12  p-w-md m-t-md">
-                                                                                <div style="width: 100%;
+                                                                                                        <select class="form-control config-igrejas" id="config-igreja${config.Id}" multiple="multiple" style="width: 100%" data-field="Congregações Participantes">
+                                                                                                        </select>
+                                                                                                    </div>
+                                                   <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                <h5>Equipe de Círculo</h5>
 
-            background: #cacacbe0;
-            border-radius: 12px;
-            padding: 10px;">
-            <div class="row">
-                                                                                    <div class="col-sm-12 col-md-4 text-center">
-                                                                                        <h5>Logo</h5>
-                                                                                        <img id="img-logo${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
-                                                                                        <form enctype="multipart/form-data" id="frm-logo${config.Id}" method="post" novalidate="novalidate">
-                                                                                            <label for="logo${config.Id}" class="inputFile">
-                                                                                                <span id="add-logo${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                                                                                                <input accept="image/*" onchange='Logo(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logo${config.Id}" name="logo${config.Id}" type="file" value="">
-                                                                                            </label>
-                                                                                        </form>
-                                                                                    </div>
+                                                                                                        <select class="form-control config-equipes" id="config-equipecirculo${config.Id}" style="width: 100%" data-field="Equipe Círculo">
+                                                                                                        </select>
+                                                     </div>
 
-                                                                                    <div class="col-sm-12 col-md-4 text-center">
-                                                                                        <h5>Logo Relatórios</h5>
-                                                                                        <img id="img-logorelatorio${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
-                                                                                        <form enctype="multipart/form-data" id="frm-logorelatorio${config.Id}" method="post" novalidate="novalidate">
-                                                                                            <label for="logorelatorio${config.Id}" class="inputFile">
-                                                                                                <span id="add-logorelatorio${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                                                                                                <input accept="image/*" onchange='LogoRelatorio(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logorelatorio${config.Id}" name="logorelatorio${config.Id}" type="file" value="">
-                                                                                            </label>
-                                                                                        </form>
-                                                                                    </div>
+                                           <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                <h5>Divisão dos Círculo</h5>
 
-                                                                                    <div class="col-sm-12 col-md-4 text-center">
-                                                                                        <h5>Background</h5>
-                                                                                        <img id="img-background${config.Id}" style="width:50%;margin:auto" src="" class="m-auto" />
-                                                                                        <form enctype="multipart/form-data" id="frm-background${config.Id}" method="post" novalidate="novalidate">
-                                                                                            <label for="background${config.Id}" class="inputFile">
-                                                                                                <span id="add-background${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                                                                                                <input accept="image/*" onchange='Background(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="background${config.Id}" name="background${config.Id}" type="file" value="">
-                                                                                            </label>
-                                                                                        </form>
-                                                                                    </div>
-                                                                                   </div>
-            </div>
-                                                                                 </div>
+                                                                                                        <select class="form-control" id="config-tipocirculo${config.Id}" style="width: 100%" data-field="Divisão Círculo">
+                                        <option value="0">Endereço</option>
+                                        <option value="1">Aleatório</option>
+                                        <option value="2">Idade</option>
+                                                                                                        </select>
+                                                     </div>
+                                                  <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                <h5>Centro de Custo para Inscrições</h5>
+                                                                                                          <select class="form-control centro-custos${config.Id}" id="config-centrocustoinscricao${config.Id}" style="width: 100%" data-field="Centro de Custo para Inscrições">
+                                                                                                        </select>
+                                                     </div>
+                                                  <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                <h5>Centro de Custo para Taxa de Equipante</h5>
+                                                   <select class="form-control centro-custos${config.Id}" id="config-centrocustoequipe${config.Id}" style="width: 100%" data-field="Centro de Custo para Taxa de Equipante">
+                                                                                                        </select>
+                                                                                                    </div>
 
-                        <div class="col-sm-12 p-w-md m-t-md text-center">
-                                        <h5>Mensagem Conclusão</h5>
+                                                                                                    <div class="col-sm-12  p-w-md m-t-md">
+                                                                                                        <div style="width: 100%;
 
-                                        <textarea class="config-msg" id="config-msg${config.Id}" name="editordata"></textarea>
+                                    background: #cacacbe0;
+                                    border-radius: 12px;
+                                    padding: 10px;">
+                                    <div class="row">
+                                                                                                            <div class="col-sm-12 col-md-4 text-center">
+                                                                                                                <h5>Logo</h5>
+                                                                                                                <img id="img-logo${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
+                                                                                                                <form enctype="multipart/form-data" id="frm-logo${config.Id}" method="post" novalidate="novalidate">
+                                                                                                                    <label for="logo${config.Id}" class="inputFile">
+                                                                                                                        <span id="add-logo${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                                                                        <input accept="image/*" onchange='Logo(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logo${config.Id}" name="logo${config.Id}" type="file" value="">
+                                                                                                                    </label>
+                                                                                                                </form>
+                                                                                                            </div>
+
+                                                                                                            <div class="col-sm-12 col-md-4 text-center">
+                                                                                                                <h5>Logo Relatórios</h5>
+                                                                                                                <img id="img-logorelatorio${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
+                                                                                                                <form enctype="multipart/form-data" id="frm-logorelatorio${config.Id}" method="post" novalidate="novalidate">
+                                                                                                                    <label for="logorelatorio${config.Id}" class="inputFile">
+                                                                                                                        <span id="add-logorelatorio${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                                                                        <input accept="image/*" onchange='LogoRelatorio(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logorelatorio${config.Id}" name="logorelatorio${config.Id}" type="file" value="">
+                                                                                                                    </label>
+                                                                                                                </form>
+                                                                                                            </div>
+
+                                                                                                            <div class="col-sm-12 col-md-4 text-center">
+                                                                                                                <h5>Background</h5>
+                                                                                                                <img id="img-background${config.Id}" style="width:50%;margin:auto" src="" class="m-auto" />
+                                                                                                                <form enctype="multipart/form-data" id="frm-background${config.Id}" method="post" novalidate="novalidate">
+                                                                                                                    <label for="background${config.Id}" class="inputFile">
+                                                                                                                        <span id="add-background${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                                                                        <input accept="image/*" onchange='Background(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="background${config.Id}" name="background${config.Id}" type="file" value="">
+                                                                                                                    </label>
+                                                                                                                </form>
+                                                                                                            </div>
+                                                                                                           </div>
                                     </div>
-                                    <div class="col-sm-12 p-w-md m-t-md text-center">
-                                        <h5>Mensagem Conclusão para a Equipe</h5>
+                                                                                                         </div>
 
-                                        <textarea class="config-msgequipe" id="config-msgequipe${config.Id}" name="editordata"></textarea>
-                                    </div>
-                                                                            <div class="col-sm-12 p-w-md m-t-md text-center">
-                                                                                <button type="button" class="btn btn-primary" onclick="PostConfig(${config.Id},${config.Id})">Salvar</button>
-                                                                            </div>
-                                                                        </div>`
+                                                <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                <h5>Mensagem Conclusão</h5>
 
-                                                    $(`#ibox-${config.Id}`).html(html)
+                                                                <textarea class="config-msg" id="config-msg${config.Id}" name="editordata"></textarea>
+                                                            </div>
+                                                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                <h5>Mensagem Conclusão para a Equipe</h5>
+
+                                                                <textarea class="config-msgequipe" id="config-msgequipe${config.Id}" name="editordata"></textarea>
+                                                            </div>
+                                                                                                    <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                                                        <button type="button" class="btn btn-primary" onclick="PostConfig(${config.Id},${config.Id})">Salvar</button>
+                                                                                                    </div>
+                                                                                                </div>`
+
+                                                            $(`#ibox-${config.Id}`).html(html)
 
 
-                                                    $(".config-campos").html(`
-                                                            ${[...camposConfig].map(p => `<option value=${p.Id}>${p.Description}</option>`)}
-                                                            `)
+                                                            $(".config-campos").html(`
+                                                                                    ${[...camposConfig].map(p => `<option value=${p.Id}>${p.Description}</option>`)}
+                                                                                    `)
 
 
-                                                    $(".config-equipes").html(`
-                                                            ${[...equipes].map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
-                                                            `)
+                                                            $(".config-equipes").html(`
+                                                                                    ${[...equipes].map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+                                                                                    `)
 
-                                                    $(`.centro-custos${config.Id}`).html(`${config.CentroCustos.filter(x => x.Tipo == "Receita").map(p => `<option value=${p.Id}>${p.Descricao}</option>`)}`)
-                                                    $(`#config-centrocustoinscricao${config.Id}`).val(config.CentroCustoInscricaoId)
-                                                    $(`#config-centrocustoequipe${config.Id}`).val(config.CentroCustoTaxaId)
-                                                    $(`#config-titulo${config.Id}`).val(config.Titulo)
-                                                    $(`#config-msg${config.Id}`).summernote({
-                                                        height: 300,
-                                                        lang: 'pt-BR',
-                                                        toolbar: [
-                                                            ['style', ['style']],
-                                                            ['font', ['bold', 'italic']],
-                                                            ['fontname', ['fontname']],
-                                                            ['view', ['codeview']],
-                                                            ['mybutton', ['Id', 'Nome', 'Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
-                                                        ],
-                                                        buttons: {
-                                                            Nome: NomeButton,
-                                                            Apelido: ApelidoButton,
-                                                            Evento: EventoButton,
-                                                            NumeracaoEvento: NumeracaoEventoButton,
-                                                            DescricaoEvento: DescricaoEventoButton,
-                                                            Data: DataButton,
-                                                            Valor: ValorButton,
-                                                            NomePadrinho: PadrinhoNomeButton,
-                                                            FonePadrinho: PadrinhoFoneButton,
+                                                            $(".config-igrejas").html(`
+                                                                                    ${[...igrejas].map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+                                                                                    `)
 
-                                                        }
-                                                    }).summernote('code', config.MsgConclusao)
-                                                    $(`#config-msgequipe${config.Id}`).summernote({
-                                                        height: 300,
-                                                        lang: 'pt-BR',
-                                                        toolbar: [
-                                                            ['style', ['style']],
-                                                            ['font', ['bold', 'italic']],
-                                                            ['fontname', ['fontname']],
-                                                            ['view', ['codeview']],
-                                                            ['mybutton', ['Id', 'Nome', 'Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor']]
-                                                        ],
-                                                        buttons: {
-                                                            Nome: NomeButton,
-                                                            Apelido: ApelidoButton,
-                                                            Evento: EventoButton,
-                                                            NumeracaoEvento: NumeracaoEventoButton,
-                                                            DescricaoEvento: DescricaoEventoButton,
-                                                            Data: DataButton,
-                                                            Valor: ValorButton
-                                                        }
-                                                    }).summernote('code', config.MsgConclusaoEquipe)
-                                                    $(`#config-corhoverbotao${config.Id}`).val(config.CorHoverBotao)
-                                                    $(`#config-corbotao${config.Id}`).val(config.CorBotao)
-                                                    $(`#config-equipecirculo${config.Id}`).val(config.EquipeCirculoId)
-                                                    $(`#config-tipocirculo${config.Id}`).val(config.TipoCirculoId)
-                                                    $(`#config-corhoverscroll${config.Id}`).val(config.CorHoverScroll)
-                                                    if (config.LogoId) {
-                                                        $(`#img-logo${config.Id}`).css(`display`, `block`)
-                                                        $(`#img-logo${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Logo)
-                                                    } else {
-                                                        $(`#img-logo${config.Id}`).css(`display`, `none`)
-                                                    }
+                                                            $(`.centro-custos${config.Id}`).html(`${config.CentroCustos.filter(x => x.Tipo == "Receita").map(p => `<option value=${p.Id}>${p.Descricao}</option>`)}`)
+                                                            $(`#config-centrocustoinscricao${config.Id}`).val(config.CentroCustoInscricaoId)
+                                                            $(`#config-centrocustoequipe${config.Id}`).val(config.CentroCustoTaxaId)
+                                                            $(`#config-titulo${config.Id}`).val(config.Titulo)
+                                                            $(`#config-msg${config.Id}`).summernote({
+                                                                height: 300,
+                                                                lang: 'pt-BR',
+                                                                toolbar: [
+                                                                    ['style', ['style']],
+                                                                    ['font', ['bold', 'italic']],
+                                                                    ['fontname', ['fontname']],
+                                                                    ['view', ['codeview']],
+                                                                    ['mybutton', ['Id', 'Nome', 'Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
+                                                                ],
+                                                                buttons: {
+                                                                    Nome: NomeButton,
+                                                                    Apelido: ApelidoButton,
+                                                                    Evento: EventoButton,
+                                                                    NumeracaoEvento: NumeracaoEventoButton,
+                                                                    DescricaoEvento: DescricaoEventoButton,
+                                                                    Data: DataButton,
+                                                                    Valor: ValorButton,
+                                                                    NomePadrinho: PadrinhoNomeButton,
+                                                                    FonePadrinho: PadrinhoFoneButton,
 
-                                                    if (config.BackgroundId) {
-                                                        $(`#img-background${config.Id}`).css(`display`, `block`)
-                                                        $(`#img-background${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Background)
-                                                    } else {
-                                                        $(`#img-background${config.Id}`).css(`display`, `none`)
-                                                    }
+                                                                }
+                                                            }).summernote('code', config.MsgConclusao)
+                                                            $(`#config-msgequipe${config.Id}`).summernote({
+                                                                height: 300,
+                                                                lang: 'pt-BR',
+                                                                toolbar: [
+                                                                    ['style', ['style']],
+                                                                    ['font', ['bold', 'italic']],
+                                                                    ['fontname', ['fontname']],
+                                                                    ['view', ['codeview']],
+                                                                    ['mybutton', ['Id', 'Nome', 'Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor']]
+                                                                ],
+                                                                buttons: {
+                                                                    Nome: NomeButton,
+                                                                    Apelido: ApelidoButton,
+                                                                    Evento: EventoButton,
+                                                                    NumeracaoEvento: NumeracaoEventoButton,
+                                                                    DescricaoEvento: DescricaoEventoButton,
+                                                                    Data: DataButton,
+                                                                    Valor: ValorButton
+                                                                }
+                                                            }).summernote('code', config.MsgConclusaoEquipe)
+                                                            $(`#config-corhoverbotao${config.Id}`).val(config.CorHoverBotao)
+                                                            $(`#config-corbotao${config.Id}`).val(config.CorBotao)
+                                                            $(`#config-equipecirculo${config.Id}`).val(config.EquipeCirculoId)
+                                                            $(`#config-tipocirculo${config.Id}`).val(config.TipoCirculoId)
+                                                            $(`#config-corhoverscroll${config.Id}`).val(config.CorHoverScroll)
+                                                            if (config.LogoId) {
+                                                                $(`#img-logo${config.Id}`).css(`display`, `block`)
+                                                                $(`#img-logo${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Logo)
+                                                            } else {
+                                                                $(`#img-logo${config.Id}`).css(`display`, `none`)
+                                                            }
 
-                                                    if (config.LogoRelatorioId) {
-                                                        $(`#img-logorelatorio${config.Id}`).css(`display`, `block`)
-                                                        $(`#img-logorelatorio${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.LogoRelatorio)
-                                                    } else {
-                                                        $(`#img-logorelatorio${config.Id}`).css(`display`, `none`)
-                                                    }
+                                                            if (config.BackgroundId) {
+                                                                $(`#img-background${config.Id}`).css(`display`, `block`)
+                                                                $(`#img-background${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Background)
+                                                            } else {
+                                                                $(`#img-background${config.Id}`).css(`display`, `none`)
+                                                            }
 
-                                                    $.ajax({
-                                                        url: "/Configuracao/GetCampos/",
-                                                        data: {
-                                                            id: config.Id
-                                                        },
-                                                        datatype: "json",
-                                                        type: "GET",
-                                                        contentType: `application/json; charset=utf-8`,
-                                                        success: function (data) {
-                                                            campos = data.Campos
-                                                            $(`#config-campos${config.Id}`).val(campos.map(campo => campo.CampoId));
-                                                            $(`#config-campos${config.Id}`).select2();
+                                                            if (config.LogoRelatorioId) {
+                                                                $(`#img-logorelatorio${config.Id}`).css(`display`, `block`)
+                                                                $(`#img-logorelatorio${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.LogoRelatorio)
+                                                            } else {
+                                                                $(`#img-logorelatorio${config.Id}`).css(`display`, `none`)
+                                                            }
+
+                                                            $.ajax({
+                                                                url: "/Configuracao/GetCampos/",
+                                                                data: {
+                                                                    id: config.Id
+                                                                },
+                                                                datatype: "json",
+                                                                type: "GET",
+                                                                contentType: `application/json; charset=utf-8`,
+                                                                success: function (data) {
+                                                                    campos = data.Campos
+                                                                    $(`#config-campos${config.Id}`).val(campos.map(campo => campo.CampoId));
+                                                                    $(`#config-campos${config.Id}`).select2();
+                                                                }
+                                                            });
+
+                                                            $.ajax({
+                                                                url: "/Configuracao/GetCamposEquipe/",
+                                                                data: {
+                                                                    id: config.Id
+                                                                },
+                                                                datatype: "json",
+                                                                type: "GET",
+                                                                contentType: `application/json; charset=utf-8`,
+                                                                success: function (data) {
+                                                                    campos = data.Campos
+                                                                    $(`#config-camposequipe${config.Id}`).val(campos.map(campo => campo.CampoId));
+                                                                    $(`#config-camposequipe${config.Id}`).select2();
+                                                                }
+                                                            });
+
+                                                            $.ajax({
+                                                                url: "/Configuracao/GetCamposEquipe/",
+                                                                data: {
+                                                                    id: config.Id
+                                                                },
+                                                                datatype: "json",
+                                                                type: "GET",
+                                                                contentType: `application/json; charset=utf-8`,
+                                                                success: function (data) {
+                                                                    campos = data.Campos
+                                                                    $(`#config-camposequipe${config.Id}`).val(campos.map(campo => campo.CampoId));
+                                                                    $(`#config-camposequipe${config.Id}`).select2();
+                                                                }
+                                                            });
+
+
+
+                                                            $.ajax({
+                                                                url: "/Configuracao/GetEquipes/",
+                                                                data: {
+                                                                    id: config.Id
+                                                                },
+                                                                datatype: "json",
+                                                                type: "GET",
+                                                                contentType: `application/json; charset=utf-8`,
+                                                                success: function (data) {
+                                                                    equipesLocal = data.Equipes
+                                                                    $(`#config-equipes${config.Id}`).val(equipesLocal.map(equipe => equipe.EquipeId));
+                                                                    $(`#config-equipes${config.Id}`).select2();
+                                                                }
+                                                            });
+
+
+                                                            $.ajax({
+                                                                url: "/Configuracao/GetIgrejas/",
+                                                                data: {
+                                                                    id: config.Id
+                                                                },
+                                                                datatype: "json",
+                                                                type: "GET",
+                                                                contentType: `application/json; charset=utf-8`,
+                                                                success: function (data) {
+                                                                    igrejasLocal = data.Igrejas
+                                                                    $(`#config-igreja${config.Id}`).val(igrejasLocal.map(igreja => igreja.IgrejaId));
+                                                                    $(`#config-igreja${config.Id}`).select2();
+                                                                }
+                                                            });
+
+
                                                         }
                                                     });
-
-                                                    $.ajax({
-                                                        url: "/Configuracao/GetCamposEquipe/",
-                                                        data: {
-                                                            id: config.Id
-                                                        },
-                                                        datatype: "json",
-                                                        type: "GET",
-                                                        contentType: `application/json; charset=utf-8`,
-                                                        success: function (data) {
-                                                            campos = data.Campos
-                                                            $(`#config-camposequipe${config.Id}`).val(campos.map(campo => campo.CampoId));
-                                                            $(`#config-camposequipe${config.Id}`).select2();
-                                                        }
-                                                    });
-
-                                                    $.ajax({
-                                                        url: "/Configuracao/GetCamposEquipe/",
-                                                        data: {
-                                                            id: config.Id
-                                                        },
-                                                        datatype: "json",
-                                                        type: "GET",
-                                                        contentType: `application/json; charset=utf-8`,
-                                                        success: function (data) {
-                                                            campos = data.Campos
-                                                            $(`#config-camposequipe${config.Id}`).val(campos.map(campo => campo.CampoId));
-                                                            $(`#config-camposequipe${config.Id}`).select2();
-                                                        }
-                                                    });
-
-
-
-                                                    $.ajax({
-                                                        url: "/Configuracao/GetEquipes/",
-                                                        data: {
-                                                            id: config.Id
-                                                        },
-                                                        datatype: "json",
-                                                        type: "GET",
-                                                        contentType: `application/json; charset=utf-8`,
-                                                        success: function (data) {
-                                                            equipesLocal = data.Equipes
-                                                            $(`#config-equipes${config.Id}`).val(equipesLocal.map(equipe => equipe.EquipeId));
-                                                            $(`#config-equipes${config.Id}`).select2();
-                                                        }
-                                                    });
-
-
                                                 }
-                                            });
+                                            })
                                         }
-                                    })
+                                    });
                                 }
-                            });
+                            })
                         }
                     })
                 }
@@ -508,7 +559,7 @@
                                 contentType: `application/json; charset=utf-8`,
                                 url: `Configuracao/Post${tipo}`,
                                 data: `{ Id: ${idConfig}, sourceId: ${data}
-                                                                                        }`,
+                                                                                                                }`,
                                 success: function () {
                                     carregarConfiguracoes()
                                 }

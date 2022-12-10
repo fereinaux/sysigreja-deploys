@@ -87,12 +87,12 @@
                         }
 
                         @*@if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
-        {
-            <div class="form-group">
-                <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
-                <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
-            </div>
-        }*@
+                            {
+                                <div class="form-group">
+                                    <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
+                                    <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
+                                </div>
+                            }*@
 
                         @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
@@ -245,10 +245,17 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Congregacao.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-congregacao" class=" block">Participa de qual congregação?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="trindade" checked="" data-valor="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="recon" data-valor="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="outra" data-valor="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
+
+                                <label for="participante-congregacao" class="">Participa de qual congregação?</label>
+                                <select class="form-control" id="participante-congregacao">
+                                    @foreach (var igreja in ViewBag.Igrejas)
+                                    {
+
+                                        <option value="@igreja.Igreja">@igreja.Igreja</option>
+                                    }
+                                    <option value="Nenhuma">Nenhuma</option>
+                                    <option value="Outra">Outra</option>
+                                </select>
                             </div>
                             <div class="form-group congregacao d-none">
                                 <label for="participante-congregacaodescricao" class="">Qual?</label>
@@ -640,15 +647,18 @@
                 $("#participante-parente").removeClass('required');
             });
 
-            $('#trindade').on('ifChecked', function (event) {
-                $('.congregacao').addClass('d-none');
-                $("#participante-congregacaodescricao").removeClass('required');
-            });
+            $('#participante-congregacao').on('change', function (event) {
 
-            $('#recon').on('ifChecked', function (event) {
-                $('.congregacao').addClass('d-none');
-                $("#participante-congregacaodescricao").removeClass('required');
-            });
+                if (event.target.value == "Outra") {
+                    $('.congregacao').removeClass('d-none');
+                    $("#participante-congregacaodescricao").addClass('required');
+
+                } else {
+                    $('.congregacao').addClass('d-none');
+                    $("#participante-congregacaodescricao").removeClass('required');
+                }
+
+            })
 
             $('#outra').on('ifChecked', function (event) {
                 $('.congregacao').removeClass('d-none');
@@ -774,7 +784,7 @@
             var div = document.createElement("div");
 
             div.innerHTML = `<div><h4><strong>${$('#participante-nome').val()}</strong></h4> <p>Ao confirmar sua inscrição, você concorda que o <strong>${evento}</strong> proceda com o tratamento de seus dados.</p>
-    
+
     <div id="termo" style="display:none">
     <p>Entende-se por tratamento de acordo com o artigo 5º inciso X, a coleta, produção, recepção, classificação, utilização, acesso, reprodução, transmissão, distribuição, processamento, arquivamento, armazenamento, eliminação, avaliação ou controle da informação, modificação, comunicação, transferência, difusão ou extração.</p>
     <p>A Controladora responsabiliza-se pela manutenção de medidas de segurança, técnicas e administrativas aptas a proteger os dados pessoais de acessos não autorizados e de situações acidentais ou ilícitas de destruição, perda, alteração, comunicação ou qualquer forma de tratamento inadequado ou ilícito.</p>
@@ -827,7 +837,7 @@
                                 Camisa: $(`#participante-camisa`).val(),
                                 Profissao: $(`#participante-profissao`).val(),
                                 CEP: $(`#participante-cep`).val(),
-                                Congregacao: $("input[type=radio][name=participante-congregacao]:checked").data("valor") != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").data("valor") : $(`#participante-congregacaodescricao`).val(),
+                                Congregacao: $('#participante-congregacao').val() != "Outra" ? $('#participante-congregacao').val() : $(`#participante-congregacaodescricao`).val(),
                                 Logradouro: $(`#participante-logradouro`).val(),
                                 Bairro: $(`#participante-bairro`).val(),
                                 Cidade: $(`#participante-cidade`).val(),

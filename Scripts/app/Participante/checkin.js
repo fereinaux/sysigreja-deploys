@@ -70,7 +70,7 @@ function PostParticipante() {
                         Conjuge: $(`#participante-conjuge`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),
                         Bairro: $(`#participante-bairro`).val(),
-                        Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
+                        Congregacao: $(`#participante-congregacao`).val(),
                         Camisa: $(`#participante-camisa`).val(),
                         Cidade: $(`#participante-cidade`).val(),
                         Estado: $(`#participante-estado`).val(),
@@ -149,7 +149,7 @@ function PostParticipante() {
                         Alergia: $(`#participante-alergia`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         CEP: $(`#participante-cep`).val(),
-                        Congregacao: $("input[type=radio][name=participante-congregacao]:checked").val() != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).val(),
+                        Congregacao: $(`#participante-congregacao`).val() ,
                         Conjuge: $(`#participante-conjuge`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),
                         Bairro: $(`#participante-bairro`).val(),
@@ -261,14 +261,7 @@ function GetParticipante() {
                 $('.dados-participante-contato').removeClass('d-none');
                 $('.dados-participante-contato input[id*="nome"]').addClass('required');
                 $('.dados-participante-contato input[id*="fone"]').addClass('fone');
-                if (data.Participante.Congregacao == 'Trindade' || data.Participante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=participante-congregacao][value='${data.Participante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                    $(`#participante-congregacaodescricao`).val(data.Participante.Congregacao);
-                    $('.congregacao').removeClass('d-none');
-                    $("#participante-congregacaodescricao").addClass('required');
-                }
+                $(`#participante-congregacao`).val(data.Participante.Congregacao);
                 $('.dados-equipante').addClass('d-none');
                 $('.padrinho').text(data.Participante.Padrinho)
                 realista = data.Participante
@@ -423,14 +416,7 @@ function GetEquipante() {
                 $('.dados-participante-contato input').removeClass('required');
                 $('.dados-participante-contato input[id*="fone"]').removeClass('fone');
                 $('#marcadores').html(data.Equipante.EtiquetasList.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
-                if (data.Equipante.Congregacao == 'Trindade' || data.Equipante.Congregacao == 'Recon') {
-                    $(`input[type=radio][name=participante-congregacao][value='${data.Equipante.Congregacao}']`).iCheck('check');
-                } else {
-                    $(`input[type=radio][name=participante-congregacao][value='Outra']`).iCheck('check');
-                    $(`#participante-congregacaodescricao`).val(data.Equipante.Congregacao);
-                    $('.congregacao').removeClass('d-none');
-                    $("#participante-congregacaodescricao").addClass('required');
-                }
+                $(`#participante-congregacao`).val(data.Participante.Congregacao);
                 $('#participante-etiquetas').val(data.Equipante.EtiquetasList.map(etiqueta => etiqueta.Id))
                 $('.participante-etiquetas').select2()
                 if (data.Equipante.Foto) {
@@ -1050,14 +1036,7 @@ ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-6 p-w-md
 
 ${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
                                 <h5>Participa de qual Congregação?</h5>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="trindade" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="recon" checked="" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="outra" checked="" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
-
-                                <div class="congregacao d-none">
-                                    <h5>Qual?</h5>
-                                    <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
-                                </div>
+                             <input type="text" class="form-control" id="participante-congregacao" data-field="Congregação" />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Convênio') ? ` <div class="col-sm-6 p-w-md m-t-md text-center">
@@ -1187,21 +1166,6 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
             $('#not-parente').on('ifChecked', function (event) {
                 $('.parente').addClass('d-none');
                 $("#participante-parente").removeClass('required');
-            });
-
-            $('#trindade').on('ifChecked', function (event) {
-                $('.congregacao').addClass('d-none');
-                $("#participante-congregacaodescricao").removeClass('required');
-            });
-
-            $('#recon').on('ifChecked', function (event) {
-                $('.congregacao').addClass('d-none');
-                $("#participante-congregacaodescricao").removeClass('required');
-            });
-
-            $('#outra').on('ifChecked', function (event) {
-                $('.congregacao').removeClass('d-none');
-                $("#participante-congregacaodescricao").addClass('required');
             });
 
             $('#is-casado').on('ifChecked', function (event) {

@@ -119,6 +119,11 @@ $('body').on('DOMNodeInserted', '.div-calendar', function () {
 
 
 function GetResultadosAdmin() {
+    if ($('#eventoid option:selected').data('role') == "Administrativo") {
+        $('#resumo-financeiro-bloco').css('display', 'none')
+    } else {
+        $('#resumo-financeiro-bloco').css('display', 'block')
+    }
     $.ajax({
         url: '/Home/GetResultadosAdmin',
         datatype: "json",
@@ -126,110 +131,6 @@ function GetResultadosAdmin() {
         type: "GET",
         success: (data) => {
             result = data.result;
-            if (result.Evento == InscricoesEncerradas) {
-                $('.detalhamento-equipes').show();
-                $.ajax({
-                    url: '/Home/GetDetalhamentoEvento',
-                    datatype: "json",
-                    data: { EventoId: $("#eventoid").val() },
-                    type: "GET",
-                    success: (data2) => {
-                        result2 = data2.result;
-                        htmlDetalhamento = '';
-                        htmlDetalhamentoMobile = '';
-                        equipe = '';
-                        totalEquipe = 0;
-                        totalGeral = 0;
-                        $(result2.Equipantes).each((i, element) => {
-                            if (equipe != element.Equipe) {
-                                if (totalEquipe > 0) {
-                                    htmlDetalhamento += `<tr>                        
-                                        <td class="font-bold">Total: ${totalEquipe}</td>                        
-                                        <td></td>                                                
-                                    </tr>`;
-                                    htmlDetalhamentoMobile += `<div class="col col-xs-12 m-b-md">
-                                                                <h2>Total: ${totalEquipe}</h2>
-                                                            </div>
-                                                            `
-
-                                    totalEquipe = 0;
-                                }
-                                htmlDetalhamento += `<tr>                        
-                                    <td class="font-bold">Equipe: ${element.Equipe}</td>                        
-                                    <td></td>                                                
-                                </tr>`;
-                                htmlDetalhamentoMobile += `<div class="col col-xs-12 m-b-md">
-                                                                <h2>${element.Equipe}</h2>
-                                                            </div>
-                                                            `
-
-
-                                if (element.Tipo == "Coordenador") {
-                                    htmlDetalhamento += `<tr>                        
-                                    <td class="font-bold">Coordenador: ${element.Nome}</td>                        
-                                    <td class="equipante-fone">${element.Fone}</td>                                                
-                                </tr>`;
-
-                                } else {
-                                    htmlDetalhamento += `<tr>                        
-                                    <td>${element.Nome}</td>                        
-                                    <td class="equipante-fone">${element.Fone}</td>                                                
-                                </tr>`;
-                                }
-
-                                equipe = element.Equipe;
-                            } else {
-                                if (element.Tipo == "Coordenador") {
-                                    htmlDetalhamento += `<tr>                        
-                                    <td class="font-bold">Coordenador: ${element.Nome}</td>                        
-                                    <td class="equipante-fone">${element.Fone}</td>                                                
-                                </tr>`;
-                                } else {
-                                    htmlDetalhamento += `<tr>                        
-                                    <td>${element.Nome}</td>                        
-                                    <td class="equipante-fone">${element.Fone}</td>                                                
-                                </tr>`;
-                                }
-                            }
-
-                            htmlDetalhamentoMobile += `<div class="col col-xs-6">
-                                                                <div class="equipe-mobile black-bg">                                                              
-                                                                    <div class="mobile-content">
-                                                                        <h4>${element.Nome}</h4>
-                                                                    </div>
-                                                                  
-                                                                </div>
-                                                            </div>
-                                                            `
-
-                            totalEquipe++;
-                            totalGeral++;
-                        });
-                        htmlDetalhamento += `<tr>                        
-                                        <td class="font-bold">Total: ${totalEquipe}</td>                        
-                                        <td></td>                                                
-                                    </tr>`;
-                        htmlDetalhamentoMobile += `<div class="col col-xs-12 m-b-md">
-                                                                <h2>Total: ${totalEquipe}</h2>
-                                                            </div>
-                                                            `
-
-                        htmlDetalhamento += `<tr>                        
-                                        <td class="font-bold">Total Geral: ${totalGeral}</td>                        
-                                        <td></td>                                                
-                                    </tr>`;
-
-                        htmlDetalhamentoMobile += `<div class="col col-xs-12 m-b-md">
-                                                                <h2>Total Geral: ${totalGeral}</h2>
-                                                            </div>
-                                                            `
-
-                        $('#tb-detalhamento-equipes').html(htmlDetalhamento);
-                        $('.detalhamento-mobile-container').html(htmlDetalhamentoMobile);
-                    }
-                })
-            } else
-                $('.detalhamento-equipes').hide();
             if (result.Total == 0) {
                 $('.zero-participantes').css('display', 'none')
             } else {
@@ -327,12 +228,6 @@ function GetResultadosAdmin() {
                         <td>${element.Presenca}</td>                                                
                     </tr>`;
             });
-
-            if ($('#eventoid option:selected').data('role') == "Administrativo") {
-                $('#resumo-financeiro-bloco').css('display', 'none')
-            } else {
-                $('#resumo-financeiro-bloco').css('display', 'block')
-            }
             $('#tb-reunioes').html(htmlReunioes);
 
             var randomColorGenerator = function () {

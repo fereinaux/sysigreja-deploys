@@ -103,14 +103,14 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
             { data: "Idade", name: "Idade", class: "noSearch" },
             {
-                data: "Equipe", className: `hide-tipoevento ${$("#equipante-eventoid-filtro").val() != 999 ? 'noVis' : ''}`, name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999
+                data: "Equipe", className: `hide-tipoevento noVis`, name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999
             },
             {
-                data: "Faltas", className: `hide-tipoevento noSearch ${$("#equipante-eventoid-filtro").val() != 999 ? 'noVis' : ''}`, name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999
+                data: "Faltas", className: `hide-tipoevento noSearch noVis`, name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999
             },
             { data: "Congregacao", name: "Congregacao", autoWidth: true, visible: false },
             {
-                data: "HasOferta", className: `hide-tipoevento noSearch ${$("#equipante-eventoid-filtro").val() != 999 ? 'noVis' : ''}`, name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
+                data: "HasOferta", className: `hide-tipoevento noSearch noVis`, name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {
                         return `<span style="font-size:13px" class="text-center label label-default}">Em espera</span>`;
                     }

@@ -6,6 +6,7 @@ using Core.Business.CentroCusto;
 using Core.Business.Circulos;
 using Core.Business.Configuracao;
 using Core.Business.Cracha;
+using Core.Business.Devocional;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Etiquetas;
@@ -47,6 +48,7 @@ namespace Web
             container.RegisterType<IGenericRepository<ApplicationUser>, GenericRepository<ApplicationUser>>();
             container.RegisterType<IGenericRepository<Participante>, GenericRepository<Participante>>();
             container.RegisterType<IGenericRepository<Login>, GenericRepository<Login>>();
+            container.RegisterType<IGenericRepository<Devocional>, GenericRepository<Devocional>>();
             container.RegisterType<IGenericRepository<Newsletter>, GenericRepository<Newsletter>>();
             container.RegisterType<IGenericRepository<EventoLote>, GenericRepository<EventoLote>>();
             container.RegisterType<IGenericRepository<Cracha>, GenericRepository<Cracha>>();
@@ -103,6 +105,7 @@ namespace Web
             container.RegisterType<IQuartosBusiness, QuartosBusiness>();
             container.RegisterType<IMensagemBusiness, MenssagemBusinesss>();
             container.RegisterType<IConfiguracaoBusiness, ConfiguracaoBusiness>();
+            container.RegisterType<IDevocionalBusiness, DevocionalBusiness>();
         }
     }
 }

@@ -189,5 +189,19 @@
     "headers": [],
     "params": [],
     "tests": []
+  },
+  {
+    "_id": "34d77c51-34bd-4e8f-b5e3-79fe76bdcdd4",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "bc67a874-3cc8-44fb-913e-72f147cf9359",
+    "name": "Get",
+    "url": "{{devocional}}",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2022-12-14T18:06:17.352Z",
+    "modified": "2022-12-14T18:06:27.129Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]

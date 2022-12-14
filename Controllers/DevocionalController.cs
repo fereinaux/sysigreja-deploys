@@ -50,7 +50,13 @@ namespace SysIgreja.Controllers
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    HttpResponseMessage response = await client.GetAsync($"https://www.googleapis.com/youtube/v3/search?key={ConfigurationManager.AppSettings["GoogleKey"]}&part=snippet&maxResults=3&oder=date&channelId={ConfigurationManager.AppSettings["ChannelId"]}");
+                    var key = ConfigurationManager.AppSettings["GoogleKey"];
+                    var channelId = ConfigurationManager.AppSettings["ChannelId"];
+                    var order = "date";
+                    var maxResults = 3;
+                    var part = "snippet";
+
+                    HttpResponseMessage response = await client.GetAsync($"https://www.googleapis.com/youtube/v3/search?key={key}&channelId={channelId}&order={order}&maxResults={maxResults}&part={part}");
                     if (response.IsSuccessStatusCode)
                     {
                         string jsondata = await response.Content.ReadAsStringAsync();

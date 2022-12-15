@@ -517,6 +517,17 @@ namespace SysIgreja.Controllers
 
             if (string.IsNullOrEmpty(model.Id))
             {
+                if (accountBusiness.GetUsuarios().Any(x => x.UserName == model.UserName))           
+                    return new HttpStatusCodeResult(400, "Username já cadastrado");
+          
+
+                if (accountBusiness.GetUsuarios().Any(x => x.Equipante.Email == model.Email))
+                {
+
+                    return new HttpStatusCodeResult(400, "Email já cadastrado");
+
+                }
+
                 var equipante = equipantesBusiness.PostEquipante(new Core.Models.Participantes.PostInscricaoModel
                 {
                     Nome = model.Nome,

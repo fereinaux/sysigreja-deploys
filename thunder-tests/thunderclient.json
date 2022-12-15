@@ -222,5 +222,24 @@
       "form": []
     },
     "tests": []
+  },
+  {
+    "_id": "dc8378c1-c335-4dc5-bc83-4d6e20a859bf",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "Reset Password",
+    "url": "{{account}}/ResetPassword",
+    "method": "POST",
+    "sortNum": 7968.8,
+    "created": "2022-12-15T15:39:38.970Z",
+    "modified": "2022-12-15T16:22:33.920Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"RecoveryKey\":\"982826db-1731-4c98-9711-2e77976cc9f3\",\n  \"Password\":\"123456\"\n}",
+      "form": []
+    },
+    "tests": []
   }
 ]

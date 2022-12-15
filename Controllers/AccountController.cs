@@ -396,6 +396,55 @@ namespace SysIgreja.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
+        public ActionResult RecuperarSenha(string id)
+        {
+            ViewBag.Configuracao = configuracaoBusiness.GetLogin();
+            if (!string.IsNullOrEmpty(id))
+            {
+                var usuario = accountBusiness.GetUsuarios().FirstOrDefault(x => x.RecoveryKey == id);
+                if (usuario != null)
+                {
+                    ViewBag.Tipo = "Recovery";
+                    ViewBag.RecoveryKey = id;
+                }
+                else
+                {
+                    return View("~/Views/NaoAutorizado/Index.cshtml");
+                }
+            }
+            else
+            {
+                ViewBag.Tipo = "Forgot";
+            }
+            return View();
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string RecoveryKey, string Password)
+        {
+            var usuario = accountBusiness.GetUsuarios().FirstOrDefault(x => x.RecoveryKey == RecoveryKey && !string.IsNullOrEmpty(RecoveryKey));
+            if (usuario != null)
+            {
+                var user = UserManager.FindById(usuario.Id);
+                var oldPassword = user.Senha;
+                user.Senha = Password.ToLower();
+                user.HasChangedPassword = true;
+                user.RecoveryKey = null;
+
+                UserManager.ChangePassword(user.Id, oldPassword, Password.ToLower());
+                UserManager.Update(user);
+                return new HttpStatusCodeResult(200);
+            }
+            else
+            {
+                return new HttpStatusCodeResult(404, "Usuário não encontrado");
+            }
+        }
+
+
         [HttpPost]
         [AllowAnonymous]
         public ActionResult ForgotPassword(string email)
@@ -415,8 +464,10 @@ namespace SysIgreja.Controllers
                 body = body.Replace("{{buttonColor}}", config.CorBotao);
                 body = body.Replace("{{identificador}}", config.Identificador);
                 Guid g = Guid.NewGuid();
-                body = body.Replace("{{url}}", $"{Request.Url.Host}/forgotPassword/{g}");
-
+                body = body.Replace("{{url}}", $"{Request.Url.Host}/RecuperarSenha/{g}");
+                var user = UserManager.FindById(usuario.Id);
+                user.RecoveryKey = g.ToString();
+                UserManager.Update(user);
                 emailSender.SendEmail(email, "Recuperação de senha", body, config.Identificador);
 
                 return new HttpStatusCodeResult(200);

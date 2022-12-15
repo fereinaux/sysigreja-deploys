@@ -26,33 +26,25 @@
             {
                 if (ViewBag.Configuracao.LogoId != null)
                 {
-                    <div class="form-group ">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <img style="max-width:85% !important;max-height:150px" src="data:image/png;base64,@ViewBag.Configuracao.Logo" alt="Igreja Episcopal Carismática do Brasil" />
-                            </div>
-                        </div>
-                    </div>
+                    <img style="max-width:85% !important;max-height:120px; margin:20px" src="data:image/png;base64,@ViewBag.Configuracao.Logo" alt="Igreja Episcopal Carismática do Brasil" />
                 }
                 @Html.ValidationSummary(true)
 
                 <div class="form-group ">
-                    <div class="col-md-12">
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control text-lowercase", placeholder = "Login" })
-                        @Html.ValidationMessageFor(m => m.UserName)
-                    </div>
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control text-lowercase", placeholder = "Login" })
+                    @Html.ValidationMessageFor(m => m.UserName)
                 </div>
                 <div class="form-group">
-                    <div class="col-md-12">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control text-lowercase", placeholder = "Senha" })
-                        @Html.ValidationMessageFor(m => m.Password)
-                    </div>
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control text-lowercase", placeholder = "Senha" })
+                    @Html.ValidationMessageFor(m => m.Password)
                 </div>
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <input type="submit" value="Entrar" class="btn btn-rounded btn-juventude w-150" />
-                        <a href="@Url.Action("Index","Inscricoes")" class="btn m-l-sm w-150 btn-rounded btn-juventude">Inscrições</a>
-                    </div>
+                <div class="link-container">
+
+                    <a style="color:@ViewBag.Configuracao.CorBotao;text-decoration:underline;text-align:left" href="/Account/RecuperarSenha">Esqueci a senha</a>
+                </div>
+                <div style="margin:15px 0">
+                    <input type="submit" value="Entrar" class="btn btn-rounded btn-juventude w-150" />
+                    <a href="@Url.Action("Index","Inscricoes")" class="btn m-l-sm w-150 btn-rounded btn-juventude">Inscrições</a>
                 </div>
             }
         </div>
@@ -63,6 +55,19 @@
 <style>
     .validation-summary-errors {
         color: white;
+    }
+
+    .form-group, .link-container {
+        width: 100%;
+    }
+
+    .form-horizontal {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: left;
+        padding: 20px
     }
 </style>
 

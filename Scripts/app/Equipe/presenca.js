@@ -2,7 +2,7 @@
     if ($("#presenca-eventoid").val() && $("#presenca-equipeid").val()) {
         const tablePresencaConfig = {
             language: languageConfig,
-            lengthMenu: [200,500,1000],
+            lengthMenu: [200, 500, 1000],
             colReorder: false,
             serverSide: false,
             deferloading: 0,
@@ -10,7 +10,7 @@
             fixedHeader: true,
             filter: true,
             orderMulti: false,
-            responsive: true,stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+            responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
             destroy: true,
             dom: domConfigNoButtons,
             columns: [
@@ -25,6 +25,12 @@
             order: [
                 [0, "asc"]
             ],
+            drawCallback: function () {
+                $('.i-checks-green').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green'
+                });
+            },
             initComplete: function () {
                 $('.i-checks-green').iCheck({
                     checkboxClass: 'icheckbox_square-green',
@@ -102,6 +108,7 @@ function getPresencas() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            $('#presenca-equipeid').append($(`<option value="0">Selecione</option>`));
             data.Equipes.forEach(function (equipe, index, array) {
                 $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Nome}</option>`));
             });

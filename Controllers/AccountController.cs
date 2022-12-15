@@ -464,7 +464,7 @@ namespace SysIgreja.Controllers
                 body = body.Replace("{{buttonColor}}", config.CorBotao);
                 body = body.Replace("{{identificador}}", config.Identificador);
                 Guid g = Guid.NewGuid();
-                body = body.Replace("{{url}}", $"{Request.Url.Host}/RecuperarSenha/{g}");
+                body = body.Replace("{{url}}", $"{Request.Url.Host}/Account/RecuperarSenha/{g}");
                 var user = UserManager.FindById(usuario.Id);
                 user.RecoveryKey = g.ToString();
                 UserManager.Update(user);

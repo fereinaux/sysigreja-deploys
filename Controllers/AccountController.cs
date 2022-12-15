@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -28,17 +29,21 @@ namespace SysIgreja.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountBusiness accountBusiness;
+        private readonly IEmailSender emailSender;
+        private readonly IImageService imageService;
         private readonly IEventosBusiness eventosBusiness;
         private readonly IEquipantesBusiness equipantesBusiness;
         private readonly IConfiguracaoBusiness configuracaoBusiness;
 
-        public AccountController(IAccountBusiness accountBusiness, IEquipantesBusiness equipantesBusiness, IEventosBusiness eventosBusiness, IConfiguracaoBusiness configuracaoBusiness)
+        public AccountController(IAccountBusiness accountBusiness, IEquipantesBusiness equipantesBusiness, IImageService imageService, IEmailSender emailSender, IEventosBusiness eventosBusiness, IConfiguracaoBusiness configuracaoBusiness)
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
             this.accountBusiness = accountBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
             this.equipantesBusiness = equipantesBusiness;
             this.eventosBusiness = eventosBusiness;
+            this.emailSender = emailSender;
+            this.imageService = imageService;
         }
 
         public AccountController(UserManager<ApplicationUser> userManager)
@@ -393,6 +398,38 @@ namespace SysIgreja.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        public ActionResult ForgotPassword(string email)
+        {
+            var usuario = accountBusiness.GetUsuarios().FirstOrDefault(x => x.Equipante.Email == email);
+            if (usuario != null)
+            {
+                var config = configuracaoBusiness.GetLogin();
+                string body = string.Empty;
+                using (StreamReader reader = new StreamReader(Server.MapPath("~/EmailTemplates/ForgotPassword.html")))
+
+                {
+                    body = reader.ReadToEnd();
+                }
+
+                body = body.Replace("{{name}}", usuario.Equipante.Nome);
+                body = body.Replace("{{buttonColor}}", config.CorBotao);
+                body = body.Replace("{{identificador}}", config.Identificador);
+                Guid g = Guid.NewGuid();
+                body = body.Replace("{{url}}", $"{Request.Url.Host}/forgotPassword/{g}");
+
+                emailSender.SendEmail(email, "Recuperação de senha", body, config.Identificador);
+
+                return new HttpStatusCodeResult(200);
+            }
+            else
+            {
+                return new HttpStatusCodeResult(404, "Usuário não encontrado");
+            }
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> ExternalLogin(LoginViewModel model)
         {
 
@@ -451,7 +488,7 @@ namespace SysIgreja.Controllers
                 UserManager.Create(user, model.Password);
                 user = UserManager.FindByName(user.UserName);
 
-                
+
             }
             else
             {

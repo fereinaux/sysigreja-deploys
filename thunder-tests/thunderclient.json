@@ -203,5 +203,24 @@
     "headers": [],
     "params": [],
     "tests": []
+  },
+  {
+    "_id": "546def98-576a-43d2-bb33-3937305598f8",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "Forgot Password",
+    "url": "{{account}}/ForgotPassword",
+    "method": "POST",
+    "sortNum": 7812.5,
+    "created": "2022-12-15T13:17:31.292Z",
+    "modified": "2022-12-15T13:17:56.782Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\":\"felipereinaux@gmail.com\"\n}",
+      "form": []
+    },
+    "tests": []
   }
 ]

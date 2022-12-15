@@ -862,6 +862,9 @@
     <Content Include="Content\Images\login_Patrimonio.png" />
     <Content Include="Content\Images\logo-bradesco-.png" />
     <Content Include="Content\plugins\dataTables\responsive.dataTables.min.css" />
+    <Content Include="EmailTemplates\ForgotPassword.html" />
+    <Content Include="Images\round_corner_bottom.png" />
+    <Content Include="Images\round_corner_top.png" />
     <Content Include="firebase-messaging-sw.js" />
     <Content Include="fonts\font-awesome\css\all.css" />
     <Content Include="fonts\font-awesome\css\all.min.css" />

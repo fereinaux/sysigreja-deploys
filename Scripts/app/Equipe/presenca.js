@@ -3,18 +3,30 @@
         const tablePresencaConfig = {
             language: languageConfig,
             lengthMenu: [200, 500, 1000],
-            colReorder: false,
-            serverSide: false,
-            deferloading: 0,
-            orderCellsTop: true,
-            fixedHeader: true,
-            filter: true,
-            orderMulti: false,
-            responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
-            destroy: true,
-            dom: getButtonsConfig(`Ata de Presença`), 
+             colReorder: true,
+        serverSide: false,
+        scrollX: true,
+        scrollXollapse: true,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+        destroy: true,
+            dom: domConfig,
+            buttons: [{
+                extend: 'excelHtml5', title: "Ata de Presença", exportOptions: {
+                    columns: [0, 1]
+                }
+            },],
             columns: [
                 { data: "Nome", name: "Nome", autoWidth: true },
+                {
+                    data: "Id", name: "Id", visible: false, className: 'noVis noSearch',
+                    "render": function (data, type, row) {
+                        return `${row.Presenca ? "✔": ""}`;
+                    }
+                },
                 {
                     data: "Id", name: "Id", orderable: false, width: "15%",
                     "render": function (data, type, row) {
@@ -29,6 +41,9 @@
                 $('.i-checks-green').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green'
+                });
+                $('.i-checks-green').on('ifClicked', function (event) {
+                    TogglePresenca($(event.target).data("id"));
                 });
             },
             initComplete: function () {

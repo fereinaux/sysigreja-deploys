@@ -3,28 +3,46 @@
         const tablePresencaConfig = {
             language: languageConfig,
             lengthMenu: [200, 500, 1000],
-             colReorder: true,
-        serverSide: false,
-        scrollX: true,
-        scrollXollapse: true,
-        orderCellsTop: true,
-        fixedHeader: true,
-        filter: true,
-        orderMulti: false,
-        responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
-        destroy: true,
+            colReorder: true,
+            serverSide: false,
+            scrollX: true,
+            scrollXollapse: true,
+            orderCellsTop: true,
+            fixedHeader: true,
+            filter: true,
+            orderMulti: false,
+            responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+            destroy: true,
             dom: domConfig,
-            buttons: [{
-                extend: 'excelHtml5', title: "Ata de Presença", exportOptions: {
-                    columns: [0, 1]
-                }
-            },],
+            buttons: [
+
+                {
+                    extend: 'colvis', text: 'Colunas', columns: ':not(.noVis)', action: function (e, dt, node, config) {
+                        dt.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+
+                            if (node[0].className.includes('Visibility')) {
+                                dt.draw()
+                            }
+                        });
+                        $.fn.dataTable.ext.buttons.collection.action.call(this, e, dt, node, config);
+                        if (typeof (onLoadCampos) == 'function') {
+                            onLoadCampos();
+                        }
+                    }
+                },
+                {
+
+                    extend: 'excelHtml5', title: "Ata de Presença", exportOptions: {
+                        columns: [0, 1, 2]
+                    }
+                },],
             columns: [
                 { data: "Nome", name: "Nome", autoWidth: true },
+                { data: "Congregacao", name: "Congregacao", autoWidth: true },
                 {
                     data: "Id", name: "Id", visible: false, className: 'noVis noSearch',
                     "render": function (data, type, row) {
-                        return `${row.Presenca ? "✔": ""}`;
+                        return `${row.Presenca ? "✔" : ""}`;
                     }
                 },
                 {

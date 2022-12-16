@@ -135,6 +135,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Nome = x.Equipante.Nome,
+                    Congregacao = x.Equipante.Congregacao,
                     Presenca = presenca.Contains(x.Id)
                 });
 

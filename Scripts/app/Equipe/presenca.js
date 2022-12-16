@@ -12,7 +12,7 @@
             orderMulti: false,
             responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
             destroy: true,
-            dom: domConfigNoButtons,
+            dom: getButtonsConfig(`Ata de Presença - ${$("#presenca-eventoid option:selected").text()} - ${$("#presenca-reuniaoid option:selected").text().replaceAll('/','.')}`), 
             columns: [
                 { data: "Nome", name: "Nome", autoWidth: true },
                 {

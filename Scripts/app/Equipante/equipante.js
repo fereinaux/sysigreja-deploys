@@ -786,11 +786,11 @@ function GetEquipante(id) {
         $(`#equipante - numero`).val('');
         $(`#equipante - complemento`).val('');
         $(`#equipante - referencia`).val('');
-        $(`input[type = radio][name = equipante - sexo][value = 1]`).iCheck('check');
-        $(`input[type = radio][name = equipante - hasalergia][value = false]`).iCheck('check');
-        $(`input[type = radio][name = equipante - hasmedicacao][value = false]`).iCheck('check');
-        $(`input[type = radio][name = equipante - hasrestricaoalimentar][value = false]`).iCheck('check');
-        $(`input[type = radio][name = equipante - iscasado][value = false]`).iCheck('check');
+        $(`input[type=radio][name=equipante-sexo][value=1]`).iCheck('check');
+        $(`input[type=radio][name=equipante-hasalergia][value=false]`).iCheck('check');
+        $(`input[type=radio][name=equipante-hasmedicacao][value=false]`).iCheck('check');
+        $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=false]`).iCheck('check');
+        $(`input[type=radio][name=equipante-iscasado][value=false]`).iCheck('check');
         $("#equipante-data-casamento").val("");
     }
 

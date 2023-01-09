@@ -468,6 +468,28 @@ namespace SysIgreja.Controllers
                     filteredResultsCount = result.Count();
                 }
 
+                if (model.columns != null)
+                {
+                    for (int i = 0; i < model.columns.Count; i++)
+                    {
+                        if (model.columns[i].search.value != null)
+                        {
+
+                            var searchValue = model.columns[i].search.value.ToLower();
+                            if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
+                            {
+                                result = result.Where(x => (x.Nome.ToLower().Contains(searchValue)));
+                            }
+
+
+                            if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
+                            {
+                                result = result.Where(x => (x.Congregacao.ToLower().Contains(searchValue)));
+                            }
+                        }
+                    }
+                }
+
 
                 if (model.order[0].dir == "asc")
                 {

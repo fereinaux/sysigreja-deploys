@@ -271,7 +271,7 @@ function GetParticipante() {
                 $('.convitetext').text(realista.NomeConvite)
                 $('.contatotext').text(realista.NomeContato)
                 $('#marcadores').html(realista.EtiquetasList.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
-                $('#participante-etiquetas').val(data.Participante.Etiquetas.map(etiqueta => etiqueta.Id))
+                $('#participante-etiquetas').val(data.Participante.EtiquetasList.map(etiqueta => etiqueta.Id))
                 $('.participante-etiquetas').select2()
                 $('.pagamento').show()
                 $('#participante-obs').val(realista.Observacao)

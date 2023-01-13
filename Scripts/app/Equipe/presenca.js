@@ -82,7 +82,6 @@
 function loadScreen() {
     getReunioes();
     getPresencas();
-    CarregarTabelaPresenca()
 }
 
 $(document).ready(function () {
@@ -137,7 +136,7 @@ function getPresencas() {
                 $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Nome}</option>`));
             });
             $("#presenca-equipeid").val($("#presenca-equipeid option:first").val()).trigger("chosen:updated");
-            CarregarTabelaPresenca();
+
         }
     });
 }

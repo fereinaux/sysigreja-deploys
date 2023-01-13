@@ -416,7 +416,7 @@ function GetEquipante() {
                 $('.dados-participante-contato input').removeClass('required');
                 $('.dados-participante-contato input[id*="fone"]').removeClass('fone');
                 $('#marcadores').html(data.Equipante.EtiquetasList.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
-                $(`#participante-congregacao`).val(data.Participante.Congregacao);
+                $(`#participante-congregacao`).val(data.Equipante.Congregacao);
                 $('#participante-etiquetas').val(data.Equipante.EtiquetasList.map(etiqueta => etiqueta.Id))
                 $('.participante-etiquetas').select2()
                 if (data.Equipante.Foto) {

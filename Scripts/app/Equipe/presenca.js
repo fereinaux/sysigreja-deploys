@@ -64,15 +64,6 @@
                     TogglePresenca($(event.target).data("id"));
                 });
             },
-            initComplete: function () {
-                $('.i-checks-green').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green'
-                });
-                $('.i-checks-green').on('ifClicked', function (event) {
-                    TogglePresenca($(event.target).data("id"));
-                });
-            },
             ajax: {
                 url: '/Equipe/GetPresenca',
                 datatype: "json",

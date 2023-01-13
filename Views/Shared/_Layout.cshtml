@@ -210,17 +210,6 @@
                 $('#home-button-logo img').attr('src', `../Images/logo-iecb.png`)
                 $('#home-button-logo').css('display', 'block')
             }
-
-            $.ajax({
-                url: "/Configuracao/GetLogin/",
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    var login = data.Login
-                    logoLogin = login.Logo
-                }
-            })
         })
 
 

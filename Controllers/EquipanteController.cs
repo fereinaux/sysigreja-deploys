@@ -373,7 +373,7 @@ namespace SysIgreja.Controllers
                         {
                             result = result.OrderBy(x => new
                             {
-                                Order = x.Presencas.Count()
+                                Order = x.Evento.Reunioes.Where(y => y.DataReuniao < System.DateTime.Today).Count() - x.Presencas.Count()
                             });
 
                         }
@@ -381,7 +381,7 @@ namespace SysIgreja.Controllers
                         {
                             result = result.OrderByDescending(x => new
                             {
-                                Order = x.Presencas.Count()
+                                Order = x.Evento.Reunioes.Where(y => y.DataReuniao < System.DateTime.Today).Count() - x.Presencas.Count()
                             });
                         }
 

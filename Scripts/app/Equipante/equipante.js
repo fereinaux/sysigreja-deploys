@@ -1768,3 +1768,38 @@ function CarregarTabelaHistorico(id) {
     $("#table-historico").DataTable(tableHistoricoConfig);
     $("#table-historico-participacao").DataTable(tableHistoricoParticipacaoConfig);
 }
+
+function enviarMensagens() {
+
+    let ids = getCheckedIds()
+
+    $.ajax({
+        url: "/Equipante/GetTelefones/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({ ids }),
+        success: function (data) {
+
+            $.ajax({
+                url: "http://localhost:3000/whatsapp/message",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        session: 'reinaux',
+                        messages: data.fones.map(fone => ({
+                            number: `${fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
+                            text: 'Mensagem de Teste'
+                        }))
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                }
+            });
+
+        }
+    })
+}
+

@@ -15,6 +15,7 @@ function CarregarTabelaEquipe() {
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
+        buttons: getButtonsConfig(`Equipes ${$("#equipe-eventoid option:selected").text()}`),
         columns: [
             { data: "Equipe", name: "Equipe", autoWidth: true },
             { data: "QuantidadeMembros", name: "QuantidadeMembros", autoWidth: true },

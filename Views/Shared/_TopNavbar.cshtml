@@ -168,6 +168,15 @@
                                     </a>
                                 </li>
                                 <li class="hover-menu">
+                                    <a href="#" onclick="whatsBot()">
+                                        <label for="user-password" style="cursor: pointer;width: 100%; color: #000000; font-weight: 600 !important; margin-bottom: 0px; font-size: 12px ">
+                                            Configurar WhatsApp
+                                            <i style="float: right; padding-right: 5px" class="fab fa-whatsapp"></i>
+                                        </label>
+                                    </a>
+                                </li>
+
+                                <li class="hover-menu">
                                     <a href="javascript:logoff()">
                                         <label for="user-logout" style="cursor: pointer;width: 100%; color: #000000; font-weight: 600 !important; margin-bottom: 0px; font-size: 12px ">
                                             Sair
@@ -183,6 +192,9 @@
         }
     </nav>
 </div>
+
+
+
 
 <script>
     const divBase = (tipo, quantidade,valor) => {
@@ -203,6 +215,15 @@
         localStorage.removeItem('UserName')
         localStorage.removeItem('Password')
         document.getElementById('frm-upload-avatar').submit()
+    }
+
+    function whatsBot() {
+        var socket = io.connect('http://localhost:3000');
+        socket.emit('session', 'reinaux')
+
+        socket.on('session', function (status) {
+            console.log(status);
+        });
     }
 
     function pagarSistema(id,valor) {

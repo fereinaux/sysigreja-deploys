@@ -547,6 +547,16 @@ namespace SysIgreja.Controllers
             return Json(new { Equipante = result }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult GetTelefones(int[] ids)
+        {
+            var query = equipantesBusiness.GetEquipantes().Where(x => ids.Contains(x.Id));
+
+            var result = query.Select(x => x.Fone).ToList();
+
+            return Json(new { fones = result }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public ActionResult GetEquipanteEvento(int Id, int eventoId)
         {

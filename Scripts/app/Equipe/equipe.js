@@ -14,7 +14,7 @@ function CarregarTabelaEquipe() {
         orderMulti: false,
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
-        dom: domConfigNoButtons,
+        dom: domConfig,
         columns: [
             { data: "Equipe", name: "Equipe", autoWidth: true },
             { data: "QuantidadeMembros", name: "QuantidadeMembros", autoWidth: true },

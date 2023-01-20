@@ -76,6 +76,7 @@
                             CorHoverBotao: $(`#config-corhoverbotao${tipoEvento}`).val(),
                             CorBotao: $(`#config-corbotao${tipoEvento}`).val(),
                             TipoCirculoId: $(`#config-tipocirculo${tipoEvento}`).val(),
+                            TipoQuartoId: $(`#config-tipoquarto${tipoEvento}`).val(),
                             EquipeCirculoId: $(`#config-equipecirculo${tipoEvento}`).val(),
                             CentroCustoInscricaoId: $(`#config-centrocustoinscricao${tipoEvento}`).val(),
                             CentroCustoTaxaId: $(`#config-centrocustoequipe${tipoEvento}`).val(),
@@ -279,6 +280,14 @@
                                         <option value="2">Idade</option>
                                                                                                         </select>
                                                      </div>
+    <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                <h5>Tipo dos Quartos</h5>
+
+                                                                                                        <select class="form-control" id="config-tipoquarto${config.Id}" style="width: 100%" data-field="Tipo dos Quartos">
+                                        <option value="0">Normal</option>
+                                        <option value="1">Endereço</option>                                        
+                                                                                                        </select>
+                                                     </div>
                                                   <div class="col-sm-6 p-w-md m-t-md text-center">
                                                 <h5>Centro de Custo para Inscrições</h5>
                                                                                                           <select class="form-control centro-custos${config.Id}" id="config-centrocustoinscricao${config.Id}" style="width: 100%" data-field="Centro de Custo para Inscrições">
@@ -415,6 +424,7 @@
                                                             $(`#config-corbotao${config.Id}`).val(config.CorBotao)
                                                             $(`#config-equipecirculo${config.Id}`).val(config.EquipeCirculoId)
                                                             $(`#config-tipocirculo${config.Id}`).val(config.TipoCirculoId)
+                                                            $(`#config-tipoquarto${config.Id}`).val(config.TipoQuartoId)
                                                             $(`#config-corhoverscroll${config.Id}`).val(config.CorHoverScroll)
                                                             if (config.LogoId) {
                                                                 $(`#img-logo${config.Id}`).css(`display`, `block`)

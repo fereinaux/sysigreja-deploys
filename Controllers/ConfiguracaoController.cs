@@ -103,6 +103,8 @@ namespace SysIgreja.Controllers
                     CorHoverBotao = x.CorHoverBotao,
                     TipoCirculoId = x.TipoCirculo,
                     TipoCirculo = x.TipoCirculo.GetDescription(),
+                    TipoQuartoId = x.TipoQuarto,
+                    TipoQuarto = x.TipoQuarto?.GetDescription(),
                     CentroCustos = x.CentroCustos.Select(y => new CentroCustoModel
                     {
                         Descricao = y.Descricao,

@@ -110,7 +110,17 @@ namespace SysIgreja.Controllers
                 EquipanteId = x.EquipanteId,
                 Equipante = UtilServices.CapitalizarNome(x.Equipante?.Nome),
                 Titulo = x.Titulo,
-                Sexo = x.Sexo.GetDescription()
+                Sexo = x.Sexo.GetDescription(),
+                CEP = x.CEP,
+                Logradouro = x.Logradouro,
+                Bairro = x.Bairro,
+                Cidade = x.Cidade,
+                Estado = x.Estado,
+                Numero = x.Numero,
+                Complemento = x.Complemento,
+                Referencia = x.Referencia,
+                Latitude = x.Latitude,
+                Longitude = x.Longitude,
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -182,6 +192,16 @@ namespace SysIgreja.Controllers
                         ParticipanteId = x.EquipanteId,
                         QuartoId = x.QuartoId,
                         Sexo = x.Quarto.Sexo.GetDescription(),
+                        CEP = x.Quarto.CEP,
+                        Logradouro = x.Quarto.Logradouro,
+                        Bairro = x.Quarto.Bairro,
+                        Cidade = x.Quarto.Cidade,
+                        Estado = x.Quarto.Estado,
+                        Numero = x.Quarto.Numero,
+                        Complemento = x.Quarto.Complemento,
+                        Referencia = x.Quarto.Referencia,
+                        Latitude = x.Quarto.Latitude,
+                        Longitude = x.Quarto.Longitude,
                         Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count().ToString()}/{x.Quarto.Capacidade.ToString()}",
                     }).ToList()
                 }, JsonRequestBehavior.AllowGet);
@@ -199,6 +219,12 @@ namespace SysIgreja.Controllers
                         ParticipanteId = x.ParticipanteId,
                         QuartoId = x.QuartoId,
                         Sexo = x.Quarto.Sexo.GetDescription(),
+                        CEP = x.Quarto.CEP,
+                        Logradouro = x.Quarto.Logradouro,
+                        Bairro = x.Quarto.Bairro,
+                        Cidade = x.Quarto.Cidade,
+                        Estado = x.Quarto.Estado,
+                        Numero = x.Quarto.Numero,
                         Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count().ToString()}/{x.Quarto.Capacidade.ToString()}",
                     }).ToList()
                 }, JsonRequestBehavior.AllowGet);
@@ -225,6 +251,12 @@ namespace SysIgreja.Controllers
                 Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
                 Titulo = x.Quarto.Titulo,
+                CEP = x.Quarto.CEP,
+                Logradouro = x.Quarto.Logradouro,
+                Bairro = x.Quarto.Bairro,
+                Cidade = x.Quarto.Cidade,
+                Estado = x.Quarto.Estado,
+                Numero = x.Quarto.Numero,
                 Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count(),
             });
 

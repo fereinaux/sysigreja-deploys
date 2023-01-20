@@ -243,6 +243,19 @@ function GetQuarto(id) {
 
                 $('#quarto-equipante').append($(`<option value="${data.Quarto.EquipanteId}">${data.Quarto.Equipante}</option>`));
                 $("#quarto-equipante").val(data.Quarto.EquipanteId || "Pesquisar").trigger("chosen:updated");
+
+                $(`#quarto-cep`).val(data.Quarto.CEP);
+                $(`#quarto-logradouro`).val(data.Quarto.Logradouro);
+                $(`#quarto-bairro`).val(data.Quarto.Bairro);
+                $(`#quarto-cidade`).val(data.Quarto.Cidade);
+                $(`#quarto-estado`).val(data.Quarto.Estado);
+                $(`#quarto-numero`).val(data.Quarto.Numero);
+                $(`#quarto-complemento`).val(data.Quarto.Complemento);
+                $(`#quarto-referencia`).val(data.Quarto.Referencia);
+                $(`#quarto-latitude`).val((data.Quarto.Latitude || '').replaceAll(',', '.'));
+                $(`#quarto-longitude`).val((data.Quarto.Longitude || '').replaceAll(',', '.'));
+
+               
             }
         });
     }
@@ -251,6 +264,28 @@ function GetQuarto(id) {
         $("#quarto-titulo").val("");
         $("#quarto-capacidade").val("");
         $(`input[type=radio][name=quarto-sexo][value=1]`).iCheck('check');
+
+
+        $(`#quarto-cep`).val();
+        $(`#quarto-logradouro`).val();
+        $(`#quarto-bairro`).val();
+        $(`#quarto-cidade`).val();
+        $(`#quarto-estado`).val();
+        $(`#quarto-numero`).val();
+        $(`#quarto-complemento`).val();
+        $(`#quarto-referencia`).val();
+        $(`#quarto-latitude`).val();
+        $(`#quarto-longitude`).val();
+    }
+
+    if ($('#map').length > 0) {
+
+        mapLocal = initMap('map')
+        markerLayerLocal = createMarkerLayer(mapLocal)
+        setInterval(function () {
+            mapLocal.invalidateSize();
+        }, 100);
+
     }
 }
 
@@ -295,7 +330,8 @@ function PostQuarto() {
                     Titulo: $("#quarto-titulo").val(),
                     Sexo: $("input[type=radio][name=quarto-sexo]:checked").val(),
                     EquipanteId: $("#quarto-equipante").val() != "Pesquisar" ? $("#quarto-equipante").val() : null,
-                    Capacidade: $("#quarto-capacidade").val()
+                    Capacidade: $("#quarto-capacidade").val(),
+                  
                 }),
             success: function () {
                 SuccessMesageOperation();
@@ -320,7 +356,17 @@ function PostQuartoEquipe() {
                     Titulo: $("#quarto-titulo").val(),
                     Sexo: $("input[type=radio][name=quarto-sexo]:checked").val(),
                     Capacidade: $("#quarto-capacidade").val(),
-                    TipoPessoa: 0
+                    TipoPessoa: 0,
+                    CEP: $(`#quarto-cep`).val(),
+                    Logradouro: $(`#quarto-logradouro`).val(),
+                    Bairro: $(`#quarto-bairro`).val(),
+                    Cidade: $(`#quarto-cidade`).val(),
+                    Estado: $(`#quarto-estado`).val(),
+                    Numero: $(`#quarto-numero`).val(),
+                    Complemento: $(`#quarto-complemento`).val(),
+                    Referencia: $(`#quarto-referencia`).val(),
+                    Latitude: $(`#quarto-latitude`).val(),
+                    Longitude: $(`#quarto-longitude`).val(),
                 }),
             success: function () {
                 SuccessMesageOperation();
@@ -382,6 +428,12 @@ function GetQuartosComParticipantes(column, dir, search) {
         type: "POST",
         success: function (data) {
             data.data.forEach(function (quarto, index, array) {
+
+                if (quarto.Latitude && quarto.Longitude) {
+                    addMapa(quarto.Latitude, quarto.Longitude, quarto.Titulo, "#000000", quarto.QuartoId, 'quarto')
+                        .bindPopup(`<h4>${quarto.Titulo}</h4><div style="display:flex;flex-direction:column"><span>Capacidade: ${quarto.Capacidade}</span><span>${quarto.Logradouro} - ${quarto.Bairro}</span></div>`);
+                }
+
                 $("#quartos").append($(`<div data-id="${quarto.Id}" style="margin-bottom:25px;background-color:${{ Masculino: "#0095ff", Feminino: "#ff00d4", Misto: "#424242" }[quarto.Sexo]}; background-clip: content-box;border-radius: 28px;" class= "p-xs col-xs-12 col-lg-4 quarto text-center text-white" >
             <div class="p-h-xs"><h4 id="capacidade-${quarto.Id}">${quarto.Capacidade}</h4>
                 <h4>${quarto.Titulo}</h4>
@@ -394,7 +446,7 @@ function GetQuartosComParticipantes(column, dir, search) {
                 <button type="button" class="btn btn-rounded btn-default print-button" onclick='PrintQuarto(${JSON.stringify(quarto)})'><i class="fa fa-2x fa-print"/></button>
             </div>`));
             });
-
+            $('.div-map-geral').css('display', 'block')
             $.ajax({
                 url: "/Quarto/GetQuartosComParticipantes/",
                 data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('Quarto/Equipe') ? 0 : 1 },
@@ -405,6 +457,7 @@ function GetQuartosComParticipantes(column, dir, search) {
                     data.Quartos.forEach(function (quarto, index, array) {
                         $(`#quarto-${quarto.QuartoId}`).append($(`<tr><td class="participante" data-id="${quarto.ParticipanteId}">${quarto.Nome}</td></tr>`));
                     });
+
                     GetParticipantesSemQuarto();
                     DragDropg();
                 }
@@ -583,4 +636,49 @@ function GetEquipantes(id) {
             GetQuarto(id);
         }
     });
+}
+
+function addMapa(lat, long, nome, cor, id, type) {
+    return L.marker([lat, long], { icon: getIcon(cor.trim()) }).addTo(markerLayer);
+
+
+}
+
+let markerLayerLocal
+let mapLocal 
+
+const map = initMap('map-geral')
+const markerLayer = createMarkerLayer(map)
+map.setView([-8.050000, -34.900002], 13);
+setInterval(function () {
+    map.invalidateSize();
+}, 100);
+
+function verificaCep(input) {
+    let cep = $(input).val()
+    if (cep.length == 9) {
+        $.ajax({
+            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $(`#quarto-logradouro`).val(data.logradouro)
+                $(`#quarto-bairro`).val(data.bairro)
+                $(`#quarto-cidade`).val(data.localidade)
+                $(`#quarto-estado`).val(data.uf)
+                $(`#quarto-latitude`).val(data.lat)
+                $(`#quarto-longitude`).val(data.lon)
+                montarMapa()
+            }
+        })
+    }
+}
+
+function montarMapa() {
+    markerLayerLocal.getLayers().forEach(mark => mark.remove())
+    var marker = L.marker([$(`#quarto-latitude`).val().toString(), $(`#quarto-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayerLocal);
+    marker.bindPopup(`<h4>${$(`#quarto-titulo`).val()}</h4>`).openPopup();
+    $('.div-map').css('display', 'block')
+    mapLocal.setView([$(`#quarto-latitude`).val(), $(`#quarto-longitude`).val()], 18);
 }

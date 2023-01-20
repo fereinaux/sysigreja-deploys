@@ -46,12 +46,26 @@
                     <tr>
                         <th>Título</th>
                         <th>Tipo</th>
-                        <th id="col-chave" >Participantes</th>
+                        <th id="col-chave">Participantes</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
+        </div>
+        <div class="ibox quarto-endereco" style="margin-top:25px;">
+            <div class="ibox-title" style="display: flex;justify-content: space-between;">
+                <h4>Mapa</h4>
+
+            </div>
+            <div class="ibox-content" style="height:650px">
+
+                <div class="col-sm-12 p-w-md m-t-md text-center div-map-geral" style="display: none">
+                    <div id="map-geral" style="height:600px;">
+                    </div>
+                </div>
+
+            </div>
         </div>
         <div class="ibox">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
@@ -109,7 +123,76 @@
                             <div class="radio i-checks-green inline"><label> <input type="radio" id="quarto-sexo" value="2" name="quarto-sexo"> <i></i> Feminino </label></div>
                             <div class="radio i-checks-green inline"><label> <input type="radio" id="quarto-sexo" value="3" name="quarto-sexo"> <i></i> Misto </label></div>
                         </div>
+                        <section class="quarto-endereco">
+                            <div class="col-sm-3 p-w-md m-t-md text-center">
+                                <h5>CEP</h5>
 
+                                <input type="text" class="form-control required cep" id="quarto-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                                <input type="hidden" id="quarto-latitude" />
+                                <input type="hidden" id="quarto-longitude" />
+                            </div>
+
+                            <div class="col-sm-9 p-w-md m-t-md text-center">
+                                <h5>Logradouro</h5>
+
+                                <input type="text" class="form-control required" disabled id="quarto-logradouro" data-field="Logradouro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>Bairro</h5>
+
+                                <input type="text" class="form-control required" disabled id="quarto-bairro" data-field="Bairro" />
+                            </div>
+
+                            <div class="col-sm-5 p-w-md m-t-md text-center">
+                                <h5>
+                                    Cidade
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="quarto-cidade" data-field="Cidade" />
+                            </div>
+
+                            <div class="col-sm-2 p-w-md m-t-md text-center">
+                                <h5>
+                                    Estado
+                                </h5>
+
+                                <input type="text" class="form-control required" disabled id="quarto-estado" data-field="Estado" />
+                            </div>
+
+                            <div class="col-sm-4 p-w-md m-t-md text-center">
+                                <h5>
+                                    Número
+                                </h5>
+
+                                <input type="text" class="form-control" id="quarto-numero" data-field="Número" />
+                            </div>
+
+
+                            <div class="col-sm-8 p-w-md m-t-md text-center">
+                                <h5>
+                                    Complemento
+                                </h5>
+
+                                <input type="text" class="form-control" id="quarto-complemento" data-field="Complemento" />
+                            </div>
+
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>
+                                    Ponto de Referência
+                                </h5>
+
+                                <input type="text" class="form-control" id="quarto-referencia" data-field="Ponto de Referência" />
+                            </div>
+
+                            <div class="col-sm-12 p-w-md m-t-md text-center div-map" style="display: none">
+                                <div id="map" style="height:300px;">
+                                </div>
+                            </div>
+
+
+                        </section>
                     </div>
                 </div>
 

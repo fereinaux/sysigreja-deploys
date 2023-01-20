@@ -258,6 +258,12 @@
                             $('#ibox-mapa-circulo').css('display', 'none')
                         }
 
+                        if (config.TipoQuarto == "Endereco") {
+                            $('.quarto-endereco').css('display','block')
+                        } else {
+                            $('.quarto-endereco').css('display','none')
+                        }
+
                         $('.title-circulo').text(config.EquipeCirculo)
                         if (config.LogoId) {
                             $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)

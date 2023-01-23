@@ -135,6 +135,22 @@ namespace SysIgreja.Controllers
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult GetBoletim(int Id)
+        {
+            var arquivo = arquivosBusiness.GetArquivos().Where(x => x.Categoria == "Boletim").FirstOrDefault(x => x.Id == Id);
+
+            if (arquivo != null)
+            {
+                return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+            }
+            else
+            {
+                return new HttpStatusCodeResult(404);
+            }
+        }
+
         [HttpPost]
         public int PostArquivo(PostArquivoModel model)
         {

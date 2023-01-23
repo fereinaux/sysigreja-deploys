@@ -94,12 +94,12 @@
     "method": "POST",
     "sortNum": 7500,
     "created": "2022-11-19T03:54:55.684Z",
-    "modified": "2022-12-15T18:02:01.671Z",
+    "modified": "2023-01-23T19:29:53.845Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"testedad123\",\n  \"Password\":\"teste2\"\n}",
+      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
       "form": []
     },
     "tests": []
@@ -153,11 +153,11 @@
     "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
     "containerId": "b643a056-ae0d-41a2-908c-cdbb02f96e33",
     "name": "Download",
-    "url": "{{arquivo}}/GetArquivo/2062",
+    "url": "{{arquivo}}/GetArquivo/1270",
     "method": "GET",
     "sortNum": 20000,
     "created": "2022-12-06T18:27:27.622Z",
-    "modified": "2022-12-06T18:28:29.639Z",
+    "modified": "2023-01-23T19:30:07.686Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -181,11 +181,11 @@
     "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
     "containerId": "346752b8-faf9-425a-90b8-c70c6d5f7e3f",
     "name": "Download",
-    "url": "{{arquivo}}/GetArquivo/1429",
+    "url": "{{arquivo}}/GetBoletim/1429",
     "method": "GET",
     "sortNum": 18750,
     "created": "2022-12-06T18:32:56.228Z",
-    "modified": "2022-12-06T18:38:05.364Z",
+    "modified": "2023-01-23T19:37:34.503Z",
     "headers": [],
     "params": [],
     "tests": []

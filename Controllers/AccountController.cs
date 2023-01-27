@@ -486,8 +486,18 @@ namespace SysIgreja.Controllers
             var login = model.UserName;
             if (UtilServices.IsValidEmail(model.UserName))
             {
-                var userEmail = await UserManager.FindByEmailAsync(model.UserName);
-                login = userEmail.UserName;
+                try
+                {
+                    var equipanteEmail = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == model.UserName);
+                    var userEmail = accountBusiness.GetUsuarios().FirstOrDefault(x => x.EquipanteId == equipanteEmail.Id); ;
+                    login = userEmail.UserName;
+                }
+                catch (Exception)
+                {
+                    return new HttpStatusCodeResult(401, "Unauthorized");
+                    throw;
+                }
+
             }
             var user = await UserManager.FindAsync(login.ToLower(), model.Password.ToLower());
             if ((user != null) && (user.Status == StatusEnum.Ativo))
@@ -522,9 +532,9 @@ namespace SysIgreja.Controllers
 
             if (string.IsNullOrEmpty(model.Id))
             {
-                if (accountBusiness.GetUsuarios().Any(x => x.UserName == model.UserName))           
+                if (accountBusiness.GetUsuarios().Any(x => x.UserName == model.UserName))
                     return new HttpStatusCodeResult(400, "Username já cadastrado");
-          
+
 
                 if (accountBusiness.GetUsuarios().Any(x => x.Equipante.Email == model.Email))
                 {

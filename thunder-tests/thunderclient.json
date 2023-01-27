@@ -94,12 +94,12 @@
     "method": "POST",
     "sortNum": 7500,
     "created": "2022-11-19T03:54:55.684Z",
-    "modified": "2023-01-23T19:29:53.845Z",
+    "modified": "2023-01-27T14:04:24.450Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
+      "raw": "{\n  \"Username\":\"felipereinaux@gmail.com\",\n  \"Password\":\"reinaux09\"\n}",
       "form": []
     },
     "tests": []

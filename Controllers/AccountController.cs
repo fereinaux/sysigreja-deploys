@@ -483,8 +483,13 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLogin(LoginViewModel model)
         {
-
-            var user = await UserManager.FindAsync(model.UserName.ToLower(), model.Password.ToLower());
+            var login = model.UserName;
+            if (UtilServices.IsValidEmail(model.UserName))
+            {
+                var userEmail = await UserManager.FindByEmailAsync(model.UserName);
+                login = userEmail.UserName;
+            }
+            var user = await UserManager.FindAsync(login.ToLower(), model.Password.ToLower());
             if ((user != null) && (user.Status == StatusEnum.Ativo))
             {
                 await SignInAsync(user, true);

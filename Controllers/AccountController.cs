@@ -176,6 +176,7 @@ namespace SysIgreja.Controllers
             var user = UserManager.FindById(User.Identity.GetUserId());
             accountBusiness.DeleteUsuario(user.Id);
             return new HttpStatusCodeResult(200);
+
         }
 
         [HttpPost]

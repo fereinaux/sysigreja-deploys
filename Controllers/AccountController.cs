@@ -169,6 +169,15 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+
+        [HttpDelete]
+        public ActionResult ExternalDelete()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            accountBusiness.DeleteUsuario(user.Id);
+            return new HttpStatusCodeResult(200);
+        }
+
         [HttpPost]
         public ActionResult setAvatar(int arquivoId)
         {
@@ -528,9 +537,9 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult ExternalRegister(RegisterExternalViewModel model)
         {
-            ApplicationUser user = null;
+            ApplicationUser user = accountBusiness.GetUsuarioDeletado(model.UserName, model.Email);
 
-            if (string.IsNullOrEmpty(model.Id))
+            if (string.IsNullOrEmpty(model.Id) && user == null)
             {
                 if (accountBusiness.GetUsuarios().Any(x => x.UserName == model.UserName))
                     return new HttpStatusCodeResult(400, "Username já cadastrado");
@@ -569,7 +578,20 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                user = UserManager.FindById(model.Id);
+                if (user != null)
+                {
+                    user = UserManager.FindById(user.Id);
+                    UserManager.ChangePassword(user.Id, user.Senha, model.Password);
+                    user.Status = StatusEnum.Ativo;
+                    user.Senha = model.Password;
+                    user.UserName = model.UserName.ToLower();
+                    user.HasChangedPassword = false;
+                    UserManager.Update(user);
+                }
+                else
+                {
+                    user = UserManager.FindById(model.Id);
+                }
 
                 equipantesBusiness.PostEquipante(new Core.Models.Participantes.PostInscricaoModel
                 {

@@ -61,12 +61,12 @@
     "method": "POST",
     "sortNum": 5000,
     "created": "2022-11-19T03:18:44.091Z",
-    "modified": "2022-12-15T18:01:19.204Z",
+    "modified": "2023-01-30T12:53:17.667Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"testedad123\",\n  \"Password\":\"teste2\",\n  \"Nome\": \"Testinho da silva jr\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"teste@gmaisl.com\",\n  \"Sexo\":\"Feminino\",\n  \"DataNascimento\":\"11/01/1995\"\n}",
+      "raw": "{\n  \"Username\":\"testedad123e1\",\n  \"Password\":\"teste2232\",\n  \"Nome\": \"Testinho da silva jr\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"teste@gmaisl23.com\",\n  \"Sexo\":\"Feminino\",\n  \"DataNascimento\":\"11/01/1995\"\n}",
       "form": []
     },
     "tests": []
@@ -94,12 +94,12 @@
     "method": "POST",
     "sortNum": 7500,
     "created": "2022-11-19T03:54:55.684Z",
-    "modified": "2023-01-27T14:04:24.450Z",
+    "modified": "2023-01-30T12:53:22.366Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"felipereinaux@gmail.com\",\n  \"Password\":\"reinaux09\"\n}",
+      "raw": "{\n  \"Username\":\"testedad123e1\",\n  \"Password\":\"teste2232\"\n}",
       "form": []
     },
     "tests": []
@@ -240,6 +240,20 @@
       "raw": "{\n  \"RecoveryKey\":\"982826db-1731-4c98-9711-2e77976cc9f3\",\n  \"Password\":\"123456\"\n}",
       "form": []
     },
+    "tests": []
+  },
+  {
+    "_id": "7ed35835-fbfa-4a57-ae36-64fb6b51562b",
+    "colId": "1c169046-bef6-41d2-a1f1-adbf16b04df5",
+    "containerId": "81b52f97-ff55-4f67-ab8f-97b042881dfd",
+    "name": "Delete",
+    "url": "{{account}}/ExternalDelete",
+    "method": "DELETE",
+    "sortNum": 6250,
+    "created": "2023-01-30T12:38:42.673Z",
+    "modified": "2023-01-30T12:39:13.714Z",
+    "headers": [],
+    "params": [],
     "tests": []
   }
 ]

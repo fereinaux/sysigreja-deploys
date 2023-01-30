@@ -170,7 +170,7 @@ namespace SysIgreja.Controllers
         }
 
 
-        [HttpDelete]
+        [HttpPost]
         public ActionResult ExternalDelete()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());

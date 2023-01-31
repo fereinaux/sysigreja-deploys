@@ -243,7 +243,7 @@
         socket.emit('session', 'reinaux')
 
         socket.on('session', function (status) {
-
+            console.log(status);
             if (!status.connected) {
                 $("#whats-qr").attr('src', `data:image/png;base64,${status.base64}`)
                 $('#modal-qr').modal()

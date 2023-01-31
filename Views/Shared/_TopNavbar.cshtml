@@ -194,14 +194,35 @@
 </div>
 
 
+<div class="modal inmodal" id="modal-qr" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <h5 class="modal-title">Escaneie o QR Code no app do Whatsapp</h5>
+            </div>
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs" style="display:flex">
+                    <img style="margin:auto" src="" id="whats-qr" />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 <script>
-    const divBase = (tipo, quantidade,valor) => {
+    const divBase = (tipo, quantidade, valor) => {
         const { titulo, link, icon, onClick } = handleTipo(tipo, quantidade, valor);
         return `
         <li class="hover-menu-notification item-notificacao">
-            <a ${link ? `href="${link}"` : `onclick="${onClick}"` }  class="dropdown-item">
+            <a ${link ? `href="${link}"` : `onclick="${onClick}"`}  class="dropdown-item">
                 <div>
                    ${icon}
                    ${titulo}
@@ -222,11 +243,18 @@
         socket.emit('session', 'reinaux')
 
         socket.on('session', function (status) {
-            console.log(status);
+
+            if (!status.connected) {
+                $("#whats-qr").attr('src', `data:image/png;base64,${status.base64}`)
+                $('#modal-qr').modal()
+            } else {
+                SuccessMessage("Whatsapp conectado com sucesso!")
+                $('#modal-qr').modal("hide")
+            }
         });
     }
 
-    function pagarSistema(id,valor) {
+    function pagarSistema(id, valor) {
         let input = document.createElement("input");
         input.type = 'number';
         input.value = valor;
@@ -240,11 +268,11 @@
                 text: "Ofertar"
             },
             className: "button-center",
-          
-        }).then(result => {            
+
+        }).then(result => {
             if (result)
                 ofertar(id, input.value)
-       
+
         })
     }
 
@@ -261,7 +289,7 @@
                     titulo: `Oferta do ${tipo}`,
                     onClick: `pagarSistema(${quantidade},${valor})`,
                     icon: '<i class="fas fa-money-bill-alt"></i>'
-                }      
+                }
         }
     }
 
@@ -283,7 +311,7 @@
                     }
                 });
             } else {
-                $('.img-avatar ').css('opacity',0.7)
+                $('.img-avatar ').css('opacity', 0.7)
             }
         })
 
@@ -352,7 +380,7 @@
                     className: "button-center",
                     title: "Oferta Computada",
                     icon: "success",
-                    content: div 
+                    content: div
                 });
             }
         });

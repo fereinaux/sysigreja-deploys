@@ -552,9 +552,9 @@ namespace SysIgreja.Controllers
         {
             var query = equipantesBusiness.GetEquipantes().Where(x => ids.Contains(x.Id));
 
-            var result = query.Select(x => x.Fone).ToList();
+            var result = query.Select(x => new { x.Fone, x.Nome }).ToList();
 
-            return Json(new { fones = result }, JsonRequestBehavior.AllowGet);
+            return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

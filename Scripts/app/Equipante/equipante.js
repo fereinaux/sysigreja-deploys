@@ -1204,6 +1204,24 @@ async function openBulkActions() {
         type: "POST",
     });
 
+    $.ajax({
+        url: "/Mensagem/GetMensagensByTipo/",
+        datatype: "json",
+        data: JSON.stringify(
+            {
+                eventoId: $("#equipante-eventoid-filtro").val(), tipos: ["Equipe"]
+            }),
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        success: function (dataMsg) {
+            $("#bulk-mensagem").html(`
+${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+`)
+
+        }
+    })
+
+
     arrayData = table.data().toArray()
     let idsM = ids.filter(x => arrayData.find(y => y.Id == x && y.Sexo == "Masculino"))
     let idsF = ids.filter(x => arrayData.find(y => y.Id == x && y.Sexo == "Feminino"))
@@ -1773,33 +1791,46 @@ function enviarMensagens() {
 
     let ids = getCheckedIds()
 
-    $.ajax({
-        url: "/Equipante/GetTelefones/",
-        datatype: "json",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({ ids }),
-        success: function (data) {
 
+    $.ajax({
+        url: "/Mensagem/GetMensagem/",
+        data: { Id: $("#bulk-mensagem").val() },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (dataMsg) {
+         
             $.ajax({
-                url: "http://localhost:3000/whatsapp/message",
+                url: "/Equipante/GetTelefones/",
                 datatype: "json",
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(
-                    {
-                        session: 'reinaux',
-                        messages: data.fones.map(fone => ({
-                            number: `${fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
-                            text: 'Mensagem de Teste'
-                        }))
-                    }),
-                success: function () {
-                    SuccessMesageOperation();
-                }
-            });
+                data: JSON.stringify({ ids }),
+                success: function (data) {
 
+                    $.ajax({
+                        url: "http://localhost:3000/whatsapp/message",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                session: 'reinaux',
+                                messages: data.Equipantes.map(equipante => ({
+                                    number: `${equipante.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
+                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome)
+                                }))
+                            }),
+                        success: function () {
+                            SuccessMesageOperation();
+                        }
+                    });
+
+                }
+            })
         }
-    })
+    });
+
+
 }
 

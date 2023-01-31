@@ -301,7 +301,7 @@
             }
 
             .badge {
-                font-size: 9px !important;
+                font-size: 0.85rem !important;
             }
 
             .search-icon {
@@ -693,7 +693,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
                 </div>
 
 
-  ${informativos.map(evento => `<div class="col-md-3 col col-xs-12 a-normal">
+  ${informativos.map(evento => `<div class="col-md-3 col col-xs-12">
   <a target="_blank" href='${evento.UrlDestino}' class="a-normal">
                         <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');
         background-size: cover;
@@ -702,6 +702,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
 ">
 <span  class="badge m-r-xs" style="position:absolute; top:5px;left:5px;z-index:999999;   background: #ffffff;color:#000">${evento.Identificador}</span>
                             </div>
+
                         <div class="card-body">
                             <span style="display: block; color: #9b2125;">${evento.Data}</span>
                               <h3 style="font-size: 16px; margin-top: 4px; margin-bottom: 4px;">

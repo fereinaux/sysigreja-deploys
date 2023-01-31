@@ -1809,7 +1809,7 @@ function enviarMensagens() {
                 success: function (data) {
 
                     $.ajax({
-                        url: "http://localhost:3000/whatsapp/message",
+                        url: "https://api.iecbeventos.com.br/whatsapp/message",
                         datatype: "json",
                         type: "POST",
                         contentType: 'application/json; charset=utf-8',

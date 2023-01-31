@@ -239,7 +239,7 @@
     }
 
     function whatsBot() {
-        var socket = io.connect('http://localhost:3000');
+        var socket = io.connect('https://api.iecbeventos.com.br');
         socket.emit('session', 'reinaux')
 
         socket.on('session', function (status) {

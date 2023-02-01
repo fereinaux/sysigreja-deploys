@@ -240,7 +240,7 @@
 
     function whatsBot() {
         var socket = io.connect('https://api.iecbeventos.com.br');
-        socket.emit('session', 'reinaux')
+        socket.emit('session','@UtilServices.CapitalizarNome(User.Identity.GetUserName())' )
 
         socket.on('session', function (status) {
             console.log(status);

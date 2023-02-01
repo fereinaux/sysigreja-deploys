@@ -1815,7 +1815,7 @@ function enviarMensagens() {
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(
                             {
-                                session: 'reinaux',
+                                session: username,
                                 messages: data.Equipantes.map(equipante => ({
                                     number: `${equipante.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
                                     text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome)

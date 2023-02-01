@@ -218,6 +218,7 @@
 
 
 <script>
+
     const divBase = (tipo, quantidade, valor) => {
         const { titulo, link, icon, onClick } = handleTipo(tipo, quantidade, valor);
         return `
@@ -240,7 +241,7 @@
 
     function whatsBot() {
         var socket = io.connect('https://api.iecbeventos.com.br');
-        socket.emit('session','@UtilServices.CapitalizarNome(User.Identity.GetUserName())' )
+        socket.emit('session',username )
 
         socket.on('session', function (status) {
             console.log(status);

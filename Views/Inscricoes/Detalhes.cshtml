@@ -266,7 +266,11 @@
         }
         else
         {
-            @Html.Raw(ViewBag.Evento.Conteudo)
+            <section id="services" class="section-padding">
+                <div class="container">
+                    @Html.Raw(ViewBag.Evento.Conteudo)
+                </div>
+            </section>
         }
     }
 

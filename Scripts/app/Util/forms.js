@@ -428,3 +428,15 @@ var PadrinhoFoneButton = function (context) {
 
     return button.render();   // return button as jquery object
 }
+
+function openBase64InNewTab(data, mimeType) {
+    var byteCharacters = atob(data);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    var byteArray = new Uint8Array(byteNumbers);
+    var file = new Blob([byteArray], { type: mimeType + ';base64' });
+    var fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
+}

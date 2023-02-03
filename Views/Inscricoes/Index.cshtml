@@ -717,7 +717,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
                 }
 
 
-                var eventosEncerrados = eventos.filter(evento => (evento.Status == "Em breve" || evento.StatusEquipe == "Em breve"))
+                var eventosEncerrados = eventos.filter(evento => (evento.Status == "Em breve" || evento.StatusEquipe == "Em breve") && !eventosAbertos.find(x => x.UrlDestino == evento.UrlDestino))
 
                 if (eventosEncerrados.length > 0) {
 

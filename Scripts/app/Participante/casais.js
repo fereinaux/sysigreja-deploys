@@ -1731,7 +1731,7 @@ async function loadCrachaImprimir(Foto) {
             type: "POST",
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(ids.length > 0 ? { Ids: ids, Foto: Foto, EventoId: $("#participante-eventoid").val() } : getFiltros(Foto)),
-            url: "Participante/GetCracha",
+            url: "/Participante/GetCrachaCasal",
         });
 
     return result.data

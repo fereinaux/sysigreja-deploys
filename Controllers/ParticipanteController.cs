@@ -382,6 +382,105 @@ namespace SysIgreja.Controllers
             return json;
         }
 
+
+        [HttpPost]
+        public ActionResult GetCrachaCasal(FilterModel model)
+        {
+
+            var result = participantesBusiness
+                        .GetParticipantesByEvento(model.EventoId.Value)
+                        .Where(x => x.EventoId == model.EventoId && (StatusEnum.Confirmado == x.Status || x.Status == StatusEnum.Inscrito));
+
+            var queryCasais = result.Join(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+            {
+                Conjuge = x.q2,
+                Nome = x.q1,
+            });
+
+            if (model.Etiquetas != null && model.Etiquetas.Count > 0)
+            {
+                model.Etiquetas.ForEach(etiqueta =>
+                queryCasais = queryCasais.Where(x =>
+                x.Conjuge.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) ||
+                 x.Nome.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                ));
+
+            }
+
+            if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
+            {
+                model.NaoEtiquetas.ForEach(etiqueta =>
+             queryCasais = queryCasais.Where(x => !x.Conjuge.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) && !x.Nome.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+            }
+
+            if (model.Status != null)
+            {
+
+                if (model.Status.Contains(StatusEnum.Checkin))
+                {
+                    queryCasais = queryCasais.Where(x => (x.Conjuge.Checkin || x.Nome.Checkin) || (model.Status.Contains(x.Conjuge.Status) || model.Status.Contains(x.Nome.Status)));
+                }
+                else
+                {
+                    queryCasais = queryCasais.Where(x => ((model.Status.Contains(x.Conjuge.Status) || (model.Status.Contains(x.Nome.Status)) && (!x.Conjuge.Checkin && !x.Nome.Checkin))));
+
+                }
+
+
+            }
+
+            if (model.PadrinhoId != null)
+            {
+                if (model.PadrinhoId.Contains(0))
+                {
+                    queryCasais = queryCasais.Where(x => (!x.Conjuge.PadrinhoId.HasValue) || (!x.Nome.PadrinhoId.HasValue));
+                }
+                else
+                {
+                    queryCasais = queryCasais.Where(x => (model.PadrinhoId.Contains(x.Conjuge.PadrinhoId.Value)) || (model.PadrinhoId.Contains(x.Nome.PadrinhoId.Value)));
+                }
+            }
+
+            if (model.CirculoId != null)
+            {
+                queryCasais = queryCasais.Where(x => (x.Conjuge.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))) || (x.Nome.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+            }
+
+            if (model.search != null && model.search.value != null)
+            {
+                queryCasais = queryCasais.Where(x => x.Conjuge != null ? ((x.Conjuge.Nome.Contains(model.search.value)) || (x.Conjuge.Conjuge.Contains(model.search.value))) : (x.Nome.Nome.Contains(model.search.value)) || (x.Nome.Conjuge.Contains(model.search.value)));
+            }
+
+            var queryNova = queryCasais.Where(x => (x.Conjuge != null & x.Nome != null)).Select(x => new
+            {
+                Dupla = x.Nome.Apelido + " de " + x.Conjuge.Apelido,
+                x.Conjuge,
+                x.Nome,
+            });
+
+            List<Data.Entities.Participante> resultCasais = new List<Data.Entities.Participante>();
+
+            queryNova.ToList().ForEach(casal =>
+            {
+                if (casal.Nome != null)
+                {
+                    casal.Nome.Dupla = casal.Dupla;
+                    casal.Nome.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
+                    {
+                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);
+                    });
+                    resultCasais.Add(casal.Nome);
+                }
+            });
+
+            var json = Json(new
+            {
+                data = mapper.Map<IEnumerable<CrachaCasalModel>>(resultCasais),
+            }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
+        }
+
         [HttpPost]
         public ActionResult GetParticipantesDatatable(FilterModel model)
         {

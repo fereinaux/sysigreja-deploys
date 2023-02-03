@@ -24,6 +24,15 @@ namespace SysIgreja.Controllers
         public string Equipe { get; set; }
         public string Foto { get; set; }
     }
+
+    public class CrachaCasalModel
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Apelido { get; set; }
+        public string Equipe { get; set; }
+        public string Foto { get; set; }
+    }
     public class MapperRealidade
     {
         public IMapper mapper;
@@ -41,6 +50,10 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
                 cfg.CreateMap<Participante, CrachaModel>()
                     .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""));
+                cfg.CreateMap<Participante, CrachaCasalModel>()
+                  .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
+                  .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Dupla)))
+                   .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""));
                 cfg.CreateMap<Equipante, PostEquipanteModel>()
                     .ForMember(dest => dest.EtiquetasList, opt => opt.MapFrom(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta)))
                     .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""));

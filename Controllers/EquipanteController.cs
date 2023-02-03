@@ -594,9 +594,9 @@ namespace SysIgreja.Controllers
 
 
         [HttpPost]
-        public ActionResult DeleteEquipante(int Id)
+        public ActionResult DeleteEquipante(int Id, int? EventoId)
         {
-            equipantesBusiness.DeleteEquipante(Id);
+            equipantesBusiness.DeleteEquipante(Id, EventoId);
 
             return new HttpStatusCodeResult(200);
         }

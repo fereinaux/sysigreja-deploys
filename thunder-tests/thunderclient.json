@@ -61,12 +61,12 @@
     "method": "POST",
     "sortNum": 5000,
     "created": "2022-11-19T03:18:44.091Z",
-    "modified": "2023-02-02T19:10:43.891Z",
+    "modified": "2023-02-03T19:22:18.635Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"e313212e\",\n  \"Password\":\"213221\",\n  \"Nome\": \"dasdsa\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"3213521@gmsdsa.com\"\n}",
+      "raw": "{\n  \"Username\":\"dsuahsaudasdsasadas\",\n  \"Email\":\"felipereinaux@gmail.com\"\n}",
       "form": []
     },
     "tests": []

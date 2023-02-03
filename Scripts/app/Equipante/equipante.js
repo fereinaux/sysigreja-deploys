@@ -873,7 +873,8 @@ function DeleteEquipante(id) {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        Id: id
+                        Id: id,
+                        EventoId: $("#equipante-eventoid-filtro").val()
                     }),
                 success: function () {
                     SuccessMesageDelete();

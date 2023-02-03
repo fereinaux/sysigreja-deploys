@@ -61,12 +61,12 @@
     "method": "POST",
     "sortNum": 5000,
     "created": "2022-11-19T03:18:44.091Z",
-    "modified": "2023-01-30T12:53:17.667Z",
+    "modified": "2023-02-02T19:10:43.891Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"testedad123e1\",\n  \"Password\":\"teste2232\",\n  \"Nome\": \"Testinho da silva jr\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"teste@gmaisl23.com\",\n  \"Sexo\":\"Feminino\",\n  \"DataNascimento\":\"11/01/1995\"\n}",
+      "raw": "{\n  \"Username\":\"e313212e\",\n  \"Password\":\"213221\",\n  \"Nome\": \"dasdsa\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Email\":\"3213521@gmsdsa.com\"\n}",
       "form": []
     },
     "tests": []

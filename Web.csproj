@@ -1037,6 +1037,7 @@
     <Content Include="Scripts\app\Mensagem\mensagem.js" />
     <Content Include="Scripts\app\Padrinho\padrinho.js" />
     <Content Include="Scripts\app\Participante\checkin.js" />
+    <Content Include="Scripts\app\Participante\casais.js" />
     <Content Include="Scripts\app\Quarto\quarto.js" />
     <Content Include="Scripts\app\Equipante\equipante.js" />
     <Content Include="Scripts\app\Circulo\circulo.js" />
@@ -1242,6 +1243,7 @@
     <Content Include="Views\Arquivo\Boletim.cshtml" />
     <Content Include="Views\Igreja\Index.cshtml" />
     <Content Include="Views\Account\RecuperarSenha.cshtml" />
+    <Content Include="Views\Participante\Casais.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

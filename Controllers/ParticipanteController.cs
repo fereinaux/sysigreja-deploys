@@ -50,7 +50,7 @@ namespace SysIgreja.Controllers
         public ParticipanteController(ILancamentoBusiness lancamentoBusiness, ICaronasBusiness caronasBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
-            this.caronasBusiness = caronasBusiness;   
+            this.caronasBusiness = caronasBusiness;
             this.arquivoBusiness = arquivoBusiness;
             this.eventosBusiness = eventosBusiness;
             this.quartosBusiness = quartosBusiness;
@@ -63,7 +63,7 @@ namespace SysIgreja.Controllers
             mapper = new MapperRealidade().mapper;
         }
 
-        
+
         public ActionResult Checkin()
         {
             ViewBag.Title = "Check-in";
@@ -80,6 +80,25 @@ namespace SysIgreja.Controllers
             GetConfiguracao();
 
             return View();
+        }
+
+        public ActionResult Casais()
+        {
+            ViewBag.Title = "Casais";
+            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
+            GetConfiguracao();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GetTelefones(int[] ids)
+        {
+            var query = participantesBusiness.GetParticipantes().Where(x => ids.Contains(x.Id));
+
+            var result = query.Select(x => new { x.Fone, x.Nome, x.NomeContato, x.FoneContato, x.FoneMae, x.NomeMae, x.FoneConvite, x.NomeConvite, x.NomePai, x.FonePai }).ToList();
+
+            return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
 
         private PostInscricaoModel mapParticipante(Data.Entities.Participante x)
@@ -372,6 +391,123 @@ namespace SysIgreja.Controllers
 
             var result = participantesBusiness
             .GetParticipantesByEvento(model.EventoId.Value);
+
+            var totalResultsCount = result.Count();
+            var filteredResultsCount = totalResultsCount;
+
+            if (model.Etiquetas != null && model.Etiquetas.Count > 0)
+            {
+                model.Etiquetas.ForEach(etiqueta =>
+                result = result.Where(x => x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+
+            }
+
+            if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
+            {
+                model.NaoEtiquetas.ForEach(etiqueta =>
+             result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+            }
+
+            if (model.Status != null)
+            {
+
+                if (model.Status.Contains(StatusEnum.Checkin))
+                {
+                    result = result.Where(x => x.Checkin || (model.Status.Contains(x.Status)));
+                }
+                else
+                {
+                    result = result.Where(x => (model.Status.Contains(x.Status) && !x.Checkin));
+
+                }
+
+
+                filteredResultsCount = result.Count();
+            }
+
+            if (model.PadrinhoId != null)
+            {
+                if (model.PadrinhoId.Contains(0))
+                {
+                    result = result.Where(x => (!x.PadrinhoId.HasValue));
+                }
+                else
+                {
+                    result = result.Where(x => (model.PadrinhoId.Contains(x.PadrinhoId.Value)));
+                }
+                filteredResultsCount = result.Count();
+            }
+
+            if (model.CirculoId != null)
+            {
+                result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+                filteredResultsCount = result.Count();
+            }
+
+            if (model.search != null && model.search.value != null)
+            {
+                result = result.Where(x => (x.Nome.Contains(model.search.value)));
+                filteredResultsCount = result.Count();
+            }
+
+
+            if (extract == "excel")
+            {
+                Guid g = Guid.NewGuid();
+                var data = mapper.Map<IEnumerable<ParticipanteExcelViewModel>>(result);
+
+                Session[g.ToString()] = datatableService.GenerateExcel(data.ToList(), model.Campos);
+
+                return Content(g.ToString());
+            }
+
+            try
+            {
+                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
+                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
+                result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+            }
+            catch (Exception)
+            {
+                result = result.OrderBy(x => x.Id);
+            }
+
+            filteredResultsCount = result.Count();
+
+
+            result = result.Skip(model.Start.Value)
+                .Take(model.Length.Value);
+
+            return Json(new
+            {
+                data = mapper.Map<IEnumerable<ParticipanteListModel>>(result),
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
+        [HttpPost]
+        public ActionResult GetCasaisDatatable(FilterModel model)
+        {
+            var extract = Request.QueryString["extract"];
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
+
+
+            var result = participantesBusiness
+            .GetParticipantesByEvento(model.EventoId.Value);
+
+            var queryCasais = result.GroupJoin(result, x => x.Nome, y => y.Conjuge, (q1, q2) => new { q1, q2 = q2.Any() ? q2.FirstOrDefault() : null }).Select(x => new
+            {
+                Nome = new List<string> { x.q1.Nome, x.q2.Nome }.Min(),
+                Conjuge = new List<string> { x.q1.Nome, x.q2.Nome }.Max(),
+            }).Distinct();
+
+            var resultCasais = queryCasais.ToList();
+
+            var grouped = resultCasais.GroupBy(x => x.Conjuge).Select(x => new { Valor = x.Count(), Key = x.Key }).ToList();
 
             var totalResultsCount = result.Count();
             var filteredResultsCount = totalResultsCount;

@@ -24,6 +24,7 @@
         <div style="margin:auto">
             @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
+                @Html.HiddenFor(m => m.RerturnUrl, new { Value = ViewBag.ReturnUrl })
                 if (ViewBag.Configuracao.LogoId != null)
                 {
                     <img style="max-width:85% !important;max-height:120px; margin:20px" src="data:image/png;base64,@ViewBag.Configuracao.Logo" alt="Igreja Episcopal Carismática do Brasil" />

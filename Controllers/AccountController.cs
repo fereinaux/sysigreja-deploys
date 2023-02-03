@@ -540,6 +540,25 @@ namespace SysIgreja.Controllers
         {
             ApplicationUser user = accountBusiness.GetUsuarioDeletado(model.UserName, model.Email);
 
+            if (string.IsNullOrEmpty(model.UserName))
+                return new HttpStatusCodeResult(400, "Username é obrigatório");
+
+
+            if (string.IsNullOrEmpty(model.Email))
+                return new HttpStatusCodeResult(400, "Email é obrigatório");
+
+            if (string.IsNullOrEmpty(model.Password))
+                return new HttpStatusCodeResult(400, "Password é obrigatório");
+
+            if (model.Password.Length < 6)
+                return new HttpStatusCodeResult(400, "Password deve conter 6 caracteres");
+
+            if (string.IsNullOrEmpty(model.Fone))
+                return new HttpStatusCodeResult(400, "Fone é obrigatório");
+
+            if (string.IsNullOrEmpty(model.Nome))
+                return new HttpStatusCodeResult(400, "Nome é obrigatório");
+
             if (string.IsNullOrEmpty(model.Id) && user == null)
             {
                 if (accountBusiness.GetUsuarios().Any(x => x.UserName == model.UserName))
@@ -553,13 +572,20 @@ namespace SysIgreja.Controllers
 
                 }
 
+                DateTime? dtnasc = null;
+
+                if (!string.IsNullOrEmpty(model.DataNascimento))
+                {
+                    dtnasc = DateTime.ParseExact(model.DataNascimento, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                }
+
                 var equipante = equipantesBusiness.PostEquipante(new Core.Models.Participantes.PostInscricaoModel
                 {
                     Nome = model.Nome,
-                    Sexo = model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
+                    Sexo =model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
                     Apelido = model.Nome,
                     Fone = model.Fone,
-                    DataNascimento = DateTime.ParseExact(model.DataNascimento, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                    DataNascimento = dtnasc,
                     Email = model.Email
                 });
 
@@ -594,6 +620,13 @@ namespace SysIgreja.Controllers
                     user = UserManager.FindById(model.Id);
                 }
 
+                DateTime? dtnasc = null;
+
+                if (!string.IsNullOrEmpty(model.DataNascimento))
+                {
+                    dtnasc = DateTime.ParseExact(model.DataNascimento, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                }
+
                 equipantesBusiness.PostEquipante(new Core.Models.Participantes.PostInscricaoModel
                 {
                     Id = user.EquipanteId.Value,
@@ -601,7 +634,7 @@ namespace SysIgreja.Controllers
                     Sexo = model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
                     Apelido = model.Nome,
                     Fone = model.Fone,
-                    DataNascimento = DateTime.ParseExact(model.DataNascimento, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture),
+                    DataNascimento = dtnasc,
                     Email = model.Email
                 });
                 var claims = UserManager.GetClaims(user.Id);
@@ -636,7 +669,7 @@ namespace SysIgreja.Controllers
                     EquipanteId = x.EquipanteId,
                     Nome = x.Equipante.Nome,
                     Fone = x.Equipante.Fone,
-                    DataNascimento = x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy"),
+                    DataNascimento = x.Equipante.DataNascimento.HasValue ? x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy") : "",
                     Sexo = x.Equipante.Sexo.GetDescription(),
                     Email = x.Equipante.Email
                 }

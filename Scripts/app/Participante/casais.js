@@ -229,7 +229,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
             }
         },
         ajax: {
-            url: '/Participante/GetParticipantesDatatable',
+            url: '/Participante/GetCasaisDatatable',
             data: getFiltros(),
             datatype: "json",
             type: "POST"

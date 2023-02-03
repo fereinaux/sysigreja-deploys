@@ -38,7 +38,7 @@ namespace SysIgreja.Controllers
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Index(string returnUrl)
         {
             if (Request.UserLanguages == null)
             {
@@ -49,6 +49,7 @@ namespace SysIgreja.Controllers
             {
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
                 accountBusiness.Seed();
+                ViewBag.ReturnUrl = returnUrl;
                 return View();
             }
         }
@@ -64,6 +65,10 @@ namespace SysIgreja.Controllers
                 if ((user != null) && (user.Status == StatusEnum.Ativo))
                 {
                     await SignInAsync(user, true);
+                    if (!string.IsNullOrEmpty(model.RerturnUrl))
+                    {
+                        return Redirect(model.RerturnUrl);
+                    }
 
                     return RedirectToAction("Index", "Home");
                 }

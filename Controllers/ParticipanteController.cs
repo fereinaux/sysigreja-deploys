@@ -499,30 +499,33 @@ namespace SysIgreja.Controllers
             var result = participantesBusiness
             .GetParticipantesByEvento(model.EventoId.Value);
 
-            var queryCasais = result.GroupJoin(result, x => x.Nome, y => y.Conjuge, (q1, q2) => new { q1, q2 = q2.Any() ? q2.FirstOrDefault() : null }).Select(x => new
+            var queryCasais = result.GroupJoin(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
             {
-                Nome = new List<string> { x.q1.Nome, x.q2.Nome }.Min(),
-                Conjuge = new List<string> { x.q1.Nome, x.q2.Nome }.Max(),
+                Conjuge = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
+                Nome = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
+            }).Select(x => new
+            {
+                Homem = x.Nome.Sexo == SexoEnum.Masculino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                Mulher = x.Nome.Sexo == SexoEnum.Feminino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
             }).Distinct();
 
-            var resultCasais = queryCasais.ToList();
-
-            var grouped = resultCasais.GroupBy(x => x.Conjuge).Select(x => new { Valor = x.Count(), Key = x.Key }).ToList();
-
-            var totalResultsCount = result.Count();
+            var totalResultsCount = queryCasais.Count();
             var filteredResultsCount = totalResultsCount;
 
             if (model.Etiquetas != null && model.Etiquetas.Count > 0)
             {
                 model.Etiquetas.ForEach(etiqueta =>
-                result = result.Where(x => x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                queryCasais = queryCasais.Where(x =>
+                x.Homem.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) ||
+                 x.Mulher.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                ));
 
             }
 
             if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
             {
                 model.NaoEtiquetas.ForEach(etiqueta =>
-             result = result.Where(x => !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+             queryCasais = queryCasais.Where(x => !x.Homem.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) && !x.Mulher.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
             }
 
             if (model.Status != null)
@@ -530,41 +533,41 @@ namespace SysIgreja.Controllers
 
                 if (model.Status.Contains(StatusEnum.Checkin))
                 {
-                    result = result.Where(x => x.Checkin || (model.Status.Contains(x.Status)));
+                    queryCasais = queryCasais.Where(x => (x.Homem.Checkin || x.Mulher.Checkin) || (model.Status.Contains(x.Homem.Status) || model.Status.Contains(x.Mulher.Status)));
                 }
                 else
                 {
-                    result = result.Where(x => (model.Status.Contains(x.Status) && !x.Checkin));
+                    queryCasais = queryCasais.Where(x => ((model.Status.Contains(x.Homem.Status) || (model.Status.Contains(x.Mulher.Status)) && (!x.Homem.Checkin && !x.Mulher.Checkin))));
 
                 }
 
 
-                filteredResultsCount = result.Count();
+                filteredResultsCount = queryCasais.Count();
             }
 
             if (model.PadrinhoId != null)
             {
                 if (model.PadrinhoId.Contains(0))
                 {
-                    result = result.Where(x => (!x.PadrinhoId.HasValue));
+                    queryCasais = queryCasais.Where(x => (!x.Homem.PadrinhoId.HasValue) || (!x.Mulher.PadrinhoId.HasValue));
                 }
                 else
                 {
-                    result = result.Where(x => (model.PadrinhoId.Contains(x.PadrinhoId.Value)));
+                    queryCasais = queryCasais.Where(x => (model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value)) || (model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value)));
                 }
-                filteredResultsCount = result.Count();
+                filteredResultsCount = queryCasais.Count();
             }
 
             if (model.CirculoId != null)
             {
-                result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
-                filteredResultsCount = result.Count();
+                queryCasais = queryCasais.Where(x => (x.Homem.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))) || (x.Mulher.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+                filteredResultsCount = queryCasais.Count();
             }
 
             if (model.search != null && model.search.value != null)
             {
-                result = result.Where(x => (x.Nome.Contains(model.search.value)));
-                filteredResultsCount = result.Count();
+                queryCasais = queryCasais.Where(x => x.Homem != null ? ((x.Homem.Nome.Contains(model.search.value)) || (x.Homem.Conjuge.Contains(model.search.value))) : (x.Mulher.Nome.Contains(model.search.value)) || (x.Mulher.Conjuge.Contains(model.search.value)));
+                filteredResultsCount = queryCasais.Count();
             }
 
 
@@ -578,26 +581,45 @@ namespace SysIgreja.Controllers
                 return Content(g.ToString());
             }
 
-            try
+            filteredResultsCount = queryCasais.Count();
+
+            var queryNova = queryCasais.Select(x => new
             {
-                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
-                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
-                result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
-            }
-            catch (Exception)
+                Dupla = (x.Homem != null & x.Mulher != null) ? x.Homem.Apelido + " e " + x.Mulher.Apelido : null,
+                x.Homem,
+                x.Mulher,
+            });
+
+            queryNova = queryNova.OrderBy(x => x.Dupla).Skip(model.Start.Value)
+                .Take(model.Length.Value);          
+
+            List<Data.Entities.Participante> resultCasais = new List<Data.Entities.Participante>();
+
+            queryNova.ToList().ForEach(casal =>
             {
-                result = result.OrderBy(x => x.Id);
-            }
-
-            filteredResultsCount = result.Count();
-
-
-            result = result.Skip(model.Start.Value)
-                .Take(model.Length.Value);
+                if (casal.Homem != null)
+                {
+                    casal.Homem.Dupla = casal.Dupla;
+                    casal.Homem.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
+                    {
+                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);
+                    });
+                    resultCasais.Add(casal.Homem);
+                }
+                if (casal.Mulher != null)
+                {
+                    casal.Mulher.Dupla = casal.Dupla;
+                    casal.Mulher.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
+                    {
+                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);
+                    });
+                    resultCasais.Add(casal.Mulher);
+                }
+            });
 
             return Json(new
             {
-                data = mapper.Map<IEnumerable<ParticipanteListModel>>(result),
+                data = mapper.Map<IEnumerable<ParticipanteListModel>>(resultCasais),
                 recordsTotal = totalResultsCount,
                 recordsFiltered = filteredResultsCount,
             }, JsonRequestBehavior.AllowGet);

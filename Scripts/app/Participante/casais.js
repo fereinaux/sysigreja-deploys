@@ -110,6 +110,10 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         colReorder: {
             fixedColumnsLeft: 1
         },
+        rowGroup: {
+            dataSrc: 'Dupla'
+        },
+        ordering: false,
         columns: [
             {
                 data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
@@ -117,6 +121,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, row.Presenca) : '';
                 }
             },
+            { data: "Dupla", name: "Dupla", title: "Dupla", visible: false, className: 'noVis' },
             { data: "Sexo", name: "Sexo", title: "Sexo", visible: false, className: 'noVis' },
             {
                 data: "Sexo", orderData: 0, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",

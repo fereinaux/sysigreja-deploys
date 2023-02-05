@@ -251,7 +251,7 @@
                             <section id="services-end" class="section-padding">
                                 @if ((int)ViewBag.Evento.Status == 4)
                                 {
-                                    <a href="@ViewBag.UrlDestino" class="btn btn-juventude mt-5">Inscreva-se já</a>
+                                    <a href="/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições" class="btn btn-juventude mt-5">Inscreva-se já</a>
                                 }
                                 @if ((int)ViewBag.Evento.StatusEquipe == 4)
                                 {

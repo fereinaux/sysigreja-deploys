@@ -596,7 +596,8 @@ namespace SysIgreja.Controllers
                     EquipanteId = equipante.Id,
                     Status = StatusEnum.Ativo,
                     Senha = model.Password,
-                    HasChangedPassword = false
+                    HasChangedPassword = false,
+                    Tipo = "Aplicativo"
                 };
                 UserManager.Create(user, model.Password);
                 user = UserManager.FindByName(user.UserName);

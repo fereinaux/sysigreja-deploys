@@ -92,7 +92,8 @@ namespace SysIgreja.Controllers
                   (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) ||
                   (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)
                 ) ||
-              x.DataEvento > DateTime.Today
+                (
+              x.DataEvento > DateTime.Today  && x.Status == StatusEnum.Informativo)
               ) &&
               (
                 (string.IsNullOrEmpty(search)) ||

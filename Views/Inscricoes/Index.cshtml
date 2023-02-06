@@ -684,7 +684,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
             `}
 
 
-                var informativos = eventos.filter(evento => !(evento.Status == "Em breve" || evento.StatusEquipe == "Em breve") && !(evento.Status == "Aberto" || evento.StatusEquipe == "Aberto"))
+                var informativos = eventos.filter(evento => evento.Status == "Informativo")
 
                 if (informativos.length > 0) {
 

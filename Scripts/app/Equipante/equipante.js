@@ -703,6 +703,7 @@ function Pagamentos(row) {
     CarregarTabelaPagamentos(row.Id);
     realista = row
     $("#modal-pagamentos").modal();
+    $("#EquipanteIdModal").val(null);
 }
 
 function GetEquipante(id) {

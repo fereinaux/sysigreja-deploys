@@ -61,12 +61,12 @@
     "method": "POST",
     "sortNum": 5000,
     "created": "2022-11-19T03:18:44.091Z",
-    "modified": "2023-02-03T19:22:18.635Z",
+    "modified": "2023-02-06T13:47:46.657Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"dsuahsaudasdsasadas\",\n  \"Email\":\"felipereinaux@gmail.com\"\n}",
+      "raw": "{\n  \"Username\":\"testema2323caco\",\n  \"Email\":\"23121321@teste.com\",\n  \"Password\":\"reinaux09\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Nome\":\"Felipe Reinaux\"\n}",
       "form": []
     },
     "tests": []

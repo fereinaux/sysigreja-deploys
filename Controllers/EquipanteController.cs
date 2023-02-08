@@ -259,6 +259,8 @@ namespace SysIgreja.Controllers
             .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
             .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
             .IncludeOptimized(x => x.Equipe)
+              .IncludeOptimized(x => x.Equipante.Quartos)
+                       .IncludeOptimized(x => x.Equipante.Quartos.Select(y => y.Quarto))
             .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
                     .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
 

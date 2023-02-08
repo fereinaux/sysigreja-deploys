@@ -195,6 +195,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Medicacao, opt => opt.MapFrom(x => x.Equipante.Medicacao))
                     .ForMember(dest => dest.Convenio, opt => opt.MapFrom(x => x.Equipante.Convenio))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
+                      .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)))
                     .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Equipante.Quartos.Any(y => y.Quarto.EventoId == x.EventoId) ? x.Equipante.Quartos.Where(y => y.Quarto.EventoId == x.EventoId).Select(y => y.Quarto).First().Titulo : ""))
                     .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.IsCasado.HasValue && x.Equipante.IsCasado.Value ? x.Equipante.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.Hospitais, opt => opt.MapFrom(x => x.Equipante.Hospitais));                    

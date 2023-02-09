@@ -115,7 +115,7 @@ namespace SysIgreja.Controllers
                     Latitude = x.Latitude,
                     Longitude = x.Longitude,
                     Endereco = $"{x.Logradouro}, {x.Numero}, {x.Bairro}, {x.Cidade}",
-                }).ToList()
+                }).OrderBy(x => x.Nome).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 

@@ -206,7 +206,7 @@ function getChangeCarona(destinoId) {
                     caronistas.forEach(carona => {
                         let addCarona = true
                         map.eachLayer(function (layer) {
-               
+
                             if (layer._latlng?.lat == carona.Latitude && layer._latlng?.lng == carona.Longitude) {
                                 addCarona = false
                                 layer.bindPopup(layer._popup?._content + `<h4>Participante: ${carona.Nome}</h4>
@@ -215,12 +215,21 @@ function getChangeCarona(destinoId) {
                         })
                         if (addCarona) {
 
-                            addMapa(carona.Latitude, carona.Longitude, carona.Nome, 'userlocation', carona.ParticipanteId, 'carona')
+                            addMapa(carona.Latitude, carona.Longitude, carona.Nome, '#d93c3c', carona.ParticipanteId, 'carona')
                                 .bindPopup(`<h4>Participante: ${carona.Nome}</h4>
                         <span>${carona.Endereco}</span>`)
                         }
                     })
 
+                    mapaSemCarona.forEach(participante => {
+
+                        if (participante.Latitude && participante.Longitude) {
+                            addMapa(participante.Latitude, participante.Longitude, participante.Nome, '#939393', participante.Id, 'carona')
+                                .bindPopup(`<h4>Participante: ${participante.Nome}</h4>
+                        <span>${participante.Endereco}</span>`)
+                        }
+
+                    })
                     $('.div-map').css('display', 'block')
                 }
             });
@@ -323,6 +332,7 @@ function GetEquipantes(id) {
     });
 }
 
+mapaSemCarona = []
 
 function GetParticipantesSemCarona() {
     $("#table-participantes").empty();
@@ -334,8 +344,11 @@ function GetParticipantesSemCarona() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            mapaSemCarona = []
             data.Participantes.forEach(function (participante, index, array) {
                 $('#table-participantes').append($(`<tr><td class="participante" data-id="${participante.Id}">${participante.Nome}</td></tr>`));
+                mapaSemCarona.push(participante)
+
             });
 
             DragDropg();

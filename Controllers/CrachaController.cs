@@ -42,9 +42,13 @@ namespace SysIgreja.Controllers
         public ActionResult GetCrachas(int configuracaoId)
         {
             var result = crachaBusiness.GetCrachas()
-                .Where(x => x.ConfiguracaoId == configuracaoId);
-            var json = Json(new { data = mapper.Map<IEnumerable<PostCrachaModel>>(result) }, JsonRequestBehavior.AllowGet);
-            json.MaxJsonLength = Int32.MaxValue;
+                .Where(x => x.ConfiguracaoId == configuracaoId). 
+                Select(x => new
+                {
+                    x.Titulo,
+                    x.Id
+                });
+            var json = Json(new { data = result.ToList() }, JsonRequestBehavior.AllowGet);
             return json;
         }
 

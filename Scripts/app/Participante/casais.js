@@ -362,7 +362,7 @@ function ConfirmFoto() {
                     contentType: false,
                     type: "POST",
                     data: dataToPost,
-                    url: "Arquivo/PostArquivo",
+                    url: "/Arquivo/PostArquivo",
                     success: function () {
                         $("#modal-fotos").modal("hide");
                         CarregarTabelaParticipante()
@@ -618,7 +618,7 @@ function PostArquivo() {
             contentType: false,
             type: "POST",
             data: dataToPost,
-            url: "Arquivo/PostArquivo",
+            url: "/Arquivo/PostArquivo",
             success: function () {
                 if (dataToPost.get('LancamentoIdModal')) {
                     GetAnexosLancamento();

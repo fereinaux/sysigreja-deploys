@@ -198,7 +198,13 @@ function getChangeCarona(destinoId) {
                     let caroneiro = arrayCaroneiros.find(x => x.Id == $("#carona-motoristas").val())
                     let caronistas = arrayCaronas.filter(x => x.CaronaId == $("#carona-motoristas").val())
                     markerLayer.getLayers().forEach(mark => mark.remove())
-                    if (caroneiro) {
+                    if (x => x.Id == $("#carona-motoristas").val() == 0) {
+                        arrayCaroneiros.forEach(caroneiro => {
+                            addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
+                                .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
+                            map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
+                        })
+                    } else if (caroneiro) {
                         addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
                             .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
                         map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);

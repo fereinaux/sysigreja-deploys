@@ -201,14 +201,19 @@ function getChangeCarona(destinoId) {
                     markerLayer.getLayers().forEach(mark => mark.remove())
                     if (x => x.Id == $("#carona-motoristas").val() == 0) {
                         arrayCaroneiros.forEach(caroneiro => {
+                            if (caroneiro.Latitude && caroneiro.Longitude) {
+
+                                addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
+                                    .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
+                                map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
+                            }
+                        })
+                    } else if (caroneiro) {
+                        if (caroneiro.Latitude && caroneiro.Longitude) {
                             addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
                                 .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
                             map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
-                        })
-                    } else if (caroneiro) {
-                        addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
-                            .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
-                        map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
+                        }
                     }
                     caronistas.forEach(carona => {
                         let addCarona = true

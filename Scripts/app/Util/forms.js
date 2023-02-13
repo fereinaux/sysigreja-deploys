@@ -1,4 +1,12 @@
-﻿
+﻿const copyContent = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        console.log('Content copied to clipboard');
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+    }
+}
+
 function getAllUrlParams(url) {
 
     // get query string from url (optional) or window

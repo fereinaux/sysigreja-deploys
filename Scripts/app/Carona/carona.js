@@ -200,7 +200,7 @@ function getChangeCarona(destinoId) {
                     markerLayer.getLayers().forEach(mark => mark.remove())
                     if (caroneiro) {
                         addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
-                            .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
+                            .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
                         map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
                     }
                     caronistas.forEach(carona => {

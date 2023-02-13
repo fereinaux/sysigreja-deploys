@@ -199,7 +199,7 @@ function getChangeCarona(destinoId) {
                     let caroneiro = arrayCaroneiros.find(x => x.Id == $("#carona-motoristas").val())
                     let caronistas = arrayCaronas.filter(x => x.CaronaId == $("#carona-motoristas").val())
                     markerLayer.getLayers().forEach(mark => mark.remove())
-                    if (x => x.Id == $("#carona-motoristas").val() == 0) {
+                    if ($("#carona-motoristas").val() == 0) {
                         arrayCaroneiros.forEach(caroneiro => {
                             if (caroneiro.Latitude && caroneiro.Longitude) {
 

@@ -65,7 +65,8 @@ namespace SysIgreja.Controllers
                     Motorista = x.Motorista.Nome,
                     Latitude = x.Motorista.Latitude,
                     Longitude = x.Motorista.Longitude,
-                    MotoristaId = x.MotoristaId.Value
+                    MotoristaId = x.MotoristaId.Value,
+                               Endereco = $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
                 }).OrderByDescending(x => x.Id);
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

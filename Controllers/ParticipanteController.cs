@@ -171,7 +171,7 @@ namespace SysIgreja.Controllers
 
             var dadosAdicionais = new
             {
-                Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Cor?.GetDescription() ?? "",
+                Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Titulo ?? "",
                 Status = result.Status.GetDescription(),
                 Quarto = quartosBusiness.GetQuartosComParticipantes(result.EventoId, TipoPessoaEnum.Participante).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "",
                 Motorista = caronasBusiness.GetCaronasComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Carona?.Motorista?.Nome ?? "",

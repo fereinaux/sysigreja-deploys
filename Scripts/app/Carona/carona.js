@@ -208,6 +208,23 @@ function getChangeCarona(destinoId) {
                                 map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
                             }
                         })
+                        arrayCaronas.forEach(carona => {
+                            let addCarona = true
+                            map.eachLayer(function (layer) {
+
+                                if (layer._latlng?.lat == carona.Latitude && layer._latlng?.lng == carona.Longitude) {
+                                    addCarona = false
+                                    layer.bindPopup(layer._popup?._content + `<h4>Participante: ${carona.Nome}</h4>
+                        <span>${carona.Endereco}</span>`)
+                                }
+                            })
+                            if (addCarona) {
+
+                                addMapa(carona.Latitude, carona.Longitude, carona.Nome, '#d93c3c', carona.ParticipanteId, 'carona')
+                                    .bindPopup(`<h4>Participante: ${carona.Nome}</h4>
+                        <span>${carona.Endereco}</span>`)
+                            }
+                        })
                     } else if (caroneiro) {
                         if (caroneiro.Latitude && caroneiro.Longitude) {
                             addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')

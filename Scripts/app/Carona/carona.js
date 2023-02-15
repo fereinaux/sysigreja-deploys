@@ -189,11 +189,11 @@ function getChangeCarona(destinoId) {
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
-                success: function (data) {
+                success: function (data2) {
 
                     arrayCaronas = []
-                    data.Caronas.forEach(function (carona, index, array) {
-                        arrayCaronas.push({ CaronaId: carona.CaronaId, Endereco: carona.Endereco, ParticipanteId: carona.ParticipanteId, Latitude: carona.Latitude, Longitude: carona.Longitude, Nome: carona.Nome })
+                    data2.Caronas.forEach(function (carona, index, array) {
+                        arrayCaronas.push({ CaronaId: carona.CaronaId, Motorista: carona.Motorista, Endereco: carona.Endereco, ParticipanteId: carona.ParticipanteId, Latitude: carona.Latitude, Longitude: carona.Longitude, Nome: carona.Nome })
                     });
 
                     let caroneiro = arrayCaroneiros.find(x => x.Id == $("#carona-motoristas").val())
@@ -210,7 +210,6 @@ function getChangeCarona(destinoId) {
                         })
                         arrayCaronas.forEach(carona => {
                             let addCarona = true
-                            console.log(carona);
                             map.eachLayer(function (layer) {
 
                                 if (layer._latlng?.lat == carona.Latitude && layer._latlng?.lng == carona.Longitude) {
@@ -224,7 +223,7 @@ function getChangeCarona(destinoId) {
 
                                 addMapa(carona.Latitude, carona.Longitude, carona.Nome, '#d93c3c', carona.ParticipanteId, 'carona')
                                     .bindPopup(`<h4>Participante: ${carona.Nome}</h4>
-
+<h4>Motorista: ${carona.Motorista}</h4>
                         <span>${carona.Endereco}</span>`)
                             }
                         })
@@ -481,7 +480,7 @@ function ChangeCarona(participanteId, destinoId) {
                 DestinoId: destinoId
             }),
         success: function () {
-            CaronaRefresh(destinoId);
+            CaronaRefresh($("#carona-motoristas").val());
         }
     });
 }

@@ -215,6 +215,7 @@ function getChangeCarona(destinoId) {
                                 if (layer._latlng?.lat == carona.Latitude && layer._latlng?.lng == carona.Longitude) {
                                     addCarona = false
                                     layer.bindPopup(layer._popup?._content + `<h4>Participante: ${carona.Nome}</h4>
+<h4>Motorista: ${carona.Motorista}</h4>
                         <span>${carona.Endereco}</span>`)
                                 }
                             })
@@ -222,7 +223,7 @@ function getChangeCarona(destinoId) {
 
                                 addMapa(carona.Latitude, carona.Longitude, carona.Nome, '#d93c3c', carona.ParticipanteId, 'carona')
                                     .bindPopup(`<h4>Participante: ${carona.Nome}</h4>
-<h4>Motorista: ${carona.Motorista}</h4>
+
                         <span>${carona.Endereco}</span>`)
                             }
                         })

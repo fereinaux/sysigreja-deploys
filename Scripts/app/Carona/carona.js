@@ -210,6 +210,7 @@ function getChangeCarona(destinoId) {
                         })
                         arrayCaronas.forEach(carona => {
                             let addCarona = true
+                            console.log(carona);
                             map.eachLayer(function (layer) {
 
                                 if (layer._latlng?.lat == carona.Latitude && layer._latlng?.lng == carona.Longitude) {

@@ -222,6 +222,7 @@ function getChangeCarona(destinoId) {
 
                                 addMapa(carona.Latitude, carona.Longitude, carona.Nome, '#d93c3c', carona.ParticipanteId, 'carona')
                                     .bindPopup(`<h4>Participante: ${carona.Nome}</h4>
+<h4>Motorista: ${carona.Motorista}</h4>
                         <span>${carona.Endereco}</span>`)
                             }
                         })

@@ -67,7 +67,7 @@ namespace SysIgreja.Controllers
         public ActionResult Checkin()
         {
             ViewBag.Title = "Check-in";
-            GetEventos();
+            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
             GetConfiguracao();
 
             return View();

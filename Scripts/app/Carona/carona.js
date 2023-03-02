@@ -46,6 +46,14 @@ function CarregarTabelaCarona() {
         drawCallback: function (settings) {
             var api = this.api();
             var dataArray = api.rows().data().toArray()
+            if (settings.aoData.length > 0) {
+
+                let column = settings.aoColumns[settings.aaSorting[0][0]].data
+                let dir = settings.aaSorting[0][1]
+                let search = settings.oPreviousSearch.sSearch
+
+                GetCaronasComParticipantes(column, dir, search);
+            }
             if (dataArray.length > 0) {
 
                 $('#carona-motoristas').html('')
@@ -83,7 +91,6 @@ function CaronaRefresh(destinoId) {
 
     CarregarTabelaCarona();
     GetParticipantesSemCarona();
-    GetCaronasComParticipantes();
     getChangeCarona(destinoId)
 }
 
@@ -316,7 +323,6 @@ function PostCarona() {
             success: function () {
                 SuccessMesageOperation();
                 CarregarTabelaCarona();
-                GetCaronasComParticipantes();
                 $("#modal-carona").modal("hide");
             }
         });
@@ -401,13 +407,13 @@ $("#modal-cores").on('hidden.bs.modal', function () {
 
 
 
-function GetCaronasComParticipantes() {
+function GetCaronasComParticipantes(column, dir, search) {
     $("#caronas").empty();
 
     $.ajax({
         url: '/Carona/GetCaronas',
         datatype: "json",
-        data: { EventoId: $("#carona-eventoid").val() },
+        data: { EventoId: $("#carona-eventoid").val(), columnName: column, columnDir: dir, search },
         type: "POST",
         success: function (data) {
             data.data.forEach(function (carona, index, array) {

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Services;
+using System.Linq.Dynamic;
 
 namespace SysIgreja.Controllers
 {
@@ -50,7 +51,7 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCaronas(int EventoId)
+        public ActionResult GetCaronas(int EventoId, string columnName, string columndir, string search)
         {
             var result = caronasBusiness
                 .GetCaronas()
@@ -67,7 +68,18 @@ namespace SysIgreja.Controllers
                     Longitude = x.Motorista.Longitude,
                     MotoristaId = x.MotoristaId.Value,
                     Endereco = $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
-                }).OrderByDescending(x => x.Id);
+                });
+
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                result = result.Where(x => x.Motorista.ToLower().Contains(search.ToLower())).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(columnName))
+            {
+                result = result.OrderBy(columnName + " " + columndir);
+            }
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

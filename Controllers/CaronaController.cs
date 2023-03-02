@@ -66,7 +66,7 @@ namespace SysIgreja.Controllers
                     Latitude = x.Motorista.Latitude,
                     Longitude = x.Motorista.Longitude,
                     MotoristaId = x.MotoristaId.Value,
-                               Endereco = $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
+                    Endereco = $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
                 }).OrderByDescending(x => x.Id);
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -136,7 +136,7 @@ namespace SysIgreja.Controllers
                     Motorista = x.Carona.Motorista.Nome,
                     Quantidade = caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count(),
                     Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count().ToString()}/{x.Carona.Capacidade.ToString()}",
-                }).OrderBy(x => new { x.Motorista, x.Nome }).ToList()
+                }).OrderBy(x => x.Motorista).ThenBy(x => x.Nome).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 

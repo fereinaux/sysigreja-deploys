@@ -173,7 +173,7 @@
         let globalConfigId
         var config = {}
         var campos = []
-        let isAdm = @User.IsInRole(Usuario.Admin).ToString().ToLower();
+        let isAdm = @User.IsInRole(Usuario.Admin).ToString().ToLower() || @User.IsInRole("Geral").ToString().ToLower();
         let username = '@UtilServices.CapitalizarNome(User.Identity.GetUserName())'
         let logoRelatorio;
         let logoLogin;

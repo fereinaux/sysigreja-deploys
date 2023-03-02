@@ -136,7 +136,7 @@ namespace SysIgreja.Controllers
                     Motorista = x.Carona.Motorista.Nome,
                     Quantidade = caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count(),
                     Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count().ToString()}/{x.Carona.Capacidade.ToString()}",
-                }).ToList()
+                }).OrderBy(x => x.Nome).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -155,7 +155,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByCarona(int CaronaId)
         {
-            var result = caronasBusiness.GetParticipantesByCaronas(CaronaId).ToList().Select(x => new
+            var result = caronasBusiness.GetParticipantesByCaronas(CaronaId).OrderBy(x => x.Participante.Nome).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),

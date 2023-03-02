@@ -172,7 +172,7 @@ namespace SysIgreja.Controllers
                     CirculoId = x.CirculoId,
                     Cor = x.Circulo.Cor,
                     Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)) }),
-                }).ToList()
+                }).OrderBy(x => x.Nome).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 

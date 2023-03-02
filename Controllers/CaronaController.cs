@@ -136,7 +136,7 @@ namespace SysIgreja.Controllers
                     Motorista = x.Carona.Motorista.Nome,
                     Quantidade = caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count(),
                     Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count().ToString()}/{x.Carona.Capacidade.ToString()}",
-                }).OrderBy(x => x.Nome).ToList()
+                }).OrderBy(x => new { x.Motorista, x.Nome }).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 

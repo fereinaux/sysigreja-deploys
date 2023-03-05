@@ -620,7 +620,7 @@
             background-position: center;
             background-repeat: no-repeat;">
  ${destaque.Logo ?
-                            `<div class="overlay"></div>
+                            `
                            <img class="img-desatque" src="data:image/png;base64,${destaque.Logo}" />
 ` : ""
                 }
@@ -659,7 +659,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
         background-position: center;
         background-repeat: no-repeat;
 ">
-                                <div class="overlay"></div>
+                               
 <span  class="badge m-r-xs" style="position:absolute; top:5px;left:5px;z-index:999999;   background: #ffffff;color:#000">${evento.Identificador}</span>
                                 <img class="img-logo" style="${evento.Logo ? "": "display:none;"}margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
                             </div>
@@ -733,7 +733,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
         background-position: center;
         background-repeat: no-repeat;
 ">
-                            <div class="overlay"></div>
+                           
 <span  class="badge m-r-xs" style="position:absolute; top:5px;left:5px; z-index:999999;  background: #ffffff;color:#000">${evento.Identificador}</span>
                             <img class="img-logo" style="${evento.Logo ? "" : "display:none;"}margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
                         </div>

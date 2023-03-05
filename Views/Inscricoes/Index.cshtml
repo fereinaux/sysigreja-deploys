@@ -82,7 +82,7 @@
                 text-decoration: none;
             }
 
-        .overlay {
+/*        .overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -91,7 +91,7 @@
             background: #1e1e20;
             opacity: .4;
             border-radius: 12px;
-        }
+        }*/
 
         a:hover .overlay {
             border-bottom-left-radius: 0px !important;
@@ -661,7 +661,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
 ">
                                 <div class="overlay"></div>
 <span  class="badge m-r-xs" style="position:absolute; top:5px;left:5px;z-index:999999;   background: #ffffff;color:#000">${evento.Identificador}</span>
-                                <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
+                                <img class="img-logo" style="${evento.Logo ? "": "display:none;"}margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
                             </div>
 
                             <div class="card-body">
@@ -735,7 +735,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
 ">
                             <div class="overlay"></div>
 <span  class="badge m-r-xs" style="position:absolute; top:5px;left:5px; z-index:999999;  background: #ffffff;color:#000">${evento.Identificador}</span>
-                            <img class="img-logo" style="margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
+                            <img class="img-logo" style="${evento.Logo ? "" : "display:none;"}margin:auto;position: relative; z-index: 999" src="data:image/png;base64,${evento.Logo}" />
                         </div>
 
                         <div class="card-body">

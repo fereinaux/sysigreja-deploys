@@ -690,7 +690,7 @@ namespace SysIgreja.Controllers
             });
 
             queryNova = queryNova.OrderBy(x => x.Dupla).Skip(model.Start.Value)
-                .Take(model.Length.Value);          
+                .Take(model.Length.Value);
 
             List<Data.Entities.Participante> resultCasais = new List<Data.Entities.Participante>();
 
@@ -699,6 +699,10 @@ namespace SysIgreja.Controllers
                 if (casal.Homem != null)
                 {
                     casal.Homem.Dupla = casal.Dupla;
+                    casal.Homem.Circulos.ToList().ForEach(circulo =>
+                    {
+                        circulo.Circulo = circulosBusiness.GetCirculoById(circulo.CirculoId);
+                    });
                     casal.Homem.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
                     {
                         etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);
@@ -708,6 +712,10 @@ namespace SysIgreja.Controllers
                 if (casal.Mulher != null)
                 {
                     casal.Mulher.Dupla = casal.Dupla;
+                    casal.Mulher.Circulos.ToList().ForEach(circulo =>
+                    {
+                        circulo.Circulo = circulosBusiness.GetCirculoById(circulo.CirculoId);
+                    });
                     casal.Mulher.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
                     {
                         etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);

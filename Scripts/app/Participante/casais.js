@@ -140,7 +140,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             {
                 data: "Nome", name: "Nome", width: "25%", render: function (data, type, row) {
                     var reg = /^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/i
-                    var titulo = row.Circulo.trim()
+                    var titulo = row.Circulo?.trim()
                     var isCor = reg.test(titulo)
                     var isEmoji = titulo.match(/\p{Emoji}+/gu)
 

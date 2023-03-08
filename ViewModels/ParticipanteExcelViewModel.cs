@@ -4,6 +4,7 @@ namespace SysIgreja.ViewModels
 {
     public class ParticipanteExcelViewModel
     {
+        public int SequencialEvento { get; set; }
         public string Nome { get; set; }
         public string Apelido { get; set; }
         [DisplayName("Data de Nascimento")]
@@ -68,6 +69,7 @@ namespace SysIgreja.ViewModels
         [DisplayName("Data/Hora Inscrição")]
         public string DataCadastro { get; set; }
         public string Parente { get; set; }
+        public string Padrinho { get; set; }
         public string Quarto { get; set; }
     }
 }

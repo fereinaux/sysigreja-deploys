@@ -502,7 +502,7 @@ namespace SysIgreja.Controllers
                 {
                     result = result.OrderByDescendingDynamic(x => "x." + model.columns[model.order[0].column].name);
                 }
-
+                filteredResultsCount = result.Count();
                 result = result.Skip(model.Start)
       .Take(model.Length);
 

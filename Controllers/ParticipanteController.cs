@@ -230,24 +230,41 @@ namespace SysIgreja.Controllers
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public ActionResult GetAniversariantesByEvento(int EventoId)
+        public class AniversarianteModel
         {
-            var result = participantesBusiness.GetAniversariantesByEvento(EventoId).ToList().Select(x => new
-            {
-                Nome = UtilServices.CapitalizarNome(x.Nome),
-                Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                Dia = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd") : "",
-                Idade = UtilServices.GetAge(x.DataNascimento).ToString()
-            }).ToList();
+            public string Nome { get; set; }
+            public string Apelido { get; set; }
+            public string Dia { get; set; }
+            public string Idade { get; set; }
+        }
 
-            result.AddRange(equipesBusiness.GetEquipantesAniversariantesByEvento(EventoId).ToList().Select(x => new
+        [HttpGet]
+        public ActionResult GetAniversariantesByEvento(int EventoId, string type)
+        {
+            var result = new List<AniversarianteModel>();
+
+            if (type == "participantes" || type == "todos")
             {
-                Nome = UtilServices.CapitalizarNome(x.Nome),
-                Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                Dia = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd") : "",
-                Idade = UtilServices.GetAge(x.DataNascimento).ToString()
-            }));
+                result.AddRange(participantesBusiness.GetAniversariantesByEvento(EventoId).ToList().Select(x => new AniversarianteModel
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                    Dia = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd") : "",
+                    Idade = UtilServices.GetAge(x.DataNascimento).ToString()
+                }).ToList());
+            }
+
+
+            if (type == "equipantes" || type == "todos")
+            {
+                result.AddRange(equipesBusiness.GetEquipantesAniversariantesByEvento(EventoId).ToList().Select(x => new AniversarianteModel
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                    Dia = x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd") : "",
+                    Idade = UtilServices.GetAge(x.DataNascimento).ToString()
+                }));
+            }
 
             return Json(new { data = result.OrderBy(x => x.Dia) }, JsonRequestBehavior.AllowGet);
         }

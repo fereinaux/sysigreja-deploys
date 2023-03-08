@@ -113,7 +113,7 @@ function getReunioes() {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             data.Reunioes.forEach(function (reuniao, index, array) {
-                $('#presenca-reuniaoid').append($(`<option value="${reuniao.Id}">${moment(reuniao.DataReuniao).format('DD/MM/YYYY')}</option>`));
+                $('#presenca-reuniaoid').append($(`<option value="${reuniao.Id}">${moment(reuniao.DataReuniao).format('DD/MM/YYYY')} - ${reuniao.Titulo}</option>`));
             });
             $("#presenca-reuniaoid").val($("#presenca-reuniaoid option:first").val()).trigger("chosen:updated");
             CarregarTabelaPresenca();

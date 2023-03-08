@@ -92,7 +92,7 @@ namespace SysIgreja.Controllers
             var result = reunioesBusiness.GetReunioes(EventoId)
                 .ToList()
                 .OrderBy(x => TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays < 0 ? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays * -1 : TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays)
-                .Select(x => new ReuniaoViewModel { DataReuniao = x.DataReuniao, Id = x.Id });
+                .Select(x => new ReuniaoViewModel { DataReuniao = x.DataReuniao, Id = x.Id, Titulo = x.Titulo });
 
             return Json(new { Reunioes = result }, JsonRequestBehavior.AllowGet);
         }

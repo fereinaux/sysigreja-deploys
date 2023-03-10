@@ -1244,6 +1244,7 @@
     <Content Include="Views\Igreja\Index.cshtml" />
     <Content Include="Views\Account\RecuperarSenha.cshtml" />
     <Content Include="Views\Participante\Casais.cshtml" />
+    <Content Include="Views\Inscricoes\Casal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -721,8 +721,8 @@ function GetEquipante(id) {
                 $("#equipante-checkin").val(data.Equipante.Checkin);
                 $(`#equipante-nome`).val(data.Equipante.Nome);
                 $(`#equipante-apelido`).val(data.Equipante.Apelido);
-                $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento).format('DD/MM/YYYY'));
-                $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento).format('DD/MM/YYYY'));
+                $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                 $(`#equipante-email`).val(data.Equipante.Email);
                 $(`#equipante-fone`).val(data.Equipante.Fone);
 

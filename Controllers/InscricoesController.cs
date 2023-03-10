@@ -93,7 +93,7 @@ namespace SysIgreja.Controllers
                   (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)
                 ) ||
                 (
-              x.DataEvento > DateTime.Today  && x.Status == StatusEnum.Informativo)
+              x.DataEvento > DateTime.Today && x.Status == StatusEnum.Informativo)
               ) &&
               (
                 (string.IsNullOrEmpty(search)) ||
@@ -164,6 +164,8 @@ namespace SysIgreja.Controllers
                         ViewBag.Complemento = equipante.Complemento;
                         ViewBag.Referencia = equipante.Referencia;
                     }
+                    if (config.TipoEventoId == TipoEventoEnum.Casais)
+                        return View("Casal");
                     return View();
                 default:
                     ViewBag.Sujeito = "participante";
@@ -180,6 +182,8 @@ namespace SysIgreja.Controllers
                         ViewBag.NomeConvite = participante.NomeConvite;
                         ViewBag.FoneConvite = participante.FoneConvite;
                     }
+                    if (config.TipoEventoId == TipoEventoEnum.Casais)
+                        return View("Casal");
                     return View();
             }
         }
@@ -261,25 +265,37 @@ namespace SysIgreja.Controllers
             switch (Tipo)
             {
                 case "Inscrições Equipe":
-                    Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
                     var eventoAtual = eventosBusiness.GetEventoById(EventoId.Value);
                     var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
+                    Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
                     var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
                     ViewBag.Configuracao = config;
                     ViewBag.MsgConclusao = config.MsgConclusaoEquipe
                          .Replace("${Nome}", equipante.Nome)
                           .Replace("${EventoId}", EventoId.ToString())
                                           .Replace("${Id}", equipante.Id.ToString())
-                 .Replace("${Apelido}", equipante.Apelido)
+
                        .Replace("${Evento}", eventoAtual.Configuracao.Titulo)
                           .Replace("${NumeracaoEvento}", eventoAtual.Numeracao.ToString())
                            .Replace("${DescricaoEvento}", eventoAtual.Descricao)
                  .Replace("${ValorEvento}", eventoAtual.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
                  .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
+
+                    if (config.TipoEventoId == TipoEventoEnum.Casais)
+                    {
+                        var casal = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Conjuge == equipante.Nome);
+                        ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", $"{equipante.Apelido} e {casal.Apelido}");
+                    }
+                    else
+                    {
+                        ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", equipante.Apelido);
+                    }
                     ViewBag.Title = "Inscrição Concluída";
                     return View();
                 default:
                     Participante participante = participantesBusiness.GetParticipanteById(Id);
+                    var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
+                    var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
                     var ValorParticipante = participante.Evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? participante.Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
                     var configParticipante = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
                     ViewBag.Configuracao = configParticipante;
@@ -287,7 +303,6 @@ namespace SysIgreja.Controllers
                                  .Replace("${Nome}", participante.Nome)
                                           .Replace("${Id}", participante.Id.ToString())
                                           .Replace("${EventoId}", participante.EventoId.ToString())
-                 .Replace("${Apelido}", participante.Apelido)
                  .Replace("${Evento}", participante.Evento.Configuracao.Titulo)
                           .Replace("${NumeracaoEvento}", participante.Evento.Numeracao.ToString())
                            .Replace("${DescricaoEvento}", participante.Evento.Descricao)
@@ -295,6 +310,15 @@ namespace SysIgreja.Controllers
                  .Replace("${DataEvento}", participante.Evento.DataEvento.ToString("dd/MM/yyyy"))
                  .Replace("${FonePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "")
                  .Replace("${NomePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? "");
+                    if (configP.TipoEventoId == TipoEventoEnum.Casais)
+                    {
+                        var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
+                        ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", $"{participante.Apelido} e {casal.Apelido}");
+                    }
+                    else
+                    {
+                        ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", participante.Apelido);
+                    }
                     ViewBag.Participante = new InscricaoConcluidaViewModel
                     {
                         Apelido = participante.Apelido,

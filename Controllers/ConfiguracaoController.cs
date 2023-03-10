@@ -105,6 +105,8 @@ namespace SysIgreja.Controllers
                     TipoCirculo = x.TipoCirculo.GetDescription(),
                     TipoQuartoId = x.TipoQuarto,
                     TipoQuarto = x.TipoQuarto?.GetDescription(),
+                    TipoEventoId = x.TipoEvento,
+                    TipoEvento = x.TipoEvento?.GetDescription(),
                     CentroCustos = x.CentroCustos.Select(y => new CentroCustoModel
                     {
                         Descricao = y.Descricao,

@@ -19,28 +19,28 @@
                     <div class="form-group">
                         @if (ViewBag.Tipo != null && ViewBag.Tipo.Contains("Equipe"))
                         {
-                            <label for="participante-email-marido" class="">Telefone do marido</label>
+                            <label for="participante-email-marido" class="">Telefone do <strong>marido</strong></label>
                             <div style="position:relative">
                                 <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('marido')" class="fas fa-search"></i>
-                                <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do marido" />
+                                <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do <strong>marido</strong>" />
                             </div>
 
-                            <label for="participante-email-marido" class="">Telefone da esposa</label>
+                            <label for="participante-email-marido" class="">Telefone da <strong>esposa</strong></label>
                             <div style="position:relative">
                                 <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('esposa')" class="fas fa-search"></i>
-                                <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da esposa" />
+                                <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da <strong>esposa</strong>" />
                             </div>
 
                         }
                         else
                         {
-                            <label for="participante-email-marido" class="">Digite o e-mail do marido</label>
+                            <label for="participante-email-marido" class="">Digite o e-mail do <strong>marido</strong></label>
                             <div style="position:relative">
                                 <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('marido')" class="fas fa-search"></i>
                                 <input type="email" class="form-control" name="email" id="participante-email-marido" data-field="E-mail" />
                             </div>
 
-                            <label for="participante-email-marido" class="">Digite o e-mail da esposa</label>
+                            <label for="participante-email-marido" class="">Digite o e-mail da <strong>esposa</strong></label>
                             <div style="position:relative">
                                 <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('esposa')" class="fas fa-search"></i>
                                 <input type="email" class="form-control" name="email" id="participante-email-esposa" data-field="E-mail" />
@@ -52,34 +52,34 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome" class="">Nome e sobrenome do marido</label>
-                                <input type="text" class="form-control required" id="participante-nome-marido" name="name" data-field="Nome do marido" value="@ViewBag.Nome" />
+                                <label for="participante-nome" class="">Nome e sobrenome do <strong>marido</strong></label>
+                                <input type="text" class="form-control required" id="participante-nome-marido" name="name" data-field="Nome do <strong>marido</strong>" value="@ViewBag.Nome" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-nome" class="">Nome e sobrenome da esposa</label>
-                                <input type="text" class="form-control required" id="participante-nome-esposa" name="name" data-field="Nome da esposa" value="@ViewBag.Nome" />
+                                <label for="participante-nome" class="">Nome e sobrenome da <strong>esposa</strong></label>
+                                <input type="text" class="form-control required" id="participante-nome-esposa" name="name" data-field="Nome da <strong>esposa</strong>" value="@ViewBag.Nome" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Apelido.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-apelido" class="">Como o marido gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
-                                <input type="text" class="form-control required" id="participante-apelido-marido" name"nickname" data-field="Apelido do marido" />
+                                <label for="participante-apelido" class="">Como o <strong>marido</strong> gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
+                                <input type="text" class="form-control required" id="participante-apelido-marido" name"nickname" data-field="Apelido do <strong>marido</strong>" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-apelido" class="">Como a esposa gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
-                                <input type="text" class="form-control required" id="participante-apelido-esposa" name"nickname" data-field="Apelido da esposa" />
+                                <label for="participante-apelido" class="">Como a <strong>esposa</strong> gostaria de ser chamado no @ViewBag.Configuracao.Titulo?</label>
+                                <input type="text" class="form-control required" id="participante-apelido-esposa" name"nickname" data-field="Apelido da <strong>esposa</strong>" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.DataNascimento.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-data-nascimento" class="">Data de nascimento do marido</label>
-                                <input type="text" class="form-control full-date required" id="participante-data-nascimento-marido" data-idade="17" data-field="Data de nascimento do marido" />
+                                <label for="participante-data-nascimento" class="">Data de nascimento do <strong>marido</strong></label>
+                                <input type="text" class="form-control full-date required" id="participante-data-nascimento-marido" data-idade="17" data-field="Data de nascimento do <strong>marido</strong>" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-data-nascimento" class="">Data de nascimento da esposa</label>
-                                <input type="text" class="form-control full-date required" id="participante-data-nascimento-esposa" data-idade="17" data-field="Data de nascimento da esposa" />
+                                <label for="participante-data-nascimento" class="">Data de nascimento da <strong>esposa</strong></label>
+                                <input type="text" class="form-control full-date required" id="participante-data-nascimento-esposa" data-idade="17" data-field="Data de nascimento da <strong>esposa</strong>" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))
@@ -87,23 +87,23 @@
                             if (ViewBag.Tipo.Contains("Equipe"))
                             {
                                 <div class="form-group">
-                                    <label for="participante-email" class="">Digite o e-mail do marido</label>
-                                    <input type="email" class="form-control" name="email" id="participante-email-marido" data-field="E-mail do marido" />
+                                    <label for="participante-email" class="">Digite o e-mail do <strong>marido</strong></label>
+                                    <input type="email" class="form-control" name="email" id="participante-email-marido" data-field="E-mail do <strong>marido</strong>" />
                                 </div>
                                 <div class="form-group">
-                                    <label for="participante-email" class="">Digite o e-mail da esposa</label>
-                                    <input type="email" class="form-control" name="email" id="participante-email-esposa" data-field="E-mail da esposa" />
+                                    <label for="participante-email" class="">Digite o e-mail da <strong>esposa</strong></label>
+                                    <input type="email" class="form-control" name="email" id="participante-email-esposa" data-field="E-mail da <strong>esposa</strong>" />
                                 </div>
                             }
                             else
                             {
                                 <div class="form-group">
-                                    <label for="participante-fone" class="">Telefone do marido</label>
-                                    <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do marido" />
+                                    <label for="participante-fone" class="">Telefone do <strong>marido</strong></label>
+                                    <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do <strong>marido</strong>" />
                                 </div>
                                 <div class="form-group">
-                                    <label for="participante-fone" class="">Telefone da esposa</label>
-                                    <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da esposa" />
+                                    <label for="participante-fone" class="">Telefone da <strong>esposa</strong></label>
+                                    <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da <strong>esposa</strong>" />
                                 </div>
 
                             }
@@ -113,7 +113,7 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-fone" class="">Tamanho da camisa do marido</label>
+                                <label for="participante-fone" class="">Tamanho da camisa do <strong>marido</strong></label>
                                 <select class="form-control" id="participante-camisa-marido">
                                     <option value="8">8</option>
                                     <option value="10">10</option>
@@ -131,7 +131,7 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Camisa.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-fone" class="">Tamanho da camisa da esposa</label>
+                                <label for="participante-fone" class="">Tamanho da camisa da <strong>esposa</strong></label>
                                 <select class="form-control" id="participante-camisa-esposa">
                                     <option value="8">8</option>
                                     <option value="10">10</option>
@@ -267,23 +267,23 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Restricao.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-hasrestricaoalimentar-marido" class=" block">O marido Tem alguma restrição alimentar?</label>
+                                <label for="participante-hasrestricaoalimentar-marido" class=" block">O <strong>marido</strong> Tem alguma restrição alimentar?</label>
                                 <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-restricaoalimentar-marido" data-valor="true" name="participante-hasrestricaoalimentar-marido"> <i></i> Sim </label></div>
                                 <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-restricaoalimentar-marido" checked="" data-valor="false" name="participante-hasrestricaoalimentar-marido"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group restricaoalimentar-marido d-none">
                                 <label for="participante-restricaoalimentar-marido" class="">Qual?</label>
-                                <input type="text" class="form-control" id="participante-restricaoalimentar-marido" data-field="O marido tem alguma restrição alimentar?" />
+                                <input type="text" class="form-control" id="participante-restricaoalimentar-marido" data-field="O <strong>marido</strong> tem alguma restrição alimentar?" />
                             </div>
 
                             <div class="form-group">
-                                <label for="participante-hasrestricaoalimentar-esposa" class=" block">A esposa Tem alguma restrição alimentar?</label>
+                                <label for="participante-hasrestricaoalimentar-esposa" class=" block">A <strong>esposa</strong> Tem alguma restrição alimentar?</label>
                                 <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="has-restricaoalimentar-esposa" data-valor="true" name="participante-hasrestricaoalimentar-esposa"> <i></i> Sim </label></div>
                                 <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="not-restricaoalimentar-esposa" checked="" data-valor="false" name="participante-hasrestricaoalimentar-esposa"> <i></i> Não </label></div>
                             </div>
                             <div class="form-group restricaoalimentar-esposa d-none">
                                 <label for="participante-restricaoalimentar-esposa" class="">Qual?</label>
-                                <input type="text" class="form-control" id="participante-restricaoalimentar-esposa" data-field="A esposa tem alguma restrição alimentar?" />
+                                <input type="text" class="form-control" id="participante-restricaoalimentar-esposa" data-field="A <strong>esposa</strong> tem alguma restrição alimentar?" />
                             </div>
                         }
 

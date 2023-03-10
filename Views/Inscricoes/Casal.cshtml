@@ -239,10 +239,17 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Congregacao.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-congregacao" class=" block">O casal Participa de qual congregação?</label>
-                                <div class="radio i-checks-brown inline"><label class=""> <input type="radio" id="trindade" checked="" data-valor="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="recon" data-valor="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
-                                <div class="radio i-checks-brown inline p-l-xs"><label class=""> <input type="radio" id="outra" data-valor="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
+
+                                <label for="participante-congregacao" class="">Participa de qual congregação?</label>
+                                <select class="form-control" id="participante-congregacao">
+                                    @foreach (var igreja in ViewBag.Igrejas)
+                                    {
+
+                                        <option value="@igreja.Igreja">@igreja.Igreja</option>
+                                    }
+                                    <option value="Nenhuma">Nenhuma</option>
+                                    <option value="Outra">Outra</option>
+                                </select>
                             </div>
                             <div class="form-group congregacao d-none">
                                 <label for="participante-congregacaodescricao" class="">Qual?</label>

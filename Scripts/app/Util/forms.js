@@ -133,10 +133,18 @@ function ValidateForm(form) {
 
 function ValidateRequired(form, formResult) {
     AplicarCssPadrao($(`${form} .required`));
-
     $(`${form} input.required`).each(function () {
         var input = $(this);
         if (!input.val()) {
+            formResult.IsValid = false;
+            AplicarCssErro(input);
+            formResult.ErrorsInput += AddErro(input.data("field"));
+        }
+    });
+
+    $(`${form} select.required`).each(function () {
+        var input = $(this);
+        if (input.attr('multiple') == 'multiple' && input.val().length == 0) {
             formResult.IsValid = false;
             AplicarCssErro(input);
             formResult.ErrorsInput += AddErro(input.data("field"));

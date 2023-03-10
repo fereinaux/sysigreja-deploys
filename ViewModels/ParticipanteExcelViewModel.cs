@@ -4,6 +4,7 @@ namespace SysIgreja.ViewModels
 {
     public class ParticipanteExcelViewModel
     {
+        [DisplayName("Sequencial")]
         public int SequencialEvento { get; set; }
         public string Nome { get; set; }
         public string Apelido { get; set; }

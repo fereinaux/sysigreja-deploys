@@ -115,18 +115,20 @@
     </script>*@
 
 <script>
+    let corBotao = '@ViewBag.Configuracao.CorBotao'
         $(window).on('load', function () {
-            var logo = "@ViewBag.Configuracao.LogoRelatorio"
+            var logo = "@(ViewBag.Configuracao.Logo)"
 
             $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
                 $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
     max-height: 150px;
     padding: 15px;" src="data:image/png;base64,${logo}">`)
+                $('.swal-modal').css('background', corBotao)
+                $('.swal-title, .swal-modal').css('color', 'white')
             });
             $('#preloader').fadeOut();
         })
 
-    let corBotao = '@ViewBag.Configuracao.CorBotao'
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $(document).ready(function () {
 

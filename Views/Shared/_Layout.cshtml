@@ -280,11 +280,15 @@
                                 $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
     max-height: 150px;
     padding: 15px;" src="data:image/png;base64,${config.LogoRelatorio}">`)
+                                $('.swal-modal').css('background', config.CorBotao)
+                                $('.swal-title, .swal-modal').css('color', 'white')
                             });
                         }
                         $('#home-button-logo').css('display', 'block')
                         if (config.LogoRelatorioId) {
                             logoRelatorio = config.LogoRelatorio
+                        } else {
+                            logoRelatorio = config.Logo
                         }
 
                         if (config.MeioPagamentos.length > 0) {

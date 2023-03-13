@@ -124,8 +124,13 @@
     max-height: 150px;
     padding: 15px;" src="data:image/png;base64,${logo}">`)
                 $('.swal-modal').css('background', corBotao)
-                $('.swal-title, .swal-modal').css('color', 'white')
+                $('.swal-modal').css('color', 'white')
             });
+            $('body').on('DOMNodeInserted', '.swal-title', function () {
+                $('.swal-title').css('color', 'white')
+            });
+            $('.btn.btn-flat').css('background', corBotao)
+            $('.btn.btn-flat').css('margin-left', '7px')
             $('#preloader').fadeOut();
         })
 
@@ -145,11 +150,11 @@
         $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
 
         $('.btn-juventude').hover(function() {
-            $(this).css('background-color', '@ViewBag.Configuracao.CorHoverBotao')
-            $(this).css('border-color', '@ViewBag.Configuracao.CorHoverBotao')
+            $(this).css('filter', 'brightness(85%)')
+            $(this).css('filter', 'brightness(85%)')
         }, function() {
-            $(this).css('background-color', '@ViewBag.Configuracao.CorBotao')
-            $(this).css('border-color', '@ViewBag.Configuracao.CorBotao')
+                 $(this).css('filter', 'brightness(100%)')
+            $(this).css('filter', 'brightness(100%)')
         })
     })
 </script>

@@ -89,12 +89,14 @@
         $('.btn-juventude').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
 
-        $('.btn-juventude').hover(function() {
-            $(this).css('background-color', '@ViewBag.Configuracao.CorHoverBotao')
-            $(this).css('border-color', '@ViewBag.Configuracao.CorHoverBotao')
-        }, function() {
-            $(this).css('background-color', '@ViewBag.Configuracao.CorBotao')
-            $(this).css('border-color', '@ViewBag.Configuracao.CorBotao')
+        $('.btn-juventude').hover(function () {
+            console.log($(this));
+            $(this).css('filter', 'brightness(0.6)')
+            $(this).css('filter', 'brightness(0.6)')
+
+        }, function () {
+            $(this).css('filter', 'brightness(100%)')
+            $(this).css('filter', 'brightness(100%)')
         })
 
          var corLoginBox = '@ViewBag.Configuracao.CorLoginBox';

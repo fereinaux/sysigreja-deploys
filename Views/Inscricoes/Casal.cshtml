@@ -322,15 +322,22 @@
 
 <style>
     .dtp > .dtp-content > .dtp-date-view > header.dtp-header {
-        background: @ViewBag.Configuracao.CorHoverBotao !important;
+        background: @ViewBag.Configuracao.CorBotao !important;
+        filter: brightness(0.8)
     }
 
     .dtp div.dtp-date, .dtp div.dtp-time {
          background: @ViewBag.Configuracao.CorBotao !important;
     }
 
-    .dtp .p10 > a {
-        color: white;
+    .dtp .btn-flat {
+         background: @ViewBag.Configuracao.CorBotao !important;
+         margin-left: 7px
+    }
+
+
+    .dtp .p10 > a, .dtp-actual-year {
+        color: white !important;
     }
 
     .dtp table.dtp-picker-days tr > td > a.selected {

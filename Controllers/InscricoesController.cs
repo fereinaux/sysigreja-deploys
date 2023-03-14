@@ -119,7 +119,6 @@ namespace SysIgreja.Controllers
                 Status = x.Status.GetDescription(),
                 StatusEquipe = x.StatusEquipe.GetDescription(),
                 Background = x.Background != null ? (isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Background, 400) : imageService.ResizeImage(x.Background, 700)) : "",
-                Logo = x.Logo != null ? (isMobile.HasValue && isMobile.Value ? imageService.ResizeImage(x.Logo, 360) : imageService.ResizeImage(x.Logo, 630)) : "",
             }).OrderBy(x => x.DataEvento).ToList();
 
             var json = Json(new { Eventos = eventos }, JsonRequestBehavior.AllowGet);

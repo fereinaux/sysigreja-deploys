@@ -23,6 +23,11 @@
 
         <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,@ViewBag.Configuracao.Logo" />
     }
+    else
+    {
+        <link rel="icon" type="image/png" sizes="16x16" href="~/Images/logo-iecb.png" />
+
+    }
     <link href="~/Content/animate.css" rel="stylesheet">
     <link href="~/Content/style.css" rel="stylesheet">
     <link href="~/Content/evento.css" rel="stylesheet">
@@ -64,7 +69,16 @@
     <div class="row justify-content-center header-evento" style="display:flex">
         <div class="col-header" style="margin: auto;padding:5px; display: flex">
             <span onclick="window.location.href = 'https://iecbeventos.com.br'" style="margin-left: 20px; cursor: pointer; margin-right: auto; margin-top: auto; margin-bottom: auto; font-size: 20px; color: white"><i class="fas fa-chevron-left"></i></span>
-            <img style="height: 50px; margin: auto; margin-left: -40px;" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+            @if (ViewBag.Configuracao.LogoId != null)
+            {
+                <img style="height: 50px; margin: auto; margin-left: -40px;" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+            }
+            else
+            {
+
+                <img style="height: 50px; margin: auto; margin-left: -40px;" alt="@ViewBag.Configuracao.Titulo" src="~/Images/logo-iecb.png" />
+
+            }
         </div>
 
     </div>
@@ -117,12 +131,12 @@
 <script>
     let corBotao = '@ViewBag.Configuracao.CorBotao'
         $(window).on('load', function () {
-            var logo = "@(ViewBag.Configuracao.Logo)"
+            var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" : '/Images/logo-iecb.png'
 
             $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
                 $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
     max-height: 150px;
-    padding: 15px;" src="data:image/png;base64,${logo}">`)
+    padding: 15px;" src="${logo}">`)
                 $('.swal-modal').css('background', corBotao)
                 $('.swal-modal').css('color', 'white')
             });

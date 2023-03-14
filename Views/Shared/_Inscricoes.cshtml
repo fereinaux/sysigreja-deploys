@@ -132,8 +132,8 @@
             $('.btn.btn-flat').css('background', corBotao)
             $('.btn.btn-flat').css('margin-left', '7px')
             $('#preloader').fadeOut();
-        })
 
+        })
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $(document).ready(function () {
 
@@ -143,19 +143,22 @@
                 <text> $('.background-evento').css('background-size', 'cover')</text>
             }
 
-
         $('.header-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.icon-check-evento').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.btn-juventude').css('background-color', '@ViewBag.Configuracao.CorBotao')
         $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
 
-        $('.btn-juventude').hover(function() {
-            $(this).css('filter', 'brightness(85%)')
-            $(this).css('filter', 'brightness(85%)')
-        }, function() {
-                 $(this).css('filter', 'brightness(100%)')
+        $('.btn-juventude').hover(function () {
+            console.log($(this));
+            $(this).css('filter', 'brightness(0.6)')
+            $(this).css('filter', 'brightness(0.6)')
+
+        }, function () {
+            $(this).css('filter', 'brightness(100%)')
             $(this).css('filter', 'brightness(100%)')
         })
+
+
     })
 </script>
 

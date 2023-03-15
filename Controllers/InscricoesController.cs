@@ -154,7 +154,7 @@ namespace SysIgreja.Controllers
                 case "Inscrições Equipe":
                     ViewBag.Sujeito = "voluntário";
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
-                    ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao) ? evento.Configuracao.Equipes.Where(x => x.ShowInscricao).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Equipe.Nome }).ToList() : equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
+                    ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao) ? evento.Configuracao.Equipes.Where(x => x.ShowInscricao).Select(x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }).ToList() : equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
                     if (ConjugeId.HasValue)
                     {
                         Equipante equipante = equipantesBusiness.GetEquipanteById(ConjugeId.Value);

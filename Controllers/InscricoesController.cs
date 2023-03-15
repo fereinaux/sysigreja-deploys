@@ -284,7 +284,7 @@ namespace SysIgreja.Controllers
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                     {
                         var casal = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Conjuge == equipante.Nome);
-                        ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", $"{equipante.Apelido} e {casal.Apelido}");
+                        ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", $"{equipante.Apelido} e {casal?.Apelido}");
                     }
                     else
                     {

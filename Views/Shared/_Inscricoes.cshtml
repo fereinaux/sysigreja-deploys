@@ -137,11 +137,15 @@
                 $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
     max-height: 150px;
     padding: 15px;" src="${logo}">`)
-                $('.swal-modal').css('background', corBotao)
-                $('.swal-modal').css('color', 'white')
             });
             $('body').on('DOMNodeInserted', '.swal-title', function () {
+                $('.swal-modal').css('background', corBotao)
+                $('.swal-modal').css('color', 'white')
                 $('.swal-title').css('color', 'white')
+            });
+
+            $('body').on('DOMNodeInserted', '.swal-content', function () {
+                $('.swal-content').css('color', 'white')
             });
 
             $('#preloader').fadeOut();

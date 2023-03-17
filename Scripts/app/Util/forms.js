@@ -123,8 +123,16 @@ function ValidateForm(form) {
                                    ${typeof camposFormatacao === "undefined" ? "" : camposFormatacao}
                                    ${typeof camposValidacao === "undefined" ? "" : camposValidacao}`;
 
-        ErrorMessage(formResult.MessageError);
+        var div = document.createElement("div");
 
+        div.innerHTML = `<p style="color:white" class="swal-text">${formResult.MessageError.replaceAll('\n','<br>')}</p>`
+
+        CustomSwal({
+            title: "Erro!",
+            icon: "error",
+            content: div,
+            className: "button-center",
+        })
         return false;
     }
 

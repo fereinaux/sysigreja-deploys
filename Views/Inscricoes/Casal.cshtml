@@ -153,7 +153,7 @@
                                 <div class="col col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-cep" class="">CEP</label>
-                                        <input type="text" class="form-control required cep" id="participante-cep" data-field="CEP" value="@ViewBag.CEP" onkeyup="verificaCep(this)" />
+                                        <input type="text" class="form-control required cep" id="participante-cep" data-field="Endereço do casal" value="@ViewBag.CEP" onkeyup="verificaCep(this)" />
                                         <input type="hidden" id="participante-latitude" />
                                         <input type="hidden" id="participante-longitude" />
                                     </div>
@@ -161,7 +161,7 @@
                                 <div class="col col-md-9 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-logradouro" class="">Logradouro</label>
-                                        <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
+                                        <input type="text" class="form-control" disabled id="participante-logradouro" data-field="Logradouro" />
                                     </div>
                                 </div>
                             </div>
@@ -169,19 +169,19 @@
                                 <div class="col col-md-5 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-bairro" class="">Bairro</label>
-                                        <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
+                                        <input type="text" class="form-control" disabled id="participante-bairro" data-field="Bairro" />
                                     </div>
                                 </div>
                                 <div class="col col-md-5 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-cidade" class="">Cidade</label>
-                                        <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
+                                        <input type="text" class="form-control" disabled id="participante-cidade" data-field="Cidade" />
                                     </div>
                                 </div>
                                 <div class="col col-md-2 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-estado" class="">Estado</label>
-                                        <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
+                                        <input type="text" class="form-control" disabled id="participante-estado" data-field="Estado" />
                                     </div>
                                 </div>
                             </div>
@@ -227,11 +227,11 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Convite.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome-convite" class="">Quem lhe fez o convite ao casal?</label>
-                                <input type="text" class="form-control required" id="participante-nome-convite" value="@ViewBag.NomeConvite" data-field="Quem lhe fez o convite?" />
+                                <label for="participante-nome-convite" class="">Quem fez o convite ao casal?</label>
+                                <input type="text" class="form-control required" id="participante-nome-convite" value="@ViewBag.NomeConvite" data-field="Quem fez o convite ao casal?" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-fone-convite" class="">Telefone de quem lhe fez o convite</label>
+                                <label for="participante-fone-convite" class="">Telefone de quem fez o convite</label>
                                 <input type="text" class="form-control fone" id="participante-fone-convite" value="@ViewBag.FoneConvite" data-field="Telefone de quem lhe fez o convite" />
                             </div>
                         }
@@ -692,7 +692,17 @@
         var evento = null
         function PostInscricao() {
             $('.btn-juventude').prop('disabled', true)
-            executePostInscricao()
+            if (ValidateForm(`#form-inscricao`)) {
+                if ($('#participante-email-marido').val() == $('#participante-email-esposa').val()) {
+                    $('.btn-juventude').prop('disabled', false)
+                    ErrorMessage('O email do <strong>marido</strong> e da <strong>esposa</strong> deve ser diferente')
+                } else {
+                executePostInscricao()
+
+                }
+            } else {
+                $('.btn-juventude').prop('disabled', false)
+            }
         }
 
         function mostrarTermo() {

@@ -1,9 +1,13 @@
 ﻿function ErrorMessage(message) {
-    swal({
+    var div = document.createElement("div");
+    div.innerHTML = `<p style="color:white" class="swal-text">${message.replaceAll('\n', '<br>')}</p>`
+
+    CustomSwal({
         title: "Erro!",
         icon: "error",
-        text: message
-    });
+        content: div,
+        className: "button-center",
+    })
 }
 
 function SuccessMessage(message) {

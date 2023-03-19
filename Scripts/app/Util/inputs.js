@@ -4,6 +4,66 @@
 
 });
 
+function mapCampos(campos) {
+    arrayCampos = []
+
+    campos.forEach(campo => {
+        arrayCampos.push(campoRelation(campo))
+
+    })
+    return arrayCampos
+}
+
+function campoRelation(campo) {
+    switch (campo) {
+        case "Nome e Sobrenome":
+            return "Nome";
+        case "Apelido":
+            return "Apelido";
+        case "Data Nascimento":
+            return "DataNascimento"
+        case "Gênero":
+            return "Sexo";
+        case "Email":
+            return "Email";
+        case "Fone":
+            return "Fone";
+        case "Cônjuge":
+            return "Conjuge";
+        case "Camisa":
+            return "Camisa";
+        case "Endereço":
+            return ["CEP", "Logradouro", "Bairro", "Cidade", "Estado", "Numero", "Complemento","Referencia"];
+        case "Dados da Mãe":
+            return ["NomeMae","FoneMae"];
+        case "Dados do Pai":
+            return ["NomePai", "FonePai"];
+        case "Dados do Contato":
+            return ["NomeContato", "FoneContato"];
+        case "Dados do Convite":
+            return ["NomeConvite", "FoneConvite"];
+        case "Parente":
+            return "Parente";
+        case "Congregação":
+            return "Congregacao";
+        case "Convênio":
+            return ["Convenio","Hospitais"];
+        case "Casamento":
+            return "DataCasamento";
+        case "Medicação":
+            return "Medicacao";
+        case "Alergia":
+            return "Alergia";
+        case "Restrição Alimentar":
+            return "RestricaoAlimentar";      
+        case "Equipe":
+            return "Equipe";
+        default:
+            break;
+    }
+
+}
+
 (function ($) {
     var originalVal = $.fn.val;
     $.fn.val = function () {
@@ -27,7 +87,7 @@ function initInputs() {
         $(this).data('index', i)
 
 
-    $(this).replaceWith(`<div style="position:relative">
+        $(this).replaceWith(`<div style="position:relative">
 
 <label tab-index="-1" style="position: absolute; top: 10px; right: 10px; cursor: pointer;" for="full-date-changer">
 

@@ -1,8 +1,49 @@
 ﻿$(document).ready(() => {
-   
+
     $('#eventoid').val($('#eventoid option:first').val())
     CarregarTela()
+    loadCampos()
 });
+
+
+function ExportarExcel() {
+    $.ajax({
+        url: "/Equipante/GetEquipantesDataTable?extract=excel",
+        dataType: "text",
+        data: {
+            EventoId: $('#eventoid').val(),
+            Equipe: [EquipeId],
+            Campos: mapCampos(campos.map(campo => campo.Campo)).concat(["Quarto", "Equipe", "Situacao"]).flatMap(campo => campo).join(','),
+            columns:
+                campos.map(campo => ({ name: campo.Campo, search: { value: "" } }))
+            ,
+            order: [{
+                column: 0,
+                dir: "asc"
+            }]
+        },
+        type: "POST",
+        success: function (o) {
+            window.location = `/Equipante/DownloadTempFile?fileName=${$('.equipe').text()} - ${$("#eventoid option:selected").text()}.xlsx&g=` + o;
+        }
+
+    })
+}
+
+let EquipeId
+
+function loadCampos() {
+    $.ajax({
+        url: "/Configuracao/GetCamposEquipeByEventoId/",
+        data: { Id: $('#eventoid').val() },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            campos = data.Campos
+        }
+    })
+}
 
 function CarregarTela() {
     $.ajax({
@@ -11,8 +52,9 @@ function CarregarTela() {
         data: { eventoId: $('#eventoid').val() },
         type: "GET",
         success: (data) => {
+            EquipeId = data.result.EquipeEnum
             $('.equipe').text(data.result.Equipe)
-            $('#img-logo').attr('src', `data:image/png;base64,${data.result.Configuracao.Logo}`)
+            $('#img-logo').attr('src', data.result.Configuracao.Logo ? `data:image/png;base64,${data.result.Configuracao.Logo}` : '/Images/logo-iecb.png')
             $('.qtd-membros').text(data.result.QtdMembros)
             $('.navy-bg').css('background-color', data.result.Configuracao.Cor)
             $('.membros').html(`${data.result.Membros.map(membro => `

@@ -54,6 +54,7 @@ function CarregarTela() {
         success: (data) => {
             EquipeId = data.result.EquipeEnum
             $('.equipe').text(data.result.Equipe)
+            $('#btn-excel').prop('disabled', false)
             $('#img-logo').attr('src', data.result.Configuracao.Logo ? `data:image/png;base64,${data.result.Configuracao.Logo}` : '/Images/logo-iecb.png')
             $('.qtd-membros').text(data.result.QtdMembros)
             $('.navy-bg').css('background-color', data.result.Configuracao.Cor)

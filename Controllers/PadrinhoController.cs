@@ -164,7 +164,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Nome = x.Nome
-                }).ToList()
+                }).OrderBy(x => x.Nome).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -180,7 +180,7 @@ namespace SysIgreja.Controllers
                     ParticipanteId = x.Id,
                     PadrinhoId = x.PadrinhoId,
                     Padrinho = UtilServices.CapitalizarNome(x.Padrinho.EquipanteEvento.Equipante.Nome)
-                }).ToList()
+                }).OrderBy(x => x.PadrinhoId).ThenBy(x => x.Nome).ToList()
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -202,7 +202,7 @@ namespace SysIgreja.Controllers
                 Apelido = UtilServices.CapitalizarNome(x.Apelido),
                 Padrinho = UtilServices.CapitalizarNome(x.Padrinho.EquipanteEvento.Equipante.Nome),
                 Fone = x.Fone
-            });
+            }).OrderBy(x => x.Padrinho).ThenBy(x => x.Nome);
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

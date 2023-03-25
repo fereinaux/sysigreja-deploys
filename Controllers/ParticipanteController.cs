@@ -615,7 +615,7 @@ namespace SysIgreja.Controllers
             var result = participantesBusiness
             .GetParticipantesByEvento(model.EventoId.Value);
 
-            var queryCasais = result.GroupJoin(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+            var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
             {
                 Conjuge = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
                 Nome = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
@@ -716,27 +716,11 @@ namespace SysIgreja.Controllers
                 if (casal.Homem != null)
                 {
                     casal.Homem.Dupla = casal.Dupla;
-                    casal.Homem.Circulos.ToList().ForEach(circulo =>
-                    {
-                        circulo.Circulo = circulosBusiness.GetCirculoById(circulo.CirculoId);
-                    });
-                    casal.Homem.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
-                    {
-                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);
-                    });
                     resultCasais.Add(casal.Homem);
                 }
                 if (casal.Mulher != null)
                 {
-                    casal.Mulher.Dupla = casal.Dupla;
-                    casal.Mulher.Circulos.ToList().ForEach(circulo =>
-                    {
-                        circulo.Circulo = circulosBusiness.GetCirculoById(circulo.CirculoId);
-                    });
-                    casal.Mulher.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
-                    {
-                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);
-                    });
+                    casal.Mulher.Dupla = casal.Dupla;                 
                     resultCasais.Add(casal.Mulher);
                 }
             });

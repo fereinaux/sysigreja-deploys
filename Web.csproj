@@ -1032,6 +1032,7 @@
     <Content Include="Scripts\app\Carona\carona.js" />
     <Content Include="Scripts\app\Cracha\print.js" />
     <Content Include="Scripts\app\Cracha\cracha.js" />
+    <Content Include="Scripts\app\Equipante\casais.js" />
     <Content Include="Scripts\app\Etiqueta\etiqueta.js" />
     <Content Include="Scripts\app\Evento\informativo.js" />
     <Content Include="Scripts\app\Mensagem\mensagem.js" />
@@ -1245,6 +1246,7 @@
     <Content Include="Views\Account\RecuperarSenha.cshtml" />
     <Content Include="Views\Participante\Casais.cshtml" />
     <Content Include="Views\Inscricoes\Casal.cshtml" />
+    <Content Include="Views\Equipante\Casais.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

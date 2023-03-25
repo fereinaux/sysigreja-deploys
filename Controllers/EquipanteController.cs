@@ -22,6 +22,7 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Threading;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -71,6 +72,15 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Equipantes";
             GetEventos();
+
+            return View();
+        }
+
+        public ActionResult Casais()
+        {
+            ViewBag.Title = "Casais";
+            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
+            GetConfiguracao();
 
             return View();
         }
@@ -241,6 +251,238 @@ namespace SysIgreja.Controllers
             json.MaxJsonLength = Int32.MaxValue;
             return json;
         }
+
+        [HttpPost]
+        public ActionResult GetCasaisDatatable(Core.Models.Equipantes.FilterModel model)
+        {
+            var extract = Request.QueryString["extract"];
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
+
+            if (model.EventoId.HasValue)
+            {
+
+                var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
+                    .IncludeOptimized(x => x.Equipante)
+            .IncludeOptimized(x => x.Equipante.Arquivos)
+            .IncludeOptimized(x => x.Equipante.Lancamentos)
+            .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+            .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+            .IncludeOptimized(x => x.Equipe)
+              .IncludeOptimized(x => x.Equipante.Quartos)
+                       .IncludeOptimized(x => x.Equipante.Quartos.Select(y => y.Quarto))
+            .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
+                    .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
+
+                var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Equipante.Nome.ToLower().Trim(), y => y.Equipante.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+                {
+                    Conjuge = x.q1.Equipante.Nome == new List<string> { x.q1.Equipante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Equipante.Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
+                    Nome = x.q1.Equipante.Nome == new List<string> { x.q1.Equipante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Equipante.Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
+                }).Select(x => new
+                {
+                    Homem = x.Nome.Equipante.Sexo == SexoEnum.Masculino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                    Mulher = x.Nome.Equipante.Sexo == SexoEnum.Feminino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                }).Distinct();
+
+                var totalResultsCount = result.Count();
+                var filteredResultsCount = totalResultsCount;
+
+                if (model.Etiquetas != null && model.Etiquetas.Count > 0)
+                {
+                    model.Etiquetas.ForEach(etiqueta =>
+                    queryCasais = queryCasais.Where(x =>
+                    x.Homem.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) ||
+                     x.Mulher.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                    ));
+
+                }
+
+                if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
+                {
+                    model.NaoEtiquetas.ForEach(etiqueta =>
+                 queryCasais = queryCasais.Where(x => !x.Homem.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) && !x.Mulher.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                }
+
+                if (model.Status != null)
+                {
+                    if (!(model.Status.Contains("pendente") && model.Status.Contains("pago")))
+                    {
+                        if (model.Status.Contains("pendente"))
+                        {
+                            queryCasais = queryCasais.Where(x => (!x.Homem.Equipante.Lancamentos.Any(y => y.EventoId == x.Homem.EventoId)) || (!x.Mulher.Equipante.Lancamentos.Any(y => y.EventoId == x.Mulher.EventoId)));
+                        }
+                        else if (model.Status.Contains("pago"))
+                        {
+                            queryCasais = queryCasais.Where(x => (x.Homem.Equipante.Lancamentos.Any(y => y.EventoId == x.Homem.EventoId)) || (x.Mulher.Equipante.Lancamentos.Any(y => y.EventoId == x.Mulher.EventoId)));
+
+                        }
+                    }
+
+                    filteredResultsCount = result.Count();
+                }
+
+
+                if (model.Equipe != null)
+                {
+                    queryCasais = queryCasais.Where(x => model.Equipe.Contains(x.Homem.EquipeId.Value) || model.Equipe.Contains(x.Mulher.EquipeId.Value));
+                }
+
+                if (model.columns != null)
+                {
+                    for (int i = 0; i < model.columns.Count; i++)
+                    {
+                        if (model.columns[i].search.value != null)
+                        {
+
+                            var searchValue = model.columns[i].search.value.ToLower();
+                            if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
+                            {
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipante?.Nome?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipante?.Nome?.ToLower().Contains(searchValue)) ?? false));
+                            }
+                            if (model.columns[i].name == "Equipe" && model.columns[i].search.value != null)
+                            {
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipe?.Nome?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipe?.Nome?.ToLower().Contains(searchValue)) ?? false));
+                            }
+
+                            if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
+                            {
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipante?.Congregacao?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipante?.Congregacao?.ToLower().Contains(searchValue)) ?? false));
+                            }
+                        }
+                    }
+                }
+
+
+                if (extract == "excel")
+                {
+                    Guid g = Guid.NewGuid();
+                    var data = mapper.Map<IEnumerable<EquipanteExcelModel>>(result);
+
+                    Session[g.ToString()] = datatableService.GenerateExcel(data.ToList(), model.Campos);
+
+                    return Content(g.ToString());
+                }
+
+                filteredResultsCount = result.Count();
+
+                var queryNova = queryCasais.Select(x => new
+                {
+                    Dupla = (x.Homem != null & x.Mulher != null) ? x.Homem.Equipante.Apelido + " e " + x.Mulher.Equipante.Apelido : null,
+                    x.Homem,
+                    x.Mulher,
+                });
+
+
+                queryNova = queryNova.OrderBy(x => x.Dupla).Skip(model.Start)
+             .Take(model.Length);
+
+                List<Data.Entities.EquipanteEvento> resultCasais = new List<Data.Entities.EquipanteEvento>();
+
+                queryNova.ToList().ForEach(casal =>
+                {
+                    if (casal.Homem != null)
+                    {
+                        casal.Homem.Equipante.Dupla = casal.Dupla;
+                        resultCasais.Add(casal.Homem);
+                    }
+                    if (casal.Mulher != null)
+                    {
+                        casal.Mulher.Equipante.Dupla = casal.Dupla;
+                        resultCasais.Add(casal.Mulher);
+                    }
+                });
+
+                return Json(new
+                {
+                    data = mapper.Map<IEnumerable<EquipanteListModel>>(resultCasais),
+                    recordsTotal = totalResultsCount,
+                    recordsFiltered = filteredResultsCount,
+                }, JsonRequestBehavior.AllowGet);
+
+
+            }
+            else
+            {
+
+                var result = equipantesBusiness.GetEquipantes();
+
+                var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+                {
+                    Conjuge = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
+                    Nome = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
+                }).Select(x => new
+                {
+                    Homem = x.Nome.Sexo == SexoEnum.Masculino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                    Mulher = x.Nome.Sexo == SexoEnum.Feminino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                }).Distinct();
+
+                var totalResultsCount = result.Count();
+                var filteredResultsCount = totalResultsCount;
+
+                if (model.search.value != null)
+                {
+                    result = result.Where(x => (x.Nome.Contains(model.search.value)));
+                    filteredResultsCount = result.Count();
+                }
+
+                if (model.columns != null)
+                {
+                    for (int i = 0; i < model.columns.Count; i++)
+                    {
+                        if (model.columns[i].search.value != null)
+                        {
+
+                            var searchValue = model.columns[i].search.value.ToLower();
+                            if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
+                            {
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Nome?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Nome?.ToLower().Contains(searchValue)) ?? false));
+                            }                   
+                            if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
+                            {
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Congregacao?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Congregacao?.ToLower().Contains(searchValue)) ?? false));
+                            }
+                        }
+                    }
+                }
+
+                filteredResultsCount = queryCasais.Count();
+
+                var queryNova = queryCasais.Select(x => new
+                {
+                    Dupla = (x.Homem != null & x.Mulher != null) ? x.Homem.Apelido + " e " + x.Mulher.Apelido : null,
+                    x.Homem,
+                    x.Mulher,
+                });
+                queryNova = queryNova.OrderBy(x => x.Dupla).Skip(model.Start)
+                .Take(model.Length);
+
+                List<Data.Entities.Equipante> resultCasais = new List<Data.Entities.Equipante>();
+
+                queryNova.ToList().ForEach(casal =>
+                {
+                    if (casal.Homem != null)
+                    {
+                        casal.Homem.Dupla = casal.Dupla;
+                        resultCasais.Add(casal.Homem);
+                    }
+                    if (casal.Mulher != null)
+                    {
+                        casal.Mulher.Dupla = casal.Dupla;
+                        resultCasais.Add(casal.Mulher);
+                    }
+                });
+
+                return Json(new
+                {
+                    data = mapper.Map<IEnumerable<EquipanteListModel>>(resultCasais),
+                    recordsTotal = totalResultsCount,
+                    recordsFiltered = filteredResultsCount,
+                }, JsonRequestBehavior.AllowGet);
+
+
+            }
+
+        }
+
 
         [HttpPost]
         public ActionResult GetEquipantesDataTable(Core.Models.Equipantes.FilterModel model)

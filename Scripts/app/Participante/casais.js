@@ -607,7 +607,7 @@ function PostArquivo() {
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
     var filename = dataToPost.get('arquivo-modal').name
     if (realista.Nome) {
-        var arquivo = new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Nome + filename.substr(filename.indexOf('.')));
+        var arquivo = new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Dupla + filename.substr(filename.indexOf('.')));
     } else {
         var arquivo = new File([dataToPost.get('arquivo-modal')], filename);
     }

@@ -476,7 +476,7 @@ function ConfirmFoto() {
                     contentType: false,
                     type: "POST",
                     data: dataToPost,
-                    url: "Arquivo/PostArquivo",
+                    url: "/Arquivo/PostArquivo",
                     success: function () {
                         $("#modal-fotos").modal("hide");
                         CarregarTabelaEquipante()
@@ -590,7 +590,7 @@ function PostArquivo() {
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
     var filename = dataToPost.get('arquivo-modal').name
 
-    var arquivo = dataToPost.get('LancamentoIdModal') > 0 ? new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Nome + filename.substr(filename.indexOf('.'))) : dataToPost.get('arquivo-modal');
+    var arquivo = dataToPost.get('LancamentoIdModal') > 0 ? new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Dupla + filename.substr(filename.indexOf('.'))) : dataToPost.get('arquivo-modal');
 
     dataToPost.set('Arquivo', arquivo)
     dataToPost.set('EventoId', $("#equipante-eventoid").val())
@@ -602,7 +602,7 @@ function PostArquivo() {
             contentType: false,
             type: "POST",
             data: dataToPost,
-            url: "Arquivo/PostArquivo",
+            url: "/Arquivo/PostArquivo",
             success: function () {
                 if (dataToPost.get('LancamentoIdModal')) {
                     GetAnexosLancamento();

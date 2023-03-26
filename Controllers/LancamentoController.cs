@@ -104,9 +104,13 @@ namespace SysIgreja.Controllers
                 Descricao = UtilServices.CapitalizarNome(x.Descricao),
                 Origem = !string.IsNullOrEmpty(x.Origem) ? UtilServices.CapitalizarNome(x.Origem) : "",
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),
-                FormaPagamento =  x.MeioPagamento.Descricao,
+                FormaPagamento = x.MeioPagamento.Descricao,
                 Valor = UtilServices.DecimalToMoeda(x.Valor),
-                ParticipanteId = x.ParticipanteId,
+                Participantes = x.Participantes.Select(y => new Core.Models.Participantes.ParticipanteListModel
+                {
+                    Id = y.Id,
+                    Nome = y.Nome
+                }).ToList(),
                 QtdAnexos = qtdAnexos
             };
         }

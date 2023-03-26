@@ -101,6 +101,7 @@ namespace SysIgreja.Controllers
                 cfg.CreateMap<EquipanteEvento, EquipanteListModel>()
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Equipante.Id))
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
+                                        .ForMember(dest => dest.Dupla, opt => opt.MapFrom(x => x.Equipante.Dupla))
                     .ForMember(dest => dest.Fone, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Fone)))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)))

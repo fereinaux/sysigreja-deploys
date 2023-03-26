@@ -260,17 +260,16 @@ namespace SysIgreja.Controllers
 
             if (model.EventoId.HasValue)
             {
-
                 var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
-                    .IncludeOptimized(x => x.Equipante)
-            .IncludeOptimized(x => x.Equipante.Arquivos)
-            .IncludeOptimized(x => x.Equipante.Lancamentos)
-            .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
-            .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
-            .IncludeOptimized(x => x.Equipe)
-              .IncludeOptimized(x => x.Equipante.Quartos)
-                       .IncludeOptimized(x => x.Equipante.Quartos.Select(y => y.Quarto))
-            .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
+                    .Include(x => x.Equipante)
+                    .Include(x => x.Equipante.Arquivos)
+                    .Include(x => x.Equipante.Lancamentos)
+                    .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+                    .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+                    .Include(x => x.Equipe)
+                    .Include(x => x.Equipante.Quartos)
+                    .Include(x => x.Equipante.Quartos.Select(y => y.Quarto))
+                    .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
                     .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
 
                 var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Equipante.Nome.ToLower().Trim(), y => y.Equipante.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
@@ -290,8 +289,8 @@ namespace SysIgreja.Controllers
                 {
                     model.Etiquetas.ForEach(etiqueta =>
                     queryCasais = queryCasais.Where(x =>
-                    x.Homem.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) ||
-                     x.Mulher.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                    (x.Homem?.Equipante?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false) ||
+                     (x.Mulher?.Equipante?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false)
                     ));
 
                 }
@@ -299,7 +298,7 @@ namespace SysIgreja.Controllers
                 if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
                 {
                     model.NaoEtiquetas.ForEach(etiqueta =>
-                 queryCasais = queryCasais.Where(x => !x.Homem.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) && !x.Mulher.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                 queryCasais = queryCasais.Where(x => (!x.Homem?.Equipante?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false) && (!x.Mulher?.Equipante?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false)));
                 }
 
                 if (model.Status != null)
@@ -308,11 +307,11 @@ namespace SysIgreja.Controllers
                     {
                         if (model.Status.Contains("pendente"))
                         {
-                            queryCasais = queryCasais.Where(x => (!x.Homem.Equipante.Lancamentos.Any(y => y.EventoId == x.Homem.EventoId)) || (!x.Mulher.Equipante.Lancamentos.Any(y => y.EventoId == x.Mulher.EventoId)));
+                            queryCasais = queryCasais.Where(x => (!x.Homem?.Equipante?.Lancamentos?.Any(y => y.EventoId == x.Homem.EventoId) ?? false) || (!x.Mulher?.Equipante?.Lancamentos?.Any(y => y.EventoId == x.Mulher.EventoId) ?? false));
                         }
                         else if (model.Status.Contains("pago"))
                         {
-                            queryCasais = queryCasais.Where(x => (x.Homem.Equipante.Lancamentos.Any(y => y.EventoId == x.Homem.EventoId)) || (x.Mulher.Equipante.Lancamentos.Any(y => y.EventoId == x.Mulher.EventoId)));
+                            queryCasais = queryCasais.Where(x => ((x.Homem?.Equipante?.Lancamentos?.Any(y => y.EventoId == x.Homem.EventoId)) ?? false) || ((x.Mulher?.Equipante?.Lancamentos?.Any(y => y.EventoId == x.Mulher.EventoId) ?? false)));
 
                         }
                     }
@@ -323,7 +322,7 @@ namespace SysIgreja.Controllers
 
                 if (model.Equipe != null)
                 {
-                    queryCasais = queryCasais.Where(x => model.Equipe.Contains(x.Homem.EquipeId.Value) || model.Equipe.Contains(x.Mulher.EquipeId.Value));
+                    queryCasais = queryCasais.Where(x => (x.Homem !=null && model.Equipe.Contains(x.Homem.EquipeId.Value)) || (x.Mulher != null && model.Equipe.Contains(x.Mulher.EquipeId.Value)));
                 }
 
                 if (model.columns != null)

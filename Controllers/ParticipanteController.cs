@@ -669,7 +669,14 @@ namespace SysIgreja.Controllers
                 }
                 else
                 {
-                    queryCasais = queryCasais.Where(x => ((x.Homem?.PadrinhoId.HasValue ?? false && model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value))) || (x.Mulher?.PadrinhoId.HasValue ?? false && (model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value))));
+                    queryCasais = queryCasais
+                        .Where(x => 
+                            (x.Homem?.Padrinho != null &&
+                             model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value))
+                                ||
+                            (x.Mulher?.Padrinho != null &&
+                             model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value))
+                        );
                 }
                 filteredResultsCount = queryCasais.Count();
             }

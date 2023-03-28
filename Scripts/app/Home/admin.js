@@ -130,6 +130,7 @@ function GetResultadosAdmin() {
         data: { EventoId: $("#eventoid").val() },
         type: "GET",
         success: (data) => {
+          
             result = data.result;
             if (result.Total == 0) {
                 $('.zero-participantes').css('display', 'none')
@@ -182,7 +183,7 @@ function GetResultadosAdmin() {
             $(result.UltimosInscritos).each((i, element) => {
                 htmlInscritos += `<tr>                        
                         <td>${element.Nome}</td>                        
-                        <td>${element.Idade}</td>                                                
+                        <td class="td-idade">${element.Idade}</td>                                                
                     </tr>`;
             });
 
@@ -233,6 +234,18 @@ function GetResultadosAdmin() {
             var randomColorGenerator = function () {
                 return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
             };
+
+            if (config.TipoEvento == "Casais") {
+                $('#total~small').text('Casais')
+                $('#meninos').parent().parent().css('display', 'none')
+                $('#meninas').parent().parent().css('display', 'none')
+                $('.td-idade').css('display', 'none')
+            } else {
+                $('#total~small').text('Participantes')
+                $('#meninos').parent().parent().css('display', 'block')
+                $('#meninas').parent().parent().css('display', 'block')
+                $('.td-idade').css('display', 'block')
+            }
 
         }
     });

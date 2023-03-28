@@ -58,7 +58,7 @@ namespace SysIgreja.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.Titulo.ToLower().Contains(search.ToLower()) || x.Cor.ToLower().Contains(search.ToLower())).ToList();
+                query = query.Where(x => x.Titulo.RemoveAccents().Contains(search.RemoveAccents()) || x.Cor.RemoveAccents().Contains(search.RemoveAccents())).ToList();
             }
 
             if (!string.IsNullOrEmpty(columnName))

@@ -71,9 +71,9 @@ function CarregarTabelaCirculo() {
 $(document).ready(function () {
 
     $("#Participante").on("keyup", function () {
-        var value = $(this).val().toLowerCase();
+        var value = $(this).val().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
         $("#table-participantes tr").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            $(this).toggle($(this).text().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').indexOf(value) > -1)
         });
     });
 

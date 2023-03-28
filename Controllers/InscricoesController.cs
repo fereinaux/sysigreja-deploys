@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using Core.Business.Notificacao;
 using Utils.Services;
 using System.Drawing.Imaging;
+using CsQuery;
 
 namespace SysIgreja.Controllers
 {
@@ -97,7 +98,7 @@ namespace SysIgreja.Controllers
               ) &&
               (
                 (string.IsNullOrEmpty(search)) ||
-                x.TituloEvento.ToLower().Contains(search.ToLower())
+                x.TituloEvento.RemoveAccents().Contains(search.RemoveAccents())
               ) &&
               (
                 (identificador == x.Identificador || x.Global) ||
@@ -347,12 +348,20 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Inscrição em Espera";
             Participante participante = participantesBusiness.GetParticipanteById(Id);
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
+            var config = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
+            ViewBag.Configuracao = config;
             var Valor = participante.Evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? participante.Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
+            var apelido = participante.Apelido;
+            if (config.TipoEventoId == TipoEventoEnum.Casais)
+            {
+                var casal = participantesBusiness.GetParticipantesByEvento(participante.EventoId).FirstOrDefault(x => x.Conjuge == participante.Nome);
+                apelido =  $"{participante.Apelido} e {casal?.Apelido}";
+            }
+           
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {
                 Id = participante.Id,
-                Apelido = participante.Apelido,
+                Apelido = apelido,
                 Logo = participante.Evento.Configuracao.Titulo + ".png",
                 Evento = $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.Configuracao.Titulo} {participante.Evento.Descricao}",
                 Valor = Valor,

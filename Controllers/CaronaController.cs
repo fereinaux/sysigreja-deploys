@@ -73,7 +73,7 @@ namespace SysIgreja.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                result = result.Where(x => x.Motorista.ToLower().Contains(search.ToLower())).ToList();
+                result = result.Where(x => x.Motorista.RemoveAccents().Contains(search.RemoveAccents())).ToList();
             }
 
             if (!string.IsNullOrEmpty(columnName))

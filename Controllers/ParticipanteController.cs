@@ -689,7 +689,8 @@ namespace SysIgreja.Controllers
 
             if (model.search != null && model.search.value != null)
             {
-                queryCasais = queryCasais.Where(x => x.Homem != null ? ((x.Homem.Nome.Contains(model.search.value)) || (x.Homem.Conjuge.Contains(model.search.value))) : (x.Mulher.Nome.Contains(model.search.value)) || (x.Mulher.Conjuge.Contains(model.search.value)));
+                model.search.value = model.search.value.RemoveAccents();
+                queryCasais = queryCasais.Where(x => x.Homem != null ? ((x.Homem.Nome.RemoveAccents().Contains(model.search.value)) || (x.Homem.Conjuge.RemoveAccents().Contains(model.search.value))) : (x.Mulher.Nome.RemoveAccents().Contains(model.search.value)) || (x.Mulher.Conjuge.RemoveAccents().Contains(model.search.value)));
                 filteredResultsCount = queryCasais.Count();
             }
 

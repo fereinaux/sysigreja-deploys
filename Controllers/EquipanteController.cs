@@ -91,12 +91,12 @@ namespace SysIgreja.Controllers
             Guid g = Guid.NewGuid();
 
             Session[g.ToString()] = datatableService.GenerateExcel(mapper.Map<IEnumerable<EquipanteExcelModel>>(equipesBusiness.GetQueryEquipantesEvento(eventoid)
-                        .IncludeOptimized(x => x.Equipante)
-                .IncludeOptimized(x => x.Equipante.Arquivos)
-                .IncludeOptimized(x => x.Equipante.Lancamentos)
-                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
-                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
-                .IncludeOptimized(x => x.Equipe).OrderBy(x => x.Equipante.Nome)));
+                        .Include(x => x.Equipante)
+                .Include(x => x.Equipante.Arquivos)
+                .Include(x => x.Equipante.Lancamentos)
+                .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+                .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+                .Include(x => x.Equipe).OrderBy(x => x.Equipante.Nome)));
 
             return Content(g.ToString());
         }
@@ -105,12 +105,12 @@ namespace SysIgreja.Controllers
         public ActionResult GetCracha(Core.Models.Equipantes.FilterModel model)
         {
             var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
-                        .IncludeOptimized(x => x.Equipante)
-                .IncludeOptimized(x => x.Equipante.Arquivos)
-                .IncludeOptimized(x => x.Equipante.Lancamentos)
-                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
-                .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
-                .IncludeOptimized(x => x.Equipe)
+                        .Include(x => x.Equipante)
+                .Include(x => x.Equipante.Arquivos)
+                .Include(x => x.Equipante.Lancamentos)
+                .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+                .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+                .Include(x => x.Equipe)
                 .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
                         .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
 
@@ -161,7 +161,7 @@ namespace SysIgreja.Controllers
 
                 if (model.search != null && !string.IsNullOrEmpty(model.search.value))
                 {
-                    result = result.Where(x => (x.Equipante.Nome.ToLower().Contains(model.search.value.ToLower())));
+                    result = result.Where(x => (x.Equipante.Nome.RemoveAccents().Contains(model.search.value.RemoveAccents())));
                 }
 
             }
@@ -272,7 +272,7 @@ namespace SysIgreja.Controllers
                     .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
                     .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
 
-                var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Equipante.Nome.ToLower().Trim(), y => y.Equipante.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+                var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Equipante.Nome.RemoveAccents().Trim(), y => y.Equipante.Conjuge?.RemoveAccents().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
                 {
                     Conjuge = x.q1.Equipante.Nome == new List<string> { x.q1.Equipante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Equipante.Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
                     Nome = x.q1.Equipante.Nome == new List<string> { x.q1.Equipante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Equipante.Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
@@ -332,19 +332,19 @@ namespace SysIgreja.Controllers
                         if (model.columns[i].search.value != null)
                         {
 
-                            var searchValue = model.columns[i].search.value.ToLower();
+                            var searchValue = model.columns[i].search.value.RemoveAccents();
                             if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
                             {
-                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipante?.Nome?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipante?.Nome?.ToLower().Contains(searchValue)) ?? false));
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipante?.Nome?.RemoveAccents().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipante?.Nome?.RemoveAccents().Contains(searchValue)) ?? false));
                             }
                             if (model.columns[i].name == "Equipe" && model.columns[i].search.value != null)
                             {
-                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipe?.Nome?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipe?.Nome?.ToLower().Contains(searchValue)) ?? false));
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipe?.Nome?.RemoveAccents().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipe?.Nome?.RemoveAccents().Contains(searchValue)) ?? false));
                             }
 
                             if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
                             {
-                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipante?.Congregacao?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipante?.Congregacao?.ToLower().Contains(searchValue)) ?? false));
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Equipante?.Congregacao?.RemoveAccents().Contains(searchValue)) ?? false) || ((x.Mulher?.Equipante?.Congregacao?.RemoveAccents().Contains(searchValue)) ?? false));
                             }
                         }
                     }
@@ -404,7 +404,7 @@ namespace SysIgreja.Controllers
 
                 var result = equipantesBusiness.GetEquipantes();
 
-                var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+                var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Nome.RemoveAccents().Trim(), y => y.Conjuge?.RemoveAccents().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
                 {
                     Conjuge = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
                     Nome = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
@@ -419,7 +419,7 @@ namespace SysIgreja.Controllers
 
                 if (model.search.value != null)
                 {
-                    result = result.Where(x => (x.Nome.Contains(model.search.value)));
+                    result = result.Where(x => (x.Nome.RemoveAccents().Contains(model.search.value.RemoveAccents())));
                     filteredResultsCount = result.Count();
                 }
 
@@ -430,14 +430,14 @@ namespace SysIgreja.Controllers
                         if (model.columns[i].search.value != null)
                         {
 
-                            var searchValue = model.columns[i].search.value.ToLower();
+                            var searchValue = model.columns[i].search.value.RemoveAccents();
                             if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
                             {
-                                queryCasais = queryCasais.Where(x => ((x.Homem?.Nome?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Nome?.ToLower().Contains(searchValue)) ?? false));
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Nome?.RemoveAccents().Contains(searchValue)) ?? false) || ((x.Mulher?.Nome?.RemoveAccents().Contains(searchValue)) ?? false));
                             }                   
                             if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
                             {
-                                queryCasais = queryCasais.Where(x => ((x.Homem?.Congregacao?.ToLower().Contains(searchValue)) ?? false) || ((x.Mulher?.Congregacao?.ToLower().Contains(searchValue)) ?? false));
+                                queryCasais = queryCasais.Where(x => ((x.Homem?.Congregacao?.RemoveAccents().Contains(searchValue)) ?? false) || ((x.Mulher?.Congregacao?.RemoveAccents().Contains(searchValue)) ?? false));
                             }
                         }
                     }
@@ -494,14 +494,14 @@ namespace SysIgreja.Controllers
             {
 
                 var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
-                    .IncludeOptimized(x => x.Equipante)
-            .IncludeOptimized(x => x.Equipante.Arquivos)
-            .IncludeOptimized(x => x.Equipante.Lancamentos)
-            .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento))
-            .IncludeOptimized(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
-            .IncludeOptimized(x => x.Equipe)
-              .IncludeOptimized(x => x.Equipante.Quartos)
-                       .IncludeOptimized(x => x.Equipante.Quartos.Select(y => y.Quarto))
+                    .Include(x => x.Equipante)
+            .Include(x => x.Equipante.Arquivos)
+            .Include(x => x.Equipante.Lancamentos)
+            .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+            .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+            .Include(x => x.Equipe)
+              .Include(x => x.Equipante.Quartos)
+                       .Include(x => x.Equipante.Quartos.Select(y => y.Quarto))
             .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
                     .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
 
@@ -546,7 +546,7 @@ namespace SysIgreja.Controllers
 
                 if (model.search != null && model.search.value != null)
                 {
-                    result = result.Where(x => (x.Equipante.Nome.ToLower().Contains(model.search.value.ToLower())));
+                    result = result.Where(x => (x.Equipante.Nome.RemoveAccents().Contains(model.search.value.RemoveAccents())));
                     filteredResultsCount = result.Count();
                 }
 
@@ -558,19 +558,19 @@ namespace SysIgreja.Controllers
                         if (model.columns[i].search.value != null)
                         {
 
-                            var searchValue = model.columns[i].search.value.ToLower();
+                            var searchValue = model.columns[i].search.value.RemoveAccents();
                             if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
                             {
-                                result = result.Where(x => (x.Equipante.Nome.ToLower().Contains(searchValue)));
+                                result = result.Where(x => (x.Equipante.Nome.RemoveAccents().Contains(searchValue)));
                             }
                             if (model.columns[i].name == "Equipe" && model.columns[i].search.value != null)
                             {
-                                result = result.Where(x => (x.Equipe.Nome.ToLower().Contains(searchValue)));
+                                result = result.Where(x => (x.Equipe.Nome.RemoveAccents().Contains(searchValue)));
                             }
 
                             if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
                             {
-                                result = result.Where(x => (x.Equipante.Congregacao.ToLower().Contains(searchValue)));
+                                result = result.Where(x => (x.Equipante.Congregacao.RemoveAccents().Contains(searchValue)));
                             }
                         }
                     }
@@ -718,16 +718,16 @@ namespace SysIgreja.Controllers
                         if (model.columns[i].search.value != null)
                         {
 
-                            var searchValue = model.columns[i].search.value.ToLower();
+                            var searchValue = model.columns[i].search.value.RemoveAccents();
                             if (model.columns[i].name == "Nome" && model.columns[i].search.value != null)
                             {
-                                result = result.Where(x => (x.Nome.ToLower().Contains(searchValue)));
+                                result = result.Where(x => (x.Nome.RemoveAccents().Contains(searchValue)));
                             }
 
 
                             if (model.columns[i].name == "Congregacao" && model.columns[i].search.value != null)
                             {
-                                result = result.Where(x => (x.Congregacao.ToLower().Contains(searchValue)));
+                                result = result.Where(x => (x.Congregacao.RemoveAccents().Contains(searchValue)));
                             }
                         }
                     }

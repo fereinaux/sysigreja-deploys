@@ -506,7 +506,7 @@ namespace SysIgreja.Controllers
 
 
             var result = participantesBusiness
-            .GetParticipantesByEvento(model.EventoId.Value);
+            .GetParticipantesByEvento(model.EventoId.Value).AsEnumerable();
 
             var totalResultsCount = result.Count();
             var filteredResultsCount = totalResultsCount;
@@ -562,7 +562,7 @@ namespace SysIgreja.Controllers
 
             if (model.search != null && model.search.value != null)
             {
-                result = result.Where(x => (x.Nome.Contains(model.search.value)));
+                result = result.Where(x => (x.Nome.RemoveAccents().Contains(model.search.value.RemoveAccents())));
                 filteredResultsCount = result.Count();
             }
 
@@ -613,7 +613,7 @@ namespace SysIgreja.Controllers
 
 
             var result = participantesBusiness
-            .GetParticipantesByEvento(model.EventoId.Value);
+            .GetParticipantesByEvento(model.EventoId.Value).AsEnumerable();
 
             var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
             {

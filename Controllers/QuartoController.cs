@@ -62,7 +62,7 @@ namespace SysIgreja.Controllers
         {
             var query = quartosBusiness
                 .GetQuartos()
-                .Where(x => x.EventoId == EventoId && x.TipoPessoa == (tipo ?? TipoPessoaEnum.Participante));
+                .Where(x => x.EventoId == EventoId && x.TipoPessoa == (tipo ?? TipoPessoaEnum.Participante)).AsEnumerable();
 
             if (!string.IsNullOrEmpty(search))
             {

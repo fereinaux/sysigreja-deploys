@@ -68,7 +68,7 @@ namespace SysIgreja.Controllers
                     Longitude = x.Motorista.Longitude,
                     MotoristaId = x.MotoristaId.Value,
                     Endereco = $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
-                });
+                }).AsEnumerable();
 
 
             if (!string.IsNullOrEmpty(search))

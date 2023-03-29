@@ -53,7 +53,7 @@ namespace SysIgreja.Controllers
                     QtdParticipantes = circulosBusiness.GetParticipantesByCirculos(x.Id).Count(),
                     Titulo = x.Titulo ?? x.Cor,
                     Cor = x.Cor
-                });
+                }).AsEnumerable();
 
 
             if (!string.IsNullOrEmpty(search))
@@ -151,7 +151,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesSemCirculo(int EventoId)
         {
-            return Json(new { Participantes = circulosBusiness.GetParticipantesSemCirculo(EventoId).Select(x => new { x.Id, x.Nome }).ToList() }, JsonRequestBehavior.AllowGet);
+            return Json(new { Participantes = circulosBusiness.GetParticipantesSemCirculo(EventoId).OrderBy(x => x.Nome).Select(x => new { x.Id, x.Nome }).ToList() }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

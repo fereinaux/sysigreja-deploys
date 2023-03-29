@@ -59,7 +59,7 @@ namespace SysIgreja.Controllers
         {
             var query = padrinhosBusiness
              .GetPadrinhos()
-             .Where(x => x.EquipanteEvento.EventoId == EventoId);
+             .Where(x => x.EquipanteEvento.EventoId == EventoId).AsEnumerable();
 
             if (!string.IsNullOrEmpty(search))
             {

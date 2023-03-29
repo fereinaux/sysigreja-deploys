@@ -112,7 +112,7 @@ namespace SysIgreja.Controllers
                 .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
                 .Include(x => x.Equipe)
                 .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
-                        .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
+                        .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta)).AsEnumerable();
 
             if (model.Foto)
             {
@@ -402,7 +402,7 @@ namespace SysIgreja.Controllers
             else
             {
 
-                var result = equipantesBusiness.GetEquipantes();
+                var result = equipantesBusiness.GetEquipantes().AsEnumerable();
 
                 var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Nome.RemoveAccents().Trim(), y => y.Conjuge?.RemoveAccents().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
                 {
@@ -503,7 +503,7 @@ namespace SysIgreja.Controllers
               .Include(x => x.Equipante.Quartos)
                        .Include(x => x.Equipante.Quartos.Select(y => y.Quarto))
             .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
-                    .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
+                    .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta)).AsEnumerable();
 
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;
@@ -700,7 +700,7 @@ namespace SysIgreja.Controllers
             else
             {
 
-                var result = equipantesBusiness.GetEquipantes();
+                var result = equipantesBusiness.GetEquipantes().AsEnumerable();
 
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;

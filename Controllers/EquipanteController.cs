@@ -595,18 +595,12 @@ namespace SysIgreja.Controllers
                     {
                         if (model.order[0].dir == "asc")
                         {
-                            result = result.OrderBy(x => new
-                            {
-                                Order = x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any()
-                            });
+                            result = result.OrderBy(x => x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any());
 
                         }
                         else
                         {
-                            result = result.OrderByDescending(x => new
-                            {
-                                Order = x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any()
-                            });
+                            result = result.OrderByDescending(x => x.Equipante.Lancamentos.Where(y => y.EventoId == model.EventoId).Any());
                         }
 
                     }
@@ -614,18 +608,12 @@ namespace SysIgreja.Controllers
                     {
                         if (model.order[0].dir == "asc")
                         {
-                            result = result.OrderBy(x => new
-                            {
-                                Order = x.Presencas.Count()
-                            });
+                            result = result.OrderBy(x => x.Presencas.Count());
 
                         }
                         else
                         {
-                            result = result.OrderByDescending(x => new
-                            {
-                                Order = x.Presencas.Count()
-                            });
+                            result = result.OrderByDescending(x =>x.Presencas.Count());
                         }
 
                     }
@@ -633,18 +621,12 @@ namespace SysIgreja.Controllers
                     {
                         if (model.order[0].dir == "asc")
                         {
-                            result = result.OrderBy(x => new
-                            {
-                                Order = x.Equipe.Nome
-                            });
+                            result = result.OrderBy(x => x.Equipe.Nome);
 
                         }
                         else
                         {
-                            result = result.OrderByDescending(x => new
-                            {
-                                Order = x.Equipe.Nome
-                            });
+                            result = result.OrderByDescending(x =>  x.Equipe.Nome);
                         }
 
                     }
@@ -652,34 +634,55 @@ namespace SysIgreja.Controllers
                     {
                         if (model.order[0].dir == "asc")
                         {
-                            result = result.OrderBy(x => new
-                            {
-                                Order = x.Equipante.DataNascimento
-                            });
+                            result = result.OrderBy(x => x.Equipante.DataNascimento);
 
                         }
                         else
                         {
-                            result = result.OrderByDescending(x => new
-                            {
-                                Order = x.Equipante.DataNascimento
-                            });
+                            result = result.OrderByDescending(x => x.Equipante.DataNascimento);
                         }
 
                     }
-                    else
+                    else if (model.columns[model.order[0].column].name == "Congregacao")
                     {
                         if (model.order[0].dir == "asc")
                         {
-                            result = result.OrderByDynamic(x => "x.Equipante." + model.columns[model.order[0].column].name);
+                            result = result.OrderBy(x => x.Equipante.Congregacao);
 
                         }
                         else
                         {
-                            result = result.OrderByDescendingDynamic(x => "x.Equipante." + model.columns[model.order[0].column].name);
+                            result = result.OrderByDescending(x => x.Equipante.Congregacao);
                         }
 
                     }
+                    else if (model.columns[model.order[0].column].name == "Nome")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.Equipante.Nome);
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.Equipante.Nome);
+                        }
+
+                    }
+                    else if (model.columns[model.order[0].column].name == "Sexo")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.Equipante.Sexo);
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.Equipante.Sexo);
+                        }
+
+                    }
+
                 }
                 catch (Exception)
                 {
@@ -733,23 +736,23 @@ namespace SysIgreja.Controllers
                     }
                 }
 
-
+                var resultQuery = result.AsQueryable();
                 if (model.order[0].dir == "asc")
                 {
-                    result = result.OrderByDynamic(x => "x." + model.columns[model.order[0].column].name);
+                    resultQuery = resultQuery.OrderByDynamic(x => "x." + model.columns[model.order[0].column].name);
 
                 }
                 else
                 {
-                    result = result.OrderByDescendingDynamic(x => "x." + model.columns[model.order[0].column].name);
+                    resultQuery = resultQuery.OrderByDescendingDynamic(x => "x." + model.columns[model.order[0].column].name);
                 }
-                filteredResultsCount = result.Count();
-                result = result.Skip(model.Start)
+                filteredResultsCount = resultQuery.Count();
+                resultQuery = resultQuery.Skip(model.Start)
       .Take(model.Length);
 
                 return Json(new
                 {
-                    data = mapper.Map<IEnumerable<EquipanteListModel>>(result),
+                    data = mapper.Map<IEnumerable<EquipanteListModel>>(resultQuery),
                     recordsTotal = totalResultsCount,
                     recordsFiltered = filteredResultsCount,
                 }, JsonRequestBehavior.AllowGet);

@@ -128,17 +128,29 @@ function FillDoc(doc, result) {
     }
 
     doc.setFont('helvetica', "bold")
-    doc.text(12, height, "Nome");
-    doc.text(117, height, "Apelido");
-    doc.text(152, height, "Whatsapp");
+    if (config.TipoEvento == "Casais") {
+        doc.text(12, height, "Nome");
+        doc.text(92, height, "Whatsapp");
+    } else {
+        doc.text(12, height, "Nome");
+        doc.text(117, height, "Apelido");
+        doc.text(152, height, "Whatsapp");
+    }
+    
     height += 2
     doc.line(10, height, 195, height);
     height += 5
     doc.setFont('helvetica', "normal")
     $(result.data).each((index, participante) => {
-        doc.text(12, height, participante.Nome);
-        doc.text(117, height, participante.Apelido);
-        doc.text(152, height, participante.Fone);
+        if (config.TipoEvento == "Casais") {
+            doc.text(12, height, participante.Nome);
+            doc.text(92, height, participante.Fone);
+        } else {
+            doc.text(12, height, participante.Nome);
+            doc.text(117, height, participante.Apelido);
+            doc.text(152, height, participante.Fone);
+        }
+    
         height += 6;
     });
 

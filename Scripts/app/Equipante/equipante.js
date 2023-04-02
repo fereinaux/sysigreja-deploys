@@ -76,7 +76,7 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
             { data: "Sexo", name: "Sexo", visible: false, className: 'noVis noSearch', },
             {
-                data: "Sexo", title: "Sexo", orderData: 0, name: "Sexo", className: "text-center noSearch", width: "5%",
+                data: "Sexo", title: "Sexo", orderData: 1, name: "Sexo", className: "text-center noSearch", width: "5%",
                 "render": function (data, type, row) {
                     if (data == "Masculino") {
                         icon = "fa-male";

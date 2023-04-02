@@ -157,23 +157,28 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetCirculosComParticipantes(int EventoId)
         {
+            var config = eventosBusiness.GetEventoById(EventoId).Configuracao;
+            var query = circulosBusiness.GetCirculosComParticipantes(EventoId).ToList().Select(x => new
+            {
+                Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                x.Participante.SequencialEvento,
+                x.Participante.Sexo,
+                ParticipanteId = x.ParticipanteId,
+                Latitude = x.Participante.Latitude,
+                Longitude = x.Participante.Longitude,
+                Endereco = $"{x.Participante.Logradouro} {x.Participante.Numero}",
+                Bairro = x.Participante.Bairro,
+                Cidade = x.Participante.Cidade,
+                Referencia = x.Participante.Referencia,
+                CirculoId = x.CirculoId,
+                Cor = x.Circulo.Cor,
+                Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)) }),
+            });
+
             return Json(new
             {
-                Circulos = circulosBusiness.GetCirculosComParticipantes(EventoId).ToList().Select(x => new
-                {
-                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                    ParticipanteId = x.ParticipanteId,
-                    Latitude = x.Participante.Latitude,
-                    Longitude = x.Participante.Longitude,
-                    Endereco = $"{x.Participante.Logradouro} {x.Participante.Numero}",
-                    Bairro = x.Participante.Bairro,
-                    Cidade = x.Participante.Cidade,
-                    Referencia = x.Participante.Referencia,
-                    CirculoId = x.CirculoId,
-                    Cor = x.Circulo.Cor,
-                    Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)) }),
-                }).OrderBy(x => x.Nome).ToList()
-            }, JsonRequestBehavior.AllowGet);
+                Circulos = config.TipoEvento == TipoEventoEnum.Casais ? query.OrderBy(x => x.SequencialEvento).ThenBy(x => x.Sexo).ToList() : query.OrderBy(x => x.Nome).ToList()
+            }, JsonRequestBehavior.AllowGet); ;
         }
 
         [HttpPost]

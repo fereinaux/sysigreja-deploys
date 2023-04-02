@@ -15,6 +15,7 @@ using Core.Business.Quartos;
 using Core.Models.Etiquetas;
 using Core.Models.Participantes;
 using Core.Models.Quartos;
+using CsQuery.ExtensionMethods.Internal;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -197,20 +198,79 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByCirculo(int CirculoId)
         {
-            var result = circulosBusiness.GetParticipantesByCirculos(CirculoId).OrderBy(x => x.Participante.Nome).ToList().Select(x => new
-            {
-                Circulo = x.Circulo.Cor?.GetDescription(),
-                Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                Cor = x.Circulo.Cor?.GetDescription(),
-                Titulo = x.Circulo.Titulo,
-                Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }),
-                Fone = x.Participante.Fone
-            });
+            var config = circulosBusiness.GetCirculoById(CirculoId).Evento.Configuracao;
 
-            var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
-            json.MaxJsonLength = Int32.MaxValue;
-            return json;
+            if (config.TipoEvento == TipoEventoEnum.Casais)
+            {
+                var query = circulosBusiness.GetParticipantesByCirculos(CirculoId);
+                var queryCasais = query.AsEnumerable().GroupJoin(query, x => x.Participante.Nome.ToLower().Trim(), y => y.Participante.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+                {
+                    Conjuge = x.q1.Participante.Nome == new List<string> { x.q1.Participante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
+                    Nome = x.q1.Participante.Nome == new List<string> { x.q1.Participante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
+                }).Select(x => new
+                {
+                    Homem = x.Nome.Participante.Sexo == SexoEnum.Masculino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                    Mulher = x.Nome.Participante.Sexo == SexoEnum.Feminino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                }).Distinct();
+
+                var queryNova = queryCasais.Select(x => new
+                {
+                    Dupla = (x.Homem != null & x.Mulher != null) ? x.Homem.Participante.Apelido + " e " + x.Mulher.Participante.Apelido : null,
+                    x.Homem,
+                    x.Mulher,
+                });
+
+                List<Data.Entities.Participante> resultCasais = new List<Data.Entities.Participante>();
+
+                queryNova.ToList().ForEach(casal =>
+                {
+                    if (casal.Homem != null)
+                    {
+                        casal.Homem.Participante.Dupla = casal.Dupla;
+                        resultCasais.Add(casal.Homem.Participante);
+                    }
+                    if (casal.Mulher != null)
+                    {
+                        casal.Mulher.Participante.Dupla = casal.Dupla;
+                        resultCasais.Add(casal.Mulher.Participante);
+                    }
+                });
+
+                var result = queryNova.ToList().Select(x => new
+                {
+                    Nome = !string.IsNullOrEmpty(x.Dupla) ? UtilServices.CapitalizarNome(x.Dupla) : (!string.IsNullOrEmpty(x.Homem?.Participante?.Nome) ? UtilServices.CapitalizarNome(x.Homem.Participante.Nome) : UtilServices.CapitalizarNome(x.Mulher.Participante.Nome)),
+                    Titulo = x.Homem?.Circulo?.Titulo ?? x.Mulher?.Circulo?.Titulo,
+                    SequencialEvento = x.Homem?.Participante?.SequencialEvento ?? x.Mulher?.Participante?.SequencialEvento,
+                    Dirigentes = x.Homem?.Circulo?.Dirigentes?.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }) ?? x.Mulher?.Circulo?.Dirigentes?.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }),
+                    Fone = $"{x.Homem?.Participante?.Fone} e {x.Mulher?.Participante?.Fone}"
+                }); ;
+
+                var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
+                json.MaxJsonLength = Int32.MaxValue;
+                return json;
+            }
+            else
+            {
+                var query = circulosBusiness.GetParticipantesByCirculos(CirculoId).OrderBy(x => x.Participante.Nome);
+
+                var result = query.ToList().Select(x => new
+                {
+                    Circulo = x.Circulo.Cor?.GetDescription(),
+                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
+                    Cor = x.Circulo.Cor?.GetDescription(),
+                    Titulo = x.Circulo.Titulo,
+                    SequencialEvento = x.Participante.SequencialEvento,
+                    Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }),
+                    Fone = x.Participante.Fone
+                });
+
+                var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
+                json.MaxJsonLength = Int32.MaxValue;
+                return json;
+            }
+
+
         }
 
         [HttpGet]
@@ -670,7 +730,7 @@ namespace SysIgreja.Controllers
                 else
                 {
                     queryCasais = queryCasais
-                        .Where(x => 
+                        .Where(x =>
                             (x.Homem?.Padrinho != null &&
                              model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value))
                                 ||

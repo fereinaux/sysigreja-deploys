@@ -161,11 +161,11 @@ namespace SysIgreja.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
             var oldPassword = user.Senha;
-            user.Senha = senha.ToLower();
+            user.Senha = senha;
             user.HasChangedPassword = true;
 
             UserManager.Update(user);
-            UserManager.ChangePassword(User.Identity.GetUserId(), oldPassword, senha.ToLower());
+            UserManager.ChangePassword(User.Identity.GetUserId(), oldPassword, senha);
             return new HttpStatusCodeResult(200);
         }
 
@@ -204,7 +204,7 @@ namespace SysIgreja.Controllers
                 var names = fullName.Split(' ');
                 string firstName = names[0];
                 string lastName = names[names.Length - 1];
-                string senha = Membership.GeneratePassword(6, 1).ToLower();
+                string senha = Membership.GeneratePassword(6, 1);
                 user = new ApplicationUser()
                 {
                     UserName = UtilServices.RemoveAccents($"{firstName}{lastName}"),
@@ -327,7 +327,7 @@ namespace SysIgreja.Controllers
             {
                 user = new ApplicationUser()
                 {
-                    UserName = model.UserName.ToLower(),
+                    UserName = model.UserName,
                     EquipanteId = model.EquipanteId,
                     Status = StatusEnum.Ativo,
                     Senha = model.Password,
@@ -341,7 +341,7 @@ namespace SysIgreja.Controllers
             {
                 user = UserManager.FindById(model.Id);
                 user.EquipanteId = model.EquipanteId;
-                user.UserName = model.UserName.ToLower();
+                user.UserName = model.UserName;
                 user.Senha = model.Password;
 
                 UserManager.Update(user);
@@ -440,11 +440,11 @@ namespace SysIgreja.Controllers
             {
                 var user = UserManager.FindById(usuario.Id);
                 var oldPassword = user.Senha;
-                user.Senha = Password.ToLower();
+                user.Senha = Password;
                 user.HasChangedPassword = true;
                 user.RecoveryKey = null;
 
-                UserManager.ChangePassword(user.Id, oldPassword, Password.ToLower());
+                UserManager.ChangePassword(user.Id, oldPassword, Password);
                 UserManager.Update(user);
                 return new HttpStatusCodeResult(200);
             }
@@ -509,7 +509,7 @@ namespace SysIgreja.Controllers
                 }
 
             }
-            var user = await UserManager.FindAsync(login.ToLower(), model.Password.ToLower());
+            var user = await UserManager.FindAsync(login, model.Password);
             if ((user != null) && (user.Status == StatusEnum.Ativo))
             {
                 await SignInAsync(user, true);
@@ -592,7 +592,7 @@ namespace SysIgreja.Controllers
 
                 user = new ApplicationUser()
                 {
-                    UserName = model.UserName.ToLower(),
+                    UserName = model.UserName,
                     EquipanteId = equipante.Id,
                     Status = StatusEnum.Ativo,
                     Senha = model.Password,
@@ -612,7 +612,7 @@ namespace SysIgreja.Controllers
                     UserManager.ChangePassword(user.Id, user.Senha, model.Password);
                     user.Status = StatusEnum.Ativo;
                     user.Senha = model.Password;
-                    user.UserName = model.UserName.ToLower();
+                    user.UserName = model.UserName;
                     user.HasChangedPassword = false;
                     UserManager.Update(user);
                 }

@@ -61,7 +61,7 @@ namespace SysIgreja.Controllers
             ViewBag.Configuracao = configuracaoBusiness.GetLogin();
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindAsync(model.UserName.ToLower(), model.Password.ToLower());
+                var user = await UserManager.FindAsync(model.UserName, model.Password);
                 if ((user != null) && (user.Status == StatusEnum.Ativo))
                 {
                     await SignInAsync(user, true);

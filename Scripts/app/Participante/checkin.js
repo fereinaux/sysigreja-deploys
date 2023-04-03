@@ -934,7 +934,6 @@ ${campos.find(x => x.Campo == 'Endereço') ? `<div class="col-sm-3 p-w-md m-t-md
                             <input type="hidden" id="participante-latitude" />
                             <input type="hidden" id="participante-longitude" />
                         </div>
-fpo
                         <div class="col-sm-9 p-w-md m-t-md text-center">
                             <h5>Logradouro</h5>
 

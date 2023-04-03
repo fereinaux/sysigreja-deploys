@@ -207,7 +207,7 @@ namespace SysIgreja.Controllers
                 string senha = Membership.GeneratePassword(6, 1).ToLower();
                 user = new ApplicationUser()
                 {
-                    UserName = UtilServices.RemoveAccents($"{firstName}{lastName}".ToLower()),
+                    UserName = UtilServices.RemoveAccents($"{firstName}{lastName}"),
                     EquipanteId = EquipanteId,
                     Status = StatusEnum.Ativo,
                     HasChangedPassword = false,
@@ -596,7 +596,7 @@ namespace SysIgreja.Controllers
                     EquipanteId = equipante.Id,
                     Status = StatusEnum.Ativo,
                     Senha = model.Password,
-                    HasChangedPassword = false,
+                    HasChangedPassword = true,
                     Tipo = "Aplicativo"
                 };
                 UserManager.Create(user, model.Password);

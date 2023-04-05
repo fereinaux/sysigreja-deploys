@@ -56,6 +56,10 @@ namespace SysIgreja.Controllers
         public ActionResult GetCrachasByEventoId(int eventoId)
         {
             var evento = eventosBusiness.GetEventoById(eventoId);
+            if (evento == null)
+            {
+                return Json(new { data = new { } }, JsonRequestBehavior.AllowGet);
+            }
             var result = crachaBusiness
                 .GetCrachas()
                 .Where(x => x.ConfiguracaoId == evento.ConfiguracaoId)

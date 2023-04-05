@@ -173,10 +173,42 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetCamposEquipeByEventoId(int id)
         {
+            if (id == 999)
+            {
+                List<CamposModel> campos = new List<CamposModel>
+                {
+                    new CamposModel{
+                        CampoId = CamposEnum.Nome,
+                        Campo = CamposEnum.Nome.GetDescription(),
+                    },
+                    new CamposModel{
+                        CampoId = CamposEnum.Email,
+                        Campo = CamposEnum.Email.GetDescription(),
+                    },
+                    new CamposModel{
+                        CampoId = CamposEnum.Fone,
+                        Campo = CamposEnum.Fone.GetDescription(),
+                    },
+                    new CamposModel{
+                        CampoId = CamposEnum.Genero,
+                        Campo = CamposEnum.Genero.GetDescription(),
+                    },
+                    new CamposModel{
+                        CampoId = CamposEnum.DataNascimento,
+                        Campo = CamposEnum.DataNascimento.GetDescription(),
+                    }
+                };
+
+                return Json(new { Campos = campos }, JsonRequestBehavior.AllowGet);
+            } else
+            {
+
+
             var evento = eventoBusiness.GetEventoById(id);
             var result = configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value);
 
             return Json(new { Campos = result }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpGet]

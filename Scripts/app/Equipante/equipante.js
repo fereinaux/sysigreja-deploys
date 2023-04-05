@@ -133,7 +133,7 @@ ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
           ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
                             ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
-                            ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar') : ""}
+                           ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
 ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 

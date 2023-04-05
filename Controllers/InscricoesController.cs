@@ -138,51 +138,34 @@ namespace SysIgreja.Controllers
             return View("Index");
         }
 
-        public ActionResult Inscricoes(int Id, string Tipo, int? ConjugeId)
+        public ActionResult Inscricoes(int Id, string Tipo)
         {
             ViewBag.Title = Tipo;
 
             ViewBag.Tipo = Tipo;
-            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id && (x.Status == StatusEnum.Aberto || (Tipo == "Inscrições Equipe" && x.DataEvento > System.DateTime.Today)));
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
             if (evento == null)
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
+            ViewBag.EventoId = Id;
             var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
-            ViewBag.EventoId = Id;
             ViewBag.Igrejas = configuracaoBusiness.GetIgrejas(evento.ConfiguracaoId.Value);
             switch (Tipo)
             {
                 case "Inscrições Equipe":
+                    if (evento.StatusEquipe != StatusEnum.Aberto)
+                        return RedirectToAction("InscricoesEncerradas", new { Id = Id });
                     ViewBag.Sujeito = "voluntário";
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
-                    ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao) ? evento.Configuracao.Equipes.Where(x => x.ShowInscricao).Select(x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }).ToList() : equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
-                    if (ConjugeId.HasValue)
-                    {
-                        Equipante equipante = equipantesBusiness.GetEquipanteById(ConjugeId.Value);
-                        ViewBag.Nome = equipante.Conjuge;
-                        ViewBag.CEP = equipante.CEP;
-                        ViewBag.Numero = equipante.Numero;
-                        ViewBag.Complemento = equipante.Complemento;
-                        ViewBag.Referencia = equipante.Referencia;
-                    }
+                    ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao) ? evento.Configuracao.Equipes.Where(x => x.ShowInscricao).Select(x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }).ToList() : equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();                    
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                         return View("Casal");
                     return View();
                 default:
+                    if (evento.Status != StatusEnum.Aberto)
+                        return RedirectToAction("InscricoesEncerradas", new { Id = Id });
                     ViewBag.Sujeito = "participante";
-                    ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
-                    if (ConjugeId.HasValue)
-                    {
-                        Participante participante = participantesBusiness.GetParticipanteById(ConjugeId.Value);
-                        ViewBag.Nome = participante.Conjuge;
-                        ViewBag.Conjuge = participante.Nome;
-                        ViewBag.CEP = participante.CEP;
-                        ViewBag.Numero = participante.Numero;
-                        ViewBag.Complemento = participante.Complemento;
-                        ViewBag.Referencia = participante.Referencia;
-                        ViewBag.NomeConvite = participante.NomeConvite;
-                        ViewBag.FoneConvite = participante.FoneConvite;
-                    }
+                    ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;                  
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                         return View("Casal");
                     return View();

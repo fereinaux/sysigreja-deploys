@@ -172,11 +172,29 @@
 
     $(document).ready(() => {
 
-
         $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
+
             $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
     max-height: 150px;
-    padding: 15px;" src="data:image/png;base64,${logo}">`)
+    padding: 15px;" src="data:image/png;base64,${config.LogoRelatorio}">`)
+
+        });
+        $('body').on('DOMNodeInserted', '.swal-title', function () {
+            $('.swal-modal').css('background', config.corBotao)
+            $('.swal-modal').css('color', 'white')
+            $('.swal-title').css('color', 'white')
+
+            $('.swal-modal').css('background', config.CorBotao)
+            $('.swal-modal').css('color', 'white')
+        });
+        $('body').on('DOMNodeInserted', '.swal-content', function () {
+            $('.swal-content').css('color', 'white')
+
+        });
+
+        $('body').on('DOMNodeInserted', '.swal-text', function () {
+            $('.swal-text').css('color', 'white')
+
         });
 
             @if (ViewBag.Configuracao.BackgroundId != null)

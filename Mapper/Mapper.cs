@@ -157,7 +157,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Parente, opt => opt.MapFrom(x => x.Equipante.Parente))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
                     .ForMember(dest => dest.IsCasado, opt => opt.MapFrom(x => x.Equipante.IsCasado))
-                    .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.DataCasamento))
+                    .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.DataCasamento.HasValue ? x.Equipante.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.NomePai, opt => opt.MapFrom(x => x.Equipante.NomePai))
                     .ForMember(dest => dest.FonePai, opt => opt.MapFrom(x => x.Equipante.FonePai))
                     .ForMember(dest => dest.NomeMae, opt => opt.MapFrom(x => x.Equipante.NomeMae))
@@ -205,7 +205,7 @@ namespace SysIgreja.Controllers
                                    .ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => (x.Tipo.GetDescription())))
                       .ForMember(dest => dest.Situacao, opt => opt.MapFrom(x => x.Equipante.Lancamentos.Any(y => y.CentroCustoId == y.Evento.Configuracao.CentroCustoTaxaId && y.EventoId == x.EventoId) ? "Pago" : "Pendente"))
                     .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Equipante.Quartos.Any(y => y.Quarto.EventoId == x.EventoId) ? x.Equipante.Quartos.Where(y => y.Quarto.EventoId == x.EventoId).Select(y => y.Quarto).First().Titulo : ""))
-                    .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.IsCasado.HasValue && x.Equipante.IsCasado.Value ? x.Equipante.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
+         .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.Equipante.DataCasamento.HasValue ? x.Equipante.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.Hospitais, opt => opt.MapFrom(x => x.Equipante.Hospitais));
             });
             mapper = configuration.CreateMapper();

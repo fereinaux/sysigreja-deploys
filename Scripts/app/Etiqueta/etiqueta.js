@@ -40,7 +40,7 @@
         }
     };
 
-    $("#table-etiquetas").DataTable(tableEtiquetasConfig);
+    $("#table-marcadores").DataTable(tableEtiquetasConfig);
 }
 
 function GetEtiqueta(id) {

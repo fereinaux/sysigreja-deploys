@@ -136,7 +136,7 @@ namespace SysIgreja.Controllers
             if (evento.Configuracao.EquipeCirculoId.HasValue)
             {
                 var dirigentes = circulosBusiness.GetDirigentes().Select(x => x.EquipanteId).ToList();
-                var pgList = equipesBusiness.GetMembrosEquipe(EventoId, evento.Configuracao.EquipeCirculoId.Value).Where(x => !dirigentes.Contains(x.Id)).Select(x => new { x.Id, Nome = x.Equipante.Nome }).ToList();
+                var pgList = equipesBusiness.GetMembrosEvento(EventoId).Where(x => !dirigentes.Contains(x.Id)).Select(x => new { x.Id, Nome = x.Equipante.Nome }).ToList();
 
                 return Json(new { Equipantes = pgList }, JsonRequestBehavior.AllowGet);
             }

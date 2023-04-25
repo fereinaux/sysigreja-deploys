@@ -536,6 +536,7 @@ namespace SysIgreja.Controllers
             {
 
                 var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
+                    .Where(x => x.Status == (model.Origem == "Montagem" ? StatusEnum.Montagem : StatusEnum.Ativo))
                     .Include(x => x.Equipante)
             .Include(x => x.Equipante.Arquivos)
             .Include(x => x.Equipante.Lancamentos)

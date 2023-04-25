@@ -400,7 +400,7 @@ namespace SysIgreja.Controllers
             {
                 case "Inscrições Equipe":
                     var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone == Email);
-                    if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId))
+                    if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId && x.Status == StatusEnum.Ativo))
                     {
                         return Json(new { Participante = equipante.Nome, Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Url = Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }) }, JsonRequestBehavior.AllowGet);
                     }

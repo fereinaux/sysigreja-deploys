@@ -536,7 +536,7 @@ namespace SysIgreja.Controllers
             {
 
                 var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
-                    .Where(x => x.Status == (model.Origem == "Montagem" ? StatusEnum.Montagem : StatusEnum.Ativo))
+                    .Where(x => x.StatusMontagem == (model.Origem == "Montagem" ? StatusEnum.Montagem : StatusEnum.Ativo))
                     .Include(x => x.Equipante)
             .Include(x => x.Equipante.Arquivos)
             .Include(x => x.Equipante.Lancamentos)
@@ -888,7 +888,8 @@ namespace SysIgreja.Controllers
             var existentes = equipesBusiness.GetEquipantesEvento(EventoId).Select(x => x.EquipanteId);
 
             var resultEquipantes = equipesBusiness.GetEquipantesByTipoEvento(EventoId)
-                .Where(x => x.Nome.Contains(Search) || x.Apelido.Contains(Search))
+                .AsEnumerable()
+                .Where(x => x.Nome.RemoveAccents().Contains(Search.RemoveAccents()) || x.Apelido.RemoveAccents().Contains(Search.RemoveAccents()))
                 .Select(x => new PessoaBase { Id = x.Id, Nome = x.Nome, Apelido = x.Apelido, Email = x.Email, Fone = x.Fone, Tipo = "Equipante" })
                 .ToList();
 
@@ -896,7 +897,8 @@ namespace SysIgreja.Controllers
             var fones = resultEquipantes.Select(y => y.Fone).ToList();
 
             var resultParticipantes = participantesBusiness.GetParticipantesByTipoEvento(EventoId)
-                .Where(x => (x.Nome.Contains(Search) || x.Apelido.Contains(Search)) && !emails.Contains(x.Email) && !fones.Contains(x.Fone))
+                .AsEnumerable()
+                .Where(x => (x.Nome.RemoveAccents().Contains(Search.RemoveAccents()) || x.Apelido.RemoveAccents().Contains(Search)) && !emails.Contains(x.Email) && !fones.Contains(x.Fone))
                 .Select(x => new PessoaBase { Id = x.Id, Nome = x.Nome, Apelido = x.Apelido, Email = x.Email, Fone = x.Fone, Tipo = "Participante" })
                 .ToList();
 

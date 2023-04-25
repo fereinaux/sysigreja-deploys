@@ -17,7 +17,7 @@
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox">
+    <div class="ibox" id="inserir-membro">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>Pesquisar</h4>
             <div class="ibox-tools pull-right">
@@ -246,6 +246,7 @@
 
 @section Scripts {
     <script>
+        HideMenu();
         $(document).ready(function () {
             loadPage()
         })
@@ -629,10 +630,10 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                             Origem: "Montagem"
                         }),
                     success: function () {
-                        SuccessMesageOperation();
                         $("#listagem").val('');
                         $("#listagem").trigger('change');
                         CarregarTabelaEquipante()
+                        $("#listagem").select2('open')
                     }
                 });
             }

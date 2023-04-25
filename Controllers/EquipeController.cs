@@ -108,7 +108,7 @@ namespace SysIgreja.Controllers
                 Equipe = x.Nome,
                 QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Count(),
                 QtdAnexos = arquivosBusiness.GetArquivosByEquipe(x.Id, false, evento.ConfiguracaoId.Value).Count()
-            });
+            }).OrderBy(x => x.Equipe);
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

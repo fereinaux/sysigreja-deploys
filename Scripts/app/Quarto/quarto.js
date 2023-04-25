@@ -177,7 +177,7 @@ function header(doc, evento, page, quarto) {
 
     doc.setFont('helvetica', "bold")
     doc.text(12, 43, "Nome");
-    doc.text(115, 43, window.location.href.includes('Quarto/Equipe') ? "Apelido" : "Círculo");
+    doc.text(115, 43, window.location.href.includes('Quarto/Equipe') ? "Apelido" : config.EquipeCirculo);
 
     doc.line(10, 45, widthP, 45);
     doc.setFont('helvetica', "normal")
@@ -584,7 +584,7 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     Nome
   </li>
   <li>
-    Círculo
+    ${config.EquipeCirculo}
   </li> 
 </ul>`,
         interactive: true,
@@ -599,7 +599,7 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     Nome
   </li>
   <li>
-    Círculo
+      ${config.EquipeCirculo}
   </li>
   <li>
     Medicamentos

@@ -21,7 +21,7 @@ function CarregarTabelaCirculo() {
         {
             data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
             "render": function (data, type, row) {
-                return `${GetButton('ListarDirigentes', JSON.stringify(row), 'blue', 'fa-list-alt', 'Listar Dirigentes do Círculo')}
+                return `${GetButton('ListarDirigentes', JSON.stringify(row), 'blue', 'fa-list-alt', `Listar Dirigentes do(a) ${config.EquipeCirculo}`)}
                             ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
                             ${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
                             ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}`;

@@ -317,7 +317,7 @@ function GetParticipante() {
                 }
 
                 $('.status').text(data.Participante.Status);
-                $('.circulo').text(data.DadosAdicionais.Circulo || "Sem Círculo");
+                $('.circulo').text(data.DadosAdicionais.Circulo || `Sem ${config.EquipeCirculo}`);
                 $('.quarto').text(data.DadosAdicionais.Quarto || "Sem Quarto");
 
                 var quartoAtual = data.DadosAdicionais.QuartoAtual;

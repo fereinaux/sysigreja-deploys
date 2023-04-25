@@ -778,6 +778,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\DevocionalController.cs" />
+    <Compile Include="Controllers\NicknameController.cs" />
     <Compile Include="Controllers\IgrejaController.cs" />
     <Compile Include="Controllers\NotificacaoController.cs" />
     <Compile Include="Controllers\CrachaController.cs" />
@@ -1247,6 +1248,7 @@
     <Content Include="Views\Participante\Casais.cshtml" />
     <Content Include="Views\Inscricoes\Casal.cshtml" />
     <Content Include="Views\Equipante\Casais.cshtml" />
+    <Content Include="Views\Equipante\Montagem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

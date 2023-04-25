@@ -16,6 +16,8 @@ using Core.Business.Reunioes;
 using Core.Models.Equipantes;
 using Core.Models.Participantes;
 using Data.Entities;
+using Data.Entities.Base;
+using Microsoft.Extensions.Logging;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -38,6 +40,7 @@ namespace SysIgreja.Controllers
     public class EquipanteController : SysIgrejaControllerBase
     {
         private readonly IEquipantesBusiness equipantesBusiness;
+        private readonly IParticipantesBusiness participantesBusiness;
         private readonly IEtiquetasBusiness etiquetasBusiness;
         private readonly IQuartosBusiness quartosBusiness;
         private readonly IArquivosBusiness arquivoBusiness;
@@ -51,9 +54,10 @@ namespace SysIgreja.Controllers
         private readonly IMapper mapper;
 
 
-        public EquipanteController(IEquipantesBusiness equipantesBusiness, IAccountBusiness accountBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IArquivosBusiness arquivoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EquipanteController(IEquipantesBusiness equipantesBusiness, IParticipantesBusiness participantesBusiness, IAccountBusiness accountBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IArquivosBusiness arquivoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.quartosBusiness = quartosBusiness;
+            this.participantesBusiness = participantesBusiness;
             this.etiquetasBusiness = etiquetasBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
             this.equipantesBusiness = equipantesBusiness;
@@ -72,6 +76,14 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Equipantes";
+            GetEventos();
+
+            return View();
+        }
+
+        public ActionResult Montagem()
+        {
+            ViewBag.Title = "Montagem";
             GetEventos();
 
             return View();
@@ -869,6 +881,33 @@ namespace SysIgreja.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult GetEquipanteTipoEvento(int EventoId, string Search)
+        {
+            var existentes = equipesBusiness.GetEquipantesEvento(EventoId).Select(x => x.EquipanteId);
+
+            var resultEquipantes = equipesBusiness.GetEquipantesByTipoEvento(EventoId)
+                .Where(x => x.Nome.Contains(Search) || x.Apelido.Contains(Search))
+                .Select(x => new PessoaBase { Id = x.Id, Nome = x.Nome, Apelido = x.Apelido, Email = x.Email, Fone = x.Fone, Tipo = "Equipante" })
+                .ToList();
+
+            var emails = resultEquipantes.Select(y => y.Email).ToList();
+            var fones = resultEquipantes.Select(y => y.Fone).ToList();
+
+            var resultParticipantes = participantesBusiness.GetParticipantesByTipoEvento(EventoId)
+                .Where(x => (x.Nome.Contains(Search) || x.Apelido.Contains(Search)) && !emails.Contains(x.Email) && !fones.Contains(x.Fone))
+                .Select(x => new PessoaBase { Id = x.Id, Nome = x.Nome, Apelido = x.Apelido, Email = x.Email, Fone = x.Fone, Tipo = "Participante" })
+                .ToList();
+
+            resultEquipantes.AddRange(resultParticipantes);
+
+            resultEquipantes = resultEquipantes
+                .Where(x => (x.Tipo == "Equipante" && !existentes.Contains(x.Id)) || x.Tipo == "Participante")
+                .ToList();
+            return Json(new { Items = resultEquipantes.Select(x => new { x.Tipo, id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).Distinct() }, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
         public ActionResult DeleteEquipante(int Id, int? EventoId)
         {
@@ -920,7 +959,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetHistoricoParticipacao(int id)
         {
             var equipante = equipantesBusiness.GetEquipanteById(id);
-            var result = equipante.Participantes.Where(x => x.Status == StatusEnum.Confirmado || x.Status == StatusEnum.Checkin).ToList().Select(x => new HistoricoModel
+            var result = participantesBusiness.GetParticipantes().Where(x => (x.Status == StatusEnum.Confirmado || x.Status == StatusEnum.Checkin) && x.Email == equipante.Email || x.Fone == equipante.Fone).ToList().Select(x => new HistoricoModel
             {
                 Evento = $"{x.Evento.Numeracao}º {x.Evento.Configuracao.Titulo}",
             }).ToList();

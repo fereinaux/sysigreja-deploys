@@ -311,11 +311,16 @@
     padding: 15px;" src="data:image/png;base64,${config.LogoRelatorio}">`)
          
                 });
+                
+
+            }
+
+            if (config.CorBotao) {
                 $('body').on('DOMNodeInserted', '.swal-title', function () {
-                    $('.swal-modal').css('background', config.corBotao)
+                    $('.swal-modal').css('background', config.CorBotao)
                     $('.swal-modal').css('color', 'white')
                     $('.swal-title').css('color', 'white')
-     
+
                     $('.swal-modal').css('background', config.CorBotao)
                     $('.swal-modal').css('color', 'white')
                 });
@@ -331,7 +336,6 @@
 
                 $('.btn.btn-flat').css('background', config.CorBotao)
                 $('.btn.btn-flat').css('margin-left', '7px')
-
 
             }
             $('#home-button-logo').css('display', 'block')

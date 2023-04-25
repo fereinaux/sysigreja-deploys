@@ -293,12 +293,34 @@ function CarregarTabelaMembrosEquipe(equipeId, titulo) {
             type: "POST"
         }
     };
-    GetEquipantes();
     $("#table-membros-equipe").DataTable(tableMembrosEquipeConfig);
 }
 
 $(document).ready(function () {
     CarregarTabelaEquipe();
+    $('#equipe-equipantes').select2({
+        ajax: {
+            url: "/Equipe/GetEquipantes/",
+            data: function (params) {
+                var query = {
+                    Search: params.term,
+                    EventoId: $("#equipe-eventoid").val()
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.Equipantes
+                };
+            }
+        },
+        placeholder: "Pesquisar",
+        minimumInputLength: 3,
+        dropdownParent: $("#frm-equipe-membros") 
+    });
 });
 
 $("#modal-membros-equipe").on('hidden.bs.modal', function () {
@@ -316,7 +338,7 @@ function ListarEquipe(row) {
 }
 
 function AddMembroEquipe() {
-    if ($("#equipe-equipantes").val() != "Pesquisar") {
+    if ($("#equipe-equipantes").val()) {
         $.ajax({
             url: "/Equipe/AddMembroEquipe/",
             datatype: "json",
@@ -330,7 +352,8 @@ function AddMembroEquipe() {
                 }),
             success: function () {
                 SuccessMesageOperation();
-                $("#equipe-equipantes").val("Pesquisar").trigger("chosen:updated");
+                $("#equipe-equipantes").val('');
+                $("#equipe-equipantes").trigger('change');
                 CarregarTabelaMembrosEquipe($("#equipe-id").val(), $('.titulo-equipe').text());
             }
         });
@@ -389,26 +412,6 @@ function DeleteMembroEquipe(id) {
     });
 }
 
-function GetEquipantes() {
-
-    $("#equipe-equipantes").empty();
-    $('#equipe-equipantes').append($('<option>Pesquisar</option>'));
-
-    $.ajax({
-        url: "/Equipe/GetEquipantes/",
-        data: { EventoId: $("#equipe-eventoid").val() },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            data.Equipantes.forEach(function (equipante, index, array) {
-                $('#equipe-equipantes').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
-            });
-            $("#equipe-equipantes").val("Pesquisar").trigger("chosen:updated");
-        }
-    });
-
-}
 
 function loadEquipe() {
     CarregarTabelaEquipe()

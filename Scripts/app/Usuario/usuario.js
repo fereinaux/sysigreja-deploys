@@ -67,7 +67,12 @@ function GetUsuario(id) {
                 } else {
                     $(".eventos").removeClass('d-none');
                 }
-                $("#usuario-equipanteid").val(data.Usuario.EquipanteId > 0 ? data.Usuario.EquipanteId : "Selecione").trigger("chosen:updated");
+                if (data.Usuario.EquipanteId > 0) {
+                    var newOption = new Option(data.Usuario.Nome, data.Usuario.EquipanteId, true, true);
+                    $('#usuario-equipanteid').append(newOption)
+                }
+
+                $("#usuario-equipanteid").val(data.Usuario.EquipanteId > 0 ? data.Usuario.EquipanteId : "").trigger("change");
                 $("#usuario-eventos").val(data.Usuario.Eventos)
                 $("#usuario-eventos").select2({ dropdownParent: $("#form-usuario") })
             }
@@ -150,7 +155,7 @@ function PostUsuario() {
                 SuccessMesageOperation();
                 CarregarTabelaUsuario();
                 $("#modal-usuarios").modal("hide");
-                if (!$("#usuario-id").val()) {                   
+                if (!$("#usuario-id").val()) {
                     windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
                 }
             }
@@ -172,43 +177,66 @@ $(document).ready(function () {
 });
 
 function GetEquipantes(id) {
+    GetUsuario(id);
+    $('#usuario-equipanteid').select2({
+        ajax: {
+            url: "/Account/GetEquipantes/",
+            data: function (params) {
+                var query = {
+                    Id: id,
+                    Search: params.term,
+                }
 
-    $("#usuario-equipanteid").empty();
-    $('#usuario-equipanteid').append($('<option>Selecione</option>'));
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
 
-    $.ajax({
-        url: "/Account/GetEquipantes/",
-        data: { Id: id },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            data.Equipantes.forEach(function (equipante, index, array) {
-                $('#usuario-equipanteid').append($(`<option data-userId="${equipante.UerId}" data-username="${equipante.UserName}" value="${equipante.Id}">${equipante.Nome}</option>`));
-            });
-            GetUsuario(id);
-        }
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.Equipantes
+                };
+            }
+        },
+        placeholder: "Pesquisar",
+        minimumInputLength: 3,
+        dropdownParent: $('#form-usuario')
     });
 
 }
 
 $('#usuario-equipanteid').on("change", function () {
-    console.log($('#usuario-equipanteid option:selected'));
-    if ($('#usuario-equipanteid option:selected').data("username")) {
-        $("#usuario-login").val($('#usuario-equipanteid option:selected').data("username"));
-        $("#usuario-id").val($('#usuario-equipanteid option:selected').data("userId"));
-        $("#usuario-senha").val("********");
-        $("#usuario-login").prop('disabled', true);
-        $("#usuario-senha").prop('disabled', true);
-        $('.password-click').css('display','none')
-    } else {
-        $("#usuario-login").val("");
-        $("#usuario-id").val("");
-        $("#usuario-senha").val("");
-        $("#usuario-login").prop('disabled', false);
-        $("#usuario-senha").prop('disabled', false);
-        $('.password-click').css('display', 'block')
-    }
+
+
+    $.ajax({
+        url: "/Account/GetUsuarioByEquipanteId/",
+        data: { Id: $('#usuario-equipanteid').val() },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+
+            if (data.Usuario) {
+                $("#usuario-login").val(data.Usuario.UserName);
+                $("#usuario-id").val(data.Usuario.Id);
+                $("#usuario-senha").val(data.Usuario.Senha);
+                $("#usuario-oldsenha").val(data.Usuario.Senha);
+                $("#usuario-login").prop('disabled', true);
+                $("#usuario-senha").prop('disabled', true);
+                $('.password-click').css('display', 'none')
+            } else {
+                $("#usuario-login").val("");
+                $("#usuario-id").val("");
+                $("#usuario-senha").val("");
+                $("#usuario-oldsenha").val("");
+                $("#usuario-login").prop('disabled', false);
+                $("#usuario-senha").prop('disabled', false);
+                $('.password-click').css('display', 'block')
+            }
+        }
+    });
+
+
 })
 
 
@@ -230,7 +258,7 @@ function GetTipos() {
 }
 
 $(`input[type=radio][value=Geral]`).on('ifChecked', function (event) {
-    $(".eventos").addClass('d-none'); 
+    $(".eventos").addClass('d-none');
 });
 $(`input[type=radio][value=Admin]`).on('ifChecked', function (event) {
     $(".eventos").removeClass('d-none');

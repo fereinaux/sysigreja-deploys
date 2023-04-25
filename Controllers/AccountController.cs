@@ -125,6 +125,7 @@ namespace SysIgreja.Controllers
                 EquipanteId = x.EquipanteId,
                 UserName = x.UserName,
                 Perfil = x.Claims.Any(y => y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral") ? "Geral" : "Admin",
+                Nome = x.Equipante != null ? $"{x.Equipante.Nome} - {x.Equipante.Apelido}" : "",
                 Eventos = x.Claims
                 .Where(y => y.ClaimType == "Permissões")
                 .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
@@ -135,10 +136,32 @@ namespace SysIgreja.Controllers
             return Json(new { Usuario = result }, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpGet]
-        public ActionResult GetEquipantes(string Id)
+        public ActionResult GetUsuarioByEquipanteId(int Id)
         {
-            var result = accountBusiness.GetEquipantesUsuario(Id).Select(x => new { x.Id, x.Nome, UserId = x.Usuario != null ? x.Usuario.Id : "", UserName = x.Usuario != null ? x.Usuario.UserName : "" }).OrderBy(x => x.Nome);
+            var result = accountBusiness.GetUsuarios().ToList().Select(x => new
+            {
+                Id = x.Id,
+                Senha = x.Senha,
+                EquipanteId = x.EquipanteId,
+                UserName = x.UserName,
+                Perfil = x.Claims.Any(y => y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral") ? "Geral" : "Admin",
+                Nome = x.Equipante != null ? $"{x.Equipante.Nome} - {x.Equipante.Apelido}" : "",
+                Eventos = x.Claims
+                .Where(y => y.ClaimType == "Permissões")
+                .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                .FirstOrDefault()?.Select(z =>
+                    z.ConfiguracaoId)
+            }).FirstOrDefault(x => x.EquipanteId == Id);
+
+            return Json(new { Usuario = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetEquipantes(string Id, string Search)
+        {
+            var result = accountBusiness.GetEquipantesUsuario(Id, Search).Select(x => new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).OrderBy(x => x.text);
 
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
@@ -582,7 +605,7 @@ namespace SysIgreja.Controllers
                 var equipante = equipantesBusiness.PostEquipante(new Core.Models.Participantes.PostInscricaoModel
                 {
                     Nome = model.Nome,
-                    Sexo =model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
+                    Sexo = model.Sexo == "Masculino" ? SexoEnum.Masculino : SexoEnum.Feminino,
                     Apelido = model.Nome,
                     Fone = model.Fone,
                     DataNascimento = dtnasc,

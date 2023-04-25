@@ -143,9 +143,11 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetEquipantes(int EventoId)
+        public ActionResult GetEquipantes(int EventoId, string Search)
         {
-            var result = equipesBusiness.GetEquipantesEventoSemEquipe(EventoId).Select(x => new { x.Id, x.Nome }).OrderBy(x => x.Nome);
+            var query = equipesBusiness.GetEquipantesEventoSemEquipe(EventoId, Search);
+
+            var result = query.ToList().Select(x => new {id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).OrderBy(x => x.text);
 
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }

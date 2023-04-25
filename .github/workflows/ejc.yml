@@ -11,23 +11,29 @@ jobs:
         uses: TNT-Likely/webhook-action@V0.1.2
         with:
           webhookUrl: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=328c45f2-e65f-aea8-a8fd-baeacf358737"
+          data: data: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
       - name: EJC Recon
         uses: TNT-Likely/webhook-action@V0.1.2
         with:
           webhookUrl: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=4632191a-70de-fb32-fad1-57897d7ad77c"
+          data: data: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
       - name: Recon
         uses: TNT-Likely/webhook-action@V0.1.2
         with:
           webhookUrl: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=b2aa0709-303a-b350-586e-8910385f00a7"
+          data: data: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
       - name: IecbEventos
         uses: TNT-Likely/webhook-action@V0.1.2
         with:
           webhookUrl: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=a3c1cf1d-51bc-b3b4-0849-9d63ad16798c"
+          data: data: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
       - name: PDC
         uses: TNT-Likely/webhook-action@V0.1.2
         with:
           webhookUrl: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=e5a99bd6-8e2e-2ffe-b733-c90f91848c8e"
+          data: data: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
       - name: Getsemani
         uses: TNT-Likely/webhook-action@V0.1.2
         with:
           webhookUrl: "https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=843290be-8694-27e8-3314-1639bfa03bd6"
+          data: data: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'

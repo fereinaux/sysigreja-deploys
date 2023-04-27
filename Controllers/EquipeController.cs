@@ -147,7 +147,7 @@ namespace SysIgreja.Controllers
         {
             var query = equipesBusiness.GetEquipantesEventoSemEquipe(EventoId, Search);
 
-            var result = query.ToList().Select(x => new {id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).OrderBy(x => x.text);
+            var result = query.ToList().Select(x => new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).OrderBy(x => x.text);
 
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
@@ -271,6 +271,16 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
+        public ActionResult ToggleMembroEquipeTipoByEquipante(int Id, int EventoId)
+        {
+            var equipanteEvento = equipesBusiness.GetQueryEquipantesEvento(EventoId).Where(x => x.EquipanteId == Id).FirstOrDefault();
+
+            return ToggleMembroEquipeTipo(equipanteEvento.Id);
+
+        }
+
+
+        [HttpPost]
         public ActionResult AddMembroEquipe(PostEquipeMembroModel model)
         {
             equipesBusiness.ChangeEquipe(model);
@@ -288,6 +298,14 @@ namespace SysIgreja.Controllers
             {
                 return new HttpStatusCodeResult(400, result);
             }
+        }
+
+        [HttpPost]
+        public ActionResult DeleteMembroEquipeByEquipante(int Id, int EventoId)
+        {
+            var equipanteEvento = equipesBusiness.GetQueryEquipantesEvento(EventoId).Where(x => x.EquipanteId == Id).FirstOrDefault();
+
+            return DeleteMembroEquipe(equipanteEvento.Id);
         }
 
         [HttpGet]

@@ -180,6 +180,7 @@ function GetEquipantes(id) {
     GetUsuario(id);
     $('#usuario-equipanteid').select2({
         ajax: {
+            delay: 750,
             url: "/Account/GetEquipantes/",
             data: function (params) {
                 var query = {

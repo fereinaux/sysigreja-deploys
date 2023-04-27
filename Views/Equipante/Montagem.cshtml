@@ -27,7 +27,7 @@
         </div>
         <div class="ibox-content">
             <div class="row">
-                <div class="col-xs-12 col-lg-2">
+                <div class="col-xs-12 col-lg-3">
                     <h5>Evento</h5>
                     <select class="form-control" id="eventoid" onchange="loadPage()">
                         @foreach (var evento in ViewBag.Eventos)
@@ -45,7 +45,7 @@
                     <select class="form-control" id="listagem"></select>
                 </div>
 
-                <div class="col-xs-12 col-lg-4">
+                <div class="col-xs-12 col-lg-3">
                     <h5>Equipe</h5>
                     <select class="form-control" id="equipe-select"></select>
                 </div>
@@ -210,30 +210,31 @@
         <div class="modal-content animated bounceInRight">
             <div class="modal-body">
                 <div class="moldura-modal" style="position:relative;background-color:white;padding:20px">
-                    <button type="button" class="btn btn-primary" id="btn-previous" onclick="previous()"
-                            style="position:absolute;top:20px;left:20px">
-                        Anterior
-                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-previous" onclick="previous()" style="position:absolute;top:20px;left:20px">Anterior</button>
                     <h2 class="text-center realista-nome" style="width:100%;margin:0">Nome</h2>
-                    <button type="button" class="btn btn-primary" id="btn-next" onclick="next()"
-                            style="position:absolute;top:20px;right:20px">
-                        Próximo
-                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-next" onclick="next()" style="position:absolute;top:20px;right:20px">Próximo</button>
                 </div>
                 <div class="moldura-modal p-h-xs" id="form-opcoes">
                     <div class="row m-md">
                         <h3 class="text-center">Mensagem</h3>
                         <select class="form-control m-b-lg" id="msg-list">
                         </select>
+
+                        <h3 class="text-center">Marcadores</h3>
+                        <select class="form-control equipante-etiquetas" id="equipante-etiquetas" multiple="multiple" style="width: 100%">
+                        </select>
+                    </div>
+
+                    <h3 class="text-center">Observações</h3>
+                    <div class="row m-md">
+                        <textarea style="height: 200px" class="form-control required" id="equipante-obs"></textarea>
                     </div>
 
 
                     <div style="display:flex; width:100%">
 
-                        <button type="button" class="btn btn-primary" style="margin-left:auto;margin-right:10px"
-                                onclick="enviar()">
-                            Enviar
-                        </button>
+                        <button type="button" class="btn btn-primary" style="margin-left:auto;margin-right:10px" onclick="enviar()">Enviar</button>
+                        <a target="_blank" href="#" class="btn btn-info btn-ligar" style="margin-right:auto">Ligar</a>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -256,6 +257,7 @@
             $('#eventoid').select2()
             $('#listagem').select2({
                 ajax: {
+                    delay: 750,
                     url: '/Equipante/GetEquipanteTipoEvento',
                     data: function (params) {
                         var query = {
@@ -275,6 +277,7 @@
                 },
                 placeholder: "Pesquisar",
                 minimumInputLength: 3,
+
                 templateSelection: function (data) {
                     tipo = data.Tipo
                     return data.text;
@@ -345,13 +348,13 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                     {
                         data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
                             return `<div>
-                                                          <span>${row.Nome}</br></span>
-                                                          ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
+                                                              <span>${row.Nome}</br></span>
+                                                              ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
                                 if (etiqueta) {
                                     return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
                                 }
                             }).join().replace(/,/g, '') : ""}
-                                                      </div>`
+                                                          </div>`
                         }
                     },
                     { data: "Idade", name: "Idade", class: "noSearch" },
@@ -363,11 +366,15 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                     {
                         data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch',
                         "render": function (data, type, row) {
+                            var color = !(Coordenador == row.Tipo) ? 'info' : 'yellow';
                             return `
 
-                                                                 ${GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico')}
-${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-envelope', 'Opções')}
-                                                                  ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
+                                                                      ${GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo)}
+                                                                       ${GetIconWhatsApp(row.Fone)}
+                                                                           ${GetIconTel(row.Fone)}
+                                                                     ${GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico')}
+${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
+                                                                      ${GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir')}
 
 `;
                         }
@@ -585,27 +592,31 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         }
 
 
-        function DeleteEquipante(id) {
+        function DeleteMembroEquipe(id) {
             ConfirmMessageDelete().then((result) => {
                 if (result) {
                     $.ajax({
-                        url: "/Equipante/DeleteEquipante/",
+                        url: "/Equipe/DeleteMembroEquipeByEquipante/",
                         datatype: "json",
                         type: "POST",
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify(
                             {
                                 Id: id,
-                                EventoId: $("#eventoid").val()
+                                EventoId: $('#eventoid').val()
                             }),
                         success: function () {
                             SuccessMesageDelete();
-                            CarregarTabelaEquipante();
+                            CarregarTabelaMembrosEquipe($("#equipe-id").val(), $('.titulo-equipe').text());
+                        },
+                        error: function (data) {
+                            ErrorMessage("O Equipante está vinculado a um registro de Padrinho, não será possível deletá-lo")
                         }
                     });
                 }
             });
         }
+
 
         var realista;
         let table
@@ -666,8 +677,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 contentType: 'application/json; charset=utf-8',
                 success: function (dataMsg) {
                     $("#bulk-mensagem").html(`
-                              ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
-                              `).select2({
+                                  ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+                                  `).select2({
                         width: 'resolve',
                         dropdownParent: $('#modal-bulk')
                     })
@@ -727,8 +738,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             })
 
             $("#bulk-change-equipe").html(`
-                              ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
-                              `).select2({
+                                  ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
+                                  `).select2({
                 width: 'resolve',
                 dropdownParent: $('#modal-bulk')
             })
@@ -798,6 +809,58 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             });
 
 
+        }
+
+        function ToggleMembroEquipeTipo(row) {
+            if (Membro == row.Tipo) {
+                var windowReference = window.open('_blank');
+
+            }
+            $.ajax({
+                url: "/Equipe/ToggleMembroEquipeTipoByEquipante/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: row.Id,
+                        EventoId: $('#eventoid').val()
+                    }),
+                success: function (data) {
+                    CarregarTabelaEquipante();
+                    if (data) {
+
+                        windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
+                    }
+
+                },
+                error: function (error) {
+                    ErrorMessage(error.statusText);
+                }
+            });
+        }
+
+        $("#modal-opcoes").on('hidden.bs.modal', function () {
+            PostInfo()
+        });
+
+        function PostInfo(callback) {
+            $.ajax({
+                url: "/Equipante/PostEtiquetas/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: equipante.Id,
+                        eventoId: $("#eventoid").val(),
+                        Etiquetas: $('.equipante-etiquetas').val(),
+                        Obs: $('#equipante-obs').val(),
+                    }),
+                success: function () {
+                    CarregarTabelaEquipante(callback)
+                }
+            });
         }
     </script>
 }

@@ -300,6 +300,7 @@ $(document).ready(function () {
     CarregarTabelaEquipe();
     $('#equipe-equipantes').select2({
         ajax: {
+            delay: 750,
             url: "/Equipe/GetEquipantes/",
             data: function (params) {
                 var query = {

@@ -137,6 +137,7 @@ namespace SysIgreja.Controllers
                 .Select(x => new
                 {
                     Tipo = x.Tipo.GetDescription(),
+
                     MeioPagamento = x.MeioPagamento,
                     Valor = x.Valor
                 })
@@ -147,13 +148,13 @@ namespace SysIgreja.Controllers
                 {
                     Nome = $"{UtilServices.CapitalizarNome(x.Homem.Apelido)} e {UtilServices.CapitalizarNome(x.Mulher.Apelido)}",
                 }).ToList(),
-                    EquipeMeninos = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Masculino).Count(),
-                    EquipeMeninas = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Feminino).Count(),
+                    EquipeMeninos = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Masculino && x.StatusMontagem == StatusEnum.Ativo).Count(),
+                    EquipeMeninas = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Feminino && x.StatusMontagem == StatusEnum.Ativo).Count(),
                     Equipes = equipesBusiness.GetEquipes(EventoId).ToList().Select(x => new ListaEquipesViewModel
                     {
                         Id = x.Id,
                         Equipe = x.Nome,
-                        QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Count()
+                        QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Where(y => y.StatusMontagem == StatusEnum.Ativo).Count()
                     }).ToList(),
                     Reunioes = reunioesBusiness.GetReunioes(EventoId).ToList().Select(x => new ReuniaoViewModel
                     {

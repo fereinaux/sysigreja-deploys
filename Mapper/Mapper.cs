@@ -114,6 +114,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Equipante.Sexo.GetDescription()))
                     .ForMember(dest => dest.HasFoto, opt => opt.MapFrom(x => x.Equipante.Arquivos.Any(y => y.IsFoto)))
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Equipante.Arquivos.Count()))
+                    .ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => x.Tipo.GetDescription()))
                     .ForMember(dest => dest.Faltas, opt => opt.MapFrom(x => x.Presencas.Count()))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Equipante.Status.GetDescription()))
                     .ForMember(dest => dest.HasOferta, opt => opt.MapFrom(x => x.Equipante.Lancamentos.Any(y => y.CentroCustoId == y.Evento.Configuracao.CentroCustoTaxaId && y.EventoId == x.EventoId)))

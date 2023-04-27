@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using Evernote.EDAM.Type;
+using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace SysIgreja
@@ -9,11 +10,20 @@ namespace SysIgreja
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapMvcAttributeRoutes();
+
+            routes.MapRoute(
+   name: "Detalhes",
+   url: "{nome}/inscricoes",
+   defaults: new { controller = "Inscricoes", action = "DetalhesByNome" },
+   constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+);
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Inscricoes", action = "Index", id = UrlParameter.Optional }
             );
+
         }
 
     }

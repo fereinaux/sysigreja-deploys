@@ -65,6 +65,19 @@
             </div>
         </div>
         <div class="ibox-content">
+            <h4>Filtros</h4>
+            <div class="row m-b-lg">
+                <div class="col-xs-12 col-lg-2">
+                    <h5>Tem Marcador</h5>
+                    <select class="form-control" id="equipante-marcadores" multiple onchange="CarregarTabelaEquipante()">
+                    </select>
+                </div>
+                <div class="col-xs-12 col-lg-2">
+                    <h5>Não tem Marcador</h5>
+                    <select class="form-control" id="equipante-nao-marcadores" multiple onchange="CarregarTabelaEquipante()">
+                    </select>
+                </div>
+            </div>
             <table id="table-equipantes" class="table table-striped table-bordered table-hover" cellspacing="0"
                    style="width: 100%">
                 <thead>
@@ -254,6 +267,23 @@
 
 
         function loadPage() {
+            $.ajax({
+                url: '/Etiqueta/GetEtiquetasByEventoId',
+                data: { eventoId: $("#eventoid").val() },
+                datatype: "json",
+                type: "POST",
+                success: (result) => {
+                    $("#equipante-marcadores").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+                    $("#equipante-nao-marcadores").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+                    $('#equipante-marcadores').select2();
+                    $('#equipante-nao-marcadores').select2();
+                    $('#equipante-status').select2();
+                }
+            });
             $('#eventoid').select2()
             $('#listagem').select2({
                 ajax: {
@@ -439,7 +469,9 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opçõe
                     url: '/Equipante/GetEquipantesDataTable',
                     data: {
                         EventoId: $("#eventoid").val(),
-                        Origem: "Montagem"
+                        Origem: "Montagem",
+                        Etiquetas: $("#equipante-marcadores").val(),
+                        NaoEtiquetas: $("#equipante-nao-marcadores").val(),
                     },
                     datatype: "json",
                     type: "POST"

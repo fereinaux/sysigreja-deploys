@@ -73,6 +73,7 @@
                         {
                             Id: id,
                             Titulo: $(`#config-titulo${tipoEvento}`).val(),
+                            Identificador: $(`#config-identificador${tipoEvento}`).val(),
                             CorHoverBotao: $(`#config-corhoverbotao${tipoEvento}`).val(),
                             CorBotao: $(`#config-corbotao${tipoEvento}`).val(),
                             TipoCirculoId: $(`#config-tipocirculo${tipoEvento}`).val(),
@@ -232,6 +233,12 @@
                                                                                                                 <h5>Título do Evento</h5>
 
                                                                                                                 <input type="text" class="form-control required" id="config-titulo${config.Id}" data-field="Título" />
+                                                                                                            </div>
+
+                                                                                                             <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                                                                <h5>Identificador do Evento</h5>
+
+                                                                                                                <input type="text" class="form-control required" id="config-identificador${config.Id}" data-field="Identificador" />
                                                                                                             </div>
 
                                                                                                             <div class="col-sm-6 p-w-md m-t-md text-center">
@@ -397,6 +404,7 @@
                                                             $(`#config-centrocustoinscricao${config.Id}`).val(config.CentroCustoInscricaoId)
                                                             $(`#config-centrocustoequipe${config.Id}`).val(config.CentroCustoTaxaId)
                                                             $(`#config-titulo${config.Id}`).val(config.Titulo)
+                                                            $(`#config-identificador${config.Id}`).val(config.Identificador)
                                                             $(`#config-msg${config.Id}`).summernote({
                                                                 height: 300,
                                                                 lang: 'pt-BR',

@@ -778,7 +778,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\DevocionalController.cs" />
-    <Compile Include="Controllers\NicknameController.cs" />
     <Compile Include="Controllers\IgrejaController.cs" />
     <Compile Include="Controllers\NotificacaoController.cs" />
     <Compile Include="Controllers\CrachaController.cs" />

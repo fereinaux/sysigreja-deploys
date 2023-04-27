@@ -95,6 +95,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Titulo = x.Titulo,
+                    Identificador = x.Identificador,
                     BackgroundId = x.BackgroundId,
                     EquipeCirculoId = x.EquipeCirculoId,
                     CentroCustoInscricaoId = x.CentroCustoInscricaoId,

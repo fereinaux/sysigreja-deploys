@@ -28,6 +28,7 @@ using Core.Business.Notificacao;
 using Utils.Services;
 using System.Drawing.Imaging;
 using CsQuery;
+using System.Web.Routing;
 
 namespace SysIgreja.Controllers
 {
@@ -79,6 +80,20 @@ namespace SysIgreja.Controllers
             public string Status { get; set; }
             public string StatusEquipe { get; set; }
             public string Identificador { get; set; }
+        }
+
+        public ActionResult DetalhesByNome(string nome)
+        {
+            var evento = eventosBusiness.GetEventos().Where(x => x.Configuracao.Identificador.ToLower() == nome.ToLower()).OrderByDescending(x => x.DataEvento).FirstOrDefault();
+
+            if (evento != null)
+            {
+                return Detalhes(evento.Id);
+            }
+            else
+            {
+                return Index();
+            }
         }
 
         [HttpGet]
@@ -173,11 +188,9 @@ namespace SysIgreja.Controllers
         }
 
 
-        public ActionResult Detalhes(int Id, string Tipo, int? ConjugeId)
+        public ActionResult Detalhes(int Id)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            ViewBag.Title = Tipo;
-            ViewBag.Tipo = Tipo;
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
             if (evento.ConfiguracaoId.HasValue)
             {
@@ -187,48 +200,16 @@ namespace SysIgreja.Controllers
             {
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
             }
-            ViewBag.UrlDestino = Url.Action("Inscricoes", "Inscricoes", new
-            {
-                id = Id,
-                Tipo = Tipo
-            });
+
+            if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto)
+                return RedirectToAction("InscricoesEncerradas", new { Id = Id });
+
+
             ViewBag.EventoId = Id;
             evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : evento.Valor;
             ViewBag.Evento = evento;
 
-            switch (Tipo)
-            {
-                case "Inscrições Equipe":
-                    ViewBag.Sujeito = "equipante";
-                    ViewBag.Equipes = equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
-                    ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
-                    if (ConjugeId.HasValue)
-                    {
-                        Equipante equipante = equipantesBusiness.GetEquipanteById(ConjugeId.Value);
-                        ViewBag.CEP = equipante.CEP;
-                        ViewBag.Numero = equipante.Numero;
-                        ViewBag.Complemento = equipante.Complemento;
-                        ViewBag.Referencia = equipante.Referencia;
-                    }
-                    return View("Inscricoes");
-                default:
-                    ViewBag.Sujeito = "participante";
-                    ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
-                    if (ConjugeId.HasValue)
-                    {
-                        Participante participante = participantesBusiness.GetParticipanteById(ConjugeId.Value);
-                        ViewBag.Nome = participante.Conjuge;
-                        ViewBag.Conjuge = participante.Nome;
-                        ViewBag.CEP = participante.CEP;
-                        ViewBag.Numero = participante.Numero;
-                        ViewBag.Complemento = participante.Complemento;
-                        ViewBag.Referencia = participante.Referencia;
-                        ViewBag.NomeConvite = participante.NomeConvite;
-                        ViewBag.FoneConvite = participante.FoneConvite;
-                    }
-                    break;
-            }
-            return View();
+            return View("Detalhes");
         }
 
         public ActionResult Equipe()

@@ -363,6 +363,10 @@ namespace SysIgreja.Controllers
             {
                 return RedirectToAction("Index", "Participante");
             }
+            else if (permissoes.Any(x => new string[] { "Convites" }.Contains(x.Role) || x.Eventos.Any(y => new string[] { "Convites" }.Contains(y.Role))))
+            {
+                return RedirectToAction("Montagem", "Equipante");
+            }
             else
             {
                 return RedirectToAction("Coordenador", "Home");

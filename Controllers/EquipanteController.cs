@@ -84,7 +84,7 @@ namespace SysIgreja.Controllers
         public ActionResult Montagem()
         {
             ViewBag.Title = "Montagem";
-            GetEventos();
+            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Convites" });
 
             return View();
         }

@@ -101,7 +101,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetEventosInscricao(string type, string identificador, string search, bool? isMobile)
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var eventos = eventosBusiness.GetEventosGlobais().AsEnumerable().Where(x =>
+            var eventos = eventosBusiness.GetEventosGlobais().Where(x =>
             (
               (
                 (
@@ -113,7 +113,7 @@ namespace SysIgreja.Controllers
               ) &&
               (
                 (string.IsNullOrEmpty(search)) ||
-                x.TituloEvento.RemoveAccents().Contains(search.RemoveAccents())
+                x.TituloEvento.Contains(search)
               ) &&
               (
                 (identificador == x.Identificador || x.Global) ||

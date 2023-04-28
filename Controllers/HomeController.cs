@@ -89,7 +89,7 @@ namespace SysIgreja.Controllers
             var resultCasais = participantesBusiness
      .GetParticipantesByEvento(EventoId);
 
-            var queryCasais = resultCasais.AsEnumerable().GroupJoin(resultCasais, x => x.Nome.ToLower().Trim(), y => y.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+            var queryCasais = resultCasais.GroupJoin(resultCasais, x => x.Nome.ToLower().Trim(), y => y.Conjuge.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
             {
                 Conjuge = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
                 Nome = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),

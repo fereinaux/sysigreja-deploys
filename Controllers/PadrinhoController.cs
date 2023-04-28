@@ -59,11 +59,11 @@ namespace SysIgreja.Controllers
         {
             var query = padrinhosBusiness
              .GetPadrinhos()
-             .Where(x => x.EquipanteEvento.EventoId == EventoId).AsEnumerable();
+             .Where(x => x.EquipanteEvento.EventoId == EventoId);
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.EquipanteEvento.Equipante.Nome.RemoveAccents().Contains(search.RemoveAccents()));
+                query = query.Where(x => x.EquipanteEvento.Equipante.Nome.Contains(search));
             }
 
             if (!string.IsNullOrEmpty(columnName))

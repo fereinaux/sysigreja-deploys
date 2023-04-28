@@ -62,11 +62,11 @@ namespace SysIgreja.Controllers
         {
             var query = quartosBusiness
                 .GetQuartos()
-                .Where(x => x.EventoId == EventoId && x.TipoPessoa == (tipo ?? TipoPessoaEnum.Participante)).AsEnumerable();
+                .Where(x => x.EventoId == EventoId && x.TipoPessoa == (tipo ?? TipoPessoaEnum.Participante));
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.Titulo.RemoveAccents().Contains(search.RemoveAccents()) || (x.Equipante != null && x.Equipante.Nome.RemoveAccents().Contains(search.RemoveAccents())));
+                query = query.Where(x => x.Titulo.Contains(search) || (x.Equipante != null && x.Equipante.Nome.Contains(search)));
             }
 
             if (!string.IsNullOrEmpty(columnName))

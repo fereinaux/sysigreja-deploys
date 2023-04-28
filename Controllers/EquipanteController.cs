@@ -558,7 +558,7 @@ namespace SysIgreja.Controllers
               .Include(x => x.Equipante.Quartos)
                        .Include(x => x.Equipante.Quartos.Select(y => y.Quarto))
             .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId))
-                    .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta)).AsEnumerable();
+                    .IncludeOptimized(x => x.Equipante.ParticipantesEtiquetas.Where(y => y.EventoId == model.EventoId).Select(y => y.Etiqueta));
 
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;
@@ -921,7 +921,6 @@ namespace SysIgreja.Controllers
             var fones = resultEquipantes.Where(x => !string.IsNullOrEmpty(x.Fone)).Select(y => y.Fone).ToList();
 
             var resultParticipantes = participantesBusiness.GetParticipantesByTipoEvento(EventoId)
-                .AsEnumerable()
                 .Where(x => (x.Nome.Contains(Search) || x.Apelido.Contains(Search)) && !emails.Contains(x.Email) && !fones.Contains(x.Fone))
                 .Select(x => new PessoaBase { Id = x.Id, Nome = x.Nome, Apelido = x.Apelido, Email = x.Email, Fone = x.Fone, Tipo = "Participante" })
                 .ToList();

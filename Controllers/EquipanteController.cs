@@ -917,8 +917,8 @@ namespace SysIgreja.Controllers
                 .Select(x => new PessoaBase { Id = x.Id, Nome = x.Nome, Apelido = x.Apelido, Email = x.Email, Fone = x.Fone, Tipo = "Equipante" })
                 .ToList();
 
-            var emails = resultEquipantes.Select(y => y.Email).ToList();
-            var fones = resultEquipantes.Select(y => y.Fone).ToList();
+            var emails = resultEquipantes.Where(x => !string.IsNullOrEmpty(x.Email)).Select(y => y.Email).ToList();
+            var fones = resultEquipantes.Where(x => !string.IsNullOrEmpty(x.Fone)).Select(y => y.Fone).ToList();
 
             var resultParticipantes = participantesBusiness.GetParticipantesByTipoEvento(EventoId)
                 .AsEnumerable()

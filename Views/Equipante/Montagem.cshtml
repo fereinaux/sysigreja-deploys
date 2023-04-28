@@ -659,7 +659,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                             }),
                         success: function () {
                             SuccessMesageDelete();
-                            CarregarTabelaMembrosEquipe($("#equipe-id").val(), $('.titulo-equipe').text());
+                            CarregarTabelaEquipante();
                         },
                         error: function (data) {
                             ErrorMessage("O Equipante está vinculado a um registro de Padrinho, não será possível deletá-lo")

@@ -66,16 +66,13 @@ namespace SysIgreja.Controllers
 
 
         [HttpGet]
-        public ActionResult GetEquipantesByEvento(int eventoid)
+        public ActionResult GetEquipantesByEvento(int eventoid, string Search)
         {
-            var result = accountBusiness.GetEquipantesByEventoUsuario(eventoid).Select(x => new { x.Id, x.Nome }).OrderBy(x => x.Nome);
+            var result = accountBusiness.GetEquipantesByEventoUsuario(eventoid).AsEnumerable().Where(x => x.Apelido.RemoveAccents().Contains(Search.RemoveAccents()) || x.Nome.RemoveAccents().Contains(Search.RemoveAccents())).Select(x =>
+            new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).OrderBy(x => x.text);
 
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }
-
-
-
-
 
         [HttpPost]
         public ActionResult GetUsuariosByEvento(int eventoid)

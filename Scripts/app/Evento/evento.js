@@ -479,24 +479,34 @@ function GetUsuarios(id) {
     $("#table-usuarios").DataTable(tableArquivoConfig);
 }
 
-function GetEquipantes(id) {
-    $("#usuario-equipanteid").empty();
-    $('#usuario-equipanteid').append($('<option>Selecione</option>'));
+$('#usuario-equipanteid-evento').select2({
+    ajax: {
+        delay: 750,
+        url: '/Account/GetEquipantesByEvento',
+        data: function (params) {
+            var query = {
+                Search: params.term,
+                eventoid
+            }
 
-    $.ajax({
-        url: "/Account/GetEquipantesByEvento/",
-        data: { eventoid: id },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            data.Equipantes.forEach(function (equipante, index, array) {
-                $('#usuario-equipanteid').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
-            });
-            $('#usuario-equipanteid').trigger("chosen:updated")
+            // Query parameters will be ?search=[term]&type=public
+            return query;
+        },
+        processResults: function (data) {
+            // Transforms the top-level key of the response object from 'items' to 'results'
+            return {
+                results: data.Equipantes
+            };
         }
-    });
+    },
+    placeholder: "Pesquisar",
+    minimumInputLength: 3,
+    width: 'resolve',
+    dropdownParent: $("#frm-usuarios")
+});
 
+function GetEquipantes(id) {
+    eventoid = id
 }
 
 
@@ -509,7 +519,7 @@ function saveUser() {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                EquipanteId: $('#usuario-equipanteid').val(),
+                EquipanteId: $('#usuario-equipanteid-evento').val(),
                 EventoId: eventoId,
                 Perfil: $("input[type=radio][name=usuario-perfil]:checked").val(),
             }),
@@ -650,7 +660,7 @@ function loadQRCode(id, color1, color2) {
                                 loadCor()
                             });
                             $('.colors div').removeClass('selected')
-                  
+
                         }
                         if (!color1 && !color2) {
                             $($('#colors1 div')[0]).addClass('selected')

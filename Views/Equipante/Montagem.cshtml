@@ -300,9 +300,9 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                     $("#equipante-nao-marcadores").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
-                    $('#equipante-marcadores').select2();
-                    $('#equipante-nao-marcadores').select2();
-                    $('#equipante-status').select2();
+                    $('#equipante-marcadores').select2({ placeholder: "Pesquisar", });
+                    $('#equipante-nao-marcadores').select2({ placeholder: "Pesquisar", });
+                    $('#equipante-status').select2({ placeholder: "Pesquisar", });
                 }
             });
             $('#equipante-status-montagem').select2({ multiple: true, maximumSelectionLength: 1 });

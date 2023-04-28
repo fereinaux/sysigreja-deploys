@@ -119,7 +119,8 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Equipante.Status.GetDescription()))
                     .ForMember(dest => dest.HasOferta, opt => opt.MapFrom(x => x.Equipante.Lancamentos.Any(y => y.CentroCustoId == y.Evento.Configuracao.CentroCustoTaxaId && y.EventoId == x.EventoId)))
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)))
-                    .ForMember(dest => dest.Checkin, opt => opt.MapFrom(x => x.Checkin));
+                    .ForMember(dest => dest.Checkin, opt => opt.MapFrom(x => x.Checkin))
+                       .ForMember(dest => dest.StatusMontagem, opt => opt.MapFrom(x => x.StatusMontagem.GetDescription()));
                 cfg.CreateMap<EquipanteEvento, PostEquipanteModel>()
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Equipante.Id))
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))

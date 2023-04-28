@@ -261,6 +261,25 @@
                 $('link[rel="icon"]').attr('href', `../Images/logo-iecb.png`)
                 $('#home-button-logo img').attr('src', `../Images/logo-iecb.png`)
                 $('#home-button-logo').css('display', 'block')
+
+                $('body').on('DOMNodeInserted', '.swal-title', function () {
+                    $('.swal-modal').css('background', '#233646')
+                    $('.swal-modal').css('color', 'white')
+                    $('.swal-title').css('color', 'white')
+
+                    $('.swal-modal').css('background', '#233646')
+                    $('.swal-modal').css('color', 'white')
+                });
+                $('body').on('DOMNodeInserted', '.swal-content', function () {
+                    $('.swal-content').css('color', 'white')
+
+                });
+
+                $('body').on('DOMNodeInserted', '.swal-text', function () {
+                    $('.swal-text').css('color', 'white')
+
+                });
+
             }
         })
 
@@ -362,8 +381,25 @@
                 $('.btn.btn-flat').css('margin-left', '7px')
 
             } else {
-                console.log('teste');
+                $('body').on('DOMNodeInserted', '.swal-title', function () {
+                    $('.swal-modal').css('background', '#233646')
+                    $('.swal-modal').css('color', 'white')
+                    $('.swal-title').css('color', 'white')
+
+                    $('.swal-modal').css('background', '#233646')
+                    $('.swal-modal').css('color', 'white')
+                });
+                $('body').on('DOMNodeInserted', '.swal-content', function () {
+                    $('.swal-content').css('color', 'white')
+
+                });
+
+                $('body').on('DOMNodeInserted', '.swal-text', function () {
+                    $('.swal-text').css('color', 'white')
+
+                });
             }
+
             $('#home-button-logo').css('display', 'block')
             if (config.LogoRelatorioId) {
                 logoRelatorio = config.LogoRelatorio

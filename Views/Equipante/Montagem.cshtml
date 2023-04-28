@@ -42,9 +42,9 @@
 
                 <div class="col-xs-12 col-lg-6 not-convite">
                     <h5>Voluntário</h5>
-                    <div style=" display: flex; align-items: center; gap: 5px; justify-content: center;">
+                    <div style=" display: flex; align-items: center; gap: 5px;">
                         <select class="form-control " id="listagem"></select>
-                        <i class="fas fa-history" style="width:15px" onclick="GetHistorico($('#listagem').val())"></i>
+                        <i class="fas fa-history" id="getHistButton" style="width:15px;cursor:pointer" onclick="GetHistorico($('#listagem').val())"></i>
                     </div>
                 </div>
 
@@ -70,10 +70,16 @@
         <div class="ibox-content">
             <h4>Filtros</h4>
             <div class="row m-b-lg">
-                <div class="col-xs-12 col-lg-2 hide-tipoevento">
+                <div class="col-xs-12 col-lg-2">
                     <h5>Equipe</h5>
                     <select class="form-control" id="equipe-select-filtro" multiple onchange="CarregarTabelaEquipante()">
-                        <option value=999>Selecione</option>
+                    </select>
+                </div>
+                <div class="col-xs-12 col-lg-2">
+                    <h5>Status</h5>
+                    <select class="form-control" id="equipante-status-montagem" multiple onchange="CarregarTabelaEquipante()">
+                        <option value="17">Montagem</option>
+                        <option value="1">Ativo</option>
                     </select>
                 </div>
                 <div class="col-xs-12 col-lg-2">
@@ -106,6 +112,7 @@
                         <th>Fone</th>
                         <th>Idade</th>
                         <th>Equipe</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
                     <tr>
@@ -116,6 +123,7 @@
                         <th></th>
                         <th></th>
                         <th><input class="form-control" type="text" placeholder="Pesquisar " /></th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -279,7 +287,7 @@
         })
 
 
-        function loadPage() {    
+        function loadPage() {
             $.ajax({
                 url: '/Etiqueta/GetEtiquetasByEventoId',
                 data: { eventoId: $("#eventoid").val() },
@@ -297,6 +305,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                     $('#equipante-status').select2();
                 }
             });
+            $('#equipante-status-montagem').select2({ multiple: true, maximumSelectionLength: 1 });
             $('#eventoid').select2()
             $('#listagem').select2({
                 ajax: {
@@ -323,6 +332,8 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 
                 templateSelection: function (data) {
                     tipo = data.Tipo
+                    console.log(data);
+                    $('#getHistButton').css('display', tipo == "Equipante" ? 'block' : 'none')
                     return data.text;
                 }
             });
@@ -395,21 +406,25 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                     {
                         data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
                             return `<div>
-                                                                  <span>${row.Nome}</br></span>
-                                                                  ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
+                                                                      <span>${row.Nome}</br></span>
+                                                                      ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
                                 if (etiqueta) {
                                     return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
                                 }
                             }).join().replace(/,/g, '') : ""}
-                                                              </div>`
+                                                                  </div>`
                         }
                     },
                     { data: "Fone", name: "Fone", class: "noSearch" },
                     { data: "Idade", name: "Idade", class: "noSearch" },
                     {
-                        data: "Equipe", className: `hide-tipoevento noVis`, name: "Equipe", autoWidth: true, visible: $("#eventoid").val() != 999
+                        data: "Equipe", name: "Equipe", autoWidth: true
                     },
+                    {
+                        data: "StatusMontagem", name: "StatusMontagem", class: "noSearch", render: (data, type, row) =>
+                            `<span style="font-size:13px" class="text-center label label-${data == 'Ativo' ? 'primary' : 'success'}">${data}</span>`
 
+                    },
 
                     {
                         data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch',
@@ -417,13 +432,13 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                             var color = !(Coordenador == row.Tipo) ? 'info' : 'yellow';
                             return `
 
-                                                                          ${!isConvite ? GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo) : ""
+                                                                              ${!isConvite ? GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo) : ""
                                 }
-                                                                           ${GetIconWhatsApp(row.Fone)}
-                                                                               ${GetIconTel(row.Fone)}
-                                                                         ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
+                                                                               ${GetIconWhatsApp(row.Fone)}
+                                                                                   ${GetIconTel(row.Fone)}
+                                                                             ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
 ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
-                                                                          ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
+                                                                              ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
 
 `;
                         }
@@ -492,6 +507,7 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opçõe
                         Etiquetas: $("#equipante-marcadores").val(),
                         NaoEtiquetas: $("#equipante-nao-marcadores").val(),
                         Equipe: $("#equipe-select-filtro").val() != 999 ? $("#equipe-select-filtro").val() : null,
+                        StatusMontagem: $("#equipante-status-montagem").val() != 999 ? $("#equipante-status-montagem").val() : null,
                     },
                     datatype: "json",
                     type: "POST"
@@ -729,8 +745,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 contentType: 'application/json; charset=utf-8',
                 success: function (dataMsg) {
                     $("#bulk-mensagem").html(`
-                                      ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
-                                      `).select2({
+                                          ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+                                          `).select2({
                         width: 'resolve',
                         dropdownParent: $('#modal-bulk')
                     })
@@ -768,7 +784,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                             {
                                 EquipanteId: id,
                                 EventoId: $("#eventoid").val(),
-                                EquipeId: $("#bulk-change-equipe").val()
+                                EquipeId: $("#bulk-change-equipe").val(),
+                                Origem: "Montagem"
                             }),
 
                     }))
@@ -790,8 +807,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             })
 
             $("#bulk-change-equipe").html(`
-                                      ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
-                                      `).select2({
+                                          ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
+                                          `).select2({
                 width: 'resolve',
                 dropdownParent: $('#modal-bulk')
             })

@@ -151,6 +151,18 @@ namespace SysIgreja.Controllers
                  result = result.Where(x => !x.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
                 }
 
+                if (model.Origem != "Montagem")
+                {
+                    model.StatusMontagem = 1;
+
+                }
+
+                if (model.StatusMontagem.HasValue)
+                {
+                    result = result.Where(x => x.StatusMontagem == (StatusEnum)model.StatusMontagem.Value);
+
+                }
+
                 if (model.Status != null)
                 {
                     if (!(model.Status.Contains("pendente") && model.Status.Contains("pago")))
@@ -536,7 +548,6 @@ namespace SysIgreja.Controllers
             {
 
                 var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
-                    .Where(x => x.StatusMontagem == (model.Origem == "Montagem" ? StatusEnum.Montagem : StatusEnum.Ativo))
                     .Include(x => x.Equipante)
             .Include(x => x.Equipante.Arquivos)
             .Include(x => x.Equipante.Lancamentos)
@@ -562,6 +573,19 @@ namespace SysIgreja.Controllers
                 {
                     model.NaoEtiquetas.ForEach(etiqueta =>
                  result = result.Where(x => !x.Equipante.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+                }
+
+
+                if (model.Origem != "Montagem")
+                {
+                    model.StatusMontagem = 1;
+
+                }
+
+                if (model.StatusMontagem.HasValue)
+                {
+                    result = result.Where(x => x.StatusMontagem == (StatusEnum)model.StatusMontagem.Value);
+
                 }
 
                 if (model.Status != null)
@@ -962,10 +986,15 @@ namespace SysIgreja.Controllers
         public ActionResult GetHistoricoParticipacao(int id)
         {
             var equipante = equipantesBusiness.GetEquipanteById(id);
-            var result = participantesBusiness.GetParticipantes().Where(x => (x.Status == StatusEnum.Confirmado || x.Status == StatusEnum.Checkin) && x.Email == equipante.Email || x.Fone == equipante.Fone).ToList().Select(x => new HistoricoModel
-            {
-                Evento = $"{x.Evento.Numeracao}º {x.Evento.Configuracao.Titulo}",
-            }).ToList();
+            var result = participantesBusiness.GetParticipantes().Where(x => 
+            (x.Status == StatusEnum.Confirmado || x.Status == StatusEnum.Checkin)
+
+           && 
+           
+           ((!string.IsNullOrEmpty(equipante.Email) && x.Email == equipante.Email) || (x.Fone == equipante.Fone && !string.IsNullOrEmpty(equipante.Fone)))).ToList().Select(x => new HistoricoModel
+           {
+               Evento = $"{x.Evento.Numeracao}º {x.Evento.Configuracao.Titulo}",
+           }).Distinct();
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

@@ -1,4 +1,4 @@
-<div class="row wrapper border-bottom white-bg page-heading">
+ï»¿<div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@ViewBag.Title</h2>
         <ol class="breadcrumb">
@@ -6,7 +6,7 @@
                 <a href="/Home/Index">Home</a>
             </li>
             <li class="breadcrumb-item">
-                <a href="#">Voluntários</a>
+                <a href="#">VoluntÃ¡rios</a>
             </li>
             <li class="breadcrumb-item active">
                 <strong>@ViewBag.Title</strong>
@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="col-xs-12 col-lg-6 not-convite">
-                    <h5>Voluntário</h5>
+                    <h5>VoluntÃ¡rio</h5>
                     <div style=" display: flex; align-items: center; gap: 5px;">
                         <select class="form-control " id="listagem"></select>
                         <i class="fas fa-history" id="getHistButton" style="width:15px;cursor:pointer" onclick="GetHistorico($('#listagem').val())"></i>
@@ -88,7 +88,7 @@
                     </select>
                 </div>
                 <div class="col-xs-12 col-lg-2">
-                    <h5>Não tem Marcador</h5>
+                    <h5>NÃ£o tem Marcador</h5>
                     <select class="form-control" id="equipante-nao-marcadores" multiple onchange="CarregarTabelaEquipante()">
                     </select>
                 </div>
@@ -113,7 +113,7 @@
                         <th>Idade</th>
                         <th>Equipe</th>
                         <th>Status</th>
-                        <th>Ações</th>
+                        <th>AÃ§Ãµes</th>
                     </tr>
                     <tr>
                         <th></th>
@@ -244,7 +244,7 @@
                 <div class="moldura-modal" style="position:relative;background-color:white;padding:20px">
                     <button type="button" class="btn btn-primary" id="btn-previous" onclick="previous()" style="position:absolute;top:20px;left:20px">Anterior</button>
                     <h2 class="text-center realista-nome" style="width:100%;margin:0">Nome</h2>
-                    <button type="button" class="btn btn-primary" id="btn-next" onclick="next()" style="position:absolute;top:20px;right:20px">Próximo</button>
+                    <button type="button" class="btn btn-primary" id="btn-next" onclick="next()" style="position:absolute;top:20px;right:20px">PrÃ³ximo</button>
                 </div>
                 <div class="moldura-modal p-h-xs" id="form-opcoes">
                     <div class="row m-md">
@@ -257,7 +257,7 @@
                         </select>
                     </div>
 
-                    <h3 class="text-center">Observações</h3>
+                    <h3 class="text-center">ObservaÃ§Ãµes</h3>
                     <div class="row m-md">
                         <textarea style="height: 200px" class="form-control required" id="equipante-obs"></textarea>
                     </div>
@@ -406,13 +406,13 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                     {
                         data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
                             return `<div>
-                                                                      <span>${row.Nome}</br></span>
-                                                                      ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
+                                                                          <span>${row.Nome}</br></span>
+                                                                          ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
                                 if (etiqueta) {
                                     return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
                                 }
                             }).join().replace(/,/g, '') : ""}
-                                                                  </div>`
+                                                                      </div>`
                         }
                     },
                     { data: "Fone", name: "Fone", class: "noSearch" },
@@ -432,13 +432,13 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                             var color = !(Coordenador == row.Tipo) ? 'info' : 'yellow';
                             return `
 
-                                                                              ${!isConvite ? GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo) : ""
+                                                                                  ${!isConvite ? GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo) : ""
                                 }
-                                                                               ${GetIconWhatsApp(row.Fone)}
-                                                                                   ${GetIconTel(row.Fone)}
-                                                                             ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
-${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
-                                                                              ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
+                                                                                   ${GetIconWhatsApp(row.Fone)}
+                                                                                       ${GetIconTel(row.Fone)}
+                                                                                 ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'HistÃ³rico') : ""}
+${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'OpÃ§Ãµes')}
+                                                                                  ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
 
 `;
                         }
@@ -540,7 +540,7 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opçõe
                 responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
                 destroy: true,
                 dom: domConfig,
-                buttons: getButtonsConfig('Histórico'),
+                buttons: getButtonsConfig('HistÃ³rico'),
                 columns: [
                     { data: "Evento", name: "Evento", autoWidth: true },
                     {
@@ -574,7 +574,7 @@ ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opçõe
                 responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
                 destroy: true,
                 dom: domConfig,
-                buttons: getButtonsConfig('Histórico'),
+                buttons: getButtonsConfig('HistÃ³rico'),
                 columns: [
                     { data: "Evento", name: "Evento", autoWidth: true },
                 ],
@@ -678,7 +678,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                             CarregarTabelaEquipante();
                         },
                         error: function (data) {
-                            ErrorMessage("O Equipante está vinculado a um registro de Padrinho, não será possível deletá-lo")
+                            ErrorMessage("O Equipante estÃ¡ vinculado a um registro de Padrinho, nÃ£o serÃ¡ possÃ­vel deletÃ¡-lo")
                         }
                     });
                 }
@@ -745,8 +745,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 contentType: 'application/json; charset=utf-8',
                 success: function (dataMsg) {
                     $("#bulk-mensagem").html(`
-                                          ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
-                                          `).select2({
+                                              ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+                                              `).select2({
                         width: 'resolve',
                         dropdownParent: $('#modal-bulk')
                     })
@@ -807,8 +807,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             })
 
             $("#bulk-change-equipe").html(`
-                                          ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
-                                          `).select2({
+                                              ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
+                                              `).select2({
                 width: 'resolve',
                 dropdownParent: $('#modal-bulk')
             })

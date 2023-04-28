@@ -84,7 +84,6 @@ function GetUsuario(id) {
         $("#usuario-senha").val("");
         $("#usuario-oldsenha").val("");
         $(`input[type=radio][value=Admin]`).iCheck('check');
-        console.log('teste');
         $("#usuario-equipanteid").val("Selecione").trigger("chosen:updated");
         $("#usuario-eventos").val()
         $("#usuario-eventos").select2({ dropdownParent: $("#form-usuario") })

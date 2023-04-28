@@ -53,12 +53,12 @@ namespace SysIgreja.Controllers
                     QtdParticipantes = circulosBusiness.GetParticipantesByCirculos(x.Id).Count(),
                     Titulo = x.Titulo ?? x.Cor,
                     Cor = x.Cor
-                }).AsEnumerable();
+                });
 
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.Titulo.RemoveAccents().Contains(search.RemoveAccents()) || x.Cor.RemoveAccents().Contains(search.RemoveAccents())).ToList();
+                query = query.Where(x => x.Titulo.Contains(search) || x.Cor.Contains(search)).ToList();
             }
 
             if (!string.IsNullOrEmpty(columnName))

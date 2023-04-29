@@ -203,7 +203,7 @@ namespace SysIgreja.Controllers
             if (config.TipoEvento == TipoEventoEnum.Casais)
             {
                 var query = circulosBusiness.GetParticipantesByCirculos(CirculoId);
-                var queryCasais = query.GroupJoin(query, x => x.Participante.Nome.Trim(), y => y.Participante.Conjuge.Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+                var queryCasais = query.AsEnumerable().GroupJoin(query, x => x.Participante.Nome.Trim(), y => y.Participante.Conjuge.Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
                 {
                     Conjuge = x.q1.Participante.Nome == new List<string> { x.q1.Participante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
                     Nome = x.q1.Participante.Nome == new List<string> { x.q1.Participante.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
@@ -224,12 +224,12 @@ namespace SysIgreja.Controllers
 
                 queryNova.ToList().ForEach(casal =>
                 {
-                    if (casal?.Homem != null)
+                    if (casal.Homem != null)
                     {
                         casal.Homem.Participante.Dupla = casal.Dupla;
                         resultCasais.Add(casal.Homem.Participante);
                     }
-                    if (casal?.Mulher != null)
+                    if (casal.Mulher != null)
                     {
                         casal.Mulher.Participante.Dupla = casal.Dupla;
                         resultCasais.Add(casal.Mulher.Participante);

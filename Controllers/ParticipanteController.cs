@@ -224,12 +224,12 @@ namespace SysIgreja.Controllers
 
                 queryNova.ToList().ForEach(casal =>
                 {
-                    if (casal.Homem != null)
+                    if (casal?.Homem != null)
                     {
                         casal.Homem.Participante.Dupla = casal.Dupla;
                         resultCasais.Add(casal.Homem.Participante);
                     }
-                    if (casal.Mulher != null)
+                    if (casal?.Mulher != null)
                     {
                         casal.Mulher.Participante.Dupla = casal.Dupla;
                         resultCasais.Add(casal.Mulher.Participante);

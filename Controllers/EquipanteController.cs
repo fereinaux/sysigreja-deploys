@@ -911,7 +911,7 @@ namespace SysIgreja.Controllers
         {
             var existentes = equipesBusiness.GetEquipantesEvento(EventoId).Select(x => x.EquipanteId);
 
-            var resultEquipantes = equipesBusiness.GetEquipantesByTipoEvento(EventoId)
+            var resultEquipantes = equipantesBusiness.GetEquipantes()
                 .Where(x => x.Nome.Contains(Search) || x.Apelido.Contains(Search))
                 .Select(x => new PessoaBase { Id = x.Id, Nome = x.Nome, Apelido = x.Apelido, Email = x.Email, Fone = x.Fone, Tipo = "Equipante" })
                 .ToList();

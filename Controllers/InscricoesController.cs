@@ -201,7 +201,7 @@ namespace SysIgreja.Controllers
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
             }
 
-            if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto)
+            if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto && evento.Status != StatusEnum.Informativo)
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
 
 

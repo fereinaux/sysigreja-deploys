@@ -64,6 +64,7 @@
             <h4>Listagem</h4>
             <div class="ibox-tools pull-right">
                 <button class="btn btn-default" style="display:none" id="btn_bulk" onclick="openBulkActions()">Editar</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Adicionar</button>
 
             </div>
         </div>
@@ -1029,6 +1030,45 @@ ${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md t
                     }
                 });
             }
+        }
+
+        function EditEquipante(id) {
+            GetEquipante(id);
+            $("#modal-equipantes").modal();
+        }
+
+
+        function GetEquipante(id) {
+            $('.equipante-etiquetas').select2({ dropdownParent: $("#form-equipante") });
+            if (id > 0) {
+                $.ajax({
+                    url: "/Equipante/GetEquipante/",
+                    data: { Id: id },
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#equipante-id").val(data.Equipante.Id);
+                        $(`#equipante-nome`).val(data.Equipante.Nome);
+                        $(`#equipante-apelido`).val(data.Equipante.Apelido);
+                        $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                        $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                        $(`#equipante-email`).val(data.Equipante.Email);
+                        $(`#equipante-fone`).val(data.Equipante.Fone);
+                        $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');                       
+                    }
+                });
+            }
+            else {
+                $("#equipante-id").val(0);
+                $(`#equipante-nome`).val("");
+                $(`#equipante-apelido`).val("");
+                $("#equipante-data-nascimento").val("");
+                $(`#equipante-email`).val("");
+                $(`#equipante-fone`).val("");              
+                $(`input[type=radio][name=equipante-sexo][value=1]`).iCheck('check');
+            }
+
         }
 
     </script>

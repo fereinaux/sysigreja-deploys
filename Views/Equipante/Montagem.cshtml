@@ -277,6 +277,24 @@
     </div>
 </div>
 
+<div class="modal inmodal" id="modal-equipantes" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs" id="form-equipante">
+                    <div class="row p-h-xs campos-cadastro">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-white pull-right" onclick="PostEquipante()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         isConvite = $('#eventoid option:selected').data('role') == "Convites"
@@ -284,10 +302,12 @@
         $(document).ready(function () {
             $('.not-convite').css('display', isConvite ? 'none' : 'block')
             loadPage()
+            loadCampos(999)
         })
 
 
         function loadPage() {
+
             $.ajax({
                 url: '/Etiqueta/GetEtiquetasByEventoId',
                 data: { eventoId: $("#eventoid").val() },
@@ -438,6 +458,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                                                                                        ${GetIconTel(row.Fone)}
                                                                                  ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
 ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
+     ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
                                                                                   ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
 
 `;
@@ -931,5 +952,84 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }
             });
         }
+
+        function loadCampos(id) {
+            $.ajax({
+                url: "/Configuracao/GetCamposEquipeByEventoId/",
+                data: { Id: id },
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    campos = data.Campos
+                    $('.campos-cadastro').html(`
+          <input type="hidden" id="equipante-id" />
+${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Nome</h5>
+
+                                <input type="text" class="form-control required" id="equipante-nome" data-field="Nome" />
+                            </div>` : ""}
+
+${campos.find(x => x.Campo == "Apelido") ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Apelido</h5>
+
+                                <input type="text" class="form-control required" id="equipante-apelido" data-field="Apelido" />
+                            </div>` : ""}
+${campos.find(x => x.Campo == 'Data Nascimento') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Data de Nascimento</h5>
+
+                                <input type="text" class="form-control full-date required" id="equipante-data-nascimento" data-field="Data de Nascimento" />
+                            </div>` : ''}
+${campos.find(x => x.Campo == 'Gênero') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Sexo</h5>
+
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" checked="" value="1" name="equipante-sexo"> <i></i> Masculino </label></div>
+                                <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" value="2" name="equipante-sexo"> <i></i> Feminino </label></div>
+                            </div>` : ''}
+${campos.find(x => x.Campo == 'Email') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>Email</h5>
+
+                                <input type="email" class="form-control" id="equipante-email" data-field="Email" />
+                            </div>` : ''}
+
+${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
+                                <h5>WhatsApp</h5>
+
+                                <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                            </div>` : ''}`)
+
+
+                    initInputs()
+
+                }
+            });
+        }
+
+
+        function PostEquipante() {
+            if (ValidateForm(`#form-equipante`)) {
+                $.ajax({
+                    url: "/Equipante/PostEquipante/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(
+                        {
+                            Id: $("#equipante-id").val(),
+                            Nome: $(`#equipante-nome`).val(),
+                            DataNascimento: moment($("#equipante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                            Email: $(`#equipante-email`).val(),
+                            Fone: $(`#equipante-fone`).val(),
+                            Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
+                        }),
+                    success: function () {
+                        SuccessMesageOperation();
+                        CarregarTabelaEquipante();
+                        $("#modal-equipantes").modal("hide");
+                    }
+                });
+            }
+        }
+
     </script>
 }

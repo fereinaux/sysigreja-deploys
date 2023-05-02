@@ -772,22 +772,22 @@ function GetEquipante(id) {
     }
     else {
         $("#equipante-id").val(0);
-        $(`#equipante - nome`).val("");
-        $(`#equipante - apelido`).val("");
+        $(`#equipante-nome`).val("");
+        $(`#equipante-apelido`).val("");
         $("#equipante-data-nascimento").val("");
-        $(`#equipante - email`).val("");
-        $(`#equipante - fone`).val("");
-        $(`#equipante - restricaoalimentar`).val("");
-        $(`#equipante - medicacao`).val("");
-        $(`#equipante - alergia`).val("");
-        $(`#equipante - cep`).val("");
-        $(`#equipante - logradouro`).val("");
-        $(`#equipante - bairro`).val('');
-        $(`#equipante - cidade`).val('');
-        $(`#equipante - estado`).val('');
-        $(`#equipante - numero`).val('');
-        $(`#equipante - complemento`).val('');
-        $(`#equipante - referencia`).val('');
+        $(`#equipante-email`).val("");
+        $(`#equipante-fone`).val("");
+        $(`#equipante-restricaoalimentar`).val("");
+        $(`#equipante-medicacao`).val("");
+        $(`#equipante-alergia`).val("");
+        $(`#equipante-cep`).val("");
+        $(`#equipante-logradouro`).val("");
+        $(`#equipante-bairro`).val('');
+        $(`#equipante-cidade`).val('');
+        $(`#equipante-estado`).val('');
+        $(`#equipante-numero`).val('');
+        $(`#equipante-complemento`).val('');
+        $(`#equipante-referencia`).val('');
         $(`input[type=radio][name=equipante-sexo][value=1]`).iCheck('check');
         $(`input[type=radio][name=equipante-hasalergia][value=false]`).iCheck('check');
         $(`input[type=radio][name=equipante-hasmedicacao][value=false]`).iCheck('check');
@@ -817,7 +817,6 @@ function GetEquipante(id) {
         $("#equipante-convenio").removeClass('required');
     });
 
-
     $('#has-alergia').on('ifChecked', function (event) {
         $('.alergia').removeClass('d-none');
         $("#equipante-alergia").addClass('required');
@@ -837,7 +836,6 @@ function GetEquipante(id) {
         $('.restricaoalimentar').addClass('d-none');
         $("#equipante-restricaoalimentar").removeClass('required');
     });
-
 
     $('#has-parente').on('ifChecked', function (event) {
         $('.parente').removeClass('d-none');

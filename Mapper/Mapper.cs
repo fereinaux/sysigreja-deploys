@@ -94,6 +94,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Quartos.Any() ? x.Quartos.Select(y => y.Quarto).First().Titulo : ""))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()));
                 cfg.CreateMap<Equipante, EquipanteListModel>()
+                      .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
                     .ForMember(dest => dest.Fone, opt => opt.MapFrom(x => x.Fone))
                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)))

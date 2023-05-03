@@ -287,8 +287,11 @@
         },
     ];
     function removeDiacritics(s) {
-        for (var i = 0, l = diacriticsMap.length; i < l; i++) {
-            s = s?.replace(diacriticsMap[i].letters, diacriticsMap[i].base);
+        if (s) {
+
+            for (var i = 0, l = diacriticsMap.length; i < l; i++) {
+                s = s.replace(diacriticsMap[i].letters, diacriticsMap[i].base);
+            }
         }
         return s;
     }

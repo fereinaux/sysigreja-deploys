@@ -1061,6 +1061,7 @@
     <Content Include="Scripts\app\Usuario\usuario.js" />
     <Content Include="Scripts\app\MeioPagamento\meio-pagamento.js" />
     <Content Include="Scripts\app\Inscricoes\inscricoes.js" />
+    <Content Include="Scripts\app\Util\diacritics.js" />
     <Content Include="Scripts\app\Util\mapa.js" />
     <Content Include="Scripts\app\Util\pdf.js" />
     <Content Include="Scripts\app\Util\extensions.js" />

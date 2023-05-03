@@ -52,7 +52,7 @@ namespace SysIgreja.Controllers
         public ActionResult Presenca()
         {
             ViewBag.Title = "Ata de Presença";
-            GetEventos();
+            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Convites" });
             return View();
         }
 

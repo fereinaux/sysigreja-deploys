@@ -327,8 +327,8 @@
 
                         @if (ViewBag.Campos.Contains(CamposEnum.Equipe.GetDescription()))
                         {
-                            <div class="form-group">
-                                <label for="participante-fone" class="">Equipe</label>
+                            <div class="form-group" id="equipes-select">
+                                <label for="participante-equipe" class="">Equipe</label>
                                 <select class="form-control" id="participante-equipe">
                                     @foreach (var equipe in ViewBag.Equipes)
                                     {
@@ -604,6 +604,9 @@
                            $('.dados-participante-contato').removeClass('d-none');
                            $('.dados-participante-contato input[id*="nome"]').addClass('required');
                            $('.dados-participante-contato input[id*="fone"]').addClass('fone');
+                           if (data.Montagem) {
+                               $('#equipes-select').remove()
+                           }
                        }
                        else if (data.Url) {
                            window.location.href = data.Url;

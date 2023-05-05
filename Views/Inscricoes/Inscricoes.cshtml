@@ -134,7 +134,7 @@
                                 <div class="col col-md-9 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-logradouro" class="">Logradouro</label>
-                                        <input type="text" class="form-control required" disabled id="participante-logradouro" data-field="Logradouro" />
+                                        <input type="text" class="form-control" disabled id="participante-logradouro" data-field="Logradouro" />
                                     </div>
                                 </div>
                             </div>
@@ -142,19 +142,19 @@
                                 <div class="col col-md-5 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-bairro" class="">Bairro</label>
-                                        <input type="text" class="form-control required" disabled id="participante-bairro" data-field="Bairro" />
+                                        <input type="text" class="form-control" disabled id="participante-bairro" data-field="Bairro" />
                                     </div>
                                 </div>
                                 <div class="col col-md-5 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-cidade" class="">Cidade</label>
-                                        <input type="text" class="form-control required" disabled id="participante-cidade" data-field="Cidade" />
+                                        <input type="text" class="form-control" disabled id="participante-cidade" data-field="Cidade" />
                                     </div>
                                 </div>
                                 <div class="col col-md-2 col-sm-12">
                                     <div class="form-group">
                                         <label for="participante-estado" class="">Estado</label>
-                                        <input type="text" class="form-control required" disabled id="participante-estado" data-field="Estado" />
+                                        <input type="text" class="form-control" disabled id="participante-estado" data-field="Estado" />
                                     </div>
                                 </div>
                             </div>
@@ -467,14 +467,12 @@
 
 </style>
 
-
 @section scripts {
     <script>
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
         $(window).on('load', function () {
             $(`input`).val("");
-            /* Page Loader active
-           ========================================================*/
+            console.log('aqui');
             $('#preloader').fadeOut();
         })
 
@@ -497,13 +495,14 @@
        var lat, lon;
 
        if ($('#map').length > 0) {
-
+           console.log('teste');
            const map = initMap('map')
            const markerLayer = createMarkerLayer(map)
 
            function verificaCep(input) {
                let cep = $(input).val()
-               if (cep.length == 9) {
+               console.log(cep.length);
+               if (cep.length == 9 && (userCountry == "Brazil")) {
                    $.blockUI({
                        css: {
                            backgroundColor: 'transparent',
@@ -561,11 +560,69 @@
                            })
                        }
                    })
+               } else if (cep.length == 7) {
+                   $.blockUI({
+                       css: {
+                           backgroundColor: 'transparent',
+                           border: 'none'
+                       },
+                       message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+                       baseZ: 1500,
+                       overlayCSS: {
+                           opacity: 0.7,
+                           cursor: 'wait'
+                       }
+                   });
+                   $.ajax({
+                       url: `https://api.iecbeventos.com.br/postalcode/${cep.replaceAll('-', '')}`,
+                       datatype: "json",
+                       type: "GET",
+                       contentType: 'application/json; charset=utf-8',
+                       success: function (data) {
+                           $(`#participante-logradouro`).val(data.logradouro)
+                           $(`#participante-bairro`).val(data.bairro)
+                           $(`#participante-cidade`).val(data.localidade)
+                           $(`#participante-estado`).val(data.uf)
+                           $(`#participante-latitude`).val(data.lat)
+                           $(`#participante-longitude`).val(data.lon)
+                           $.unblockUI();
+                           markerLayer.getLayers().forEach(mark => mark.remove())
+                           var marker = L.marker([data.lat, data.lon], {
+                               icon: getIcon('vermelho'), draggable: true,
+                               autoPan: true
+                           }).addTo(markerLayer);
+                           marker.on('moveend', function (event) {
+                               $(`#participante-latitude`).val(event.target._latlng.lat)
+                               $(`#participante-longitude`).val(event.target._latlng.lng)
+
+                           });
+                           $('#map').css('display', 'block')
+                           map.setView([data.lat, data.lon], 18);
+                           map.on('click', function (event) {
+                               markerLayer.getLayers().forEach(mark => mark.remove())
+                               var marker = L.marker([event.latlng.lat, event.latlng.lng], {
+                                   icon: getIcon('vermelho'), draggable: true,
+                                   autoPan: true
+                               }).addTo(markerLayer);
+                               marker.on('moveend', function (event) {
+                                   $(`#participante-latitude`).val(event.latlng.lat)
+                                   $(`#participante-longitude`).val(event.latlng.lng)
+
+                               });
+                           })
+                       }
+                   })
                }
            }
        }
 
-       function VerificaCadastro() {
+        function VerificaCadastro() {
                $.ajax({
                    url: "/Inscricoes/VerificaCadastro",
                    datatype: "json",

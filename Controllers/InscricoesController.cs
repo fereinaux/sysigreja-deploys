@@ -29,6 +29,7 @@ using Utils.Services;
 using System.Drawing.Imaging;
 using CsQuery;
 using System.Web.Routing;
+using System.Data.Entity;
 
 namespace SysIgreja.Controllers
 {
@@ -94,6 +95,23 @@ namespace SysIgreja.Controllers
             {
                 return Index();
             }
+        }
+
+        public ActionResult LogoByNome(string nome)
+        {
+            var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Logo).Where(x => x.Configuracao.Identificador.ToLower() == nome.ToLower()).OrderByDescending(x => x.DataEvento).FirstOrDefault();
+
+            var arquivo = evento.Configuracao.Logo;
+
+            if (arquivo != null)
+            {
+                return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         [HttpGet]
@@ -387,7 +405,7 @@ namespace SysIgreja.Controllers
                     }
                     else if (equipante != null)
                     {
-                        return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Montagem = equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Montagem),Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
+                        return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Montagem = equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Montagem), Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
                     }
                     return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
 

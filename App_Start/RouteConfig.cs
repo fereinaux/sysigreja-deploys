@@ -12,11 +12,18 @@ namespace SysIgreja
             routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
-   name: "Detalhes",
-   url: "{nome}/inscricoes",
-   defaults: new { controller = "Inscricoes", action = "DetalhesByNome" },
-   constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
-);
+               name: "Detalhes",
+               url: "{nome}/inscricoes",
+               defaults: new { controller = "Inscricoes", action = "DetalhesByNome" },
+               constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+            );
+
+            routes.MapRoute(
+                name: "Logo",
+                url: "{nome}/logo",
+                defaults: new { controller = "Inscricoes", action = "LogoByNome" },
+                constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+            );
 
             routes.MapRoute(
                 name: "Default",

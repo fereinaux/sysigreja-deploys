@@ -634,7 +634,7 @@ function loadQRCode(id, color1, color2) {
                     const qrCode = new QRCodeStyling({
                         width: 300,
                         height: 300,
-                        data: `https://${window.location.host}/Inscricoes/Detalhes/${id}?Tipo=Inscrições`,
+                        data: `https://${window.location.host}/${data.Configuracao.Identificador}/inscricoes`,
                     });
 
                     qrCode.append(document.getElementById("qrcode"));
@@ -672,7 +672,7 @@ function loadQRCode(id, color1, color2) {
                             {
                                 "width": 300,
                                 "height": 300,
-                                "data": `https://${window.location.host}/Inscricoes/Detalhes/${id}?Tipo=Inscrições`,
+                                "data": `https://${window.location.host}/${data.Configuracao.Identificador}/inscricoes`,
                                 "margin": 0,
                                 "qrOptions": {
                                     "typeNumber": "0",

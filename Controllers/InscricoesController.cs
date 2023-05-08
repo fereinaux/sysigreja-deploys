@@ -30,6 +30,12 @@ using System.Drawing.Imaging;
 using CsQuery;
 using System.Web.Routing;
 using System.Data.Entity;
+using QRCoder;
+using System.Drawing;
+using System.IO;
+using Microsoft.AspNet.Identity;
+using Owin.Security.Providers.Orcid.Message;
+using Utils.Constants;
 
 namespace SysIgreja.Controllers
 {
@@ -46,11 +52,13 @@ namespace SysIgreja.Controllers
         private readonly IEquipantesBusiness equipantesBusiness;
         private readonly INewsletterBusiness newsletterBusiness;
         private readonly IImageService imageService;
+        private readonly IEmailSender emailSender;
         private readonly IMapper mapper;
 
-        public InscricoesController(IParticipantesBusiness participantesBusiness, IImageService imageService, INotificacaoBusiness notificacaoBusiness, ICategoriaBusiness categoriaBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
+        public InscricoesController(IParticipantesBusiness participantesBusiness, IEmailSender emailSender, IImageService imageService, INotificacaoBusiness notificacaoBusiness, ICategoriaBusiness categoriaBusiness, IEquipesBusiness equipesBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, INewsletterBusiness newsletterBusiness, ILancamentoBusiness lancamentoBusiness, IMeioPagamentoBusiness meioPagamentoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
+            this.emailSender = emailSender;
             this.notificacaoBusiness = notificacaoBusiness;
             this.imageService = imageService;
             this.categoriaBusiness = categoriaBusiness;
@@ -112,6 +120,21 @@ namespace SysIgreja.Controllers
                 return null;
             }
 
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult qrcode(int eventoid, int participanteid)
+        {
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode($"{eventoid}|{participanteid}", QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(20);
+            var stream = new MemoryStream();
+            qrCodeImage.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+
+            return File(stream.ToArray(), "image/png");
         }
 
         [HttpGet]
@@ -381,7 +404,51 @@ namespace SysIgreja.Controllers
                 return Json(Url.Action("InscricaoEspera", new { Id = participantesBusiness.PostInscricao(model) }));
             }
 
-            return Json(Url.Action("InscricaoConcluida", new { Id = participantesBusiness.PostInscricao(model) }));
+            var config = evento.Configuracao;
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(Server.MapPath("~/EmailTemplates/Inscricao.html")))
+
+            {
+                body = reader.ReadToEnd();
+            }
+
+            var participanteid = participantesBusiness.PostInscricao(model);
+
+            Participante participante = participantesBusiness.GetParticipanteById(participanteid);
+
+            var ValorParticipante = participante.Evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? participante.Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
+
+            var msgConclusao = config.MsgConclusao.Replace("${Nome}", model.Nome)
+                                          .Replace("${Id}", participanteid.ToString())
+                                          .Replace("${EventoId}", evento.Id.ToString())
+                 .Replace("${Evento}", evento.Configuracao.Titulo)
+                          .Replace("${NumeracaoEvento}", evento.Numeracao.ToString())
+                           .Replace("${DescricaoEvento}", evento.Descricao)
+                 .Replace("${ValorEvento}", ValorParticipante)
+                 .Replace("${DataEvento}", evento.DataEvento.ToString("dd/MM/yyyy"))
+                 .Replace("${FonePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "")
+                 .Replace("${NomePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? "");
+
+            if (config.TipoEvento == TipoEventoEnum.Casais)
+            {
+                var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
+                msgConclusao = msgConclusao.Replace("${Apelido}", $"{participante.Apelido} e {casal.Apelido}");
+            }
+            else
+            {
+                msgConclusao = msgConclusao.Replace("${Apelido}", participante.Apelido);
+            }
+
+            body = body.Replace("{{msgConclusao}}", msgConclusao);
+            body = body.Replace("{{buttonColor}}", config.CorBotao);
+            body = body.Replace("{{logoEvento}}", $"https://{Request.UrlReferrer.Authority}/{config.Identificador}/Logo");
+            body = body.Replace("{{qrcodeParticipante}}", $"https://{Request.UrlReferrer.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&participanteid={participante.Id.ToString()}");
+
+
+            Guid g = Guid.NewGuid();
+            emailSender.SendEmail(participante.Email, "Confirmar Inscrição", body, config.Titulo);
+
+            return Json(Url.Action("InscricaoConcluida", new { Id = participanteid }));
         }
 
         [HttpPost]

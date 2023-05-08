@@ -516,6 +516,11 @@
     <Reference Include="PreMailer.Net, Version=1.2.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PreMailer.Net.1.2.7\lib\net40\PreMailer.Net.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.3.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.3\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
@@ -756,6 +761,7 @@
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
     <Reference Include="Z.EntityFramework.Extensions, Version=6.14.3.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
       <HintPath>..\packages\Z.EntityFramework.Extensions.6.14.3\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
@@ -862,6 +868,7 @@
     <Content Include="Content\Images\login_Patrimonio.png" />
     <Content Include="Content\Images\logo-bradesco-.png" />
     <Content Include="Content\plugins\dataTables\responsive.dataTables.min.css" />
+    <Content Include="EmailTemplates\Inscricao.html" />
     <Content Include="EmailTemplates\ForgotPassword.html" />
     <Content Include="Images\round_corner_bottom.png" />
     <Content Include="Images\round_corner_top.png" />

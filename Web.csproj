@@ -869,6 +869,7 @@
     <Content Include="Content\Images\logo-bradesco-.png" />
     <Content Include="Content\plugins\dataTables\responsive.dataTables.min.css" />
     <Content Include="EmailTemplates\Inscricao.html" />
+    <Content Include="EmailTemplates\Pagamento.html" />
     <Content Include="EmailTemplates\ForgotPassword.html" />
     <Content Include="Images\round_corner_bottom.png" />
     <Content Include="Images\round_corner_top.png" />

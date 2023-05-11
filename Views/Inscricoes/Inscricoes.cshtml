@@ -601,7 +601,7 @@
                    type: "POST",
                    contentType: 'application/json; charset=utf-8',
                    data: JSON.stringify({
-                       Email: '@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone`).val() : $(`#participante-email`).val(),
+                       Email: $(`#participante-email`).val(),
                        Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
                        eventoId: @ViewBag.EventoId
                    }),

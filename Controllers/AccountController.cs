@@ -573,9 +573,6 @@ namespace SysIgreja.Controllers
             if (model.Password.Length < 6)
                 return new HttpStatusCodeResult(400, "Password deve conter 6 caracteres");
 
-            if (string.IsNullOrEmpty(model.Fone))
-                return new HttpStatusCodeResult(400, "Fone é obrigatório");
-
             if (string.IsNullOrEmpty(model.Nome))
                 return new HttpStatusCodeResult(400, "Nome é obrigatório");
 

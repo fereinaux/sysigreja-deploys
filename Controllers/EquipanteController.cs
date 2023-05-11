@@ -989,7 +989,7 @@ namespace SysIgreja.Controllers
 
            &&
 
-           ((!string.IsNullOrEmpty(equipante.Email) && x.Email == equipante.Email) || (x.Fone == equipante.Fone && !string.IsNullOrEmpty(equipante.Fone)))).ToList().Select(x => new HistoricoModel
+           ((!string.IsNullOrEmpty(equipante.Email) && x.Email == equipante.Email))).ToList().Select(x => new HistoricoModel
            {
                Evento = $"{x.Evento.Numeracao}º {x.Evento.Configuracao.Titulo}",
            }).Distinct();

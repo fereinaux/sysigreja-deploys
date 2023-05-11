@@ -391,7 +391,7 @@ namespace SysIgreja.Controllers
         {
 
             var evento = eventosBusiness.GetEventoById(model.EventoId);
-            var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone == model.Fone || x.Email == model.Email);
+            var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == model.Email);
             if (equipante != null)
             {
                 model.EquipanteId = equipante.Id;
@@ -465,7 +465,7 @@ namespace SysIgreja.Controllers
             switch (Tipo)
             {
                 case "Inscrições Equipe":
-                    var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone == Email);
+                    var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == Email);
                     if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Ativo))
                     {
                         return Json(new { Participante = equipante.Nome, Montagem = equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Montagem), Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Url = Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }) }, JsonRequestBehavior.AllowGet);
@@ -488,7 +488,7 @@ namespace SysIgreja.Controllers
                     var participanteConsulta = participantesBusiness.GetParticipanteConsulta(Email);
 
                     if (participanteConsulta != null)
-                        return Json(new { Participante = participanteConsulta, Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
+                        return Json(new { Participante = mapper.Map<EquipanteListModel>(participanteConsulta), Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
 
                     return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
             }

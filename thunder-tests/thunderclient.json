@@ -61,12 +61,12 @@
     "method": "POST",
     "sortNum": 5000,
     "created": "2022-11-19T03:18:44.091Z",
-    "modified": "2023-02-06T13:47:46.657Z",
+    "modified": "2023-05-11T14:04:32.711Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"testema2323caco\",\n  \"Email\":\"23121321@teste.com\",\n  \"Password\":\"reinaux09\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Nome\":\"Felipe Reinaux\"\n}",
+      "raw": "{\n  \"Id\": \"e93557eb-af6e-4b3e-9f51-88ccb8e78225\",\n  \"Username\":\"Felipe Reinaux\",\n  \"Email\":\"felipereinaux@gmail.com\",\n  \"Password\":\"reinaux09\",\n  \"Fone\":\"+55(81)9.9718-7441\",\n  \"Nome\":\"Teste\",\n  \"Sexo\": \"Masculino\"\n}",
       "form": []
     },
     "tests": []
@@ -94,12 +94,12 @@
     "method": "POST",
     "sortNum": 7500,
     "created": "2022-11-19T03:54:55.684Z",
-    "modified": "2023-01-30T12:53:22.366Z",
+    "modified": "2023-05-11T13:51:13.089Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"Username\":\"testedad123e1\",\n  \"Password\":\"teste2232\"\n}",
+      "raw": "{\n  \"Username\":\"reinaux\",\n  \"Password\":\"reinaux09\"\n}",
       "form": []
     },
     "tests": []

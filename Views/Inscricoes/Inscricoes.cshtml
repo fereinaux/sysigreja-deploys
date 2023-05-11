@@ -17,24 +17,11 @@
                 <div class="p-h-xs m-b-lg" id="form-inscricao">
                     <input type="hidden" name="EquipanteId" id="EquipanteId" value="0" />
                     <div class="form-group">
-                        @if (ViewBag.Tipo.Contains("Equipe"))
-                        {
-                            <label for="participante-email" class="">Telefone do @ViewBag.Sujeito</label>
-                            <div style="position:relative">
-                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
-                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do @ViewBag.Sujeito" />
-                            </div>
-
-                        }
-                        else
-                        {
-                            <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
-                            <div style="position:relative">
-                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
-                                <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
-                            </div>
-
-                        }
+                        <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
+                        <div style="position:relative">
+                            <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro()" class="fas fa-search"></i>
+                            <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
+                        </div>
                     </div>
                     <div class="pnl-cadastro">
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
@@ -68,31 +55,16 @@
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))
                         {
-                            if (ViewBag.Tipo.Contains("Equipe"))
-                            {
-                                <div class="form-group">
-                                    <label for="participante-email" class="">Digite o e-mail do @ViewBag.Sujeito</label>
-                                    <input type="email" class="form-control" name="email" id="participante-email" data-field="E-mail" />
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="form-group">
-                                    <label for="participante-fone" class="">Telefone do @ViewBag.Sujeito</label>
-                                    <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
-                                </div>
 
-                            }
+                            <div class="form-group">
+                                <label for="participante-fone" class="">Telefone do @ViewBag.Sujeito</label>
+                                <input type="text" class="form-control fone" id="participante-fone" data-field="Telefone do participante" />
+                            </div>
+
+
 
                         }
 
-                        @*@if (ViewBag.Campos.Contains(CamposEnum.Instagram.GetDescription()))
-                            {
-                                <div class="form-group">
-                                    <label for="participante-instagram" class="">Instagram do @ViewBag.Sujeito</label>
-                                    <input type="text" class="form-control" id="participante-instagram" data-field="Instagram do @ViewBag.Sujeito" />
-                                </div>
-                            }*@
 
                         @if (ViewBag.Campos.Contains(CamposEnum.Conjuge.GetDescription()))
                         {
@@ -640,7 +612,7 @@
                            }
                            $(`#participante-nome`).val(data.Participante.Nome);
                            $(`#participante-apelido`).val(data.Participante.Apelido);
-                           $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
+                           $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                            $(`#participante-email`).val(data.Participante.Email);
                            $(`#participante-fone`).val(data.Participante.Fone);
                            $(`#participante-nome-pai`).val(data.Participante.NomePai);

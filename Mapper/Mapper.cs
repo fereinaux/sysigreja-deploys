@@ -103,7 +103,15 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                     .ForMember(dest => dest.HasFoto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto)))
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()));
+                cfg.CreateMap<ParticipanteConsulta, EquipanteListModel>()
+                    .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
+                  .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
+                  .ForMember(dest => dest.Fone, opt => opt.MapFrom(x => x.Fone))
+                  .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)))
+                  .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))
+                  .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()));
                 cfg.CreateMap<EquipanteEvento, EquipanteListModel>()
+                               .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.Equipante.DataNascimento.HasValue ? x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Equipante.Id))
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
                                         .ForMember(dest => dest.Dupla, opt => opt.MapFrom(x => x.Equipante.Dupla))

@@ -221,6 +221,8 @@
                 margin-left: 0 !important;
             }
 
+
+
             .button-destaque {
                 position: relative;
                 width: 100%;
@@ -312,145 +314,169 @@
             }
         }
 
-        .fc-event-title {
-            color: #fff !important;
+        @@media (max-width: 300px) {
+
+
+            .select-igreja, .pesquisa-evento {
+                display: none !important;
+            }
+
+            .bloco.bloco-normal {
+                width: 100% !important ;
+                height: 140px !important;
+            }
+
+            .a-normal {
+                flex-direction:column;
+                height: 230px !important;
+            }
+
+            .col-evento-select {
+                height: fit-content;
+            }
         }
 
-        .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
-            position: absolute !important;
-            top: 0
-        }
+            .fc-event-title {
+                color: #fff !important;
+            }
 
-        .fc-button {
-            padding: 0 6px !important;
-        }
+            .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+                position: absolute !important;
+                top: 0
+            }
+
+            .fc-button {
+                padding: 0 6px !important;
+            }
 
 
 
-        .fc .fc-list-event:hover td {
-            background-color: transparent;
-            border-color: transparent;
-        }
+            .fc .fc-list-event:hover td {
+                background-color: transparent;
+                border-color: transparent;
+            }
 
-        .fc-button-primary {
-            background-color: transparent !important;
-            border-color: transparent !important;
-            color: gray !important;
-        }
-
-            .fc-button-primary:hover {
+            .fc-button-primary {
                 background-color: transparent !important;
                 border-color: transparent !important;
+                color: gray !important;
             }
 
-        .fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
-            box-shadow: none;
-        }
+                .fc-button-primary:hover {
+                    background-color: transparent !important;
+                    border-color: transparent !important;
+                }
 
-        .fc-today-button {
-            display: none !important;
-        }
+            .fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
+                box-shadow: none;
+            }
 
-        .fc .fc-list-day-cushion, .fc .fc-list-table td {
-            color: gray;
-        }
+            .fc-today-button {
+                display: none !important;
+            }
 
-        .fc .fc-list-table td {
-            padding: 0;
-        }
+            .fc .fc-list-day-cushion, .fc .fc-list-table td {
+                color: gray;
+            }
 
-        .img-calendar {
-            width: 50px;
-            position: absolute;
-            z-index: 99;
-            left: 52.5px;
-            transform: translate(-25px,0);
-        }
+            .fc .fc-list-table td {
+                padding: 0;
+            }
 
-        .overlay-calendar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            background-color: #000;
-            height: 60px;
-            width: 105px;
-            opacity: 0.4;
-        }
+            .img-calendar {
+                width: 50px;
+                position: absolute;
+                z-index: 99;
+                left: 52.5px;
+                transform: translate(-25px,0);
+            }
 
-        .bg-calendar {
-            height: 60px;
-            width: 105px;
-        }
+            .overlay-calendar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                background-color: #000;
+                height: 60px;
+                width: 105px;
+                opacity: 0.4;
+            }
 
-        .div-calendar {
-            position: relative;
-            display: flex;
-            align-items: center;
-            height: 60px
-        }
+            .bg-calendar {
+                height: 60px;
+                width: 105px;
+            }
 
-        .span-calendar {
-        }
+            .div-calendar {
+                position: relative;
+                display: flex;
+                align-items: center;
+                height: 60px
+            }
 
-        .span-container-calendar {
-            padding-left: 20px;
-            width: calc(100% - 105px);
-        }
+            .span-calendar {
+            }
 
-        .fc-list-event-graphic, .fc-list-event-time {
-            display: none;
-        }
+            .span-container-calendar {
+                padding-left: 20px;
+                width: calc(100% - 105px);
+            }
 
-
-        .fc-list-day-text, .fc-list-day-side-text {
-            color: #444546 !important
-        }
-
-            .fc-list-day-text:hover, .fc-list-day-side-text:hover {
-                color: #1f2020 !important
+            .fc-list-event-graphic, .fc-list-event-time {
+                display: none;
             }
 
 
-        .fc .fc-daygrid-day-number {
-            color: white;
-            z-index: 99;
-        }
+            .fc-list-day-text, .fc-list-day-side-text {
+                color: #444546 !important
+            }
 
-        #calendar {
-            top: 40px;
-            position: absolute;
-            z-index: 9999999;
-            width: 400px;
-            height: 400px;
-            background: #fff;
-            border-radius: 16px;
-            padding-top: 1.5em;
-            box-shadow: rgb(25 31 40 / 59%) 0px 6px 24px 0px;
-        }
+                .fc-list-day-text:hover, .fc-list-day-side-text:hover {
+                    color: #1f2020 !important
+                }
 
-        .fc-list-empty {
-            background-color: transparent !important;
-        }
 
-        .fc-toolbar-chunk {
-            padding-left: 10px
-        }
+            .fc .fc-daygrid-day-number {
+                color: white;
+                z-index: 99;
+            }
 
-        .fc .fc-toolbar-title {
-            font-size: 1.25em;
-        }
+            #calendar {
+                top: 40px;
+                position: absolute;
+                z-index: 9999999;
+                width: 400px;
+                height: 400px;
+                background: #fff;
+                border-radius: 16px;
+                padding-top: 1.5em;
+                box-shadow: rgb(25 31 40 / 59%) 0px 6px 24px 0px;
+            }
 
-        .fc .fc-view-harness {
-            background-color: #fff;
-            border-bottom-left-radius: 16px;
-            border-bottom-right-radius: 16px;
-        }
+            .fc-list-empty {
+                background-color: transparent !important;
+            }
 
-        .fc .fc-view-harness-active > .fc-view {
-            border: none;
-            height: 400px;
-        }
+            .fc-toolbar-chunk {
+                padding-left: 10px
+            }
+
+            .fc .fc-toolbar-title {
+                font-size: 1.25em;
+            }
+
+            .fc .fc-view-harness {
+                background-color: #fff;
+                border-bottom-left-radius: 16px;
+                border-bottom-right-radius: 16px;
+            }
+
+            .fc .fc-view-harness-active > .fc-view {
+                border: none;
+                height: 400px;
+            }
+
+
     </style>
 </head>
 <body>
@@ -460,14 +486,14 @@
             <div class="col-xs-12 col-select" style="height:50px;margin-top:20px;display:flex;padding:0">
                 <div class="div-cols" style="width:100%">
                     <div class="col-md-4 col-xs-12" style="display: flex">
-                        <img style="height: 40px; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+                        <img style="height: 3rem; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
 
                         <h3 class="desktop" style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
 
                         @if (ViewBag.CountIgrejas > 0)
                         {
-                            <div class="col-md-4 col-xs-12 select-igreja mobile" style="display: none;padding-left:0;align-items:center">
-                                <i style="margin-left: auto; font-size: 25px;margin-right:5px" class="fas fa-church"></i>
+                            <div class="col-md-4 col-xs-12 select-igreja mobile" style="display: none;padding:0;align-items:center">
+                                <i style="margin-left: auto; font-size: 2.5rem;margin-right:5px" class="fas fa-church"></i>
 
 
                                 <select class="form-control" style="width: fit-content !important;  margin-top: auto; margin-bottom: auto; " id="igreja-mobile" onchange=" carregarEventos()">
@@ -490,7 +516,7 @@
                         }
                     </div>
 
-                    <div class="col-md-4 col-xs-12" style="display: flex;align-items:center">
+                    <div class="col-md-4 col-xs-12 pesquisa-evento" style="display: flex;align-items:center">
 
                         <input type="text" placeholder="Pesquisar eventos, congressos, acampamentos..." class="form-control" style="padding-left:30px;margin-top: auto; margin-bottom: auto;" name="search-evento" id="search-evento" value="" />
                         <i class="fas fa-search search-icon"></i>

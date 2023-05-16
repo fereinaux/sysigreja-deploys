@@ -238,7 +238,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 
     tableParticipanteConfig.buttons.forEach(function (o) {
         if (o.extend === "excel") {
-
+            let equipe = config.EquipeCirculo
             o.action = function (e, dt, button, config) {
                 var div = document.createElement("div");
                 selected = false
@@ -284,7 +284,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:${$('#is-casado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataCasamento"> Data de Casamento <i></i></label>
 <label style="display:${$('.congregacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Congregacao"> Congregação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel " type="checkbox" value="Circulo"><span class="title-circulo"> ${config.EquipeCirculo} </span><i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel " type="checkbox" value="Circulo"><span class="title-circulo"> ${equipe} </span><i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Carona <i></i></label>
 

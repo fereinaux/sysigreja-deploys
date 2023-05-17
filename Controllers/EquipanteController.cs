@@ -853,7 +853,7 @@ namespace SysIgreja.Controllers
 
             var dadosAdicionais = new
             {
-                Status = result.Status.GetDescription(),
+                Status = result.Status?.GetDescription(),
                 Quarto = eventoId.HasValue ? (quartosBusiness.GetQuartosComParticipantes(eventoId.Value, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo) : ""
             };
 

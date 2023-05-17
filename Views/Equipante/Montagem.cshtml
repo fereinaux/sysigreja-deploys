@@ -111,6 +111,7 @@
                         <th></th>
                         <th>Nome</th>
                         <th>Fone</th>
+                           <th>Email</th>
                         <th>Idade</th>
                         <th>Equipe</th>
                         <th>Status</th>
@@ -121,6 +122,7 @@
                         <th></th>
                         <th></th>
                         <th><input class="form-control" type="text" placeholder="Pesquisar " /></th>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th><input class="form-control" type="text" placeholder="Pesquisar " /></th>
@@ -437,6 +439,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                         }
                     },
                     { data: "Fone", name: "Fone", class: "noSearch" },
+                    { data: "Email", name: "Email", class: "noSearch" },
                     { data: "Idade", name: "Idade", class: "noSearch" },
                     {
                         data: "Equipe", name: "Equipe", autoWidth: true

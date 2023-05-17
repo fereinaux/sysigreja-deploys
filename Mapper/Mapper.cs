@@ -205,6 +205,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.NomeMae, opt => opt.MapFrom(x => x.Equipante.NomeMae))
                     .ForMember(dest => dest.FoneMae, opt => opt.MapFrom(x => x.Equipante.FoneMae))
                     .ForMember(dest => dest.NomeContato, opt => opt.MapFrom(x => x.Equipante.NomeContato))
+                       .ForMember(dest => dest.Presenca, opt => opt.MapFrom(x => x.Presencas.Count()))
                     .ForMember(dest => dest.FoneContato, opt => opt.MapFrom(x => x.Equipante.FoneContato))
                     .ForMember(dest => dest.NomeConvite, opt => opt.MapFrom(x => x.Equipante.NomeConvite))
                     .ForMember(dest => dest.FoneConvite, opt => opt.MapFrom(x => x.Equipante.FoneConvite))

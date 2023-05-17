@@ -254,6 +254,7 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Equipe"> Equipe <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Tipo"> Tipo <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Presenca"> Presença <i></i></label>
 </div>
 </div>
 </div>`;

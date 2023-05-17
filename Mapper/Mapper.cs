@@ -117,6 +117,7 @@ namespace SysIgreja.Controllers
                                         .ForMember(dest => dest.Dupla, opt => opt.MapFrom(x => x.Equipante.Dupla))
                     .ForMember(dest => dest.Fone, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Fone)))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
+                          .ForMember(dest => dest.Email, opt => opt.MapFrom(x => x.Equipante.Email))
                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)))
                     .ForMember(dest => dest.Etiquetas, opt => opt.MapFrom(x => x.Equipante.ParticipantesEtiquetas.Select(y => y.Etiqueta)))
                     .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.Equipante.DataNascimento)))

@@ -105,6 +105,20 @@ namespace SysIgreja.Controllers
             }
         }
 
+        public ActionResult GoToEquipe(string nome)
+        {
+            var evento = eventosBusiness.GetEventos().Where(x => x.Configuracao.Identificador.ToLower() == nome.ToLower()).OrderByDescending(x => x.DataEvento).FirstOrDefault();
+
+            if (evento != null)
+            {
+                return Inscricoes(evento.Id, "Inscrições Equipe");
+            }
+            else
+            {
+                return Index();
+            }
+        }
+
         public ActionResult LogoByNome(string nome)
         {
             var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Logo).Where(x => x.Configuracao.Identificador.ToLower() == nome.ToLower()).OrderByDescending(x => x.DataEvento).FirstOrDefault();

@@ -230,7 +230,7 @@ namespace SysIgreja.Controllers
                     ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao) ? evento.Configuracao.Equipes.Where(x => x.ShowInscricao).Select(x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }).ToList() : equipesBusiness.GetEquipes(Id).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList();
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                         return View("Casal");
-                    return View();
+                    return View("Inscricoes");
                 default:
                     if (evento.Status != StatusEnum.Aberto)
                         return RedirectToAction("InscricoesEncerradas", new { Id = Id });
@@ -238,7 +238,7 @@ namespace SysIgreja.Controllers
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCampos(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                         return View("Casal");
-                    return View();
+                    return View("Inscricoes");
             }
         }
 

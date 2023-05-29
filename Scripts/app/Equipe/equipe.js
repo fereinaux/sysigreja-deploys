@@ -229,9 +229,9 @@ function FillDoc(doc, result) {
     height = 50;
 
     $(result.data).each((index, participante) => {
-        if (index == 19) {
+        if (index % 19 == 0 ) {
             doc.addPage()
-            header(doc, evento, 2, result.data[0].Equipe)
+            header(doc, evento, (index/19)+1, result.data[0].Equipe)
             height = 50;
         }
 

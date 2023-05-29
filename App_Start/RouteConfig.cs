@@ -18,12 +18,7 @@ namespace SysIgreja
                constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
             );
 
-            routes.MapRoute(
-               name: "Inscrições Equipe",
-               url: "{nome}/equipe",
-               defaults: new { controller = "Inscricoes", action = "GoToEquipe" },
-               constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
-            );
+     
 
             routes.MapRoute(
                 name: "Logo",

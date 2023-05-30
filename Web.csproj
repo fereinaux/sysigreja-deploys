@@ -1223,7 +1223,7 @@
     <Content Include="Views\Configuracao\Index.cshtml" />
     <Content Include="Views\Mensagem\Index.cshtml" />
     <Content Include="Views\Carona\Index.cshtml" />
-    <Content Include="Views\Quarto\Equipe.cshtml" />
+    <Content Include="Views\Quarto\Voluntarios.cshtml" />
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
     <None Include="Properties\PublishProfiles\SysIgreja Deploy.pubxml" />
     <Content Include="Views\Shared\_Inscricoes.cshtml" />

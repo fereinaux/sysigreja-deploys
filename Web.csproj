@@ -1228,7 +1228,7 @@
     <None Include="Properties\PublishProfiles\SysIgreja Deploy.pubxml" />
     <Content Include="Views\Shared\_Inscricoes.cshtml" />
     <Content Include="Views\Padrinho\Index.cshtml" />
-    <Content Include="Views\Configuracao\Equipe.cshtml" />
+    <Content Include="Views\Configuracao\Equipes.cshtml" />
     <Content Include="Views\Inscricoes\Index.cshtml" />
     <Content Include="Views\NaoAutorizado\Index.cshtml" />
     <Content Include="Views\Configuracao\Login.cshtml" />

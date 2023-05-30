@@ -1,0 +1,182 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="#">Configurações</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>@ViewBag.Title</h4>
+            <div class="ibox-tools pull-right">
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipe(0)">Adicionar</button>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table id="table-equipe" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Equipe</th>
+                        <th>Ações</th>  
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="modal-equipe" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs" id="form-equipe">
+                    <div class="row p-h-xs">
+                        <input type="hidden" id="equipe-id"/>
+                        <div class="col-sm-6 p-w-md text-center">
+                            <h5>Equipe</h5>
+
+                            <input type="text" class="form-control required" id="equipe-nome" data-field="Equipe" />
+                        </div>                       
+                    </div>
+                </div>             
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-white pull-right" onclick="PostEquipe()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {   
+    
+}
+
+@section Scripts {
+    
+
+    <script>
+        function CarregarTabelaEquipe() {
+            const tableEquipeConfig = {
+                language: languageConfig,
+                lengthMenu: [200, 500, 1000],
+                colReorder: false,
+                serverSide: false,
+                deferloading: 0,
+                orderCellsTop: true,
+                fixedHeader: true,
+                filter: true,
+                orderMulti: false,
+                responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+                destroy: true,
+                dom: domConfig,
+                buttons: getButtonsConfig('Equipes'),
+                columns: [
+                    { data: "Nome", name: "Nome", autoWidth: true },
+                    {
+                        data: "Id", name: "Id", orderable: false, width: "10%",
+                        "render": function (data, type, row) {
+                            return `${GetButton('EditEquipe', data, 'blue', 'fa-edit', 'Editar')}                            
+                            ${GetButton('DeleteEquipe', data, 'red', 'fa-trash', 'Excluir')}`;
+                        }
+                    }
+                ],
+                order: [
+                    [0, "asc"]
+                ],
+                ajax: {
+                    url: '/Equipe/GetEquipesConfig',
+                    datatype: "json",
+                    type: "POST"
+                }
+            };
+
+            $("#table-equipe").DataTable(tableEquipeConfig);
+        }
+
+        function GetEquipe(id) {
+            if (id > 0) {
+                $.ajax({
+                    url: "/Equipe/GetEquipe/",
+                    data: { Id: id },
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#equipe-id").val(data.Equipe.Id);
+                        $("#equipe-nome").val(data.Equipe.Nome);
+                    }
+                });
+            }
+            else {
+                $("#equipe-id").val(0);
+                $("#equipe-nome").val("");
+            }
+        }
+
+        function EditEquipe(id) {
+            GetEquipe(id);
+            $("#modal-equipe").modal();
+        }
+
+        function DeleteEquipe(id) {
+            ConfirmMessageDelete().then((result) => {
+                if (result) {
+                    $.ajax({
+                        url: "/Equipe/DeleteEquipe/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                Id: id
+                            }),
+                        success: function () {
+                            SuccessMesageDelete();
+                            CarregarTabelaEquipe();
+                        }
+                    });
+                }
+            });
+        }
+
+        function PostEquipe() {
+            if (ValidateForm(`#form-equipe`)) {
+                $.ajax({
+                    url: "/Equipe/PostEquipe/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(
+                        {
+                            Id: $("#equipe-id").val(),
+                            Nome: $("#equipe-nome").val(),
+                        }),
+                    success: function () {
+                        SuccessMesageOperation();
+                        CarregarTabelaEquipe();
+                        $("#modal-equipe").modal("hide");
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            CarregarTabelaEquipe();
+        });
+
+    </script>
+}

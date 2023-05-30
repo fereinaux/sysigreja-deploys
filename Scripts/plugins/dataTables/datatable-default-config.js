@@ -20,7 +20,7 @@
         return ((a < b) ? 1 : ((a > b) ? -1 : 0));
     },
     "data-br-pre": function (a) {
-        if (a == null || a == "") {return 0;}
+        if (a == null || a == "") { return 0; }
         var dataBR = a.split('/');
         return (dataBR[2] + dataBR[1] + dataBR[0]) * 1;
     },
@@ -67,7 +67,7 @@ function getButtonsConfig(fileName) {
         {
             extend: 'colvis', text: 'Colunas', columns: ':not(.noVis)', action: function (e, dt, node, config) {
                 dt.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
-                    
+
                     if (node[0].className.includes('Visibility')) {
                         dt.draw()
                     }
@@ -78,9 +78,21 @@ function getButtonsConfig(fileName) {
                 }
             }
         },
-        { extend: 'excel', title: fileName },
-        { extend: 'pdf', title: fileName },
-        { extend: 'print', title: fileName },
+        {
+            extend: 'excel', title: fileName, exportOptions: {
+                columns: ':not(.noExport)'
+            }
+        },
+        {
+            extend: 'pdf', title: fileName, orientation: 'landscape', exportOptions: {
+                columns: ':not(.noExport)'
+            }
+        },
+        {
+            extend: 'print', title: fileName, text: "Imprimir", exportOptions: {
+                columns: ':not(.noExport)'
+            }
+        },
     ];
 }
 

@@ -80,17 +80,17 @@ function getButtonsConfig(fileName) {
         },
         {
             extend: 'excel', title: fileName, exportOptions: {
-                columns: ':not(.noExport) :not(.noVis)'
+                columns: ':not(.noExport), :not(.noVis)'
             }
         },
         {
             extend: 'pdf', title: fileName, orientation: 'landscape', exportOptions: {
-                columns: ':not(.noExport) :not(.noVis)'
+                columns: ':not(.noExport), :not(.noVis)'
             }
         },
         {
             extend: 'print', title: fileName, text: "Imprimir", exportOptions: {
-                columns: ':not(.noExport) :not(.noVis)'
+                columns: ':not(.noExport), :not(.noVis)'
             }
         },
     ];

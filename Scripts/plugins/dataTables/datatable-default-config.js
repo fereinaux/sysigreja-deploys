@@ -79,6 +79,8 @@ function getButtonsConfig(fileName) {
             }
         },
         { extend: 'excel', title: fileName },
+        { extend: 'pdf', title: fileName },
+        { extend: 'print', title: fileName },
     ];
 }
 

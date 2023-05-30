@@ -80,17 +80,32 @@ function getButtonsConfig(fileName) {
         },
         {
             extend: 'excel', title: fileName, exportOptions: {
-                columns: ':not(.noExport):visible'
+                columns: ':not(.noExport):visible, .export', orthogonal: 'export'
             }
         },
         {
-            extend: 'pdf', title: fileName, orientation: 'landscape', exportOptions: {
-                columns: ':not(.noExport):visible'
+            extend: 'pdf', orientation: 'landscape', download: 'open', exportOptions: {
+                columns: ':not(.noExport):visible, .export', orthogonal: 'export'
+            }, customize: function (doc) {
+
+                doc.content.splice(0, 1, {
+                    columns: [
+                        {
+                            margin: [5, 5, 25, 15],
+                            alignment: 'left',
+                            image: `data:image/png;base64, ${config.LogoRelatorio}`,
+                            width: 70
+                        },
+                        { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
+
+                    ]
+
+                });
             }
         },
         {
             extend: 'print', title: fileName, text: "Imprimir", exportOptions: {
-                columns: ':not(.noExport):visible'
+                columns: ':not(.noExport):visible, .export', orthogonal: 'export'
             }
         },
     ];

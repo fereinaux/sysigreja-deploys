@@ -116,6 +116,7 @@
                         <th>Equipe</th>
                         <th>Bairro</th>
                         <th>Cidade</th>
+                        <th>Etiquetas</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
@@ -128,6 +129,7 @@
                         <th></th>
                         <th></th>
                         <th><input class="form-control" type="text" placeholder="Pesquisar " /></th>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -431,26 +433,39 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                         }
                     },
                     {
-                        data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
-                            return `<div>
-                                                                          <span>${row.Nome}</br></span>
-                                                                          ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
-                                if (etiqueta) {
-                                    return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
-                                }
-                            }).join().replace(/,/g, '') : ""}
-                                                                      </div>`
-                        }
+                        data: "Nome", name: "Nome", autoWidth: true
                     },
                     { data: "Fone", name: "Fone", class: "noSearch" },
                     { data: "Email", name: "Email", class: "noSearch" },
-              
+
                     { data: "Idade", name: "Idade", class: "noSearch" },
                     {
                         data: "Equipe", name: "Equipe", autoWidth: true
                     },
                     { data: "Bairro", name: "Bairro", class: "noSearch" },
                     { data: "Cidade", name: "Cidade", class: "noSearch" },
+                    {
+                        data: "Etiquetas", name: "Etiquetas", className: 'noSearch', render: function (data, type, row) {
+                            if (type === 'export') {
+                                return `<div>
+
+                                                                                              ${row.Etiquetas.map(etiqueta => {
+                                    if (etiqueta) {
+                                        return etiqueta.Nome.replace(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/, '')
+                                    }
+                                })}</div>`
+                            }
+
+                            return `<div>
+                                                                                              ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
+                                if (etiqueta) {
+                                    return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
+                                }
+                            }).join().replace(/,/g, '') : ""}
+                                                                                          </div>`
+                        }
+                    },
+
                     {
                         data: "StatusMontagem", name: "StatusMontagem", class: "noSearch", render: (data, type, row) =>
                             `<span style="font-size:13px" class="text-center label label-${data == 'Ativo' ? 'primary' : 'success'}">${data}</span>`
@@ -463,14 +478,14 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
                             var color = !(Coordenador == row.Tipo) ? 'info' : 'yellow';
                             return `
 
-                                                                                  ${!isConvite ? GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo) : ""
+                                                                                                      ${!isConvite ? GetLabel('ToggleMembroEquipeTipo', JSON.stringify(row), color, row.Tipo) : ""
                                 }
-                                                                                   ${GetIconWhatsApp(row.Fone)}
-                                                                                       ${GetIconTel(row.Fone)}
-                                                                                 ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
+                                                                                                       ${GetIconWhatsApp(row.Fone)}
+                                                                                                           ${GetIconTel(row.Fone)}
+                                                                                                     ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
 ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
-     ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
-                                                                                  ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
+                         ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
+                                                                                                      ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
 
 `;
                         }
@@ -777,8 +792,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 contentType: 'application/json; charset=utf-8',
                 success: function (dataMsg) {
                     $("#bulk-mensagem").html(`
-                                              ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
-                                              `).select2({
+                                                                  ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+                                                                  `).select2({
                         width: 'resolve',
                         dropdownParent: $('#modal-bulk')
                     })
@@ -839,8 +854,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             })
 
             $("#bulk-change-equipe").html(`
-                                              ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
-                                              `).select2({
+                                                                  ${equipes.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
+                                                                  `).select2({
                 width: 'resolve',
                 dropdownParent: $('#modal-bulk')
             })
@@ -974,40 +989,40 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 success: function (data) {
                     campos = data.Campos
                     $('.campos-cadastro').html(`
-          <input type="hidden" id="equipante-id" />
+                              <input type="hidden" id="equipante-id" />
 ${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Nome</h5>
+                                                    <h5>Nome</h5>
 
-                                <input type="text" class="form-control required" id="equipante-nome" data-field="Nome" />
-                            </div>` : ""}
+                                                    <input type="text" class="form-control required" id="equipante-nome" data-field="Nome" />
+                                                </div>` : ""}
 
 ${campos.find(x => x.Campo == "Apelido") ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Apelido</h5>
+                                                    <h5>Apelido</h5>
 
-                                <input type="text" class="form-control required" id="equipante-apelido" data-field="Apelido" />
-                            </div>` : ""}
+                                                    <input type="text" class="form-control required" id="equipante-apelido" data-field="Apelido" />
+                                                </div>` : ""}
 ${campos.find(x => x.Campo == 'Data Nascimento') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Data de Nascimento</h5>
+                                                    <h5>Data de Nascimento</h5>
 
-                                <input type="text" class="form-control full-date required" id="equipante-data-nascimento" data-field="Data de Nascimento" />
-                            </div>` : ''}
+                                                    <input type="text" class="form-control full-date required" id="equipante-data-nascimento" data-field="Data de Nascimento" />
+                                                </div>` : ''}
 ${campos.find(x => x.Campo == 'Gênero') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Sexo</h5>
+                                                    <h5>Sexo</h5>
 
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" checked="" value="1" name="equipante-sexo"> <i></i> Masculino </label></div>
-                                <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" value="2" name="equipante-sexo"> <i></i> Feminino </label></div>
-                            </div>` : ''}
+                                                    <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" checked="" value="1" name="equipante-sexo"> <i></i> Masculino </label></div>
+                                                    <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" value="2" name="equipante-sexo"> <i></i> Feminino </label></div>
+                                                </div>` : ''}
 ${campos.find(x => x.Campo == 'Email') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Email</h5>
+                                                    <h5>Email</h5>
 
-                                <input type="email" class="form-control" id="equipante-email" data-field="Email" />
-                            </div>` : ''}
+                                                    <input type="email" class="form-control" id="equipante-email" data-field="Email" />
+                                                </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>WhatsApp</h5>
+                                                    <h5>WhatsApp</h5>
 
-                                <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
-                            </div>` : ''}`)
+                                                    <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                                                </div>` : ''}`)
 
 
                     initInputs()
@@ -1065,7 +1080,7 @@ ${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md t
                         $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                         $(`#equipante-email`).val(data.Equipante.Email);
                         $(`#equipante-fone`).val(data.Equipante.Fone);
-                        $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');                       
+                        $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');
                     }
                 });
             }
@@ -1075,7 +1090,7 @@ ${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md t
                 $(`#equipante-apelido`).val("");
                 $("#equipante-data-nascimento").val("");
                 $(`#equipante-email`).val("");
-                $(`#equipante-fone`).val("");              
+                $(`#equipante-fone`).val("");
                 $(`input[type=radio][name=equipante-sexo][value=1]`).iCheck('check');
             }
 

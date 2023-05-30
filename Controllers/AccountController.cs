@@ -215,11 +215,12 @@ namespace SysIgreja.Controllers
             var user = accountBusiness
                 .GetUsuarios().FirstOrDefault(x => x.EquipanteId == EquipanteId);
             var evento = eventosBusiness.GetEventoById(EventoId);
+            var config = configuracaoBusiness.GetConfiguracaoByEventoId(EventoId);
 
+                var equipante = equipantesBusiness.GetEquipanteById(EquipanteId);
             List<Permissoes> permissoes = new List<Permissoes>();
             if (user == null)
             {
-                var equipante = equipantesBusiness.GetEquipanteById(EquipanteId);
                 string fullName = equipante.Nome;
                 var names = fullName.Split(' ');
                 string firstName = names[0];
@@ -277,6 +278,7 @@ namespace SysIgreja.Controllers
             UserManager.AddClaim(user.Id, new Claim("Permissões", JsonConvert.SerializeObject(permissoes)));
 
 
+            accountBusiness.sendUser(user, equipante, config, Perfil, evento);
 
             return Json(new
             {
@@ -391,6 +393,7 @@ namespace SysIgreja.Controllers
                         ConfiguracaoId = evento,
                         Role = "Admin"
                     });
+
                 });
             }
             else
@@ -402,6 +405,8 @@ namespace SysIgreja.Controllers
                         ConfiguracaoId = config.Id,
                         Role = "Admin"
                     });
+
+
                 });
             }
 

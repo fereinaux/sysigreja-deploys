@@ -871,6 +871,7 @@
     <Content Include="EmailTemplates\Inscricao.html" />
     <Content Include="EmailTemplates\Pagamento.html" />
     <Content Include="EmailTemplates\ForgotPassword.html" />
+    <Content Include="EmailTemplates\Usuario.html" />
     <Content Include="Images\round_corner_bottom.png" />
     <Content Include="Images\round_corner_top.png" />
     <Content Include="firebase-messaging-sw.js" />

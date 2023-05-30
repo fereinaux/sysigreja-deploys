@@ -79,6 +79,15 @@ function getButtonsConfig(fileName) {
             }
         },
         {
+            text: "Resetar", action: function (e, dt, node, config) {
+                dt.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+                    localStorage.removeItem('DataTables_' + dt.settings()[0].sInstance + $("*[id*='eventoid']").val())
+                    window.location.reload()
+                });
+
+            }
+        },
+        {
             extend: 'excel', title: fileName, exportOptions: {
                 columns: ':not(.noExport):visible, .export', orthogonal: 'export'
             }

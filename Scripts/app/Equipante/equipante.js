@@ -74,10 +74,15 @@ function CarregarTabelaEquipante(callbackFunction) {
                     return `${GetCheckBox(data, row.Presenca)}`;
                 }
             },
-            { data: "Sexo", name: "Sexo", visible: false, className: 'noVis noSearch', },
+            { data: "Sexo", name: "Sexo", visible: false, className: 'noVis noSearch noExport', },
             {
                 data: "Sexo", title: "Sexo", orderData: 1, name: "Sexo", className: "text-center noSearch", width: "5%",
                 "render": function (data, type, row) {
+
+                    if (type === 'export') {
+                        return data
+                    }
+
                     if (data == "Masculino") {
                         icon = "fa-male";
                         cor = "#0095ff";
@@ -91,6 +96,11 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
             {
                 data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
+
+                    if (type === 'export') {
+                        return data
+                    }
+
                     return `<div>
                         <span>${row.Nome}</br></span>
                         ${$("#equipante-eventoid-filtro").val() != 999 ? row.Etiquetas.map(etiqueta => {
@@ -110,6 +120,27 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
             { data: "Congregacao", name: "Congregacao", autoWidth: true, visible: false },
             {
+                data: "Etiquetas", name: "Etiquetas", visible: false, className: 'noVis noSearch export', render: function (data, type, row) {
+                    if (type === 'export') {
+                        return `<div>
+
+                                                                                              ${row.Etiquetas.map(etiqueta => {
+                            if (etiqueta) {
+                                return etiqueta.Nome.replace(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/, '')
+                            }
+                        })}</div>`
+                    }
+
+                    return `<div>
+                                                                                              ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
+                        if (etiqueta) {
+                            return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
+                        }
+                    }).join().replace(/,/g, '') : ""}
+                                                                                          </div>`
+                }
+            },
+            {
                 data: "HasOferta", className: `hide-tipoevento noSearch noVis`, name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {
                         return `<span style="font-size:13px" class="text-center label label-default}">Em espera</span>`;
@@ -118,7 +149,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch',
+                data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch noExport',
                 "render": function (data, type, row) {
                     return `   
 

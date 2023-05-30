@@ -1045,6 +1045,7 @@
     <Content Include="Scripts\app\Etiqueta\etiqueta.js" />
     <Content Include="Scripts\app\Evento\informativo.js" />
     <Content Include="Scripts\app\Mensagem\mensagem.js" />
+    <Content Include="Scripts\app\Montagem\montagem.js" />
     <Content Include="Scripts\app\Padrinho\padrinho.js" />
     <Content Include="Scripts\app\Participante\checkin.js" />
     <Content Include="Scripts\app\Participante\casais.js" />

@@ -40,7 +40,7 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-        public ActionResult Equipe()
+        public ActionResult Voluntarios()
         {
             ViewBag.Title = "Quartos da Equipe";
             GetEventos();

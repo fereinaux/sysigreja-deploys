@@ -43,7 +43,7 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-        public ActionResult Equipe()
+        public ActionResult Equipes()
         {
             GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Equipes";

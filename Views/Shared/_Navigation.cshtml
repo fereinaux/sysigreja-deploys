@@ -30,7 +30,7 @@
 
                 </ul>
             </li>
-            <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Equipe","Equipante","Quarto","Home"}, actions: new List<string> { "Coordenador","Index","Presenca","Equipe"})">
+            <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Equipe","Equipante","Quarto","Home"}, actions: new List<string> { "Coordenador","Index","Presenca","Voluntarios"})">
                 <a href="#"><i class="fas fa-broom"></i> <span class="nav-label">Voluntários</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Equipe","Equipante","Quarto"}, actions: new List<string> { "Index","Presenca","Equipe" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller:"Equipante")"><a href="@Url.Action("Index", "Equipante")">Cadastro</a></li>
@@ -39,7 +39,7 @@
                     <li class="@Html.IsSelected(action: "Index", controller:"Equipe")"><a href="@Url.Action("Index", "Equipe")">Equipes</a></li>
                     <li class="@Html.IsSelected(action: "Coordenador", controller:"Home")"><a href="@Url.Action("Coordenador", "Home")">Coordenador</a></li>
                     <li class="@Html.IsSelected(action: "Presenca", controller:"Equipe")"><a href="@Url.Action("Presenca", "Equipe")">Ata de Presença</a></li>
-                    <li class="@Html.IsSelected(action: "Equipe", controller:"Quarto")"><a href="@Url.Action("Equipe", "Quarto")">Quartos</a></li>
+                    <li class="@Html.IsSelected(action: "Voluntarios", controller:"Quarto")"><a href="@Url.Action("Voluntarios", "Quarto")">Quartos</a></li>
                 </ul>
             </li>
             <li class="@Html.IsSelected(action: "Index", controller: "Lancamento")"><a href="@Url.Action("Index", "Lancamento")"><i class="far fa-money-bill-alt"></i><span class="nav-label">Financeiro</span></a></li>
@@ -60,7 +60,7 @@
                 <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">Configurações</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] { "MeioPagamento", "Account","Categoria", "ContaBancaria", "CentroCusto", "Arquivo", "Configuracao","Igreja" }, actions: new List<string> { "Index", "Equipe" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller: "MeioPagamento")"><a href="@Url.Action("Index", "MeioPagamento")">Formas de Pagamento</a></li>
-                    <li class="@Html.IsSelected(action: "Equipe", controller: "Configuracao")"><a href="@Url.Action("Equipe", "Configuracao")">Equipes</a></li>
+                    <li class="@Html.IsSelected(action: "Equipes", controller: "Configuracao")"><a href="@Url.Action("Equipes", "Configuracao")">Equipes</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "Igreja")"><a href="@Url.Action("Index", "Igreja")">Igrejas</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "CentroCusto")"><a href="@Url.Action("Index", "CentroCusto")">Centros de Custo</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "Account")"><a href="@Url.Action("Index", "Account")">Administradores</a></li>

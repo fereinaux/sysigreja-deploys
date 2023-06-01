@@ -443,24 +443,34 @@ namespace SysIgreja.Controllers
                  .Replace("${FonePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "")
                  .Replace("${NomePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? "");
 
-            if (config.TipoEvento == TipoEventoEnum.Casais)
-            {
-                var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
-                msgConclusao = msgConclusao.Replace("${Apelido}", $"{participante.Apelido} e {casal.Apelido}");
-            }
-            else
-            {
-                msgConclusao = msgConclusao.Replace("${Apelido}", participante.Apelido);
-            }
 
-            body = body.Replace("{{msgConclusao}}", msgConclusao);
             body = body.Replace("{{buttonColor}}", config.CorBotao);
             body = body.Replace("{{logoEvento}}", $"https://{Request.UrlReferrer.Authority}/{config.Identificador}/Logo");
             body = body.Replace("{{qrcodeParticipante}}", $"https://{Request.UrlReferrer.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&participanteid={participante.Id.ToString()}");
 
 
-            Guid g = Guid.NewGuid();
-            emailSender.SendEmail(participante.Email, "Confirmar Inscrição", body, config.Titulo);
+            if (config.TipoEvento == TipoEventoEnum.Casais)
+            {
+                var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
+
+                if (casal != null)
+                {
+                    msgConclusao = msgConclusao.Replace("${Apelido}", $"{participante.Apelido} e {casal.Apelido}");
+                    body = body.Replace("{{msgConclusao}}", msgConclusao);
+
+                    emailSender.SendEmail(participante.Email, "Confirmar Inscrição", body, config.Titulo);
+                    emailSender.SendEmail(casal.Email, "Confirmar Inscrição", body, config.Titulo);
+                }
+            }
+            else
+            {
+                msgConclusao = msgConclusao.Replace("${Apelido}", participante.Apelido);
+                body = body.Replace("{{msgConclusao}}", msgConclusao);
+
+                emailSender.SendEmail(participante.Email, "Confirmar Inscrição", body, config.Titulo);
+            }
+
+
 
             return Json(Url.Action("InscricaoConcluida", new { Id = participanteid }));
         }

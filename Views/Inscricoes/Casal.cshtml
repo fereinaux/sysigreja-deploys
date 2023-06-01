@@ -568,7 +568,7 @@
 
                                $(`#participante-nome-marido`).val(data.Participante.Nome);
                                $(`#participante-apelido-marido`).val(data.Participante.Apelido);
-                               $("#participante-data-nascimento-marido").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
+                               $("#participante-data-nascimento-marido").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                                $(`#participante-email-marido`).val(data.Participante.Email);
                                $(`#participante-fone-marido`).val(data.Participante.Fone);
                                $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
@@ -583,7 +583,7 @@
                            } else {
                                $(`#participante-nome-esposa`).val(data.Participante.Nome);
                                $(`#participante-apelido-esposa`).val(data.Participante.Apelido);
-                               $("#participante-data-nascimento-esposa").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
+                               $("#participante-data-nascimento-esposa").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                                $(`#participante-email-esposa`).val(data.Participante.Email);
                                $(`#participante-fone-esposa`).val(data.Participante.Fone);
                                $(`#participante-nome-convite`).val(data.Participante.NomeConvite);

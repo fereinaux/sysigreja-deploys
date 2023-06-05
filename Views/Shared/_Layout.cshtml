@@ -248,6 +248,7 @@
                     window.caches.delete(name);
             });
             window.localStorage.clear();
+            localStorage.setItem("version", version);
             window.location.reload(); // force page reload
         }
 
@@ -256,7 +257,7 @@
 
             var clientVersion = localStorage.getItem("version")
             if (version != clientVersion) {
-                localStorage.setItem("version", version);
+          
                 clearCache()
 
             }

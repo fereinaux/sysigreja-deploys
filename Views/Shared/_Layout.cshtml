@@ -248,19 +248,11 @@
                     window.caches.delete(name);
             });
             window.localStorage.clear();
-            localStorage.setItem("version", version);
             window.location.reload(); // force page reload
         }
 
         $(document).ready(function () {
             loadAvatar()
-
-            var clientVersion = localStorage.getItem("version")
-            if (version != clientVersion) {
-          
-                clearCache()
-
-            }
 
             if (!window.location.href.includes('Coordenador')) {
                 globalEventoId = localStorage.getItem('eventoId')

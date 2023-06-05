@@ -242,17 +242,21 @@
 
         const version = '1.0.1'
 
+        function clearCache() {
+            window.caches.keys().then(function (names) {
+                for (let name of names)
+                    window.caches.delete(name);
+            });
+            window.location.reload(); // force page reload
+        }
+
         $(document).ready(function () {
             loadAvatar()
 
             var clientVersion = localStorage.getItem("version")
             if (version != clientVersion) {
                 localStorage.setItem("version", version);
-                window.caches.keys().then(function (names) {
-                    for (let name of names)
-                        window.caches.delete(name);
-                });
-                window.location.reload(true); // force page reload
+                clearCache()
 
             }
 

@@ -247,6 +247,7 @@
                 for (let name of names)
                     window.caches.delete(name);
             });
+            window.localStorage.clear();
             window.location.reload(); // force page reload
         }
 

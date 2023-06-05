@@ -186,23 +186,23 @@ namespace SysIgreja.Controllers
                 {
                     Quartos = quartosBusiness.GetQuartosComParticipantes(EventoId, TipoPessoaEnum.Equipante).ToList().Select(x => new
                     {
-                        Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
-                        Titulo = x.Quarto.Titulo,
+                        Nome = UtilServices.CapitalizarNome(x.Equipante?.Nome),
+                        Titulo = x.Quarto?.Titulo,
                         Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count(),
                         ParticipanteId = x.EquipanteId,
                         QuartoId = x.QuartoId,
-                        Sexo = x.Quarto.Sexo.GetDescription(),
-                        CEP = x.Quarto.CEP,
-                        Logradouro = x.Quarto.Logradouro,
-                        Bairro = x.Quarto.Bairro,
-                        Cidade = x.Quarto.Cidade,
-                        Estado = x.Quarto.Estado,
-                        Numero = x.Quarto.Numero,
-                        Complemento = x.Quarto.Complemento,
-                        Referencia = x.Quarto.Referencia,
-                        Latitude = x.Quarto.Latitude,
-                        Longitude = x.Quarto.Longitude,
-                        Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count().ToString()}/{x.Quarto.Capacidade.ToString()}",
+                        Sexo = x.Quarto?.Sexo?.GetDescription(),
+                        CEP = x.Quarto?.CEP,
+                        Logradouro = x.Quarto?.Logradouro,
+                        Bairro = x.Quarto?.Bairro,
+                        Cidade = x.Quarto?.Cidade,
+                        Estado = x.Quarto?.Estado,
+                        Numero = x.Quarto?.Numero,
+                        Complemento = x.Quarto?.Complemento,
+                        Referencia = x.Quarto?.Referencia,
+                        Latitude = x.Quarto?.Latitude,
+                        Longitude = x.Quarto?.Longitude,
+                        Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count().ToString()}/{x.Quarto?.Capacidade?.ToString()}",
                     }).ToList()
                 }, JsonRequestBehavior.AllowGet);
             }

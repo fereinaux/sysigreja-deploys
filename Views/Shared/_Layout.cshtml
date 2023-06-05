@@ -197,7 +197,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js" integrity="sha512-YeeA/Qxn5hYdkukScTCNNOhTrv1C2RubAGButJ1rmgQwZf/HdRaCGl+JAVkqsqaNRaYNHdheiuKKuPf9mDcqKg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script>
+    @if (1 == 1)
+    {
+
+
+
+        <script>
         const { jsPDF } = window.jspdf;
         let globalEventoId
         let globalConfigId
@@ -533,7 +538,8 @@
                 });
         }
 
-    </script>
+        </script>
+    }
     <!-- Handler for local scripts -->
     @RenderSection("scripts", required: false)
 </body>

@@ -248,6 +248,10 @@
             var clientVersion = localStorage.getItem("version")
             if (version != clientVersion) {
                 localStorage.setItem("version", version);
+                window.caches.keys().then(function (names) {
+                    for (let name of names)
+                        window.caches.delete(name);
+                });
                 window.location.reload(true); // force page reload
 
             }

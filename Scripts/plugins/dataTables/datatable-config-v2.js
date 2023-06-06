@@ -94,7 +94,7 @@ function getButtonsConfig(fileName) {
         },
         {
             extend: 'pdf', orientation: 'landscape', exportOptions: {
-                columns: ':not(.noExport):visible, .export', orthogonal: 'export'
+                columns: isMobile ? ':not(.noExport), .export' : ':not(.noExport):visible, .export', orthogonal: 'export'
             }, customize: function (doc) {
 
                 doc.content.splice(0, 1, {

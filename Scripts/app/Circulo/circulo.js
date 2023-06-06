@@ -24,7 +24,8 @@ function CarregarTabelaCirculo() {
                 return `${GetButton('ListarDirigentes', JSON.stringify(row), 'blue', 'fa-list-alt', `Listar Dirigentes do(a) ${config.EquipeCirculo}`)}
                             ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
                             ${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
-                            ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}`;
+                            ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}
+                            ${GetButton('EsvaziarCirculo', data, 'red', 'fas fa-ban', 'Esvaziar')}`;
             }
         }
     ]
@@ -208,6 +209,52 @@ function DeleteCirculo(id) {
         }
     });
 }
+
+
+function EsvaziarCirculo(id) {
+    ConfirmMessage(`Essa ação ira esvaziar o(a) ${$('.title-circulo').text()}, você confirma a operação?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Circulo/EsvaziarCirculo/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: id
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaCirculo();
+                }
+            });
+        }
+    });
+}
+
+
+
+function EsvaziarTodosCirculo() {
+    ConfirmMessage(`Essa ação ira esvaziar TODOS(AS) os(as) ${$('.title-circulo').text()}, você confirma a operação?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Circulo/EsvaziarTodosCirculo/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: $("#circulo-eventoid").val()
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaCirculo();
+                }
+            });
+        }
+    });
+}
+
 
 function PostCirculo() {
     if (ValidateForm(`#form-circulo`)) {

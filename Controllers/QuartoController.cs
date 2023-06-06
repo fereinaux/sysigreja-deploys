@@ -150,6 +150,24 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+
+        [HttpPost]
+        public ActionResult EsvaziarQuarto(int Id)
+        {
+            quartosBusiness.EsvaziarQuarto(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult EsvaziarTodosQuarto(int Id, TipoPessoaEnum Tipo)
+        {
+            quartosBusiness.EsvaziarTodosQuarto(Id, Tipo);
+
+            return new HttpStatusCodeResult(200);
+        }
+
         [HttpPost]
         public ActionResult DistribuirQuartos(int EventoId, TipoPessoaEnum? tipo)
         {

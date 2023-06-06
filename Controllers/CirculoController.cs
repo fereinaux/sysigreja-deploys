@@ -15,6 +15,7 @@ using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
+using Core.Business.Quartos;
 
 namespace SysIgreja.Controllers
 {
@@ -193,6 +194,23 @@ namespace SysIgreja.Controllers
         public ActionResult AddDirigente(int EquipanteId, int CirculoId)
         {
             circulosBusiness.AddDirigente(EquipanteId, CirculoId);
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult EsvaziarCirculo(int Id)
+        {
+            circulosBusiness.EsvaziarCirculo(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult EsvaziarTodosCirculo(int Id)
+        {
+            circulosBusiness.EsvaziarTodosCirculo(Id);
+
             return new HttpStatusCodeResult(200);
         }
 

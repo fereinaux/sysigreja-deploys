@@ -10,7 +10,8 @@ let columnsParticipantes = [
             return `
                             ${GetButton('PrintQuarto', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
                             ${GetButton('EditQuarto', data, 'blue', 'fa-edit', 'Editar')}                            
-                            ${GetButton('DeleteQuarto', data, 'red', 'fa-trash', 'Excluir')}`;
+                            ${GetButton('DeleteQuarto', data, 'red', 'fa-trash', 'Excluir')}
+                             ${GetButton('EsvaziarQuarto', data, 'red', 'fas fa-ban', 'Esvaziar')}`;
         }
     }
 ]
@@ -25,7 +26,8 @@ let columnsEquipantes = [
             return `
                             ${GetButton('PrintQuarto', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
                             ${GetButton('EditQuarto', data, 'blue', 'fa-edit', 'Editar')}                            
-                            ${GetButton('DeleteQuarto', data, 'red', 'fa-trash', 'Excluir')}`;
+                            ${GetButton('DeleteQuarto', data, 'red', 'fa-trash', 'Excluir')}
+                            ${GetButton('EsvaziarQuarto', data, 'red', 'fas fa-ban', 'Esvaziar')}`;
         }
     }
 ]
@@ -681,4 +683,50 @@ function montarMapa() {
     marker.bindPopup(`<h4>${$(`#quarto-titulo`).val()}</h4>`).openPopup();
     $('.div-map').css('display', 'block')
     mapLocal.setView([$(`#quarto-latitude`).val(), $(`#quarto-longitude`).val()], 18);
+}
+
+
+function EsvaziarQuarto(id) {
+    ConfirmMessage(`Essa ação ira esvaziar o quarto, você confirma a operação?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Quarto/EsvaziarQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: id
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaQuarto();
+                }
+            });
+        }
+    });
+}
+
+
+
+function EsvaziarTodosQuarto() {
+    ConfirmMessage(`Essa ação ira esvaziar TODOS os quartos, você confirma a operação?`).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Quarto/EsvaziarTodosQuarto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: $("#quarto-eventoid").val(),
+                        Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaQuarto();
+                }
+            });
+        }
+    });
 }

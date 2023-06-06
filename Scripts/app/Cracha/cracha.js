@@ -78,13 +78,15 @@ function GetCracha(id) {
                     .val(cracha.Nome.Family).trigger('change')
                 $('.equipe-font #font-picker')
                     .val(cracha.Equipe.Family).trigger('change')
+                $('.circulo-font #font-picker')
+                    .val(cracha.Circulo.Family).trigger('change')
                 $('.apelido-font #font-picker')
                     .val(cracha.Apelido.Family).trigger('change')
 
                 $('.apelido-font #font-size').val(cracha.Apelido.Size)
                 $('.apelido-font #font-padding').val(cracha.Apelido.Margin)
                 $('.apelido-font #font-color').val(cracha.Apelido.Color)
-                Align(cracha.Apelido.Align, 'nome')
+                Align(cracha.Apelido.Align, 'apelido')
                 $('.nome-font #font-size').val(cracha.Nome.Size)
                 $('.nome-font #font-padding').val(cracha.Nome.Margin)
                 $('.nome-font #font-color').val(cracha.Nome.Color)
@@ -92,7 +94,11 @@ function GetCracha(id) {
                 $('.equipe-font #font-size').val(cracha.Equipe.Size)
                 $('.equipe-font #font-padding').val(cracha.Equipe.Margin)
                 $('.equipe-font #font-color').val(cracha.Equipe.Color)
-                Align(cracha.Equipe.Align, 'nome')
+                Align(cracha.Equipe.Align, 'equipe')
+                $('.circulo-font #font-size').val(cracha.Circulo.Size)
+                $('.circulo-font #font-padding').val(cracha.Circulo.Margin)
+                $('.circulo-font #font-color').val(cracha.Circulo.Color)
+                Align(cracha.Circulo.Align, 'circulo')
                 $('#cracha').html(cracha.Conteudo)
                 arquivos = $('.arquivos-cracha').length + 1
                 renderCracha()
@@ -117,23 +123,30 @@ function GetCracha(id) {
             .val('Roboto:700').trigger('change')
         $('.apelido-font #font-picker')
             .val('Roboto:400').trigger('change')
+        $('.circulo-font #font-picker')
+            .val('Roboto:400').trigger('change')
 
         $('.apelido-font #font-size').val(35)
         $('.apelido-font #font-padding').val(5)
-        $('.apelido-font #font-color').val('#FFFFFF')
+        $('.apelido-font #font-color').val('#000000')
         Align('left', 'apelido')
         $('.nome-font #font-size').val(20)
         $('.nome-font #font-padding').val(5)
-        $('.nome-font #font-color').val('#FFFFFF')
+        $('.nome-font #font-color').val('#000000')
         Align('left', 'nome')
         $('.equipe-font #font-size').val(15)
         $('.equipe-font #font-padding').val(5)
-        $('.equipe-font #font-color').val('#FFFFFF')
+        $('.equipe-font #font-color').val('#000000')
         Align('left', 'equipe')
+        $('.circulo-font #font-size').val(15)
+        $('.circulo-font #font-padding').val(5)
+        $('.circulo-font #font-color').val('#000000')
+        Align('left', 'circulo')
         $('#cracha').html(`<img src="./Images/profile.jpg" class="background" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0" />
                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
                                 <span style="white-space:normal;display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
-                                <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>`)
+                                <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>
+                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="circulo-cracha text-cracha">{Circulo}</span>`)
         renderCracha()
         dragResize()
     }
@@ -221,6 +234,13 @@ function PostCracha() {
                         Color: $('.equipe-font #font-color').val(),
                         Align: $('.equipe-font .active').attr('class').split(/\s+/)[1].split('-')[2],
                         Margin: parseFloat($('.equipe-font #font-padding').val()),
+                    },
+                    Circulo: {
+                        Family: $('.circulo-font #font-picker').val(),
+                        Size: parseFloat($('.circulo-font #font-size').val()),
+                        Color: $('.circulo-font #font-color').val(),
+                        Align: $('.circulo-font .active').attr('class').split(/\s+/)[1].split('-')[2],
+                        Margin: parseFloat($('.circulo-font #font-padding').val()),
                     }
                 }),
             success: function () {
@@ -253,6 +273,7 @@ function print() {
     $('span.nome-cracha').text('Felipe Reinaux')
     $('span.apelido-cracha').text('Renô')
     $('span.equipe-cracha').text('Secretaria')
+    $('span.circulo-cracha').text('Vermelho')
     $('#cracha').toggleClass('moldura-modal')
     html2canvas($("#cracha")[0]).then(canvas => {
         var imgData = canvas.toDataURL(
@@ -269,6 +290,7 @@ function print() {
         $('span.nome-cracha').text('{Nome}')
         $('span.apelido-cracha').text('{Apelido}')
         $('span.equipe-cracha').text('{Equipe}')
+        $('span.circulo-cracha').text('{Circulo}')
     });
 }
 
@@ -344,6 +366,12 @@ function renderCracha() {
     $('span.nome-cracha').css('padding-right', `${$('.nome-font #font-padding').val()}px`)
 
 
+    $('span.circulo-cracha').css('padding-left', `${$('.circulo-font #font-padding').val()}px`)
+    $('span.circulo-cracha').css('font-size', `${$('.circulo-font #font-size').val()}px`)
+    $('span.circulo-cracha').css('color', `${$('.circulo-font #font-color').val()}`)
+    $('span.circulo-cracha').css('padding-right', `${$('.circulo-font #font-padding').val()}px`)
+
+
 }
 
 
@@ -360,6 +388,10 @@ $(document).ready(function () {
     $('.equipe-font #font-picker')
         .fontpicker({ parentElement: '#form-cracha' }).on('change', function () {
             $('.equipe-cracha').css(getCss(this.value));
+        });
+    $('.circulo-font #font-picker')
+        .fontpicker({ parentElement: '#form-cracha' }).on('change', function () {
+            $('.circulo-cracha').css(getCss(this.value));
         });
     $('input[type=radio][id=background]').on('ifChecked', function (event) {
 

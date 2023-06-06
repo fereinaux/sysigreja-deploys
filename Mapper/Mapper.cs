@@ -23,6 +23,7 @@ namespace SysIgreja.Controllers
         public string Apelido { get; set; }
         public string Equipe { get; set; }
         public string Foto { get; set; }
+        public string Circulo { get; set; }
     }
 
     public class CrachaCasalModel
@@ -32,6 +33,7 @@ namespace SysIgreja.Controllers
         public string Apelido { get; set; }
         public string Equipe { get; set; }
         public string Foto { get; set; }
+        public string Circulo { get; set; }
     }
     public class MapperRealidade
     {
@@ -53,7 +55,8 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Equipante.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Equipante.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""))
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
                 cfg.CreateMap<Participante, CrachaModel>()
-                    .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""));
+                    .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""))
+                         .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Titulo) : ""));
                 cfg.CreateMap<Participante, CrachaCasalModel>()
                   .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
                   .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Dupla)))
@@ -76,7 +79,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.DataCasamento.HasValue ? x.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                     .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Quartos.Any() ? x.Quartos.Select(y => y.Quarto).First().Titulo : ""))
-                    .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Cor ?? x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
+                    .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
                     .ForMember(dest => dest.Motorista, opt => opt.MapFrom(x => x.Caronas.Any() ? x.Caronas.LastOrDefault().Carona.Motorista.Nome : ""))
                     .ForMember(dest => dest.Padrinho, opt => opt.MapFrom(x => x.Padrinho.EquipanteEvento.Equipante.Nome ?? ""))
                     .ForMember(dest => dest.Situacao, opt => opt.MapFrom(x => x.Status.GetDescription()));
@@ -89,7 +92,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                     .ForMember(dest => dest.DataCasamento, opt => opt.MapFrom(x => x.DataCasamento.HasValue ? x.DataCasamento.Value.ToString("dd/MM/yyyy") : ""))
                     .ForMember(dest => dest.Padrinho, opt => opt.MapFrom(x => x.PadrinhoId.HasValue ? x.Padrinho.EquipanteEvento.Equipante.Nome : null))
-                    .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Cor ?? x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
+                    .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
                     .ForMember(dest => dest.Etiquetas, opt => opt.MapFrom(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta)))
                     .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Quartos.Any() ? x.Quartos.Select(y => y.Quarto).First().Titulo : ""))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()));

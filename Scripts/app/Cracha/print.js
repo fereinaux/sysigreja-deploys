@@ -90,6 +90,7 @@ async function renderCracha(data) {
     $('span.nome-cracha').text(`${splittedNome[0]} ${splittedNome[splittedNome.length - 1]}`)
     $('span.apelido-cracha').text(data.Apelido)
     $('span.equipe-cracha').text(data.Equipe || '')
+    $('span.circulo-cracha').text(data.Circulo || '')
     $('#cracha').toggleClass('moldura-modal')
     const canvas = await html2canvas($("#cracha")[0])
     var imgData = canvas.toDataURL(
@@ -100,6 +101,7 @@ async function renderCracha(data) {
     $('span.nome-cracha').text('{Nome}')
     $('span.apelido-cracha').text('{Apelido}')
     $('span.equipe-cracha').text('{Equipe}')
+    $('span.circulo-cracha').text('{Circulo}')
     if (atualCol < modelo.Colunas - 1) {
         atualCol++
     } else {

@@ -258,14 +258,18 @@
             });
 
             // Get indexed db and delete indexed db
-            const dbs = await window.indexedDB.databases()
+            window.indexedDB.databases().then(dbs => {
+
             dbs.forEach(db => { window.indexedDB.deleteDatabase(db.name) })
+            })
 
             // clear localStorage
             window.localStorage.clear();
 
             // clear sessionStorage
             window.sessionStorage.clear();
+
+            window.location.reload()
         }
 
         $(document).ready(function () {

@@ -499,9 +499,13 @@
                        type: "GET",
                        contentType: 'application/json; charset=utf-8',
                        success: function (data) {
+                           $(`#participante-logradouro`).prop("disabled", data.logradouro);
                            $(`#participante-logradouro`).val(data.logradouro)
+                           $(`#participante-bairro`).prop("disabled", data.bairro);
                            $(`#participante-bairro`).val(data.bairro)
+                           $(`#participante-cidade`).prop("disabled", data.localidade);
                            $(`#participante-cidade`).val(data.localidade)
+                           $(`#participante-estado`).prop("disabled", data.uf);
                            $(`#participante-estado`).val(data.uf)
                            $(`#participante-latitude`).val(data.lat)
                            $(`#participante-longitude`).val(data.lon)

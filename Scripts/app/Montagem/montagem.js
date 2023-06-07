@@ -95,7 +95,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
     fixedHeader: true,
     filter: true,
     orderMulti: false,
-    responsive: false,
+    responsive: true,
     stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
     destroy: true,
     colReorder: {

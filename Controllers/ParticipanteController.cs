@@ -449,7 +449,7 @@ namespace SysIgreja.Controllers
                 }
             }
 
-            result.OrderBy(x => x.Nome);
+            result = result.OrderBy(x => x.Nome);
 
             var json = Json(new
             {

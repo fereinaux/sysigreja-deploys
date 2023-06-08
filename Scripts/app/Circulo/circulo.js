@@ -212,7 +212,7 @@ function DeleteCirculo(id) {
 
 
 function EsvaziarCirculo(id) {
-    ConfirmMessage(`Essa ação ira esvaziar o(a) ${$('.title-circulo').text()}, você confirma a operação?`).then((result) => {
+    ConfirmMessage(`Essa ação ira esvaziar o(a) ${$('.title-circulo').first().text()}, você confirma a operação?`).then((result) => {
         if (result) {
             $.ajax({
                 url: "/Circulo/EsvaziarCirculo/",
@@ -235,7 +235,7 @@ function EsvaziarCirculo(id) {
 
 
 function EsvaziarTodosCirculo() {
-    ConfirmMessage(`Essa ação ira esvaziar TODOS(AS) os(as) ${$('.title-circulo').text()}, você confirma a operação?`).then((result) => {
+    ConfirmMessage(`Essa ação ira esvaziar TODOS(AS) os(as) ${$('.title-circulo').first().text()}, você confirma a operação?`).then((result) => {
         if (result) {
             $.ajax({
                 url: "/Circulo/EsvaziarTodosCirculo/",

@@ -789,3 +789,24 @@ function GetEquipante(id) {
     }
 
 }
+
+function ToggleSexo(id) {
+    ConfirmMessage("Confirma a mudança de gênero?").then((result) => {
+        if (result) {
+            $.ajax({
+                url: "/Equipante/ToggleSexo/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: id
+                    }),
+                success: function () {
+                    SuccessMesageOperation();
+                    CarregarTabelaEquipante();
+                }
+            });
+        }
+    });
+}

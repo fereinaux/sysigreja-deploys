@@ -699,8 +699,7 @@ ${campos.find(x => x.Campo == 'Data Nascimento') ? `<div class="col-sm-12 p-w-md
                                                     <h5>Data de Nascimento</h5>
 
                                                     <input type="text" class="form-control full-date required" id="equipante-data-nascimento" data-field="Data de Nascimento" />
-                                                </div>` : ''}
-${campos.find(x => x.Campo == 'Gênero') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+                                                </div><div class="col-sm-12 p-w-md m-t-md text-center">
                                                     <h5>Sexo</h5>
 
                                                     <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" checked="" value="1" name="equipante-sexo"> <i></i> Masculino </label></div>

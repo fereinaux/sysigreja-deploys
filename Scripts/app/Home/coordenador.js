@@ -55,7 +55,7 @@ function CarregarTela() {
             EquipeId = data.result.EquipeEnum
             $('.equipe').text(data.result.Equipe)
             $('#btn-excel').prop('disabled', false)
-            $('#img-logo').attr('src', data.result.Configuracao.Logo ? `data:image/png;base64,${data.result.Configuracao.Logo}` : '/Images/logo-iecb.png')
+            $('#img-logo').attr('src', data.result.Configuracao.Logo ? `data:image/png;base64,${data.result.Configuracao.Logo}` : logoLogin)
             $('.qtd-membros').text(data.result.QtdMembros)
             $('.navy-bg').css('background-color', data.result.Configuracao.Cor)
             $('.membros').html(`${data.result.Membros.map(membro => `

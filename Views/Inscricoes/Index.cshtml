@@ -25,7 +25,16 @@
           href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
           type="text/css" />
 
-    <link rel="icon" type="image/png" sizes="16x16" href="~/Images/logo-iecb.png" />
+    @if (ViewBag.Configuracao.LogoId != null)
+    {
+
+        <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+    }
+    else
+    {
+        <link rel="icon" type="image/png" sizes="16x16" href="~/Images/logo-iecb.png" />
+
+    }
     @Styles.Render("~/Content/css")
     <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
     <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
@@ -82,7 +91,7 @@
                 text-decoration: none;
             }
 
-/*        .overlay {
+                /*        .overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -93,23 +102,23 @@
             border-radius: 12px;
         }*/
 
-        a:hover .overlay {
-            border-bottom-left-radius: 0px !important;
-            border-bottom-right-radius: 0px !important;
-            transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
-        }
+                a:hover .overlay {
+                    border-bottom-left-radius: 0px !important;
+                    border-bottom-right-radius: 0px !important;
+                    transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
+                }
 
-        a:hover .bloco {
-            border-bottom-left-radius: 0px !important;
-            border-bottom-right-radius: 0px !important;
-            transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
-        }
+                a:hover .bloco {
+                    border-bottom-left-radius: 0px !important;
+                    border-bottom-right-radius: 0px !important;
+                    transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
+                }
 
-        a:hover .card-body {
-            -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
-            box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
-            transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
-        }
+                a:hover .card-body {
+                    -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+                    box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+                    transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
+                }
 
         .img-wrapper img:hover {
             transform: scale(1.15);
@@ -322,12 +331,12 @@
             }
 
             .bloco.bloco-normal {
-                width: 100% !important ;
+                width: 100% !important;
                 height: 140px !important;
             }
 
             .a-normal {
-                flex-direction:column;
+                flex-direction: column;
                 height: 230px !important;
             }
 
@@ -336,147 +345,145 @@
             }
         }
 
-            .fc-event-title {
-                color: #fff !important;
-            }
+        .fc-event-title {
+            color: #fff !important;
+        }
 
-            .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
-                position: absolute !important;
-                top: 0
-            }
+        .fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+            position: absolute !important;
+            top: 0
+        }
 
-            .fc-button {
-                padding: 0 6px !important;
-            }
+        .fc-button {
+            padding: 0 6px !important;
+        }
 
 
 
-            .fc .fc-list-event:hover td {
-                background-color: transparent;
-                border-color: transparent;
-            }
+        .fc .fc-list-event:hover td {
+            background-color: transparent;
+            border-color: transparent;
+        }
 
-            .fc-button-primary {
+        .fc-button-primary {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            color: gray !important;
+        }
+
+            .fc-button-primary:hover {
                 background-color: transparent !important;
                 border-color: transparent !important;
-                color: gray !important;
             }
 
-                .fc-button-primary:hover {
-                    background-color: transparent !important;
-                    border-color: transparent !important;
-                }
+        .fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
+            box-shadow: none;
+        }
 
-            .fc .fc-button-primary:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus, .fc .fc-button-primary:not(:disabled):active:focus {
-                box-shadow: none;
-            }
+        .fc-today-button {
+            display: none !important;
+        }
 
-            .fc-today-button {
-                display: none !important;
-            }
+        .fc .fc-list-day-cushion, .fc .fc-list-table td {
+            color: gray;
+        }
 
-            .fc .fc-list-day-cushion, .fc .fc-list-table td {
-                color: gray;
-            }
+        .fc .fc-list-table td {
+            padding: 0;
+        }
 
-            .fc .fc-list-table td {
-                padding: 0;
-            }
+        .img-calendar {
+            width: 50px;
+            position: absolute;
+            z-index: 99;
+            left: 52.5px;
+            transform: translate(-25px,0);
+        }
 
-            .img-calendar {
-                width: 50px;
-                position: absolute;
-                z-index: 99;
-                left: 52.5px;
-                transform: translate(-25px,0);
-            }
+        .overlay-calendar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background-color: #000;
+            height: 60px;
+            width: 105px;
+            opacity: 0.4;
+        }
 
-            .overlay-calendar {
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                background-color: #000;
-                height: 60px;
-                width: 105px;
-                opacity: 0.4;
-            }
+        .bg-calendar {
+            height: 60px;
+            width: 105px;
+        }
 
-            .bg-calendar {
-                height: 60px;
-                width: 105px;
-            }
+        .div-calendar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 60px
+        }
 
-            .div-calendar {
-                position: relative;
-                display: flex;
-                align-items: center;
-                height: 60px
-            }
+        .span-calendar {
+        }
 
-            .span-calendar {
-            }
+        .span-container-calendar {
+            padding-left: 20px;
+            width: calc(100% - 105px);
+        }
 
-            .span-container-calendar {
-                padding-left: 20px;
-                width: calc(100% - 105px);
-            }
-
-            .fc-list-event-graphic, .fc-list-event-time {
-                display: none;
-            }
+        .fc-list-event-graphic, .fc-list-event-time {
+            display: none;
+        }
 
 
-            .fc-list-day-text, .fc-list-day-side-text {
-                color: #444546 !important
-            }
+        .fc-list-day-text, .fc-list-day-side-text {
+            color: #444546 !important
+        }
 
-                .fc-list-day-text:hover, .fc-list-day-side-text:hover {
-                    color: #1f2020 !important
-                }
-
-
-            .fc .fc-daygrid-day-number {
-                color: white;
-                z-index: 99;
-            }
-
-            #calendar {
-                top: 40px;
-                position: absolute;
-                z-index: 9999999;
-                width: 400px;
-                height: 400px;
-                background: #fff;
-                border-radius: 16px;
-                padding-top: 1.5em;
-                box-shadow: rgb(25 31 40 / 59%) 0px 6px 24px 0px;
-            }
-
-            .fc-list-empty {
-                background-color: transparent !important;
-            }
-
-            .fc-toolbar-chunk {
-                padding-left: 10px
-            }
-
-            .fc .fc-toolbar-title {
-                font-size: 1.25em;
-            }
-
-            .fc .fc-view-harness {
-                background-color: #fff;
-                border-bottom-left-radius: 16px;
-                border-bottom-right-radius: 16px;
-            }
-
-            .fc .fc-view-harness-active > .fc-view {
-                border: none;
-                height: 400px;
+            .fc-list-day-text:hover, .fc-list-day-side-text:hover {
+                color: #1f2020 !important
             }
 
 
+        .fc .fc-daygrid-day-number {
+            color: white;
+            z-index: 99;
+        }
+
+        #calendar {
+            top: 40px;
+            position: absolute;
+            z-index: 9999999;
+            width: 400px;
+            height: 400px;
+            background: #fff;
+            border-radius: 16px;
+            padding-top: 1.5em;
+            box-shadow: rgb(25 31 40 / 59%) 0px 6px 24px 0px;
+        }
+
+        .fc-list-empty {
+            background-color: transparent !important;
+        }
+
+        .fc-toolbar-chunk {
+            padding-left: 10px
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.25em;
+        }
+
+        .fc .fc-view-harness {
+            background-color: #fff;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        .fc .fc-view-harness-active > .fc-view {
+            border: none;
+            height: 400px;
+        }
     </style>
 </head>
 <body>

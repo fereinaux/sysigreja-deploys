@@ -154,7 +154,7 @@
 <script>
     let corBotao = '@ViewBag.Configuracao.CorBotao'
         $(window).on('load', function () {
-            var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" : '/Images/logo-iecb.png'
+            var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" : logoLogin
 
             $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
 

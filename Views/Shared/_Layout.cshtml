@@ -225,6 +225,21 @@
 
         })
 
+        function loadLogin() {
+
+            $.ajax({
+                url: "/Configuracao/GetLogin/",
+                datatype: "json",
+                type: "GET",
+                contentType: `application/json; charset=utf-8`,
+                success: function (data) {
+                    login = data.Login
+                    logoLogin = `data:image/png;base64,${login.Logo}`
+                }
+            });
+        }
+
+
         $("*[id*='configId']").change(function () {
             $.ajax({
                 url: "/Configuracao/GetConfiguracaoResumido/",
@@ -304,8 +319,8 @@
                 });
             } else {
                 $('title').text("SysIgreja")
-                $('link[rel="icon"]').attr('href', `../Images/logo-iecb.png`)
-                $('#home-button-logo img').attr('src', `../Images/logo-iecb.png`)
+                $('link[rel="icon"]').attr('href', logoLogin)
+                $('#home-button-logo img').attr('src', logoLogin)
                 $('#home-button-logo').css('display', 'block')
 
                 $('body').on('DOMNodeInserted', '.swal-title', function () {

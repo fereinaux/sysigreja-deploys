@@ -11,6 +11,7 @@ async function commit() {
   await axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=b2aa0709-303a-b350-586e-8910385f00a7')
   await axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=328c45f2-e65f-aea8-a8fd-baeacf358737')
   await axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=a3c1cf1d-51bc-b3b4-0849-9d63ad16798c')
+  await axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=7ae49a39-7ada-3a04-a7e5-c42cb79c3708')
   console.log('webhook done')
 }
 

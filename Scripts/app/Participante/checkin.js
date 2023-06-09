@@ -694,6 +694,9 @@ function Checkin() {
                     GetEquipante()
                 }
                 GetTotaisCheckin()
+                $('html, body').animate({
+                    scrollTop: $('#reader').offset().top
+                }, 500);
 
 
             }

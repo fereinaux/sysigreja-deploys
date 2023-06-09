@@ -238,6 +238,7 @@
 
                     if (!config.LogoId) {
                         $('#home-button-logo img').attr('src', `data:image/png;base64,${login.Logo}`)
+                        $('link[rel="icon"]').attr('href', `data:image/png;base64,${login.Logo}`)
                     }
                 }
             });

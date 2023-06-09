@@ -11,6 +11,10 @@
         <div class="col-sm-6">
             <div class="moldura-modal p-h-xs m-b-md">
                 <div class="row m-sm">
+                    <div style="display:flex; width: 100%;margin-bottom:20px">
+
+                        <button type="button" style="margin:auto" class="btn btn-white" onclick="startCam()"><i style="font-size:80px" class="fas fa-qrcode" aria-hidden="true" title="QR Code"></i></button>
+                    </div>
                     <div id="reader" width="100%"></div>
 
                     <div class="col-sm-3 text-right">
@@ -272,23 +276,38 @@
 
     <script src="~/Scripts/app/Participante/checkin.js?@ViewBag.Numero"></script>
     <script src="~/Scripts/app/Cracha/print.js?@ViewBag.Numero"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript" > </script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <script>
-        function onScanSuccess(decodedText, decodedResult) {
 
-            html5QrcodeScanner.stop().then((ignore) => {
+
+        const html5QrCode = new Html5Qrcode("reader");
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            html5QrCode.stop().then((ignore) => {
                 console.log(decodedText);
+                {
+                    arrValue = decodedText.split('|')
+                    console.log(arrValue);
+                    if ($("#eventoid").val() == arrValue[0]) {
+                        $("#participantes").val(arrValue[1]).trigger("chosen:updated");
+                        GetParticipante();
+                    } else {
+                        $("#eventoid").val(arrValue[0])
+                        GetParticipantes(arrValue[1])
+                    }
+              
+                }
             }).catch((err) => {
                 // Stop failed, handle it.
             });
+        };
+        const configCam = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+        // If you want to prefer back camera
+
+        function startCam() {
+
+            html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback);
         }
-
-
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader",
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-  /* verbose= */ false);
-        html5QrcodeScanner.render(onScanSuccess, function () { });
     </script>
 }

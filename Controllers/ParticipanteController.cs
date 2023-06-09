@@ -443,6 +443,11 @@ namespace SysIgreja.Controllers
                     result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
                 }
 
+                if (model.QuartoId != null)
+                {
+                    result = result.Where(x => (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))));
+                }
+
                 if (model.search != null && model.search.value != null)
                 {
                     result = result.Where(x => (x.Nome.Contains(model.search.value)));
@@ -521,6 +526,11 @@ namespace SysIgreja.Controllers
             if (model.CirculoId != null)
             {
                 queryCasais = queryCasais.Where(x => (x.Conjuge.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))) || (x.Nome.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+            }
+
+            if (model.QuartoId != null)
+            {
+                queryCasais = queryCasais.Where(x => (x.Conjuge.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))) || (x.Nome.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))));
             }
 
             if (model.search != null && model.search.value != null)
@@ -617,6 +627,12 @@ namespace SysIgreja.Controllers
             if (model.CirculoId != null)
             {
                 result = result.Where(x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+                filteredResultsCount = result.Count();
+            }
+
+            if (model.QuartoId != null)
+            {
+                result = result.Where(x => (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))));
                 filteredResultsCount = result.Count();
             }
 
@@ -746,6 +762,14 @@ namespace SysIgreja.Controllers
                 queryCasais = queryCasais.Where(x => (x.Homem?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId))) ?? false || (x.Mulher?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId)) ?? false));
                 filteredResultsCount = queryCasais.Count();
             }
+
+
+            if (model.QuartoId != null)
+            {
+                queryCasais = queryCasais.Where(x => (x.Homem?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId))) ?? false || (x.Mulher?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId)) ?? false));
+                filteredResultsCount = queryCasais.Count();
+            }
+
 
             if (model.search != null && model.search.value != null)
             {

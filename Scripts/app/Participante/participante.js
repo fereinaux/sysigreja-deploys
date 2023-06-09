@@ -35,6 +35,20 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
         });
 
         $.ajax({
+            url: '/Quarto/GetQuartos',
+            data: { eventoId: $("#participante-eventoid").val() },
+            datatype: "json",
+            type: "POST",
+            success: (result) => {
+                eventoId = $("#participante-eventoid").val()
+                $("#participante-quartoid").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+`)
+                $("#participante-quartoid").select2()
+            }
+        });
+
+        $.ajax({
             url: '/Etiqueta/GetEtiquetasByEventoId',
             data: { eventoId: $("#participante-eventoid").val() },
             datatype: "json",
@@ -1743,6 +1757,7 @@ function getFiltros(Foto) {
         Status: $("#participante-status").val(),
         Etiquetas: $("#participante-marcadores").val(),
         NaoEtiquetas: $("#participante-nao-marcadores").val(),
+        QuartoId: $("#participante-quartoid").val(),
         Foto: Foto
     }
 }

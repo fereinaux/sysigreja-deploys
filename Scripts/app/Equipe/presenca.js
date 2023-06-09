@@ -31,6 +31,26 @@
                     }
                 },
                 {
+                    extend: 'pdf', orientation: 'landscape', exportOptions: {
+                        columns: isMobile ? ':not(.noExport), .export' : ':not(.noExport):visible, .export', orthogonal: 'export'
+                    }, customize: function (doc) {
+
+                        doc.content.splice(0, 1, {
+                            columns: [
+                                {
+                                    margin: [5, 5, 25, 15],
+                                    alignment: 'left',
+                                    image: `data:image/png;base64, ${config.LogoRelatorio}`,
+                                    width: 70
+                                },
+                                { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
+
+                            ]
+
+                        });
+                    }
+                },
+                {
 
                     extend: 'excelHtml5', title: "Ata de Presença", exportOptions: {
                         columns: [0, 1, 2]
@@ -48,6 +68,9 @@
                 {
                     data: "Id", name: "Id", orderable: false, width: "15%",
                     "render": function (data, type, row) {
+                        if (type === 'export') {
+                            return row.Presenca ? "SIM" : "NÃO"
+                        }
                         return `${GetCheckBox(data, row.Presenca)}`;
                     }
                 }

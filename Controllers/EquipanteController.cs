@@ -959,9 +959,17 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult ToggleCheckin(int Id, int eventoid)
+        public ActionResult ToggleCheckin(int Id)
         {
             equipantesBusiness.ToggleCheckin(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult ToggleStatusMontagem(int Id, int EventoId)
+        {
+            equipantesBusiness.ToggleStatusMontagem(Id, EventoId);
 
             return new HttpStatusCodeResult(200);
         }

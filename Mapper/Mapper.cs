@@ -22,6 +22,7 @@ namespace SysIgreja.Controllers
         public string Nome { get; set; }
         public string Apelido { get; set; }
         public string Equipe { get; set; }
+        public string Quarto { get; set; }
         public string Foto { get; set; }
         public string Circulo { get; set; }
     }
@@ -56,7 +57,8 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
                 cfg.CreateMap<Participante, CrachaModel>()
                     .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""))
-                         .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Titulo) : ""));
+                         .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
+                            .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Quartos.Any() ? x.Quartos.Select(y => y.Quarto).First().Titulo : ""));
                 cfg.CreateMap<Participante, CrachaCasalModel>()
                   .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
                   .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Dupla)))

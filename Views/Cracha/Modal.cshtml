@@ -200,7 +200,7 @@
                                         <input type="color" onchange="renderCracha()" style="padding: 0; flex: 1;" class="form-control" id="font-color" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#FFFFFF" data-field="Cor">
                                     </div>
 
-                                    <h5 class=" m-t-md title-circulo"></h5>
+                                    <h5 class=" m-t-md"></h5>
                                     <div class="circulo-font" style=" display: flex;flex-wrap:wrap; background: #d7d8d9; border-radius: 4px; padding: 5px;">
                                         <div class="font-picker-div ">
                                             <input type="text" id="font-picker" onchange="renderCracha()" value="" />
@@ -236,6 +236,44 @@
                                         <input type="color" onchange="renderCracha()" style="padding: 0; flex: 1;" class="form-control" id="font-color" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#FFFFFF" data-field="Cor">
                                     </div>
 
+                                    <h5 class=" m-t-md">Quarto</h5>
+                                    <div class="quarto-font" style=" display: flex;flex-wrap:wrap; background: #d7d8d9; border-radius: 4px; padding: 5px;">
+                                        <div class="font-picker-div ">
+                                            <input type="text" id="font-picker" onchange="renderCracha()" value="" />
+                                        </div>
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-height"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-size" style="width:80px;" value="20" />
+                                        <div class="moldura-modal " style="height: 35px !important; padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-text-width"></i>
+                                        </div>
+                                        <input class="form-control" type="number" onchange="renderCracha()" id="font-padding" style="width:80px;" value="0" />
+                                        <div class="line-break"></div>
+                                        <div class="moldura-modal pointer" onclick="Align('left','quarto')" style="padding:8px">
+                                            <i class="fas fa-align-left active"></i>
+
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('center','quarto')" style="padding:8px">
+
+                                            <i class="fas fa-align-center"></i>
+                                        </div>
+                                        <div class="moldura-modal pointer" onclick="Align('right','quarto')" style="padding:8px">
+
+                                            <i class="fas fa-align-right"></i>
+                                        </div>
+
+                                        <div class="moldura-modal " style="padding: 8px; margin-left: 5px">
+
+                                            <i class="fas fa-palette"></i>
+                                        </div>
+                                        <input type="color" onchange="renderCracha()" style="padding: 0; flex: 1;" class="form-control" id="font-color" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#FFFFFF" data-field="Cor">
+                                    </div>
+
+
+
                                 </div>
 
 
@@ -249,7 +287,8 @@
                                 <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
                                 <span style="display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
                                 <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>
-                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Circulo}</span>
+                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="circulo-cracha text-cracha">{Circulo}</span>
+                                <span style="display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="quarto-cracha text-cracha">{Quarto}</span>
                             </div>
                         </div>
                     </div>

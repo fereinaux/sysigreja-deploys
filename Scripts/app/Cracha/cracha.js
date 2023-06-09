@@ -80,6 +80,8 @@ function GetCracha(id) {
                     .val(cracha.Equipe.Family).trigger('change')
                 $('.circulo-font #font-picker')
                     .val(cracha.Circulo.Family).trigger('change')
+                $('.quarto-font #font-picker')
+                    .val(cracha.Quarto.Family).trigger('change')
                 $('.apelido-font #font-picker')
                     .val(cracha.Apelido.Family).trigger('change')
 
@@ -99,6 +101,10 @@ function GetCracha(id) {
                 $('.circulo-font #font-padding').val(cracha.Circulo.Margin)
                 $('.circulo-font #font-color').val(cracha.Circulo.Color)
                 Align(cracha.Circulo.Align, 'circulo')
+                $('.quarto-font #font-size').val(cracha.Quarto.Size)
+                $('.quarto-font #font-padding').val(cracha.Quarto.Margin)
+                $('.quarto-font #font-color').val(cracha.Quarto.Color)
+                Align(cracha.Quarto.Align, 'quarto')
                 $('#cracha').html(cracha.Conteudo)
                 arquivos = $('.arquivos-cracha').length + 1
                 renderCracha()
@@ -126,6 +132,8 @@ function GetCracha(id) {
         $('.circulo-font #font-picker')
             .val('Roboto:400').trigger('change')
 
+        $('.quarto-font #font-picker')
+            .val('Roboto:400').trigger('change')
         $('.apelido-font #font-size').val(35)
         $('.apelido-font #font-padding').val(5)
         $('.apelido-font #font-color').val('#000000')
@@ -142,11 +150,16 @@ function GetCracha(id) {
         $('.circulo-font #font-padding').val(5)
         $('.circulo-font #font-color').val('#000000')
         Align('left', 'circulo')
+        $('.quarto-font #font-size').val(15)
+        $('.quarto-font #font-padding').val(5)
+        $('.quarto-font #font-color').val('#000000')
+        Align('left', 'quarto')
         $('#cracha').html(`<img src="./Images/profile.jpg" class="background" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0" />
                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
                                 <span style="white-space:normal;display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>
-                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="circulo-cracha text-cracha">{Circulo}</span>`)
+                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="circulo-cracha text-cracha">{Circulo}</span>
+                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="quarto-cracha text-cracha">{Quarto}</span>`)
         renderCracha()
         dragResize()
     }
@@ -241,6 +254,13 @@ function PostCracha() {
                         Color: $('.circulo-font #font-color').val(),
                         Align: $('.circulo-font .active').attr('class').split(/\s+/)[1].split('-')[2],
                         Margin: parseFloat($('.circulo-font #font-padding').val()),
+                    },
+                    Quarto: {
+                        Family: $('.quarto-font #font-picker').val(),
+                        Size: parseFloat($('.quarto-font #font-size').val()),
+                        Color: $('.quarto-font #font-color').val(),
+                        Align: $('.quarto-font .active').attr('class').split(/\s+/)[1].split('-')[2],
+                        Margin: parseFloat($('.quarto-font #font-padding').val()),
                     }
                 }),
             success: function () {
@@ -274,6 +294,7 @@ function print() {
     $('span.apelido-cracha').text('Renô')
     $('span.equipe-cracha').text('Secretaria')
     $('span.circulo-cracha').text('Vermelho')
+    $('span.quarto-cracha').text('Quarto A1')
     $('#cracha').toggleClass('moldura-modal')
     html2canvas($("#cracha")[0]).then(canvas => {
         var imgData = canvas.toDataURL(
@@ -291,6 +312,7 @@ function print() {
         $('span.apelido-cracha').text('{Apelido}')
         $('span.equipe-cracha').text('{Equipe}')
         $('span.circulo-cracha').text('{Circulo}')
+        $('span.quarto-cracha').text('{Quarto}')
     });
 }
 
@@ -372,6 +394,12 @@ function renderCracha() {
     $('span.circulo-cracha').css('padding-right', `${$('.circulo-font #font-padding').val()}px`)
 
 
+    $('span.quarto-cracha').css('padding-left', `${$('.quarto-font #font-padding').val()}px`)
+    $('span.quarto-cracha').css('font-size', `${$('.quarto-font #font-size').val()}px`)
+    $('span.quarto-cracha').css('color', `${$('.quarto-font #font-color').val()}`)
+    $('span.quarto-cracha').css('padding-right', `${$('.quarto-font #font-padding').val()}px`)
+
+
 }
 
 
@@ -392,7 +420,12 @@ $(document).ready(function () {
     $('.circulo-font #font-picker')
         .fontpicker({ parentElement: '#form-cracha' }).on('change', function () {
             $('.circulo-cracha').css(getCss(this.value));
-        });
+        })
+
+    $('.quarto-font #font-picker')
+        .fontpicker({ parentElement: '#form-cracha' }).on('change', function () {
+            $('.quarto-cracha').css(getCss(this.value));
+        });;
     $('input[type=radio][id=background]').on('ifChecked', function (event) {
 
         if (this.value == 'foto') {

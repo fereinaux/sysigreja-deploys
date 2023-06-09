@@ -235,6 +235,10 @@
                 success: function (data) {
                     login = data.Login
                     logoLogin = `data:image/png;base64,${login.Logo}`
+
+                    if (!config.LogoId) {
+                        $('#home-button-logo img').attr('src', `data:image/png;base64,${login.Logo}`)
+                    }
                 }
             });
         }

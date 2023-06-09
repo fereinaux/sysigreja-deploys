@@ -314,11 +314,13 @@
 
         function startCam() {
 
-            html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback);
-       
+            html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback).then(() => {
                 $('html, body').animate({
                     scrollTop: $('#reader').offset().top
                 }, 500);
+            });
+       
+             
       
         }
     </script>

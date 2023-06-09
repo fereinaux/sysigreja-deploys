@@ -34,6 +34,7 @@ namespace SysIgreja.Controllers
         public string Apelido { get; set; }
         public string Equipe { get; set; }
         public string Foto { get; set; }
+        public string Quarto { get; set; }
         public string Circulo { get; set; }
     }
     public class MapperRealidade
@@ -62,6 +63,8 @@ namespace SysIgreja.Controllers
                 cfg.CreateMap<Participante, CrachaCasalModel>()
                   .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
                   .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Dupla)))
+                    .ForMember(dest => dest.Circulo, opt => opt.MapFrom(x => x.Circulos.Any() ? (x.Circulos.LastOrDefault().Circulo.Titulo) : ""))
+                            .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Quartos.Any() ? x.Quartos.Select(y => y.Quarto).First().Titulo : ""))
                    .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""));
                 cfg.CreateMap<Equipante, PostEquipanteModel>()
                     .ForMember(dest => dest.EtiquetasList, opt => opt.MapFrom(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta)))

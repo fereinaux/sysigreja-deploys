@@ -72,6 +72,7 @@ function GetCracha(id) {
                 $('#largura').val(cracha.Largura)
                 $('#altura').val(cracha.Altura)
                 $('#paper').val(cracha.Papel)
+                $(`input[type=radio][id=nomecompleto][value=${cracha.NomeCompleto}]`).iCheck('check');
                 $(`input[type=radio][id=orientation][value=${cracha.Orientacao}]`).iCheck('check');
                 $(`input[type=radio][id=background][value=${cracha.Background}]`).iCheck('check');
                 $('.nome-font #font-picker')
@@ -121,6 +122,7 @@ function GetCracha(id) {
         $('#largura').val(8)
         $('#altura').val(12)
         $('#paper').val('a3')
+        $(`input[type=radio][id=nomecompleto][value=false]`).iCheck('check');
         $(`input[type=radio][id=orientation][value=l]`).iCheck('check');
         $(`input[type=radio][id=background][value=foto]`).iCheck('check');
         $('.nome-font #font-picker')
@@ -231,28 +233,28 @@ function PostCracha() {
                         Family: $('.nome-font #font-picker').val(),
                         Size: parseFloat($('.nome-font #font-size').val()),
                         Color: $('.nome-font #font-color').val(),
-                        Align: $('.nome-font .active').attr('class').split(/\s+/)[1].split('-')[2],
+                        Align: $('.nome-font .active').attr('class')?.split(/\s+/)[1]?.split('-')[2],
                         Margin: parseFloat($('.nome-font #font-padding').val()),
                     },
                     Apelido: {
                         Family: $('.apelido-font #font-picker').val(),
                         Size: parseFloat($('.apelido-font #font-size').val()),
                         Color: $('.apelido-font #font-color').val(),
-                        Align: $('.apelido-font .active').attr('class').split(/\s+/)[1].split('-')[2],
+                        Align: $('.apelido-font .active').attr('class')?.split(/\s+/)[1]?.split('-')[2],
                         Margin: parseFloat($('.apelido-font #font-padding').val()),
                     },
                     Equipe: {
                         Family: $('.equipe-font #font-picker').val(),
                         Size: parseFloat($('.equipe-font #font-size').val()),
                         Color: $('.equipe-font #font-color').val(),
-                        Align: $('.equipe-font .active').attr('class').split(/\s+/)[1].split('-')[2],
+                        Align: $('.equipe-font .active').attr('class')?.split(/\s+/)[1]?.split('-')[2],
                         Margin: parseFloat($('.equipe-font #font-padding').val()),
                     },
                     Circulo: {
                         Family: $('.circulo-font #font-picker').val(),
                         Size: parseFloat($('.circulo-font #font-size').val()),
                         Color: $('.circulo-font #font-color').val(),
-                        Align: $('.circulo-font .active').attr('class').split(/\s+/)[1].split('-')[2],
+                        Align: $('.circulo-font .active').attr('class')?.split(/\s+/)[1]?.split('-')[2],
                         Margin: parseFloat($('.circulo-font #font-padding').val()),
                     },
                     Quarto: {

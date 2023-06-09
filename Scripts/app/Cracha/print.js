@@ -46,7 +46,7 @@ async function getModelo() {
 `
     }
 
-    $('.preview-layout').css('display','flex').html(`
+    $('.preview-layout').css('display', 'flex').html(`
         ${linhas}
 
 `)
@@ -57,7 +57,7 @@ async function printSome(evt) {
     print($(evt).parent().data('row'), $(evt).data('col'))
 }
 
-async function print(linha,col) {
+async function print(linha, col) {
 
     const results = await loadCrachaImprimir(modelo.Background == 'foto')
     $("#container-cracha").height(modelo.Altura * razao)
@@ -87,7 +87,7 @@ async function renderCracha(data) {
     await $('img.background').attr('src', `data:image/png;base64,${data.Foto}`)
     $('#container-cracha').css('display', 'block')
     var splittedNome = data.Nome.split(' ');
-    $('span.nome-cracha').text(`${splittedNome[0]} ${splittedNome[splittedNome.length - 1]}`)
+    $('span.nome-cracha').text(data.NomeCompleto ? data.Nome : `${splittedNome[0]} ${splittedNome[splittedNome.length - 1]}`)
     $('span.apelido-cracha').text(data.Apelido)
     $('span.equipe-cracha').text(data.Equipe || '')
     $('span.circulo-cracha').text(data.Circulo || '')

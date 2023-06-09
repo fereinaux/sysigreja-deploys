@@ -11,6 +11,8 @@
         <div class="col-sm-6">
             <div class="moldura-modal p-h-xs m-b-md">
                 <div class="row m-sm">
+                    <div id="reader" width="100%"></div>
+
                     <div class="col-sm-3 text-right">
                         <h4>Evento</h4>
                     </div>
@@ -171,12 +173,12 @@
                         <i class="fa fa-paste fa-3x"></i>
                         <h5 class="text-center equipe"></h5>
                     </div>
-                
+
                     <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
                         <i class="fas fa-laptop fa-3x"></i>
                         <h5 class="text-center padrinho">Padrinho</h5>
                     </div>
-                        <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
+                    <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
                         <i class="fas fa-car fa-3x"></i>
                         <h5 class="text-center motorista">Motorista</h5>
                     </div>
@@ -270,8 +272,23 @@
 
     <script src="~/Scripts/app/Participante/checkin.js?@ViewBag.Numero"></script>
     <script src="~/Scripts/app/Cracha/print.js?@ViewBag.Numero"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript" > </script>
 
     <script>
+        function onScanSuccess(decodedText, decodedResult) {
 
+            html5QrcodeScanner.stop().then((ignore) => {
+                console.log(decodedText);
+            }).catch((err) => {
+                // Stop failed, handle it.
+            });
+        }
+
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+  /* verbose= */ false);
+        html5QrcodeScanner.render(onScanSuccess, function () { });
     </script>
 }

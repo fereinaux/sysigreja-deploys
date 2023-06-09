@@ -91,7 +91,7 @@
 
             </div>
 
-            <div class="moldura-modal p-h-xs m-t-md m-b-md participante-info d-none">
+            <div id="info-geral" class="moldura-modal p-h-xs m-t-md m-b-md participante-info d-none">
                 <div class="row p-h-xs text-center">
                     <div class="col-xs-4 col-md-2 p-w-md text-center">
                         <i class="fa fa-info-circle fa-3x"></i>
@@ -315,6 +315,11 @@
         function startCam() {
 
             html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback);
+       
+                $('html, body').animate({
+                    scrollTop: $('#reader').offset().top
+                }, 500);
+      
         }
     </script>
 }

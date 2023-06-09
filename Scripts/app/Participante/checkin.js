@@ -340,6 +340,9 @@ function GetParticipante() {
                     $('.btn-checkin').removeClass('d-none');
                 }
 
+                $('html, body').animate({
+                    scrollTop: $('#info-geral').offset().top
+                }, 500);
             }
         });
     }

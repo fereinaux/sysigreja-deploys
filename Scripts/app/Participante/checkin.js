@@ -192,6 +192,8 @@ function NewParticipante() {
     GetParticipante();
 }
 
+checkin = false
+
 
 function GetParticipante() {
     AplicarCssPadrao($('input'));
@@ -340,9 +342,13 @@ function GetParticipante() {
                     $('.btn-checkin').removeClass('d-none');
                 }
 
+                if (!checkin) {
+
                 $('html, body').animate({
                     scrollTop: $('#info-geral').offset().top
                 }, 500);
+                    checkin = false
+                }
             }
         });
     }
@@ -674,6 +680,7 @@ function CarregarTabelaPagamentos(id) {
 }
 
 function Checkin() {
+    checkin = true
     $.ajax(
         {
             datatype: "json",
@@ -695,7 +702,7 @@ function Checkin() {
                 }
                 GetTotaisCheckin()
                 $('html, body').animate({
-                    scrollTop: $('#reader').offset().top
+                    scrollTop: $('#panel-reader').offset().top
                 }, 500);
 
 

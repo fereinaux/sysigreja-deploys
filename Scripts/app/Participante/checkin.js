@@ -18,7 +18,13 @@ function GetParticipantes(id) {
                 if (participante.Status != Cancelado)
                     $('#participantes').append($(`<option value="${participante.Id}">${participante.Nome}</option>`));
             });
-            $("#participantes").val(id > 0 ? id : "Pesquisar").trigger("chosen:updated");
+            $("#participantes").select2({
+                placeholder: "Pesquisar",
+                minimumInputLength: 3,
+                width: '100%',
+            })
+
+            $("#participantes").val(id > 0 ? id : "").trigger("change");
             GetParticipante();
         }
     });
@@ -36,7 +42,13 @@ function GetEquipantes(id) {
             result.data.forEach(function (equipante, index, array) {
                 $('#equipantes').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
             });
-            $("#equipantes").val(id > 0 ? id : "Pesquisar").trigger("chosen:updated");
+            $("#equipantes").select2({
+                placeholder: "Pesquisar",
+                minimumInputLength: 3,
+                width: '100%',
+            })
+
+            $("#equipantes").val(id > 0 ? id : "").trigger("change");
             GetEquipante();
         }
     });

@@ -87,7 +87,7 @@ async function renderCracha(data) {
     await $('img.background').attr('src', `data:image/png;base64,${data.Foto}`)
     $('#container-cracha').css('display', 'block')
     var splittedNome = data.Nome.split(' ');
-    $('span.nome-cracha').text(data.NomeCompleto ? data.Nome : `${splittedNome[0]} ${splittedNome[splittedNome.length - 1]}`)
+    $('span.nome-cracha').text(modelo.NomeCompleto ? data.Nome : `${splittedNome[0]} ${splittedNome[splittedNome.length - 1]}`)
     $('span.apelido-cracha').text(data.Apelido)
     $('span.equipe-cracha').text(data.Equipe || '')
     $('span.circulo-cracha').text(data.Circulo || '')

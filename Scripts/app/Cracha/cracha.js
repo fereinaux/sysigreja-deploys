@@ -262,7 +262,7 @@ function PostCracha() {
                         Family: $('.quarto-font #font-picker').val(),
                         Size: parseFloat($('.quarto-font #font-size').val()),
                         Color: $('.quarto-font #font-color').val(),
-                        Align: $('.quarto-font .active').attr('class').split(/\s+/)[1].split('-')[2],
+                        Align: $('.quarto-font .active').attr('class')?.split(/\s+/)[1]?.split('-')[2],
                         Margin: parseFloat($('.quarto-font #font-padding').val()),
                     }
                 }),

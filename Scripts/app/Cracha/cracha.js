@@ -227,6 +227,7 @@ function PostCracha() {
                     Orientacao: $('#orientation:checked').val(),
                     Papel: $('#paper').val(),
                     Background: $('#background:checked').val(),
+                    NomeCompleto: $('#nomecompleto:checked').val(),
                     Conteudo: $('#cracha').html(),
                     ConfiguracaoId: $('#cracha-configId').val(),
                     Nome: {

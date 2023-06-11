@@ -241,7 +241,9 @@ namespace SysIgreja.Controllers
                     Nome = !string.IsNullOrEmpty(x.Dupla) ? UtilServices.CapitalizarNome(x.Dupla) : (!string.IsNullOrEmpty(x.Homem?.Participante?.Nome) ? UtilServices.CapitalizarNome(x.Homem.Participante.Nome) : UtilServices.CapitalizarNome(x.Mulher.Participante.Nome)),
                     Titulo = x.Homem?.Circulo?.Titulo ?? x.Mulher?.Circulo?.Titulo,
                     SequencialEvento = x.Homem?.Participante?.SequencialEvento ?? x.Mulher?.Participante?.SequencialEvento,
-                    Dirigentes = x.Homem?.Circulo?.Dirigentes?.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }) ?? x.Mulher?.Circulo?.Dirigentes?.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }),
+                    Dirigentes = x.Homem?.Circulo?.Dirigentes?.Select(y => 
+                    new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome), Apelido = UtilServices.CapitalizarNome(y.Equipante.Equipante.Apelido), Fone = y.Equipante.Equipante.Fone }) ?? x.Mulher?.Circulo?.Dirigentes?.Select(y => 
+                    new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome), Apelido = UtilServices.CapitalizarNome(y.Equipante.Equipante.Apelido), Fone = y.Equipante.Equipante.Fone }),
                     Fone = $"{x.Homem?.Participante?.Fone} e {x.Mulher?.Participante?.Fone}"
                 }); ;
 
@@ -261,7 +263,7 @@ namespace SysIgreja.Controllers
                     Cor = x.Circulo.Cor?.GetDescription(),
                     Titulo = x.Circulo.Titulo,
                     SequencialEvento = x.Participante.SequencialEvento,
-                    Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome) }),
+                    Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome), Apelido = UtilServices.CapitalizarNome(y.Equipante.Equipante.Apelido), Fone = y.Equipante.Equipante.Fone }),
                     Fone = x.Participante.Fone
                 });
 

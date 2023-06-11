@@ -15,6 +15,8 @@ namespace SysIgreja.ViewModels
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+        public string Apelido { get; set; }
+        public string Fone { get; set; }
     }
 
 

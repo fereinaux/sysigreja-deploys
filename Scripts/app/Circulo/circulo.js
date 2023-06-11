@@ -118,20 +118,41 @@ function FillDoc(doc, result) {
     if (result.data[0].Dirigentes.length > 0) {
         doc.setFont('helvetica', "bold")
         doc.text(12, height, "Dirigentes");
+
+        height += 6;
+        doc.setFont('helvetica', "bold")
+        if (config.TipoEvento == "Casais") {
+            doc.text(12, height, "Nome");
+            doc.text(112, height, "Whatsapp");
+        } else {
+            doc.text(12, height, "Nome");
+            doc.text(117, height, "Apelido");
+            doc.text(152, height, "Whatsapp");
+        }
+
         height += 2
         doc.line(10, height, 195, height);
         height += 5
         doc.setFont('helvetica', "normal")
         $(result.data[0].Dirigentes).each((index, dirigente) => {
             doc.text(12, height, dirigente.Nome);
+
+            if (config.TipoEvento == "Casais") {
+                doc.text(12, height, dirigente.Nome);
+                doc.text(112, height, dirigente.Fone);
+            } else {
+                doc.text(12, height, dirigente.Nome);
+                doc.text(117, height, dirigente.Apelido);
+                doc.text(152, height, dirigente.Fone);
+            }
             height += 6;
         });
     }
 
     doc.setFont('helvetica', "bold")
     if (config.TipoEvento == "Casais") {
-        doc.text(12, height, "Nome");
-        doc.text(92, height, "Whatsapp");
+        doc.text(12, height, "Casal");
+        doc.text(112, height, "Whatsapp");
     } else {
         doc.text(12, height, "Nome");
         doc.text(117, height, "Apelido");
@@ -145,7 +166,7 @@ function FillDoc(doc, result) {
     $(result.data).each((index, participante) => {
         if (config.TipoEvento == "Casais") {
             doc.text(12, height, participante.Nome);
-            doc.text(92, height, participante.Fone);
+            doc.text(112, height, participante.Fone);
         } else {
             doc.text(12, height, participante.Nome);
             doc.text(117, height, participante.Apelido);

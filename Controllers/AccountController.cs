@@ -86,7 +86,7 @@ namespace SysIgreja.Controllers
                     Status = x.Status.GetDescription(),
                     Nome = x.Equipante.Nome,
                     EquipanteId = x.EquipanteId,
-                    Perfil = JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue)
+                    Perfil = (JsonConvert.DeserializeObject<List<Permissoes>>(x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue)).FirstOrDefault(z => z.Eventos.Any(y => y.EventoId == eventoid))?.Eventos.FirstOrDefault(z => z.EventoId == eventoid).Role
                 });
 
             return Json(new { data = query }, JsonRequestBehavior.AllowGet);

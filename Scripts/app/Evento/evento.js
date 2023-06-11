@@ -447,7 +447,15 @@ function GetUsuarios(id) {
         columns: [
             { data: "Nome", name: "Nome", autoWidth: true },
             {
-                data: "Perfil", name: "Perfil", autoWidth: true
+                data: "Perfil", name: "Perfil", autoWidth: true, render: function (data, type, row) {
+                    return row.Perfil.find(x => {
+
+                        if (x.Eventos) {
+                            return x.Eventos.find(y => y.EventoId == id)
+                        }
+
+                    }).Eventos[0].Role
+                }
             },
             {
                 data: "EquipanteId", name: "EquipanteId", orderable: false, width: "15%",

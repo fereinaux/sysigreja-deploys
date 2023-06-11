@@ -119,6 +119,10 @@ $('body').on('DOMNodeInserted', '.div-calendar', function () {
 
 
 function GetResultadosAdmin() {
+    if ($('#eventoid option:selected').data('role') == 'Coordenador') {
+        window.location.href = '/Home/Coordenador'
+    }
+
     if ($('#eventoid option:selected').data('role') == "Administrativo") {
         $('#resumo-financeiro-bloco').css('display', 'none')
     } else {

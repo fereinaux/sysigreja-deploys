@@ -509,6 +509,7 @@ namespace SysIgreja.Controllers
                         PictureUrl = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
                     },
                 },
+                    AutoReturn = "approved",
                     BackUrls = new PreferenceBackUrlsRequest
                     {
                         Success = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/Inscricoes/PagamentoConcluido",

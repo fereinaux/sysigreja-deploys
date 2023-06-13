@@ -150,7 +150,8 @@ namespace SysIgreja.Controllers
             if (participanteid.HasValue)
             {
                 texto += $"|{participanteid.Value}|PARTICIPANTE";
-            } else
+            }
+            else
             {
                 texto += $"|{equipanteid.Value}|EQUIPANTE";
             }
@@ -320,11 +321,11 @@ namespace SysIgreja.Controllers
                 var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
                 ViewBag.Configuracao = configP;
                 ViewBag.Participante = participante;
-                ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome); 
+                ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
                 ViewBag.Evento = eventoAtualP;
                 ViewBag.Padrinho = participante.Padrinho?.EquipanteEvento?.Equipante;
                 ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
-                                 
+
                 ViewBag.Title = "Pagamento Concluído";
                 return View();
 
@@ -486,12 +487,15 @@ namespace SysIgreja.Controllers
             var evento = eventosBusiness.GetEventoById(model.EventoId);
             var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == model.Email);
 
-            MercadoPagoConfig.AccessToken = evento.Configuracao.AccessTokenMercadoPago;
-            Guid g = Guid.NewGuid();
-            model.MercadoPagoId = g.ToString();
-            var request = new PreferenceRequest
+            if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
             {
-                Items = new List<PreferenceItemRequest>
+
+                MercadoPagoConfig.AccessToken = evento.Configuracao.AccessTokenMercadoPago;
+                Guid g = Guid.NewGuid();
+                model.MercadoPagoId = g.ToString();
+                var request = new PreferenceRequest
+                {
+                    Items = new List<PreferenceItemRequest>
                 {
                     new PreferenceItemRequest
                     {
@@ -503,19 +507,19 @@ namespace SysIgreja.Controllers
                         PictureUrl = $"https://{Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
                     },
                 },
-                BackUrls =
+                    BackUrls =
                 {
                     Success = $"https://{Request.Url.Host}/Inscricoes/PagamentoConcluido",
                 },
-                ExternalReference = model.MercadoPagoId
-            };
+                    ExternalReference = model.MercadoPagoId
+                };
 
-            // Cria a preferência usando o client
-            var client = new PreferenceClient();
-            Preference preference = client.Create(request);
+                // Cria a preferência usando o client
+                var client = new PreferenceClient();
+                Preference preference = client.Create(request);
 
-            model.MercadoPagoPreferenceId = preference.Id;
-
+                model.MercadoPagoPreferenceId = preference.Id;
+            }
 
             if (equipante != null)
             {

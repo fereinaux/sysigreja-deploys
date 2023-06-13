@@ -40,6 +40,7 @@ using MercadoPago.Config;
 using MercadoPago.Client.Preference;
 using MercadoPago.Resource.Preference;
 using Microsoft.Extensions.Logging;
+using System.Web;
 
 namespace SysIgreja.Controllers
 {
@@ -488,7 +489,7 @@ namespace SysIgreja.Controllers
             var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == model.Email);
 
             if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
-            {
+            {               
 
                 MercadoPagoConfig.AccessToken = evento.Configuracao.AccessTokenMercadoPago;
                 Guid g = Guid.NewGuid();
@@ -504,12 +505,12 @@ namespace SysIgreja.Controllers
                         Quantity = 1,
                         CurrencyId = "BRL",
                         UnitPrice = evento.Valor,
-                        PictureUrl = $"https://{HttpContext.Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
+                        PictureUrl = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
                     },
                 },
                     BackUrls =
                 {
-                    Success = $"https://{HttpContext.Request.Url.Host}/Inscricoes/PagamentoConcluido",
+                    Success = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/Inscricoes/PagamentoConcluido",
                 },
                     ExternalReference = model.MercadoPagoId
                 };

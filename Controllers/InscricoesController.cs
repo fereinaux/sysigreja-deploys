@@ -36,6 +36,10 @@ using System.IO;
 using Microsoft.AspNet.Identity;
 using Owin.Security.Providers.Orcid.Message;
 using Utils.Constants;
+using MercadoPago.Config;
+using MercadoPago.Client.Preference;
+using MercadoPago.Resource.Preference;
+using Microsoft.Extensions.Logging;
 
 namespace SysIgreja.Controllers
 {
@@ -138,11 +142,19 @@ namespace SysIgreja.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult qrcode(int eventoid, int participanteid)
+        public ActionResult qrcode(int eventoid, int? participanteid, int? equipanteid)
         {
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode($"{eventoid}|{participanteid}", QRCodeGenerator.ECCLevel.Q);
+            var texto = $"{eventoid}";
+            if (participanteid.HasValue)
+            {
+                texto += $"|{participanteid.Value}|PARTICIPANTE";
+            } else
+            {
+                texto += $"|{equipanteid.Value}|EQUIPANTE";
+            }
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(texto, QRCodeGenerator.ECCLevel.Q);
             QRCode qrCode = new QRCode(qrCodeData);
             Bitmap qrCodeImage = qrCode.GetGraphic(20);
             var stream = new MemoryStream();
@@ -219,6 +231,7 @@ namespace SysIgreja.Controllers
             ViewBag.EventoId = Id;
             var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
+            ViewBag.Login = configuracaoBusiness.GetLogin();
             ViewBag.Igrejas = configuracaoBusiness.GetIgrejas(evento.ConfiguracaoId.Value);
             switch (Tipo)
             {
@@ -281,8 +294,79 @@ namespace SysIgreja.Controllers
                             .Count() >= evento.Capacidade;
         }
 
+        public ActionResult PagamentoConcluido(string external_reference, string payment_id)
+        {
+            ViewBag.Login = configuracaoBusiness.GetLogin();
+
+            if (participantesBusiness.GetParticipantes().Any(x => x.MercadoPagoId == external_reference))
+            {
+                Participante participante = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.MercadoPagoId == external_reference);
+                var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
+
+                if (participante.Status == StatusEnum.Inscrito)
+                {
+
+                    lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
+                    {
+                        Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+                        Valor = eventoAtualP.Valor,
+                        Origem = "Mercado Pago",
+                        ParticipanteId = participante.Id,
+                        MeioPagamentoId = lancamentoBusiness.GetMercadoPago(eventoAtualP.ConfiguracaoId.Value).Id,
+                        EventoId = eventoAtualP.Id
+                    });
+                }
+
+                var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
+                ViewBag.Configuracao = configP;
+                ViewBag.Participante = participante;
+                ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome); 
+                ViewBag.Evento = eventoAtualP;
+                ViewBag.Padrinho = participante.Padrinho?.EquipanteEvento?.Equipante;
+                ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
+                                 
+                ViewBag.Title = "Pagamento Concluído";
+                return View();
+
+            }
+            else if (equipesBusiness.GetQueryEquipantesEventoSemFiltro().Any(x => x.MercadoPagoId == external_reference))
+            {
+                EquipanteEvento equipanteEv = equipesBusiness.GetQueryEquipantesEventoSemFiltro().Include(x => x.Equipante).Include(x => x.Equipante.Lancamentos).FirstOrDefault(x => x.MercadoPagoId == external_reference);
+                var equipante = equipanteEv.Equipante;
+                var eventoAtual = eventosBusiness.GetEventoById(equipanteEv.EventoId.Value);
+                var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
+
+                if (!equipante.Lancamentos.Any(x => x.EventoId == eventoAtual.Id && x.CentroCustoId == config.CentroCustoTaxaId))
+                {
+
+                    lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
+                    {
+                        Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+                        Valor = eventoAtual.ValorTaxa,
+                        Origem = "Mercado Pago",
+                        EquipanteId = equipante.Id,
+                        MeioPagamentoId = lancamentoBusiness.GetMercadoPago(config.Id.Value).Id,
+                        EventoId = eventoAtual.Id
+                    });
+                }
+                var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
+                ViewBag.Configuracao = config;
+
+                ViewBag.Participante = equipante;
+                ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == equipante.Nome);
+                ViewBag.Evento = eventoAtual;
+                ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
+
+                ViewBag.Title = "Pagamento Concluído";
+                return View();
+            }
+            return View("~/Views/NaoAutorizado/Index.cshtml");
+        }
+
         public ActionResult InscricaoConcluida(int Id, int? EventoId, string Tipo)
         {
+            ViewBag.Login = configuracaoBusiness.GetLogin();
+
             switch (Tipo)
             {
                 case "Inscrições Equipe":
@@ -340,6 +424,7 @@ namespace SysIgreja.Controllers
                     {
                         ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", participante.Apelido);
                     }
+                    ViewBag.MercadoPagoId = participante.MercadoPagoId;
                     ViewBag.Participante = new InscricaoConcluidaViewModel
                     {
                         Apelido = participante.Apelido,
@@ -349,16 +434,11 @@ namespace SysIgreja.Controllers
                         PadrinhoFone = participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "",
                         PadrinhoNome = participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? ""
                     };
-                    if (participante.Status == StatusEnum.Inscrito)
-                    {
-                        ViewBag.Title = "Inscrição Concluída";
-                        return View();
-                    }
-                    else
-                    {
-                        ViewBag.Title = "Inscrição Completa";
-                        return View("InscricaoCompleta");
-                    }
+
+
+                    ViewBag.Title = "Inscrição Concluída";
+                    return View();
+
             }
 
 
@@ -403,9 +483,40 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostInscricao(PostInscricaoModel model)
         {
-
             var evento = eventosBusiness.GetEventoById(model.EventoId);
             var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == model.Email);
+
+            MercadoPagoConfig.AccessToken = evento.Configuracao.AccessTokenMercadoPago;
+            Guid g = Guid.NewGuid();
+            model.MercadoPagoId = g.ToString();
+            var request = new PreferenceRequest
+            {
+                Items = new List<PreferenceItemRequest>
+                {
+                    new PreferenceItemRequest
+                    {
+                        Id = "",
+                        Title = $"Inscrição {evento.Numeracao.ToString()}º {evento.Configuracao.Titulo}",
+                        Quantity = 1,
+                        CurrencyId = "BRL",
+                        UnitPrice = evento.Valor,
+                        PictureUrl = $"https://{Request.Url.Authority}/{evento.Configuracao.Identificador}/logo"
+                    },
+                },
+                BackUrls =
+                {
+                    Success = $"https://{Request.Url.Authority}/Inscricoes/PagamentoConcluido",
+                },
+                ExternalReference = model.MercadoPagoId
+            };
+
+            // Cria a preferência usando o client
+            var client = new PreferenceClient();
+            Preference preference = client.Create(request);
+
+            model.MercadoPagoPreferenceId = preference.Id;
+
+
             if (equipante != null)
             {
                 model.EquipanteId = equipante.Id;
@@ -445,8 +556,8 @@ namespace SysIgreja.Controllers
 
 
             body = body.Replace("{{buttonColor}}", config.CorBotao);
-            body = body.Replace("{{logoEvento}}", $"https://{Request.UrlReferrer.Authority}/{config.Identificador}/Logo");
-            body = body.Replace("{{qrcodeParticipante}}", $"https://{Request.UrlReferrer.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&participanteid={participante.Id.ToString()}");
+            body = body.Replace("{{logoEvento}}", $"https://{Request.Url.Authority}/{config.Identificador}/Logo");
+            body = body.Replace("{{qrcodeParticipante}}", $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&participanteid={participante.Id.ToString()}");
 
 
             if (config.TipoEvento == TipoEventoEnum.Casais)

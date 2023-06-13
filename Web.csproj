@@ -1264,6 +1264,7 @@
     <Content Include="Views\Inscricoes\Casal.cshtml" />
     <Content Include="Views\Equipante\Casais.cshtml" />
     <Content Include="Views\Equipante\Montagem.cshtml" />
+    <Content Include="Views\Inscricoes\PagamentoConcluido.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

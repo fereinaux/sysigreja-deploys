@@ -74,6 +74,8 @@
                             Id: id,
                             Titulo: $(`#config-titulo${tipoEvento}`).val(),
                             Identificador: $(`#config-identificador${tipoEvento}`).val(),
+                            PublicTokenMercadoPago: $(`#config-public${tipoEvento}`).val(),
+                            AccessTokenMercadoPago: $(`#config-access${tipoEvento}`).val(),
                             CorHoverBotao: $(`#config-corhoverbotao${tipoEvento}`).val(),
                             CorBotao: $(`#config-corbotao${tipoEvento}`).val(),
                             TipoCirculoId: $(`#config-tipocirculo${tipoEvento}`).val(),
@@ -369,6 +371,21 @@
                                                                                                                  </div>
 
                                                         <div class="col-sm-12 p-w-md m-t-md text-center">
+
+                                                                  <div class="col-sm-12 col-md-6  p-w-md m-t-md m-b-md text-center">
+                                                                                                                <h5>Public Key Mercado Pago</h5>
+
+                                                                                                                <input type="text" class="form-control " id="config-public${config.Id}" data-field="Public Key Mercado Pago" />
+                                                                                                            </div>
+
+                                                                                                                        <div class="col-sm-12 col-md-6  p-w-md m-t-md text-center">
+                                                                                                                <h5>Access Token Mercado Pago</h5>
+
+                                                                                                                <input type="text" class="form-control " id="config-access${config.Id}" data-field="Access Token Mercado Pago" />
+                                                                                                            </div>
+
+
+
                                                                         <h5>Mensagem Conclusão</h5>
 
                                                                         <textarea class="config-msg" id="config-msg${config.Id}" name="editordata"></textarea>
@@ -405,6 +422,8 @@
                                                             $(`#config-centrocustoequipe${config.Id}`).val(config.CentroCustoTaxaId)
                                                             $(`#config-titulo${config.Id}`).val(config.Titulo)
                                                             $(`#config-identificador${config.Id}`).val(config.Identificador)
+                                                            $(`#config-public${config.Id}`).val(config.PublicTokenMercadoPago)
+                                                            $(`#config-access${config.Id}`).val(config.AccessTokenMercadoPago)
                                                             $(`#config-msg${config.Id}`).summernote({
                                                                 height: 300,
                                                                 lang: 'pt-BR',

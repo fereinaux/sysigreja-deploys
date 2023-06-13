@@ -134,6 +134,7 @@
 <script src="https://sdk.mercadopago.com/js/v2"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
 
 @*<script>
         const mp = new MercadoPago('APP_USR-4fba577e-117d-4ac4-ad7a-499a782b5268', {
@@ -154,7 +155,7 @@
 <script>
     let corBotao = '@ViewBag.Configuracao.CorBotao'
         $(window).on('load', function () {
-            var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" : logoLogin
+            var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" :"data:image/png;base64,@(ViewBag.Login.Logo)"
 
             $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
 

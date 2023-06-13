@@ -100,6 +100,8 @@ namespace SysIgreja.Controllers
                     EquipeCirculoId = x.EquipeCirculoId,
                     CentroCustoInscricaoId = x.CentroCustoInscricaoId,
                     CentroCustoTaxaId = x.CentroCustoTaxaId,
+                    PublicTokenMercadoPago = x.PublicTokenMercadoPago,
+                    AccessTokenMercadoPago = x.AccessTokenMercadoPago,
                     CorBotao = x.CorBotao,
                     CorHoverBotao = x.CorHoverBotao,
                     TipoCirculoId = x.TipoCirculo,

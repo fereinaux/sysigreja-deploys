@@ -18,6 +18,30 @@
 
         <div class="col-sm-12 p-h-sm text-center">
             @Html.Raw(ViewBag.MsgConclusao)
+
+            @if (!string.IsNullOrEmpty(ViewBag.Configuracao.PublicTokenMercadoPago))
+            {
+                <div id="wallet_container"></div>
+            }
         </div>
     </div>
 </div>
+
+
+
+@section Scripts {
+
+
+    <script>
+        const mp = new MercadoPago("@ViewBag.Configuracao.PublicTokenMercadoPago");
+
+        window.onload = function () {
+            mp.bricks().create("wallet", "wallet_container", {
+                initialization: {
+                    preferenceId: "@ViewBag.MercadoPagoId",
+                },
+            });
+
+        }
+    </script>
+}

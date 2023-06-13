@@ -1,4 +1,4 @@
-
+ï»¿
 isConvite = $('#eventoid option:selected').data('role') == "Convites"
 HideMenu();
 $(document).ready(function () {
@@ -107,7 +107,7 @@ function CarregarTabelaEquipante(callbackFunction) {
             {
                 data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis noSearch noExport',
                 "render": function (data, type, row) {
-                    return `${GetCheckBox(data, row.Presenca)}`;
+                    return `${GetCheckBox(data, false)}`;
                 }
             },
             { data: "Sexo", name: "Sexo", visible: false, className: 'noVis noSearch noExport', },
@@ -161,9 +161,28 @@ function CarregarTabelaEquipante(callbackFunction) {
 
 
             {
-                data: "StatusMontagem", name: "StatusMontagem", class: "noSearch", render: (data, type, row) =>
+                data: "StatusMontagem", orderable: false, name: "StatusMontagem", class: "noSearch", render: (data, type, row) =>
                     GetLabel('ToggleStatusMontagem', JSON.stringify(row), data == 'Ativo' ? 'green' : 'blue', data)
 
+            },
+            {
+                data: "Presenca", name: "Presenca", orderable: false, className: 'noSearch', render: function (data, type, row) {
+                    if (type === 'export') {
+                        return `<div>
+
+        ${data.map(presenca => {
+            return presenca ? 'âˆš' : "X"
+                        }).join(' - ')}</div>`
+                    }
+
+                    return `<div style="    text-wrap: nowrap;">
+                    ${data.map(presenca => {
+
+                        return `   <i class="fas fa-${presenca ? "check" : "times"}"></i>`
+
+                    }).join().replace(/,/g, '')}
+    </div>`
+                }
             },
 
             {
@@ -176,8 +195,8 @@ function CarregarTabelaEquipante(callbackFunction) {
                         }
     ${GetIconWhatsApp(row.Fone)}
     ${GetIconTel(row.Fone)}
-    ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
-    ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
+    ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'HistÃ³rico') : ""}
+    ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'OpÃ§Ãµes')}
     ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
     ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
 
@@ -281,7 +300,7 @@ function CarregarTabelaHistorico(id) {
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
-        buttons: getButtonsConfig('Histórico'),
+        buttons: getButtonsConfig('HistÃ³rico'),
         columns: [
             { data: "Evento", name: "Evento", autoWidth: true },
             {
@@ -315,7 +334,7 @@ function CarregarTabelaHistorico(id) {
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
-        buttons: getButtonsConfig('Histórico'),
+        buttons: getButtonsConfig('HistÃ³rico'),
         columns: [
             { data: "Evento", name: "Evento", autoWidth: true },
         ],
@@ -419,7 +438,7 @@ function DeleteMembroEquipe(id) {
                     CarregarTabelaEquipante();
                 },
                 error: function (data) {
-                    ErrorMessage("O Equipante está vinculado a um registro de Padrinho, não será possível deletá-lo")
+                    ErrorMessage("O Equipante estÃ¡ vinculado a um registro de Padrinho, nÃ£o serÃ¡ possÃ­vel deletÃ¡-lo")
                 }
             });
         }
@@ -811,7 +830,7 @@ function GetEquipante(id) {
 }
 
 function ToggleSexo(id) {
-    ConfirmMessage("Confirma a mudança de gênero?").then((result) => {
+    ConfirmMessage("Confirma a mudanÃ§a de gÃªnero?").then((result) => {
         if (result) {
             $.ajax({
                 url: "/Equipante/ToggleSexo/",

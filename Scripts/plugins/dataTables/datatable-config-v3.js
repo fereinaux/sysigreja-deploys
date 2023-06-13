@@ -97,7 +97,7 @@ function getButtonsConfig(fileName) {
                 columns: isMobile ? ':not(.noExport), .export' : ':not(.noExport):visible, .export', orthogonal: 'export'
             }, customize: function (doc) {
 
-                doc.content.splice(0, 1, { 
+                doc.content.splice(0, 1, {
                     columns: [
                         {
                             margin: [5, 5, 25, 15],
@@ -110,6 +110,8 @@ function getButtonsConfig(fileName) {
                     ]
 
                 });
+
+                doc.defaultStyle.icon = { font: 'emoji' }
             }
         },
         {
@@ -119,6 +121,7 @@ function getButtonsConfig(fileName) {
         },
     ];
 }
+
 
 function stateSaveCallback(settings, data) {
     localStorage.setItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val(), JSON.stringify(data))

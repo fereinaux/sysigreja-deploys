@@ -7,9 +7,12 @@ using Core.Models.Etiquetas;
 using Core.Models.Eventos;
 using Core.Models.Participantes;
 using Core.Models.Quartos;
+using CsQuery.ExtensionMethods;
+using CsQuery.ExtensionMethods.Internal;
 using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Utils.Extensions;
 using Utils.Services;
@@ -154,6 +157,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Parente, opt => opt.MapFrom(x => x.Equipante.Parente))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
                     .ForMember(dest => dest.Checkin, opt => opt.MapFrom(x => x.Checkin))
+                                 .ForMember(dest => dest.Presenca, opt => opt.MapFrom(x => x.Evento.Reunioes.Where(y => y.DataReuniao.Date <= System.DateTime.Today).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id))))
                        .ForMember(dest => dest.StatusMontagem, opt => opt.MapFrom(x => x.StatusMontagem.GetDescription()));
                 cfg.CreateMap<EquipanteEvento, PostEquipanteModel>()
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Equipante.Id))

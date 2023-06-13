@@ -549,6 +549,8 @@ namespace SysIgreja.Controllers
 
                 var result = equipesBusiness.GetQueryEquipantesEvento(model.EventoId.Value)
                     .Include(x => x.Equipante)
+                    .Include(x => x.Evento)
+                    .Include(x => x.Evento.Reunioes)
             .Include(x => x.Equipante.Arquivos)
             .Include(x => x.Equipante.Lancamentos)
             .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento))

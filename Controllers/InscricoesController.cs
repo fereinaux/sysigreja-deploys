@@ -500,12 +500,12 @@ namespace SysIgreja.Controllers
                         Quantity = 1,
                         CurrencyId = "BRL",
                         UnitPrice = evento.Valor,
-                        PictureUrl = $"https://{Request.Url.Authority}/{evento.Configuracao.Identificador}/logo"
+                        PictureUrl = $"https://{Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
                     },
                 },
                 BackUrls =
                 {
-                    Success = $"https://{Request.Url.Authority}/Inscricoes/PagamentoConcluido",
+                    Success = $"https://{Request.Url.Host}/Inscricoes/PagamentoConcluido",
                 },
                 ExternalReference = model.MercadoPagoId
             };

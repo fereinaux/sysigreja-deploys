@@ -17,12 +17,15 @@
         <div class="cho-container"></div>
 
         <div class="col-sm-12 p-h-sm text-center">
-           <h2>@ViewBag.Participante.Nome</h2>
-
+            <h2>@ViewBag.Participante.Nome</h2>
+            @if (@ViewBag.Configuracao.TipoEvento == "Casais")
+            {
+                <h2>e @ViewBag.Casal.Nome</h2>
+            }
             <p>O seu pagamento foi confirmado pelo Mercado Pago, você receberá em seu e-mail cadastrado uma confirmação de sua inscrição e pagamento, além deste QR Code que deverá ser apresentado no momento do seu checkin.</p>
             <p>Em caso de dúvidas, procure a administração do evento.</p>
 
-           <img style="width:50%" src="@ViewBag.QRCode" alt="QR Code" />
+            <img style="width:50%" src="@ViewBag.QRCode" alt="QR Code" />
         </div>
     </div>
 </div>

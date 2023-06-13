@@ -489,7 +489,7 @@ namespace SysIgreja.Controllers
             var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == model.Email);
 
             if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
-            {               
+            {
 
                 MercadoPagoConfig.AccessToken = evento.Configuracao.AccessTokenMercadoPago;
                 Guid g = Guid.NewGuid();
@@ -508,10 +508,10 @@ namespace SysIgreja.Controllers
                         PictureUrl = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
                     },
                 },
-                    BackUrls =
-                {
-                    Success = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/Inscricoes/PagamentoConcluido",
-                },
+                    BackUrls = new PreferenceBackUrlsRequest
+                    {
+                        Success = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/Inscricoes/PagamentoConcluido",
+                    },
                     ExternalReference = model.MercadoPagoId
                 };
 

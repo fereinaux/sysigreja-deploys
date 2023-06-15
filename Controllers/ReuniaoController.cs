@@ -50,8 +50,8 @@ namespace SysIgreja.Controllers
                     Equipes = x.Presenca.GroupBy(y => y.EquipanteEvento.Equipe).Select(z => new EquipesModel
                     {
                         Equipe = z.Key.Nome,
-                        Presenca = $"{z.Count()}/{equipesBusiness.GetMembrosEquipe(EventoId, z.Key.Id).Count()}",
-                        PresencaOrder = z.Count()/equipesBusiness.GetMembrosEquipe(EventoId, z.Key.Id).Count()
+                        Presenca = $"{z.Count()}/{equipesBusiness.GetMembrosEquipe(EventoId, GetEquipesFilhas(z.Key.Id, EventoId)).Count()}",
+                        PresencaOrder = z.Count()/equipesBusiness.GetMembrosEquipe(EventoId, GetEquipesFilhas(z.Key.Id, EventoId)).Count()
                     }).ToList()
                 }); ;
 

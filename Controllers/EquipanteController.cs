@@ -181,6 +181,8 @@ namespace SysIgreja.Controllers
 
                 if (model.Equipe != null)
                 {
+                    model.Equipe = GetEquipesFilhas(model.Equipe, model.EventoId.Value);
+
                     result = result.Where(x => model.Equipe.Contains(x.EquipeId.Value));
                 }
 
@@ -201,7 +203,7 @@ namespace SysIgreja.Controllers
         }
 
 
-         [HttpPost]
+        [HttpPost]
         public ActionResult GetCrachaCasal(Core.Models.Equipantes.FilterModel model)
         {
 
@@ -272,6 +274,8 @@ namespace SysIgreja.Controllers
 
             if (model.Equipe != null)
             {
+                model.Equipe = GetEquipesFilhas(model.Equipe, model.EventoId.Value);
+
                 queryCasais = queryCasais.Where(x => (x.Homem != null && model.Equipe.Contains(x.Homem.EquipeId.Value)) || (x.Mulher != null && model.Equipe.Contains(x.Mulher.EquipeId.Value)));
             }
 
@@ -376,6 +380,8 @@ namespace SysIgreja.Controllers
 
                 if (model.Equipe != null)
                 {
+                    model.Equipe = GetEquipesFilhas(model.Equipe, model.EventoId.Value);
+
                     queryCasais = queryCasais.Where(x => (x.Homem != null && model.Equipe.Contains(x.Homem.EquipeId.Value)) || (x.Mulher != null && model.Equipe.Contains(x.Mulher.EquipeId.Value)));
                 }
 
@@ -610,6 +616,8 @@ namespace SysIgreja.Controllers
 
                 if (model.Equipe != null)
                 {
+                    model.Equipe = GetEquipesFilhas(model.Equipe, model.EventoId.Value);
+
                     result = result.Where(x => model.Equipe.Contains(x.EquipeId.Value));
                 }
 

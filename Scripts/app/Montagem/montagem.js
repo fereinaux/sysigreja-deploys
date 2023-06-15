@@ -170,13 +170,13 @@ function CarregarTabelaEquipante(callbackFunction) {
                     if (type === 'export') {
                         return `<div>
 
-        ${data.map(presenca => {
-            return presenca ? '√' : "X"
+        ${data?.map(presenca => {
+                            return presenca ? '√' : "X"
                         }).join(' - ')}</div>`
                     }
 
                     return `<div style="    text-wrap: nowrap;">
-                    ${data.map(presenca => {
+                    ${data?.map(presenca => {
 
                         return `   <i class="fas fa-${presenca ? "check" : "times"}"></i>`
 

@@ -1,6 +1,7 @@
 ﻿using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
+using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models;
 using Core.Models.Configuracao;
@@ -51,6 +52,14 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        public ActionResult Hierarquia()
+        {
+            base.GetConfiguracoes();
+            ViewBag.Title = "Hierarquia das Equipes";
+
+            return View();
+        }
+
         [HttpGet]
         public ActionResult GetConfiguracoesSelect()
         {
@@ -66,7 +75,8 @@ namespace SysIgreja.Controllers
             var result = configuracaoBusiness.GetConfiguracoes()
                 .Where(x => configId.Contains(x.Id))
                 .ToList()
-                .Select(x => new {
+                .Select(x => new
+                {
                     Id = x.Id,
                     Titulo = x.Titulo,
                 });
@@ -122,7 +132,7 @@ namespace SysIgreja.Controllers
                     Background = x.Background != null ? Convert.ToBase64String(x.Background.Conteudo) : "",
                     LogoRelatorio = x.LogoRelatorio != null ? Convert.ToBase64String(x.LogoRelatorio.Conteudo) : "",
                     MsgConclusao = x.MsgConclusao,
-                    MsgConclusaoEquipe = x.MsgConclusaoEquipe,                    
+                    MsgConclusaoEquipe = x.MsgConclusaoEquipe,
 
                 });
 
@@ -203,14 +213,15 @@ namespace SysIgreja.Controllers
                 };
 
                 return Json(new { Campos = campos }, JsonRequestBehavior.AllowGet);
-            } else
+            }
+            else
             {
 
 
-            var evento = eventoBusiness.GetEventoById(id);
-            var result = configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value);
+                var evento = eventoBusiness.GetEventoById(id);
+                var result = configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value);
 
-            return Json(new { Campos = result }, JsonRequestBehavior.AllowGet);
+                return Json(new { Campos = result }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -238,6 +249,24 @@ namespace SysIgreja.Controllers
 
             return Json(new { Equipes = result }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult GetEquipesDatatable(int id)
+        {
+            var result = configuracaoBusiness.GetEquipes(id);
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public ActionResult GetEquipesFilhas(int id, int equipeId)
+        {
+            var result = configuracaoBusiness.GetEquipes(id).Where(x => x.EquipePaiId == equipeId);
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public ActionResult GetIgrejas(int id)
@@ -276,6 +305,14 @@ namespace SysIgreja.Controllers
         public ActionResult PostEquipes(List<EquipesModel> equipes, int id)
         {
             configuracaoBusiness.PostEquipes(equipes, id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult EditEquipePai(EquipesModel equipe)
+        {
+            configuracaoBusiness.EditEquipePai(equipe);
 
             return new HttpStatusCodeResult(200);
         }
@@ -324,7 +361,7 @@ namespace SysIgreja.Controllers
 
 
         [HttpPost]
-        public ActionResult PostBackgroundLogin( int sourceId)
+        public ActionResult PostBackgroundLogin(int sourceId)
         {
             configuracaoBusiness.PostBackgroundLogin(sourceId);
 

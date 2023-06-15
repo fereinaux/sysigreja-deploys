@@ -96,5 +96,6 @@
       "username": "sozo",
       "password": "Reinaux0)"
     }
-  ]
+  ],
+  "dotnet.defaultSolution": "sysigreja-deploys.sln"
 }

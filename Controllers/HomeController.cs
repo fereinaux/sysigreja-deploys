@@ -8,6 +8,8 @@ using Core.Business.Lancamento;
 using Core.Business.Participantes;
 using Core.Business.Reunioes;
 using Core.Models;
+using Data.Entities;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
 using System;
@@ -102,7 +104,7 @@ namespace SysIgreja.Controllers
             var casais = queryCasais.Where(x => x.Homem != null && x.Mulher != null);
 
 
-            var result =  evento.Configuracao.TipoEvento == TipoEventoEnum.Casais ?
+            var result = evento.Configuracao.TipoEvento == TipoEventoEnum.Casais ?
                 new
                 {
                     Evento = evento.Status.GetDescription(),
@@ -150,12 +152,14 @@ namespace SysIgreja.Controllers
                 }).ToList(),
                     EquipeMeninos = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Masculino && x.StatusMontagem == StatusEnum.Ativo).Count(),
                     EquipeMeninas = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Feminino && x.StatusMontagem == StatusEnum.Ativo).Count(),
-                    Equipes = equipesBusiness.GetEquipes(EventoId).ToList().Select(x => new ListaEquipesViewModel
-                    {
-                        Id = x.Id,
-                        Equipe = x.Nome,
-                        QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Where(y => y.StatusMontagem == StatusEnum.Ativo).Count()
-                    }).ToList(),
+                    Equipes = equipesBusiness.GetEquipesGrouped(EventoId)
+            .Select(x => new ListaEquipesViewModel
+            {
+                QuantidadeMembros = x.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
+                QtdAnexos = x.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
+                Equipe = x.Equipe.Nome,
+                Id = x.EquipeId
+            }).ToList(),
                     Reunioes = reunioesBusiness.GetReunioes(EventoId).ToList().Select(x => new ReuniaoViewModel
                     {
                         Id = x.Id,
@@ -167,29 +171,29 @@ namespace SysIgreja.Controllers
 
 
                 : new
-            {
-                Evento = evento.Status.GetDescription(),
-                EventoOferta = evento.EventoLotes.Any() && evento.EventoLotes.OrderByDescending(x => x.Valor).FirstOrDefault().Valor > evento.Valor ?
+                {
+                    Evento = evento.Status.GetDescription(),
+                    EventoOferta = evento.EventoLotes.Any() && evento.EventoLotes.OrderByDescending(x => x.Valor).FirstOrDefault().Valor > evento.Valor ?
                 evento.EventoLotes.OrderByDescending(x => x.Valor).FirstOrDefault().Valor :
                 evento.Valor,
-                Confirmados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Confirmado).Count(),
-                Cancelados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Cancelado).Count(),
-                Espera = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Espera).Count(),
-                Presentes = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Checkin).Count(),
-                Total = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
-                Meninos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Sexo == SexoEnum.Masculino && x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
-                Meninas = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Sexo == SexoEnum.Feminino && x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
-                MeiosPagamento = lancamentoBusiness.GetLancamentos().Where(x => x.EventoId == EventoId && x.Valor > 0).Select(x => x.MeioPagamento.Descricao).Distinct(),
-                Financeiro = lancamentoBusiness.GetLancamentos().Where(x => x.EventoId == EventoId && x.Valor > 0).Select(x => new
-                {
-                    MeioPagamento = x.MeioPagamento.Descricao,
-                    Valor = x.Valor,
-                    Tipo = x.Tipo
-                }).GroupBy(x => new
-                {
-                    x.Tipo,
-                    x.MeioPagamento
-                })
+                    Confirmados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Confirmado).Count(),
+                    Cancelados = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Cancelado).Count(),
+                    Espera = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status == StatusEnum.Espera).Count(),
+                    Presentes = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Checkin).Count(),
+                    Total = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
+                    Meninos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Sexo == SexoEnum.Masculino && x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
+                    Meninas = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Sexo == SexoEnum.Feminino && x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera).Count(),
+                    MeiosPagamento = lancamentoBusiness.GetLancamentos().Where(x => x.EventoId == EventoId && x.Valor > 0).Select(x => x.MeioPagamento.Descricao).Distinct(),
+                    Financeiro = lancamentoBusiness.GetLancamentos().Where(x => x.EventoId == EventoId && x.Valor > 0).Select(x => new
+                    {
+                        MeioPagamento = x.MeioPagamento.Descricao,
+                        Valor = x.Valor,
+                        Tipo = x.Tipo
+                    }).GroupBy(x => new
+                    {
+                        x.Tipo,
+                        x.MeioPagamento
+                    })
                 .Select(x => new
                 {
                     Tipo = x.Key.Tipo,
@@ -204,30 +208,32 @@ namespace SysIgreja.Controllers
                     Valor = x.Valor
                 })
                 .OrderByDescending(x => x.Tipo),
-                InscritosHora = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.DataCadastro.HasValue).GroupBy(x => x.DataCadastro.Value.Hour).Select(x => new { Hora = x.Key, Qtd = x.Count() }).OrderBy(x => x.Hora).ToList(),
-                UltimosInscritos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status != StatusEnum.Cancelado)
+                    InscritosHora = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.DataCadastro.HasValue).GroupBy(x => x.DataCadastro.Value.Hour).Select(x => new { Hora = x.Key, Qtd = x.Count() }).OrderBy(x => x.Hora).ToList(),
+                    UltimosInscritos = participantesBusiness.GetParticipantesByEvento(EventoId).Where(x => x.Status != StatusEnum.Cancelado)
                 .OrderByDescending(x => x.DataCadastro).Take(5).ToList().Select(x => new ParticipanteViewModel
                 {
                     Nome = UtilServices.CapitalizarNome(x.Nome),
                     Sexo = x.Sexo.GetDescription(),
                     Idade = UtilServices.GetAge(x.DataNascimento)
                 }).ToList(),
-                EquipeMeninos = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Masculino).Count(),
-                EquipeMeninas = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Feminino).Count(),
-                Equipes = equipesBusiness.GetEquipes(EventoId).ToList().Select(x => new ListaEquipesViewModel
-                {
-                    Id = x.Id,
-                    Equipe = x.Nome,
-                    QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Count()
-                }).ToList(),
-                Reunioes = reunioesBusiness.GetReunioes(EventoId).ToList().Select(x => new ReuniaoViewModel
-                {
-                    Id = x.Id,
-                    DataReuniao = x.DataReuniao,
-                    Titulo = x.Titulo,
-                    Presenca = x.Presenca.Count()
-                }).OrderBy(x => x.DataReuniao).ToList()
-            };
+                    EquipeMeninos = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Masculino).Count(),
+                    EquipeMeninas = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Feminino).Count(),
+                    Equipes = equipesBusiness.GetEquipesGrouped(EventoId)
+            .Select(x => new ListaEquipesViewModel
+            {
+                QuantidadeMembros = x.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
+                QtdAnexos = x.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
+                Equipe = x.Equipe.Nome,
+                Id = x.EquipeId
+            }).ToList(),
+                    Reunioes = reunioesBusiness.GetReunioes(EventoId).ToList().Select(x => new ReuniaoViewModel
+                    {
+                        Id = x.Id,
+                        DataReuniao = x.DataReuniao,
+                        Titulo = x.Titulo,
+                        Presenca = x.Presenca.Count()
+                    }).OrderBy(x => x.DataReuniao).ToList()
+                };
 
             return Json(new
             {
@@ -265,10 +271,12 @@ namespace SysIgreja.Controllers
 
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
-            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipanteEvento.EquipeId.Value);
+            var equipeFilhas = GetEquipesFilhas(equipanteEvento.EquipeId.Value, eventoId);
+            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas);
             var result = new
             {
                 Equipe = equipanteEvento.Equipe.Nome,
+                EquipePai = equipeFilhas.Count > 1,
                 EquipeEnum = equipanteEvento.EquipeId,
                 QtdMembros = membrosEquipe.Count(),
                 Configuracao = new
@@ -290,6 +298,7 @@ namespace SysIgreja.Controllers
                     Fone = x.Equipante.Fone,
                     Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                     Nome = x.Equipante.Nome,
+                    Equipe = x.Equipe.Nome,
                     Faltas = reunioesBusiness.GetFaltasByEquipanteId(x.EquipanteId.Value, eventoId),
                     Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId.Value, x.EventoId.Value).Any(),
                 })
@@ -327,7 +336,7 @@ namespace SysIgreja.Controllers
             var eventoId = reunioesBusiness.GetReuniaoById(ReuniaoId).EventoId;
 
             var result = equipesBusiness
-                .GetMembrosEquipe(eventoId, equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id).EquipeId.Value).ToList().Select(x => new PresencaViewModel
+                .GetMembrosEquipe(eventoId, GetEquipesFilhas(equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id).EquipeId.Value, eventoId)).ToList().Select(x => new PresencaViewModel
                 {
                     Id = x.Id,
                     Nome = x.Equipante.Nome,

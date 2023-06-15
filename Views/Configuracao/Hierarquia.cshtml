@@ -1,0 +1,229 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="#">Configurações</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>@ViewBag.Title</h4>
+            <div class="ibox-tools pull-righ w-300t">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <select class="form-control" id="hierarquia-configId" onchange="loadPageHierarquia()">
+                            @foreach (var config in ViewBag.Configuracoes)
+                            {
+                                <option value="@config.Id">@config.Titulo</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <table id="table-hierarquia" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Equipe</th>
+                        <th>Equipe Pai</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal" id="modal-filhas" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs" id="form-historico">
+                    <div class="row p-h-xs">
+                        <div class="col-sm-12 p-md">
+                            <h4 class="equipe-pai"></h4>
+                            <table id="table-filhas" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Equipe</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>                           
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+
+}
+
+@section Scripts {
+
+
+    <script>
+        function CarregarTabelaHierarquia() {
+            const tableHierarquiaConfig = {
+                language: languageConfig,
+                lengthMenu: [200, 500, 1000],
+                colReorder: false,
+                serverSide: false,
+                deferloading: 0,
+                orderCellsTop: true,
+                fixedHeader: true,
+                filter: true,
+                orderMulti: false,
+                responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+                destroy: true,
+                dom: domConfig,
+                drawCallback: function () { },
+                buttons: getButtonsConfig('Equipes'),
+                columns: [
+                    { data: "Equipe", name: "Equipe", autoWidth: true },
+                    { data: "EquipePai", name: "EquipePai", autoWidth: true },
+                    {
+                        data: "Id", name: "Id", orderable: false, width: "10%",
+                        "render": function (data, type, row) {
+                            return `${GetButton('EditPai', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fa-edit', 'Editar')} ${GetButton('ViewFilhos', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'green', 'fa-sitemap', 'Hierarquia')}`;
+                        }
+                    }
+                ],
+                order: [
+                    [0, "asc"]
+                ],
+                ajax: {
+                    url: '/Configuracao/GetEquipesDatatable',
+                    datatype: "json",
+                    data: { id: $('#hierarquia-configId').val() },
+                    type: "POST"
+                }
+            };
+
+            $("#table-hierarquia").DataTable(tableHierarquiaConfig);
+        }
+
+        let EquipesHierarquia
+
+        $(document).ready(function () {
+            loadPageHierarquia()
+        });
+
+        function loadPageHierarquia() {
+            CarregarTabelaHierarquia();
+            carregarEquipes()
+        }
+
+        function carregarEquipes() {
+            $.ajax({
+                url: "/Configuracao/GetEquipes/",
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: { id: $('#hierarquia-configId').val() },
+                success: (data) => {
+                    EquipesHierarquia = data.Equipes
+                }
+            });
+        }
+
+
+        function EditPai(row) {
+            let input = document.createElement("select");
+            input.innerHTML = EquipesHierarquia.filter(equipe => equipe.Id != row.Id).map(equipe => `<option value="${equipe.Id}">${equipe.Equipe}</option>`)
+            input.className = 'swal-content__input';
+            CustomSwal({
+                title: row.Equipe,
+                text: "Definir Equipe Pai",
+                icon: "info",
+                content: input,
+                button: {
+                    text: "Confirmar"
+                },
+                className: "button-center",
+
+            }).then(result => {
+                if (result) {
+
+
+                    $.ajax({
+                        url: "/Configuracao/EditEquipePai/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                Id: row.Id,
+                                EquipePaiId: input.value
+                            }),
+                        success: (data) => {
+                            loadPageHierarquia()
+                            SuccessMesageOperation()
+                        }
+
+                    });
+                }
+
+            })
+        }
+
+        function ViewFilhos(row) {
+            const tableFilhasConfig = {
+                language: languageConfig,
+                lengthMenu: [200, 500, 1000],
+                colReorder: false,
+                serverSide: false,
+                deferloading: 0,
+                orderCellsTop: true,
+                fixedHeader: true,
+                filter: true,
+                orderMulti: false,
+                responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+                destroy: true,
+                dom: domConfig,
+                buttons: getButtonsConfig('Histórico'),
+                columns: [
+                    { data: "Equipe", name: "Equipe", autoWidth: true },
+                ],
+
+                order: [
+                    [0, "asc"]
+                ],
+                ajax: {
+                    data: { id: $('#hierarquia-configId').val(), equipeId: row.Id },
+                    url: '/Configuracao/GetEquipesFilhas',
+                    datatype: "json",
+                    type: "POST"
+                }
+            };
+
+            $('.equipe-pai').text(row.Equipe)
+
+            $("#table-filhas").DataTable(tableFilhasConfig);
+            $("#modal-filhas").modal();
+        }
+
+    </script>
+}

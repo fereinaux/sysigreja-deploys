@@ -53,6 +53,7 @@ function CarregarTela() {
         type: "GET",
         success: (data) => {
             EquipeId = data.result.EquipeEnum
+            $('#col-equipe').css('display', data.result.EquipePai ? 'block' : 'none' )
             $('.equipe').text(data.result.Equipe)
             $('#btn-excel').prop('disabled', false)
             $('#img-logo').attr('src', data.result.Configuracao.Logo ? `data:image/png;base64,${data.result.Configuracao.Logo}` : logoLogin)
@@ -63,6 +64,8 @@ function CarregarTela() {
     <td data-label="Sexo"><span style="font-size:24px;" class="p-l-xs"> <i class="fa  ${membro.Sexo == "Masculino" ? "fa-male" : "fa-female"} " aria-hidden="true"></i></span></td>
     <td data-label="Nome">${membro.Nome}</td>
     <td data-label="Idade">${membro.Idade}</td>
+    ${data.result.EquipePai ? `    <td data-label="Equipe">${membro.Equipe}</td>` : ""}
+    
     <td data-label="Oferta"> <span style="font-size:24px;"> <i class="fa ${membro.Oferta ? "fa-check" : "fa-times"} " aria-hidden="true"></i></span></td>
     <td data-label="Faltas">${membro.Faltas}</td>
     <td data-label="Contato" class="membro-fone">${membro.Fone}</td>

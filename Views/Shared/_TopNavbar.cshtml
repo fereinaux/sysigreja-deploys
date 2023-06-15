@@ -175,14 +175,6 @@
                                         </label>
                                     </a>
                                 </li>
-                                <li class="hover-menu">
-                                    <a href="#" onclick="clearCache()">
-                                        <label for="clear-cache" style="cursor: pointer;width: 100%; color: #000000; font-weight: 600 !important; margin-bottom: 0px; font-size: 12px ">
-                                            Limpar Preferências
-                                            <i style="float: right; padding-right: 5px" class="fas fa-recycle"></i>
-                                        </label>
-                                    </a>
-                                </li>
 
                                 <li class="hover-menu">
                                     <a href="javascript:logoff()">
@@ -224,175 +216,139 @@
 
 
 
+    <script>
 
-<script>
-
-    const divBase = (tipo, quantidade, valor) => {
-        const { titulo, link, icon, onClick } = handleTipo(tipo, quantidade, valor);
-        return `
-        <li class="hover-menu-notification item-notificacao">
-            <a ${link ? `href="${link}"` : `onclick="${onClick}"`}  class="dropdown-item">
-                <div>
-                   ${icon}
-                   ${titulo}
-                </div>
-            </a>
-        </li>
-        `
-    }
-
-    function logoff() {
-        localStorage.removeItem('UserName')
-        localStorage.removeItem('Password')
-        document.getElementById('frm-upload-avatar').submit()
-    }
-
-    function whatsBot() {
-        var socket = io.connect('https://api.iecbeventos.com.br');
-        socket.emit('session',username )
-
-        socket.on('session', function (status) {
-            console.log(status);
-            if (!status.connected) {
-                $("#whats-qr").attr('src', `data:image/png;base64,${status.base64}`)
-                $('#modal-qr').modal()
-            } else {
-                SuccessMessage("Whatsapp conectado com sucesso!")
-                $('#modal-qr').modal("hide")
-            }
-        });
-    }
-
-    function pagarSistema(id, valor) {
-        let input = document.createElement("input");
-        input.type = 'number';
-        input.value = valor;
-        input.className = 'swal-content__input';
-        CustomSwal({
-            title: "Oferta do Sistema",
-            text: "Quanto você deseja ofertar?",
-            icon: "info",
-            content: input,
-            button: {
-                text: "Ofertar"
-            },
-            className: "button-center",
-
-        }).then(result => {
-            if (result)
-                ofertar(id, input.value)
-
-        })
-    }
-
-    const handleTipo = (tipo, quantidade, valor) => {
-        switch (tipo) {
-            case "Inscrição":
-                return {
-                    titulo: `${quantidade} ${quantidade > 1 ? "novas inscrições" : "nova inscrição"}`,
-                    link: "/Participante",
-                    icon: '<i class="fas fa-user-plus"></i>'
-                }
-            default:
-                return {
-                    titulo: `Oferta do ${tipo}`,
-                    onClick: `pagarSistema(${quantidade},${valor})`,
-                    icon: '<i class="fas fa-money-bill-alt"></i>'
-                }
+        const divBase = (tipo, quantidade, valor) => {
+            const { titulo, link, icon, onClick } = handleTipo(tipo, quantidade, valor);
+            return `
+                <li class="hover-menu-notification item-notificacao">
+                    <a ${link ? `href="${link}"` : `onclick="${onClick}"`}  class="dropdown-item">
+                        <div>
+                           ${icon}
+                           ${titulo}
+                        </div>
+                    </a>
+                </li>
+                `
         }
-    }
 
-    window.onload = function () {
-        consultarNotificacoes()
-        setInterval(consultarNotificacoes, 60000)
+        function logoff() {
+            localStorage.removeItem('UserName')
+            localStorage.removeItem('Password')
+            document.getElementById('frm-upload-avatar').submit()
+        }
 
-        $('.menu-user, .menu-notification').on('click', (event) => {
-            $(event.target).parent().find('.dropdown-content').css('display', 'block')
-            if ($(event.target).parent().hasClass('menu-notification')) {
-                $('.fa-bell').css("color", "#1c84c6")
-                $.ajax({
-                    url: "/Notificacao/SetNotificacoesLidas/",
-                    datatype: "json",
-                    type: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function () {
-                        $('#contador-notificacoes').css('display', 'none')
+        function whatsBot() {
+            var socket = io.connect('https://api.iecbeventos.com.br');
+            socket.emit('session', username)
+
+            socket.on('session', function (status) {
+                console.log(status);
+                if (!status.connected) {
+                    $("#whats-qr").attr('src', `data:image/png;base64,${status.base64}`)
+                    $('#modal-qr').modal()
+                } else {
+                    SuccessMessage("Whatsapp conectado com sucesso!")
+                    $('#modal-qr').modal("hide")
+                }
+            });
+        }
+
+        function pagarSistema(id, valor) {
+            let input = document.createElement("input");
+            input.type = 'number';
+            input.value = valor;
+            input.className = 'swal-content__input';
+            CustomSwal({
+                title: "Oferta do Sistema",
+                text: "Quanto você deseja ofertar?",
+                icon: "info",
+                content: input,
+                button: {
+                    text: "Ofertar"
+                },
+                className: "button-center",
+
+            }).then(result => {
+                if (result)
+                    ofertar(id, input.value)
+
+            })
+        }
+
+        const handleTipo = (tipo, quantidade, valor) => {
+            switch (tipo) {
+                case "Inscrição":
+                    return {
+                        titulo: `${quantidade} ${quantidade > 1 ? "novas inscrições" : "nova inscrição"}`,
+                        link: "/Participante",
+                        icon: '<i class="fas fa-user-plus"></i>'
                     }
-                });
-            } else {
-                $('.img-avatar ').css('opacity', 0.7)
-            }
-        })
-
-        window.onclick = (event) => {
-            if ($(event.target).parents('.dropdown-content').length == 0 && $(event.target).parent('.menu-user, .menu-notification').length == 0) {
-                $('.dropdown-content').css('display', 'none')
-                $('.img-avatar ').css('opacity', 1)
-                $('.fa-bell').css("color", "#676a6c")
-            } else if ($('.menu-user .dropdown-content').css('display') == 'block' && $(event.target).parent('.menu-notification').length > 0) {
-                $('.menu-user .dropdown-content').css('display', 'none')
-                $('.img-avatar ').css('opacity', 1)
-            } else if ($('.menu-notification .dropdown-content').css('display') == 'block' && $(event.target).parent('.menu-user').length > 0) {
-                $('.menu-notification .dropdown-content').css('display', 'none')
-                $('.fa-bell').css("color", "#676a6c")
+                default:
+                    return {
+                        titulo: `Oferta do ${tipo}`,
+                        onClick: `pagarSistema(${quantidade},${valor})`,
+                        icon: '<i class="fas fa-money-bill-alt"></i>'
+                    }
             }
         }
-    };
-
-    const consultarNotificacoes = () => {
-        $.ajax({
-            url: "/Notificacao/GetNotificacoesNaoLidas/",
-            datatype: "json",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                const { Notificacoes, Eventos } = data
-
-                const qtdNofitificacoes = Notificacoes.length + Eventos.length;
-
-                $('#contador-notificacoes').text(qtdNofitificacoes);
-
-                $('#contador-notificacoes').css('display', qtdNofitificacoes > 0 ? 'block' : 'none')
-
-                $('.item-notificacao').remove()
-
-                Notificacoes.forEach(notificacao => {
-                    $('#panel-notificao').prepend(divBase(notificacao.Titulo, notificacao.Quantidade))
-                })
-
-                Eventos.forEach(evento => {
-                    $('#panel-notificao').prepend(divBase(evento.Evento, evento.Id, evento.Valor))
-                })
-            }
-        })
 
 
-    }
+        const consultarNotificacoes = () => {
+            $.ajax({
+                url: "/Notificacao/GetNotificacoesNaoLidas/",
+                datatype: "json",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    const { Notificacoes, Eventos } = data
 
-    function ofertar(id, valor) {
+                    const qtdNofitificacoes = Notificacoes.length + Eventos.length;
+
+                    $('#contador-notificacoes').text(qtdNofitificacoes);
+
+                    $('#contador-notificacoes').css('display', qtdNofitificacoes > 0 ? 'block' : 'none')
+
+                    $('.item-notificacao').remove()
+
+                    Notificacoes.forEach(notificacao => {
+                        $('#panel-notificao').prepend(divBase(notificacao.Titulo, notificacao.Quantidade))
+                    })
+
+                    Eventos.forEach(evento => {
+                        $('#panel-notificao').prepend(divBase(evento.Evento, evento.Id, evento.Valor))
+                    })
+                }
+            })
 
 
-        $.ajax({
-            url: "/Evento/OfertaEvento/",
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                { Id: id, Valor: valor }),
-            success: (data) => {
-                consultarNotificacoes()
+        }
 
-                let div = document.createElement("div");
+        function ofertar(id, valor) {
 
-                $(div).html(`<h4>Informações para transferência</h4><p>PIX CPF: <strong>100.778.704-09</strong> - Felipe Reinaux </p><p>Enviar comprovante para <strong>(81)9.9718-7441</strong></p>`)
-                swal({
-                    className: "button-center",
-                    title: "Oferta Computada",
-                    icon: "success",
-                    content: div
-                });
-            }
-        });
-    }
 
-</script>
+            $.ajax({
+                url: "/Evento/OfertaEvento/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    { Id: id, Valor: valor }),
+                success: (data) => {
+                    consultarNotificacoes()
+
+                    let div = document.createElement("div");
+
+                    $(div).html(`<h4>Informações para transferência</h4><p>PIX CPF: <strong>100.778.704-09</strong> - Felipe Reinaux </p><p>Enviar comprovante para <strong>(81)9.9718-7441</strong></p>`)
+                    swal({
+                        className: "button-center",
+                        title: "Oferta Computada",
+                        icon: "success",
+                        content: div
+                    });
+                }
+            });
+        }
+
+    </script>
+

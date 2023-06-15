@@ -166,6 +166,7 @@
             });
             $('body').on('DOMNodeInserted', '.swal-title', function () {
                 $('.swal-modal').css('background', corBotao)
+
                 $('.swal-modal').css('color', 'white')
                 $('.swal-title').css('color', 'white')
 
@@ -174,6 +175,7 @@
             });
             $('body').on('DOMNodeInserted', '.swal-content', function () {
                 $('.swal-content').css('color', 'white')
+                $('.swal-content__input').css('background', corBotao)
 
             });
 

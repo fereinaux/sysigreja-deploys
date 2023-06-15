@@ -102,13 +102,15 @@ namespace SysIgreja.Controllers
         {
             var evento = eventosBusiness.GetEventoById(EventoId);
 
-            var result = equipesBusiness.GetEquipes(EventoId).ToList().Select(x => new ListaEquipesViewModel
+            var result = equipesBusiness.GetEquipesGrouped(EventoId)
+            .Select(x => new ListaEquipesViewModel
             {
-                Id = x.Id,
-                Equipe = x.Nome,
-                QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, x.Id).Count(),
-                QtdAnexos = arquivosBusiness.GetArquivosByEquipe(x.Id, false, evento.ConfiguracaoId.Value).Count()
-            }).OrderBy(x => x.Equipe);
+                QuantidadeMembros = x.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
+                QtdAnexos = x.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
+                Equipe = x.Equipe.Nome,
+                Id = x.EquipeId
+            });
+           
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -131,7 +133,7 @@ namespace SysIgreja.Controllers
             var presenca = equipesBusiness.GetPresenca(ReuniaoId).Select(x => x.EquipanteEventoId).ToList();
 
             var result = equipesBusiness
-                .GetMembrosEquipe(EventoId, EquipeId).ToList().Select(x => new PresencaViewModel
+                .GetMembrosEquipe(EventoId, GetEquipesFilhas(EquipeId, EventoId)).ToList().Select(x => new PresencaViewModel
                 {
                     Id = x.Id,
                     Nome = x.Equipante.Nome,
@@ -219,7 +221,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetMembrosEquipe(int EventoId, int EquipeId)
         {
             var query = equipesBusiness
-                .GetMembrosEquipe(EventoId, EquipeId)
+                .GetMembrosEquipe(EventoId, GetEquipesFilhas(EquipeId, EventoId))
                 .ToList();
 
             var result = query

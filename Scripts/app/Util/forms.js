@@ -125,7 +125,7 @@ function ValidateForm(form) {
 
         var div = document.createElement("div");
 
-        div.innerHTML = `<p style="color:white" class="swal-text">${formResult.MessageError.replaceAll('\n','<br>')}</p>`
+        div.innerHTML = `<p style="color:white" class="swal-text">${formResult.MessageError.replaceAll('\n', '<br>')}</p>`
 
         CustomSwal({
             title: "Erro!",
@@ -281,7 +281,11 @@ function IsEmail(email) {
 }
 
 function IsFone(fone) {
-    return fone.indexOf("+55") == 0 && fone.indexOf("(") == 3 && fone.indexOf(")") == 6 && fone.indexOf("9.") == 7 && fone.indexOf("-") == 13 && fone.length == 18;
+    if (userCountry == "Brazil") {
+        return fone.indexOf("+55") == 0 && fone.indexOf("(") == 3 && fone.indexOf(")") == 6 && fone.indexOf("9.") == 7 && fone.indexOf("-") == 13 && fone.length == 18;
+    } else {
+        return true
+    } 
 }
 
 function IsData(data) {

@@ -267,6 +267,14 @@ namespace SysIgreja.Controllers
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult GetEquipesOrigem(int id, int equipeId)
+        {
+            var result = configuracaoBusiness.GetEquipes(id).Where(x => x.EquipesDestinoId.Contains(equipeId));
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public ActionResult GetIgrejas(int id)
@@ -313,6 +321,14 @@ namespace SysIgreja.Controllers
         public ActionResult EditEquipePai(EquipesModel equipe)
         {
             configuracaoBusiness.EditEquipePai(equipe);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult EditEquipeDestino(EquipesModel equipe)
+        {
+            configuracaoBusiness.EditEquipeDestino(equipe);
 
             return new HttpStatusCodeResult(200);
         }

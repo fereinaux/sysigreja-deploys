@@ -38,6 +38,7 @@
                     <tr>
                         <th>Equipe</th>
                         <th>Equipe Pai</th>
+                        <th>Equipe Destino</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -56,6 +57,7 @@
                     <div class="row p-h-xs">
                         <div class="col-sm-12 p-md">
                             <h4 class="equipe-pai"></h4>
+                            <h5>Equipes Filhas</h5>
                             <table id="table-filhas" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
                                 <thead>
                                     <tr>
@@ -63,7 +65,16 @@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
-                            </table>                           
+                            </table>
+                            <h5>Equipes de Origem</h5>
+                            <table id="table-destino" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Equipe</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -105,9 +116,18 @@
                     { data: "Equipe", name: "Equipe", autoWidth: true },
                     { data: "EquipePai", name: "EquipePai", autoWidth: true },
                     {
+                        data: "EquipesDestino", name: "EquipesDestino", autoWidth: true, render: function (data, type, row) {
+                            return data.map(a => a).join(',')
+                        }
+                    },
+                    {
                         data: "Id", name: "Id", orderable: false, width: "10%",
                         "render": function (data, type, row) {
-                            return `${GetButton('EditPai', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fa-edit', 'Editar')} ${GetButton('ViewFilhos', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'green', 'fa-sitemap', 'Hierarquia')}`;
+                            return `
+                                ${GetButton('EditPai', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fas fa-sort-amount-up-alt', 'Equipe Pai')}
+                                ${GetButton('EditDestino', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fa-recycle', 'Equipe Destino')}
+
+                                ${GetButton('ViewFilhos', JSON.stringify({ Id: row.Id, Equipe: row.Equipe, Destinos: row.EquipesDestinoId }), 'green', 'fa-sitemap', 'Hierarquia')}`;
                         }
                     }
                 ],
@@ -189,6 +209,60 @@
             })
         }
 
+        function EditDestino(row) {
+            let input = document.createElement("select");
+            input.innerHTML = EquipesHierarquia.filter(equipe => equipe.Id != row.Id).map(equipe => `<option value="${equipe.Id}">${equipe.Equipe}</option>`)
+            input.className = 'swal-content__input';
+            input.multiple = true
+            input.value = row.Destinos
+            CustomSwal({
+                title: row.Equipe,
+                text: "Definir Equipe Destino",
+                icon: "info",
+                content: input,
+                button: {
+                    text: "Confirmar"
+                },
+                className: "button-center",
+
+            }).then(result => {
+                if (result) {
+
+
+                    $.ajax({
+                        url: "/Configuracao/EditEquipeDestino/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                Id: row.Id,
+                                EquipesDestinoId: function () {
+                                    var result = [];
+                                    var options = input.options;
+                                    var opt;
+
+                                    for (var i = 0, iLen = options.length; i < iLen; i++) {
+                                        opt = options[i];
+
+                                        if (opt.selected) {
+                                            result.push(opt.value || opt.text);
+                                        }
+                                    }
+                                    return result;
+                                }()
+                            }),
+                        success: (data) => {
+                            loadPageHierarquia()
+                            SuccessMesageOperation()
+                        }
+
+                    });
+                }
+
+            })
+        }
+
         function ViewFilhos(row) {
             const tableFilhasConfig = {
                 language: languageConfig,
@@ -203,7 +277,7 @@
                 responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
                 destroy: true,
                 dom: domConfig,
-                buttons: getButtonsConfig('Histórico'),
+                buttons: getButtonsConfig('Equipes Filhas'),
                 columns: [
                     { data: "Equipe", name: "Equipe", autoWidth: true },
                 ],
@@ -222,6 +296,37 @@
             $('.equipe-pai').text(row.Equipe)
 
             $("#table-filhas").DataTable(tableFilhasConfig);
+
+            const tableDestinoConfig = {
+                language: languageConfig,
+                lengthMenu: [200, 500, 1000],
+                colReorder: false,
+                serverSide: false,
+                deferloading: 0,
+                orderCellsTop: true,
+                fixedHeader: true,
+                filter: true,
+                orderMulti: false,
+                responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+                destroy: true,
+                dom: domConfig,
+                buttons: getButtonsConfig('Equipes Origem'),
+                columns: [
+                    { data: "Equipe", name: "Equipe", autoWidth: true },
+                ],
+
+                order: [
+                    [0, "asc"]
+                ],
+                ajax: {
+                    data: { id: $('#hierarquia-configId').val(), equipeId: row.Id },
+                    url: '/Configuracao/GetEquipesOrigem',
+                    datatype: "json",
+                    type: "POST"
+                }
+            };
+
+            $("#table-destino").DataTable(tableDestinoConfig);
             $("#modal-filhas").modal();
         }
 

@@ -56,7 +56,7 @@ namespace SysIgreja
             bundles.Add(new ScriptBundle("~/bundles/util").Include(
                       "~/Scripts/app/util/constants.js",
                       "~/Scripts/app/util/messages.js",
-                      "~/Scripts/app/util/inputs.js",
+                      "~/Scripts/app/util/inputs-v2.js",
                       "~/Scripts/app/util/forms.js",
                       "~/Scripts/app/util/pdf.js",
                       "~/Scripts/app/util/extensions.js",

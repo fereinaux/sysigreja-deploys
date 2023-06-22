@@ -1082,7 +1082,7 @@
     <Content Include="Scripts\app\Util\pdf.js" />
     <Content Include="Scripts\app\Util\extensions.js" />
     <Content Include="Scripts\app\Util\forms.js" />
-    <Content Include="Scripts\app\Util\inputs.js" />
+    <Content Include="Scripts\app\Util\inputs-v2.js" />
     <Content Include="Scripts\app\Util\messages.js" />
     <Content Include="Scripts\app\Util\buttons.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />

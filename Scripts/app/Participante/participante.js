@@ -224,7 +224,7 @@ ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt',
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconWhatsApp(row.Fone)}
                             ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}                               
-                            ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}                            
+                            ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}                            
                             ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
                         : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
@@ -771,6 +771,8 @@ function CarregarTabelaPagamentos(id) {
         columns: [
             { data: "FormaPagamento", name: "FormaPagamento", autoWidth: true },
             { data: "Valor", name: "Valor", autoWidth: true },
+            { data: "DataLancamento", name: "DataLancamento", autoWidth: true },
+            { data: "Origem", name: "Origem", autoWidth: true },
             {
                 data: "Id", name: "Id", orderable: false, width: "15%",
                 "render": function (data, type, row) {
@@ -971,12 +973,11 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
     })
 }
 
-function Opcoes(row) {
-    realista = row;
+function Opcoes(id) {
     $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Participante/GetParticipante/",
-        data: { Id: row.Id },
+        data: { Id: id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -997,7 +998,7 @@ function Opcoes(row) {
             $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
 
             arrayData = table.data().toArray()
-            let index = arrayData.findIndex(r => r.Id == row.Id)
+            let index = arrayData.findIndex(r => r.Id == id)
 
             $('#btn-previous').css('display', 'block')
             $('#btn-next').css('display', 'block')

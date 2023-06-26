@@ -13,8 +13,10 @@ using Newtonsoft.Json;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using Utils.Enums;
 using Utils.Extensions;
@@ -65,7 +67,7 @@ namespace SysIgreja.Controllers
             {
                 return Json(new
                 {
-                    Equipes = equipesBusiness.GetEquipes(EventoId).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Nome }).ToList()
+                    Equipes = equipesBusiness.GetEquipesGrouped(EventoId).Include(x => x.Equipe).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Equipe.Nome }).ToList()
                     .Where(x =>
                     x.Id == equipesBusiness.GetEquipanteEventoByUser(EventoId, user.Id)
                         .EquipeId)
@@ -74,7 +76,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return Json(new { Equipes = equipesBusiness.GetEquipes(EventoId).Select(x => new { x.Id, x.Nome }).ToList() }, JsonRequestBehavior.AllowGet);
+                return Json(new { Equipes = equipesBusiness.GetEquipesGrouped(EventoId).Include(x => x.Equipe).Select(x => new { x.Id, x.Equipe.Nome }).ToList() }, JsonRequestBehavior.AllowGet);
             }
         }
 

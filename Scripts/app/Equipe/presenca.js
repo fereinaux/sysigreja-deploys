@@ -148,7 +148,7 @@ function getPresencas() {
     $("#presenca-equipeid").empty();
 
     $.ajax({
-        url: "/Equipe/GetEquipesByUser/",
+        url: '/Equipe/GetEquipes',
         data: { EventoId: $("#presenca-eventoid").val() },
         datatype: "json",
         type: "GET",

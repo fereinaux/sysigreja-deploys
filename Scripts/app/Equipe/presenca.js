@@ -149,17 +149,15 @@ function getPresencas() {
 
     $.ajax({
         url: '/Equipe/GetEquipes',
-        data: { EventoId: $("#presenca-eventoid").val() },
         datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
+        data: { EventoId: $("#presenca-eventoid").val() },
+        type: "POST",
+        success: (result) => {
             $('#presenca-equipeid').append($(`<option value="0">Selecione</option>`));
-            data.Equipes.forEach(function (equipe, index, array) {
-                $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Nome}</option>`));
+            result.data.forEach(function (equipe) {
+                $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Equipe}</option>`));
             });
             $("#presenca-equipeid").val($("#presenca-equipeid option:first").val()).trigger("chosen:updated");
-
         }
     });
 }

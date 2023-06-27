@@ -554,11 +554,13 @@ namespace SysIgreja.Controllers
                 if (casal.Nome != null)
                 {
                     casal.Nome.Dupla = casal.Dupla;
-                    casal.Nome.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
-                    {
-                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId);
-                    });
-                    resultCasais.Add(casal.Nome);
+                    casal.Nome.Apelido = casal.Nome.Apelido + " de " + casal.Conjuge.Apelido;
+                }
+
+                if (casal.Conjuge != null)
+                {
+                    casal.Conjuge.Dupla = casal.Dupla;
+                    casal.Conjuge.Apelido = casal.Conjuge.Apelido + " de " + casal.Nome.Apelido;
                 }
             });
 

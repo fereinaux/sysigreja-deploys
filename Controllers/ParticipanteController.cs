@@ -553,14 +553,12 @@ namespace SysIgreja.Controllers
             {
                 if (casal.Nome != null)
                 {
-                    casal.Nome.Dupla = casal.Dupla;
-                    casal.Nome.Apelido = casal.Nome.Apelido + " de " + casal.Conjuge.Apelido;
+                    casal.Nome.Dupla = casal.Nome.Apelido + " de " + casal.Conjuge.Apelido;
                 }
 
                 if (casal.Conjuge != null)
                 {
-                    casal.Conjuge.Dupla = casal.Dupla;
-                    casal.Conjuge.Apelido = casal.Conjuge.Apelido + " de " + casal.Nome.Apelido;
+                    casal.Conjuge.Dupla = casal.Conjuge.Apelido + " de " + casal.Nome.Apelido;
                 }
             });
 

@@ -292,14 +292,12 @@ namespace SysIgreja.Controllers
             {
                 if (casal.Homem != null)
                 {
-                    casal.Homem.Equipante.Dupla = casal.Dupla;
-                    casal.Homem.Equipante.Apelido = casal.Homem.Equipante.Apelido + " de " + casal.Mulher.Equipante.Apelido;
+                    casal.Homem.Equipante.Dupla = casal.Homem.Equipante.Apelido + " de " + casal.Mulher.Equipante.Apelido;
                     resultCasais.Add(casal.Homem.Equipante);
                 }
                 if (casal.Mulher != null)
                 {
-                    casal.Mulher.Equipante.Dupla = casal.Dupla;
-                    casal.Mulher.Equipante.Apelido = casal.Mulher.Equipante.Apelido + " de " + casal.Homem.Equipante.Apelido;
+                    casal.Mulher.Equipante.Dupla = casal.Mulher.Equipante.Apelido + " de " + casal.Homem.Equipante.Apelido;
                     resultCasais.Add(casal.Mulher.Equipante);
                 }
             });

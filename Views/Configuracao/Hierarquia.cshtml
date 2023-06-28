@@ -124,10 +124,10 @@
                         data: "Id", name: "Id", orderable: false, width: "10%",
                         "render": function (data, type, row) {
                             return `
-                                ${GetButton('EditPai', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fas fa-sort-amount-up-alt', 'Equipe Pai')}
-                                ${GetButton('EditDestino', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fa-recycle', 'Equipe Destino')}
+                                    ${GetButton('EditPai', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fas fa-sort-amount-up-alt', 'Equipe Pai')}
+                                    ${GetButton('EditDestino', JSON.stringify({ Id: row.Id, Equipe: row.Equipe }), 'blue', 'fa-recycle', 'Equipe Destino')}
 
-                                ${GetButton('ViewFilhos', JSON.stringify({ Id: row.Id, Equipe: row.Equipe, Destinos: row.EquipesDestinoId }), 'green', 'fa-sitemap', 'Hierarquia')}`;
+                                    ${GetButton('ViewFilhos', JSON.stringify({ Id: row.Id, Equipe: row.Equipe, Destinos: row.EquipesDestinoId }), 'green', 'fa-sitemap', 'Hierarquia')}`;
                         }
                     }
                 ],

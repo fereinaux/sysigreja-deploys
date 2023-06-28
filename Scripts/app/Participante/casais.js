@@ -118,7 +118,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             {
                 data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
                 "render": function (data, type, row) {
-                    return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, row.Presenca) : '';
+                    return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, false) : '';
                 }
             },
             { data: "Dupla", name: "Dupla", title: "Dupla", visible: false, className: 'noVis' },

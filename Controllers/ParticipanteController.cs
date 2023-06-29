@@ -475,18 +475,22 @@ namespace SysIgreja.Controllers
                         .GetParticipantesByEvento(model.EventoId.Value)
                         .Where(x => x.EventoId == model.EventoId && (StatusEnum.Confirmado == x.Status || x.Status == StatusEnum.Inscrito));
 
-            var queryCasais = result.Join(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
+            var queryCasais = result.AsEnumerable().GroupJoin(result, x => x.Nome.ToLower().Trim(), y => y.Conjuge?.ToLower().Trim(), (q1, q2) => new { q1, q2 }).Select(x => new
             {
-                Conjuge = x.q2,
-                Nome = x.q1,
-            });
+                Conjuge = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Min() ? x.q1 : x.q2.FirstOrDefault(),
+                Nome = x.q1.Nome == new List<string> { x.q1.Nome, x.q2.Any() ? x.q2.FirstOrDefault().Nome : "" }.Max() ? x.q1 : x.q2.FirstOrDefault(),
+            }).Select(x => new
+            {
+                Homem = x.Nome.Sexo == SexoEnum.Masculino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+                Mulher = x.Nome.Sexo == SexoEnum.Feminino ? x.Nome : (x.Conjuge != null ? x.Conjuge : null),
+            }).Distinct();
 
             if (model.Etiquetas != null && model.Etiquetas.Count > 0)
             {
                 model.Etiquetas.ForEach(etiqueta =>
                 queryCasais = queryCasais.Where(x =>
-                x.Conjuge.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) ||
-                 x.Nome.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                (x.Homem?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false) ||
+                 (x.Mulher?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false)
                 ));
 
             }
@@ -494,7 +498,7 @@ namespace SysIgreja.Controllers
             if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
             {
                 model.NaoEtiquetas.ForEach(etiqueta =>
-             queryCasais = queryCasais.Where(x => !x.Conjuge.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta) && !x.Nome.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)));
+             queryCasais = queryCasais.Where(x => !x.Homem?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false && (!x.Mulher?.ParticipantesEtiquetas?.Any(y => y.EtiquetaId.ToString() == etiqueta) ?? false)));
             }
 
             if (model.Status != null)
@@ -502,63 +506,73 @@ namespace SysIgreja.Controllers
 
                 if (model.Status.Contains(StatusEnum.Checkin))
                 {
-                    queryCasais = queryCasais.Where(x => (x.Conjuge.Checkin || x.Nome.Checkin) || (model.Status.Contains(x.Conjuge.Status) || model.Status.Contains(x.Nome.Status)));
+                    queryCasais = queryCasais.Where(x => (x.Homem.Checkin || x.Mulher.Checkin) || (model.Status.Contains(x.Homem.Status) || model.Status.Contains(x.Mulher.Status)));
                 }
                 else
                 {
-                    queryCasais = queryCasais.Where(x => ((model.Status.Contains(x.Conjuge.Status) || (model.Status.Contains(x.Nome.Status)) && (!x.Conjuge.Checkin && !x.Nome.Checkin))));
+                    queryCasais = queryCasais.Where(x => (x.Homem != null && (model.Status.Contains(x.Homem.Status) || (x.Mulher != null && model.Status.Contains(x.Mulher.Status)) && ((!x.Homem?.Checkin ?? false) && (!x.Mulher?.Checkin ?? false)))));
 
                 }
-
-
             }
 
             if (model.PadrinhoId != null)
             {
-                if (model.PadrinhoId.Contains(0))
+                if (model.PadrinhoId.Count == 0)
                 {
-                    queryCasais = queryCasais.Where(x => (!x.Conjuge.PadrinhoId.HasValue) || (!x.Nome.PadrinhoId.HasValue));
+                    queryCasais = queryCasais.Where(x => (!x.Homem.PadrinhoId.HasValue) || (!x.Mulher.PadrinhoId.HasValue));
                 }
                 else
                 {
-                    queryCasais = queryCasais.Where(x => (model.PadrinhoId.Contains(x.Conjuge.PadrinhoId.Value)) || (model.PadrinhoId.Contains(x.Nome.PadrinhoId.Value)));
+                    queryCasais = queryCasais
+                        .Where(x =>
+                            (x.Homem?.Padrinho != null &&
+                             model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value))
+                                ||
+                            (x.Mulher?.Padrinho != null &&
+                             model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value))
+                        );
                 }
             }
 
             if (model.CirculoId != null)
             {
-                queryCasais = queryCasais.Where(x => (x.Conjuge.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))) || (x.Nome.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))));
+                queryCasais = queryCasais.Where(x => (x.Homem?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId))) ?? false || (x.Mulher?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId)) ?? false));
             }
+
 
             if (model.QuartoId != null)
             {
-                queryCasais = queryCasais.Where(x => (x.Conjuge.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))) || (x.Nome.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))));
+                queryCasais = queryCasais.Where(x => (x.Homem?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId))) ?? false || (x.Mulher?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId)) ?? false));
             }
+
 
             if (model.search != null && model.search.value != null)
             {
-                queryCasais = queryCasais.Where(x => x.Conjuge != null ? ((x.Conjuge.Nome.Contains(model.search.value)) || (x.Conjuge.Conjuge.Contains(model.search.value))) : (x.Nome.Nome.Contains(model.search.value)) || (x.Nome.Conjuge.Contains(model.search.value)));
+                model.search.value = model.search.value.RemoveAccents();
+                queryCasais = queryCasais.Where(x => x.Homem != null ? ((x.Homem.Nome.RemoveAccents().Contains(model.search.value)) || (x.Homem.Conjuge.RemoveAccents().Contains(model.search.value))) : (x.Mulher.Nome.RemoveAccents().Contains(model.search.value)) || (x.Mulher.Conjuge.RemoveAccents().Contains(model.search.value)));
             }
 
-            var queryNova = queryCasais.Where(x => (x.Conjuge != null & x.Nome != null)).Select(x => new
+
+            var queryNova = queryCasais.Select(x => new
             {
-                Dupla = x.Nome.Apelido + " de " + x.Conjuge.Apelido,
-                x.Conjuge,
-                x.Nome,
+                Dupla = (x.Homem != null & x.Mulher != null) ? x.Homem.Apelido + " e " + x.Mulher.Apelido : null,
+                x.Homem,
+                x.Mulher,
             });
 
             List<Data.Entities.Participante> resultCasais = new List<Data.Entities.Participante>();
 
             queryNova.ToList().ForEach(casal =>
             {
-                if (casal.Nome != null)
+                if (casal.Homem != null)
                 {
-                    casal.Nome.Dupla = casal.Nome.Apelido + " de " + casal.Conjuge.Apelido;
+                    casal.Homem.Dupla = casal.Homem.Apelido + " de " + casal.Mulher.Apelido;
+                    resultCasais.Add(casal.Homem);
                 }
-
-                if (casal.Conjuge != null)
+                if (casal.Mulher != null)
                 {
-                    casal.Conjuge.Dupla = casal.Conjuge.Apelido + " de " + casal.Nome.Apelido;
+                    casal.Mulher.Dupla = casal.Mulher.Apelido + " de " + casal.Homem.Apelido;
+                    resultCasais.Add(casal.Mulher);
                 }
             });
 

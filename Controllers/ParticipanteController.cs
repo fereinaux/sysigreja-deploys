@@ -566,12 +566,12 @@ namespace SysIgreja.Controllers
             {
                 if (casal.Homem != null)
                 {
-                    casal.Homem.Dupla = casal.Homem.Apelido + " de " + casal.Mulher.Apelido;
+                    casal.Homem.Dupla = casal.Homem?.Apelido + " de " + casal.Mulher?.Apelido;
                     resultCasais.Add(casal.Homem);
                 }
                 if (casal.Mulher != null)
                 {
-                    casal.Mulher.Dupla = casal.Mulher.Apelido + " de " + casal.Homem.Apelido;
+                    casal.Mulher.Dupla = casal.Mulher?.Apelido + " de " + casal.Homem?.Apelido;
                     resultCasais.Add(casal.Mulher);
                 }
             });

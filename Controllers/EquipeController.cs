@@ -153,7 +153,7 @@ namespace SysIgreja.Controllers
             else
             {
                 result = equipesBusiness
-                   .GetQueryEquipantesEvento(EventoId).Include(x => x.Evento).Include(x => x.Presencas)
+                   .GetQueryEquipantesEvento(EventoId).Include(x => x.Evento).Include(x => x.Equipante).Include(x => x.Presencas)
                        .Include(x => x.Evento.Reunioes).ToList().Select(x => new PresencaViewModel
                        {
                            Id = x.Id,

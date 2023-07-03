@@ -134,16 +134,36 @@ namespace SysIgreja.Controllers
         {
             var presenca = equipesBusiness.GetPresenca(ReuniaoId).Select(x => x.EquipanteEventoId).ToList();
 
-            var result = equipesBusiness
-                .GetMembrosEquipe(EventoId, GetEquipesFilhas(EquipeId, EventoId)).Include(x => x.Evento).Include(x => x.Presencas)
-                    .Include(x => x.Evento.Reunioes).ToList().Select(x => new PresencaViewModel
-                    {
-                        Id = x.Id,
-                        Nome = x.Equipante.Nome,
-                        Congregacao = x.Equipante.Congregacao,
-                        Presenca = presenca.Contains(x.Id),
-                        Reunioes = x.Evento.Reunioes.Where(y => y.DataReuniao.Date < DateTime.Today && y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
-                    });
+            var result = new List<PresencaViewModel>();
+
+            if (EquipeId != 0)
+            {
+
+                result = equipesBusiness
+                    .GetMembrosEquipe(EventoId, GetEquipesFilhas(EquipeId, EventoId)).Include(x => x.Evento).Include(x => x.Presencas)
+                        .Include(x => x.Evento.Reunioes).ToList().Select(x => new PresencaViewModel
+                        {
+                            Id = x.Id,
+                            Nome = x.Equipante.Nome,
+                            Congregacao = x.Equipante.Congregacao,
+                            Presenca = presenca.Contains(x.Id),
+                            Reunioes = x.Evento.Reunioes.Where(y => y.DataReuniao.Date < DateTime.Today && y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
+                        }).ToList();
+            }
+            else
+            {
+                result = equipesBusiness
+                   .GetQueryEquipantesEvento(EventoId).Include(x => x.Evento).Include(x => x.Presencas)
+                       .Include(x => x.Evento.Reunioes).ToList().Select(x => new PresencaViewModel
+                       {
+                           Id = x.Id,
+                           Nome = x.Equipante.Nome,
+                           Congregacao = x.Equipante.Congregacao,
+                           Presenca = presenca.Contains(x.Id),
+                           Reunioes = x.Evento.Reunioes.Where(y => y.DataReuniao.Date < DateTime.Today && y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
+                       }).ToList();
+            }
+
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

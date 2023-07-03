@@ -60,7 +60,7 @@
                 { data: "Nome", name: "Nome", autoWidth: true },
                 { data: "Congregacao", name: "Congregacao", autoWidth: true },
                 {
-                    data: "Id", name: "Id", visible: false, className: 'noVis noSearch',
+                    data: "Id", name: "Id", visible: false, className: 'noVis noSearch noExport',
                     "render": function (data, type, row) {
                         return `${row.Presenca ? "✔" : ""}`;
                     }

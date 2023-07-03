@@ -7,94 +7,78 @@
         "encrypt": true
       },
       "previewLimit": 50,
-      "server": "iecbeventos.com.br",
-      "port": 1431,
+      "server": "162.246.23.197",
+      "port": 1433,
       "driver": "MSSQL",
-      "name": "Imersão",
-      "group": "Recon",
-      "database": "imersao",
-      "username": "imersao",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "iecbeventos.com.br",
-      "port": 1431,
-      "driver": "MSSQL",
-      "name": "SVES",
-      "group": "Trindade",
-      "database": "sves",
-      "username": "sves",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "iecbeventos.com.br",
-      "port": 1431,
-      "driver": "MSSQL",
-      "name": "Realidade Recon",
-      "group": "Recon",
-      "database": "realidaderecon",
-      "username": "realidaderecon",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "iecbeventos.com.br",
-      "port": 1431,
-      "driver": "MSSQL",
-      "name": "EJC Recon",
-      "group": "Recon",
-      "database": "ejcrecon",
-      "username": "ejcrecon",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "iecbeventos.com.br",
-      "port": 1431,
-      "driver": "MSSQL",
-      "name": "EJC",
-      "group": "Trindade",
-      "database": "ejc",
-      "username": "ejcuser",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "sozo.iecbeventos.com.br",
-      "port": 1431,
-      "driver": "MSSQL",
-      "name": "Sozo",
       "group": "IECB",
-      "database": "sozo",
-      "username": "sozo",
-      "password": "Reinaux0)"
+      "database": "trindade",
+      "name": "Trindade",
+      "username": "reinaux",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "IECB",
+      "database": "recon",
+      "name": "Recon",
+      "username": "reinaux",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "IECB",
+      "database": "getsemani",
+      "name": "Getsemani",
+      "username": "reinaux",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "IECB",
+      "database": "iecbeventos",
+      "name": "Iecbeventos",
+      "username": "reinaux",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "IECB",
+      "database": "consulta",
+      "name": "Consulta",
+      "username": "reinaux",
+      "password": "T3_g0x0o9"
     }
   ],
   "dotnet.defaultSolution": "sysigreja-deploys.sln"

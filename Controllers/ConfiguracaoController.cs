@@ -325,6 +325,14 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+        //[HttpPost]
+        //public ActionResult EditEquipeDestino(EquipesModel equipe)
+        //{
+        //    configuracaoBusiness.EditEquipeDestino(equipe);
+
+        //    return new HttpStatusCodeResult(200);
+        //}
+
         [HttpPost]
         public ActionResult EditEquipeDestino(EquipesModel equipe)
         {

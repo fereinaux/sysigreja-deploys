@@ -112,7 +112,7 @@ namespace SysIgreja.Controllers
                 Equipe = x.Equipe.Nome,
                 Id = x.EquipeId
             });
-           
+
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

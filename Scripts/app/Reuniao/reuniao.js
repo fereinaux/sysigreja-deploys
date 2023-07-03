@@ -26,7 +26,6 @@
                 data: "Id", name: "Id", orderable: false, width: "10%",
                 "render": function (data, type, row) {
                     return `${GetButton('EditReuniao', data, 'blue', 'fa-edit', 'Editar')}
-${GetButton('PresencaReuniao', JSON.stringify(row.Equipes), 'green', 'fa-info-circle', 'Presenca')}
                                ${GetButton('DeleteReuniao', data, 'red', 'fa-trash', 'Excluir')}`;
                 }
             }

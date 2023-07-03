@@ -39,21 +39,14 @@ namespace SysIgreja.Controllers
         {
             var result = reuniaosBusiness
                 .GetReunioes(EventoId)
-                .ToList()
                 .Select(x => new ReuniaoViewModel
                 {
                     Id = x.Id,
                     DataReuniao = x.DataReuniao,
                     Presenca = x.Presenca.Count(),
                     Pauta = x.Pauta,
-                    Titulo = x.Titulo,
-                    Equipes = x.Presenca.GroupBy(y => y.EquipanteEvento.Equipe).Select(z => new EquipesModel
-                    {
-                        Equipe = z.Key.Nome,
-                        Presenca = $"{z.Count()}/{equipesBusiness.GetMembrosEquipe(EventoId, GetEquipesFilhas(z.Key.Id, EventoId)).Count()}",
-                        PresencaOrder = z.Count()/equipesBusiness.GetMembrosEquipe(EventoId, GetEquipesFilhas(z.Key.Id, EventoId)).Count()
-                    }).ToList()
-                }); ;
+                    Titulo = x.Titulo
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

@@ -34,7 +34,7 @@
                     <div class="m-b-md">
                         <div class="d-flex m-b-lg">
 
-                        <img id="img-logo" style="width:200px"  class="m-auto"/>
+                            <img id="img-logo" style="width:200px" class="m-auto" />
                         </div>
                         <h2 class="font-bold no-margins">
                             <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Evento
@@ -47,7 +47,7 @@
                                 <select class="form-control text-center navy-bg" id="eventoid" onchange="CarregarTela()">
                                     @foreach (var evento in ViewBag.Eventos)
                                     {
-                                        <option data-status="@evento.Status" value="@evento.Id" >@evento.Configuracao.Titulo @evento.Numeracao.ToString()</option>
+                                        <option data-status="@evento.Status" value="@evento.Id">@evento.Configuracao.Titulo @evento.Numeracao.ToString()</option>
                                     }
                                 </select>
                             </div>
@@ -63,7 +63,7 @@
                     </div>
                     <div>
                         <span>Membros na Equipe: <span class="qtd-membros"></span></span>
-                        <button disabled id="btn-excel"  class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="ExportarExcel()"><i class="fa fa-file-excel"></i> Excel</button>
+                        <button disabled id="btn-excel" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="ExportarExcel()"><i class="fa fa-file-excel"></i> Excel</button>
                     </div>
                 </div>
                 <div class="widget-text-box">
@@ -118,11 +118,7 @@
                     <div>
                         <div class="row">
                             <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
-                                <select class="form-control text-center navy-bg" id="reuniaoid"  onchange="CarregarTabelaPresenca()">
-
-                                        
-                                
-
+                                <select class="form-control text-center navy-bg" id="reuniaoid" onchange="CarregarTabelaPresenca()">
                                 </select>
                             </div>
                         </div>
@@ -139,7 +135,7 @@
                         <tbody class="tbpresenca"></tbody>
                     </table>
                 </div>
-            </div>            
+            </div>
         </div>
     </div>
 </body>

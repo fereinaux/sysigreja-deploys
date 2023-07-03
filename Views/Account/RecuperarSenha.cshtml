@@ -27,18 +27,18 @@
                 <img style="max-width:85% !important;max-height:120px; margin:20px" src="data:image/png;base64,@ViewBag.Configuracao.Logo" alt="Igreja Episcopal Carismática do Brasil" />
             }
 
-        <div class="form-group ">
-            @if (ViewBag.Tipo == "Recovery")
-            {
-                <input type="password" style="margin-bottom:15px" placeholder="senha" class="form-control text-lowercase required" name="password" id="password" data-field="Senha" />
-                <input type="password" placeholder="confirmar senha" class="form-control text-lowercase required" name="password" id="confirm-password" data-field="Senha" />
-            }
-            else
-            {
+            <div class="form-group ">
+                @if (ViewBag.Tipo == "Recovery")
+                {
+                    <input type="password" style="margin-bottom:15px" placeholder="senha" class="form-control text-lowercase required" name="password" id="password" data-field="Senha" />
+                    <input type="password" placeholder="confirmar senha" class="form-control text-lowercase required" name="password" id="confirm-password" data-field="Senha" />
+                }
+                else
+                {
 
-                <input type="email" placeholder="E-mail" class="form-control text-lowercase required" name="email" id="email" data-field="E-mail" />
-            }
-        </div>
+                    <input type="email" placeholder="E-mail" class="form-control text-lowercase required" name="email" id="email" data-field="E-mail" />
+                }
+            </div>
 
 
             <div style="margin:15px 0">

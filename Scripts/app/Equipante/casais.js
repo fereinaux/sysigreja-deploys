@@ -75,7 +75,7 @@ function CarregarTabelaEquipante(callbackFunction) {
             {
                 data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis noSearch',
                 "render": function (data, type, row) {
-                    return `${GetCheckBox(data, row.Presenca)}`;
+                    return `${GetCheckBox(data, false)}`;
                 }
             },
             { data: "Dupla", name: "Dupla", title: "Dupla", visible: false, className: 'noVis' },

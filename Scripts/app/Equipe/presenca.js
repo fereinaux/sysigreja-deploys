@@ -67,7 +67,26 @@
                         }
                         return `${GetCheckBox(data, row.Presenca)}`;
                     }
-                }
+                },
+                {
+                    data: "Reunioes", name: "Reunioes", orderable: false, className: 'noSearch', render: function (data, type, row) {
+                        if (type === 'export') {
+                            return `<div>
+
+        ${data?.map(presenca => {
+                                return presenca ? '√' : "X"
+                            }).join(' - ')}</div>`
+                        }
+
+                        return `<div style="    text-wrap: nowrap;">
+                    ${data?.map(presenca => {
+
+                            return `   <i class="fas fa-${presenca ? "check" : "times"}"></i>`
+
+                        }).join().replace(/,/g, '')}
+    </div>`
+                    }
+                },
             ],
             order: [
                 [0, "asc"]
@@ -92,7 +111,7 @@
                 type: "POST"
             }
         };
-        $("#table-presenca").DataTable(tablePresencaConfig);
+        $("#table-ata-presenca").DataTable(tablePresencaConfig);
     }
 }
 

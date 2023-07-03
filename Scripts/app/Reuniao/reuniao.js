@@ -66,7 +66,7 @@ function GetReuniao(id) {
 }
 
 function PresencaReuniao(equipes) {
-    $("#table-presenca").DataTable({
+    $("#table-ata-presenca").DataTable({
         language: languageConfig,
         lengthMenu: [20],
         colReorder: false,

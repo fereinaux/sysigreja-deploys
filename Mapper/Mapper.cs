@@ -157,7 +157,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Parente, opt => opt.MapFrom(x => x.Equipante.Parente))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
                     .ForMember(dest => dest.Checkin, opt => opt.MapFrom(x => x.Checkin))
-                                 .ForMember(dest => dest.Presenca, opt => opt.MapFrom(x => x.Evento.Reunioes.Where(y => y.DataReuniao.Date < System.DateTime.Today).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id))))
+                                 .ForMember(dest => dest.Presenca, opt => opt.MapFrom(x => x.Evento.Reunioes.Where(y => y.DataReuniao.Date < System.DateTime.Today && y.Status != Utils.Enums.StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id))))
                        .ForMember(dest => dest.StatusMontagem, opt => opt.MapFrom(x => x.StatusMontagem.GetDescription()));
                 cfg.CreateMap<EquipanteEvento, PostEquipanteModel>()
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Equipante.Id))

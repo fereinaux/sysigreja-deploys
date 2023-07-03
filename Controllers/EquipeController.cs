@@ -140,7 +140,8 @@ namespace SysIgreja.Controllers
                     Id = x.Id,
                     Nome = x.Equipante.Nome,
                     Congregacao = x.Equipante.Congregacao,
-                    Presenca = presenca.Contains(x.Id)
+                    Presenca = presenca.Contains(x.Id),
+                    Reunioes = x.Evento.Reunioes.Where(y => y.DataReuniao.Date < DateTime.Today && y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
                 });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

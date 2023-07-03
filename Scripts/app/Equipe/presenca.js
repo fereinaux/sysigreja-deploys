@@ -60,12 +60,6 @@
                 { data: "Nome", name: "Nome", autoWidth: true },
                 { data: "Congregacao", name: "Congregacao", autoWidth: true },
                 {
-                    data: "Id", name: "Id", visible: false, className: 'noVis noSearch noExport',
-                    "render": function (data, type, row) {
-                        return `${row.Presenca ? "✔" : ""}`;
-                    }
-                },
-                {
                     data: "Id", name: "Id", orderable: false, width: "15%",
                     "render": function (data, type, row) {
                         if (type === 'export') {

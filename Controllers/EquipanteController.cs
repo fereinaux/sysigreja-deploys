@@ -81,6 +81,15 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+
+        public ActionResult Duplicados()
+        {
+            ViewBag.Title = "Remover Duplicados";
+            GetEventos();
+
+            return View();
+        }
+
         public ActionResult Montagem()
         {
             ViewBag.Title = "Montagem";
@@ -917,6 +926,21 @@ namespace SysIgreja.Controllers
 
 
         [HttpGet]
+        public ActionResult GetDuplicados(string Search, int? Original)
+        {
+            var query = equipantesBusiness.GetEquipantes();
+
+            query = query.Where(x => x.Nome.Contains(Search) || x.Apelido.Contains(Search));
+
+            if (Original.HasValue)
+            {
+                query = query.Where(x => x.Id != Original.Value);
+            }
+
+            return Json(new { Items = query.ToList().Select(x => new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).Distinct() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public ActionResult GetEquipanteTipoEvento(int EventoId, string Search)
         {
             var existentes = equipesBusiness.GetEquipantesEvento(EventoId).Select(x => x.EquipanteId);
@@ -942,6 +966,13 @@ namespace SysIgreja.Controllers
             return Json(new { Items = resultEquipantes.Select(x => new { x.Tipo, id = x.Id, text = $"{x.Nome} - {x.Apelido}" }).Distinct() }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult RemoverDuplicado(int Original, int Duplicado)
+        {
+            equipantesBusiness.RemoverDuplicado(Original, Duplicado);
+
+            return new HttpStatusCodeResult(200);
+        }
 
         [HttpPost]
         public ActionResult DeleteEquipante(int Id, int? EventoId)

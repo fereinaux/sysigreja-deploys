@@ -40,6 +40,7 @@
                     <li class="@Html.IsSelected(action: "Coordenador", controller:"Home")"><a href="@Url.Action("Coordenador", "Home")">Coordenador</a></li>
                     <li class="@Html.IsSelected(action: "Presenca", controller:"Equipe")"><a href="@Url.Action("Presenca", "Equipe")">Ata de Presença</a></li>
                     <li class="@Html.IsSelected(action: "Voluntarios", controller:"Quarto")"><a href="@Url.Action("Voluntarios", "Quarto")">Quartos</a></li>
+                    <li class="@Html.IsSelected(action: "Duplicados", controller:"Equipante")"><a href="@Url.Action("Duplicados", "Equipante")">Remover Duplicados</a></li>
                 </ul>
             </li>
             <li class="@Html.IsSelected(action: "Index", controller: "Lancamento")"><a href="@Url.Action("Index", "Lancamento")"><i class="far fa-money-bill-alt"></i><span class="nav-label">Financeiro</span></a></li>

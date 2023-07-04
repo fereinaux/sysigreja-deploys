@@ -1,0 +1,1016 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="#">Voluntários</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>@ViewBag.Title</h4>
+            <div style=" width: 20%;" class="ibox-tools pull-right">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-default" onclick="PostEquipante()">Salvar Original</button>
+                        <button class="btn btn-default" onclick="RemoverDuplicado()">Remover Duplicado</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <h4>Registro Original - Será Mantido</h4>
+
+                    <select onchange="dadosOriginal()" class="form-control" id="registro-original" style="width:100%"></select>
+                    <div class="moldura-modal p-xs d-none" style="margin-top:15px" id="form-original">
+                        <h5>Histórico</h5>
+                        <table id="table-historico-original" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Evento</th>
+                                    <th>Equipe</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Nome</h5>
+
+                            <input type="text" class="form-control " id="equipante-nome" data-field="Nome" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Apelido</h5>
+
+                            <input type="text" class="form-control " id="equipante-apelido" data-field="Apelido" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Data de Nascimento</h5>
+
+                            <input type="text" class="form-control full-date " id="equipante-data-nascimento" data-field="Data de Nascimento" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Sexo</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" checked="" value="1" name="equipante-sexo"> <i></i> Masculino </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" value="2" name="equipante-sexo"> <i></i> Feminino </label></div>
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Email</h5>
+
+                            <input type="email" class="form-control" id="equipante-email" data-field="Email" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>WhatsApp</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Cônjuge</h5>
+
+                            <input type="text" class="form-control " id="equipante-conjuge" data-field="Cônjuge" />
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Instagram</h5>
+
+                            <input type="text" class="form-control " id="equipante-instagram" data-field="Apelido" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Tamanho da Camisa</h5>
+
+                            <select class="form-control" id="equipante-camisa">
+                                <option value="8">8</option>
+                                <option value="10">10</option>
+                                <option value="12">12</option>
+                                <option value="14">14</option>
+                                <option value="PP">PP</option>
+                                <option value="P">P</option>
+                                <option value="M">M</option>
+                                <option value="G">G</option>
+                                <option value="GG">GG</option>
+                                <option value="XGG">XGG</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3 p-w-md m-t-md text-center">
+                            <h5>CEP</h5>
+
+                            <input type="text" class="form-control  cep" id="equipante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                            <input type="hidden" id="equipante-latitude" />
+                            <input type="hidden" id="equipante-longitude" />
+                        </div>
+
+                        <div class="col-sm-9 p-w-md m-t-md text-center">
+                            <h5>Logradouro</h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-logradouro" data-field="Logradouro" />
+                        </div>
+
+                        <div class="col-sm-5 p-w-md m-t-md text-center">
+                            <h5>Bairro</h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-bairro" data-field="Bairro" />
+                        </div>
+
+                        <div class="col-sm-5 p-w-md m-t-md text-center">
+                            <h5>
+                                Cidade
+                            </h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-cidade" data-field="Cidade" />
+                        </div>
+
+                        <div class="col-sm-2 p-w-md m-t-md text-center">
+                            <h5>
+                                Estado
+                            </h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-estado" data-field="Estado" />
+                        </div>
+
+                        <div class="col-sm-4 p-w-md m-t-md text-center">
+                            <h5>
+                                Número
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-numero" data-field="Número" />
+                        </div>
+
+
+                        <div class="col-sm-8 p-w-md m-t-md text-center">
+                            <h5>
+                                Complemento
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-complemento" data-field="Complemento" />
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>
+                                Ponto de Referência
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-referencia" data-field="Ponto de Referência" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center div-map" style="display: none">
+                            <div id="map" style="height:300px;">
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Nome da Mãe</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomemae" data-field="Nome da Mã" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone da Mãe</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fonemae" data-field="Fone da Mãe" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Nome do Pai</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomepai" data-field="Nome do Pai" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone do Pai</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fonepai" data-field="Fone do Pai" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Pessoa de Contato</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomecontato" data-field="Pessoa de Contato" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone do Contato</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fonecontato" data-field="Fone do Contato" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Pessoa que Convidou</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomeconvite" data-field="Pessoa de Convite" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone de quem convidou</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-foneconvite" data-field="Fone do Convite" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Participa de qual Congregação?</h5>
+                            <input type="text" class="form-control" id="equipante-congregacao" data-field="Congregação" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Possui convênio médico?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-convenio" value="true" name="equipante-hasconvenio"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-convenio" checked="" value="false" name="equipante-hasconvenio"> <i></i> Não </label></div>
+
+                            <div class="convenio d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-convenio" data-field="Convênio" />
+                                <h5>Quais hospitais atendem?</h5>
+                                <input type="text" class="form-control" id="equipante-hospitais" data-field="Hospitais" />
+                            </div>
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>É casado(a)?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="is-casado" value="true" name="equipante-iscasado"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-casado" checked="" value="false" name="equipante-iscasado"> <i></i> Não </label></div>
+
+                            <div class="casado d-none">
+                                <h5>Qual a sua data de casamento?</h5>
+                                <input type="text" class="form-control full-date" id="equipante-data-casamento" data-field="Data de Casamento" />
+
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Toma alguma medicação?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-medicacao" value="true" name="equipante-hasmedicacao"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-medicacao" checked="" value="false" name="equipante-hasmedicacao"> <i></i> Não </label></div>
+
+                            <div class="medicacao d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-medicacao" data-field="Medicação" />
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Tem alguma alergia?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-alergia" value="true" name="equipante-hasalergia"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-alergia" checked="" value="false" name="equipante-hasalergia"> <i></i> Não </label></div>
+
+                            <div class="alergia d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-alergia" data-field="Alergia" />
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Tem alguma restrição alimentar?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-restricaoalimentar" value="true" name="equipante-hasrestricaoalimentar"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-restricaoalimentar" checked="" value="false" name="equipante-hasrestricaoalimentar"> <i></i> Não </label></div>
+
+                            <div class="restricaoalimentar d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-restricaoalimentar" data-field="Restrição Alimentar" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                    <h4>Registro Duplicado - Será Apagado</h4>
+
+                    <select onchange="dadosDuplicado()" class="form-control" id="registro-duplicado" style="width:100%"></select>
+                    <div class="moldura-modal p-xs d-none" style="margin-top:15px" id="form-duplicado">
+                        <h5>Histórico</h5>
+                        <table id="table-historico-duplicado" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Evento</th>
+                                    <th>Equipe</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Nome</h5>
+
+                            <input type="text" class="form-control " id="equipante-nome" data-field="Nome" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Apelido</h5>
+
+                            <input type="text" class="form-control " id="equipante-apelido" data-field="Apelido" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Data de Nascimento</h5>
+
+                            <input type="text" class="form-control full-date " id="equipante-data-nascimento" data-field="Data de Nascimento" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Sexo</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" checked="" value="1" name="equipante-sexo"> <i></i> Masculino </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="equipante-sexo" value="2" name="equipante-sexo"> <i></i> Feminino </label></div>
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Email</h5>
+
+                            <input type="email" class="form-control" id="equipante-email" data-field="Email" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>WhatsApp</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Cônjuge</h5>
+
+                            <input type="text" class="form-control " id="equipante-conjuge" data-field="Cônjuge" />
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Instagram</h5>
+
+                            <input type="text" class="form-control " id="equipante-instagram" data-field="Apelido" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Tamanho da Camisa</h5>
+
+                            <select class="form-control" id="equipante-camisa">
+                                <option value="8">8</option>
+                                <option value="10">10</option>
+                                <option value="12">12</option>
+                                <option value="14">14</option>
+                                <option value="PP">PP</option>
+                                <option value="P">P</option>
+                                <option value="M">M</option>
+                                <option value="G">G</option>
+                                <option value="GG">GG</option>
+                                <option value="XGG">XGG</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3 p-w-md m-t-md text-center">
+                            <h5>CEP</h5>
+
+                            <input type="text" class="form-control  cep" id="equipante-cep" data-field="CEP" onkeyup="verificaCep(this)" />
+                            <input type="hidden" id="equipante-latitude" />
+                            <input type="hidden" id="equipante-longitude" />
+                        </div>
+
+                        <div class="col-sm-9 p-w-md m-t-md text-center">
+                            <h5>Logradouro</h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-logradouro" data-field="Logradouro" />
+                        </div>
+
+                        <div class="col-sm-5 p-w-md m-t-md text-center">
+                            <h5>Bairro</h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-bairro" data-field="Bairro" />
+                        </div>
+
+                        <div class="col-sm-5 p-w-md m-t-md text-center">
+                            <h5>
+                                Cidade
+                            </h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-cidade" data-field="Cidade" />
+                        </div>
+
+                        <div class="col-sm-2 p-w-md m-t-md text-center">
+                            <h5>
+                                Estado
+                            </h5>
+
+                            <input type="text" class="form-control " disabled id="equipante-estado" data-field="Estado" />
+                        </div>
+
+                        <div class="col-sm-4 p-w-md m-t-md text-center">
+                            <h5>
+                                Número
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-numero" data-field="Número" />
+                        </div>
+
+
+                        <div class="col-sm-8 p-w-md m-t-md text-center">
+                            <h5>
+                                Complemento
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-complemento" data-field="Complemento" />
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>
+                                Ponto de Referência
+                            </h5>
+
+                            <input type="text" class="form-control" id="equipante-referencia" data-field="Ponto de Referência" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center div-map" style="display: none">
+                            <div id="map" style="height:300px;">
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Nome da Mãe</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomemae" data-field="Nome da Mã" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone da Mãe</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fonemae" data-field="Fone da Mãe" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Nome do Pai</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomepai" data-field="Nome do Pai" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone do Pai</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fonepai" data-field="Fone do Pai" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Pessoa de Contato</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomecontato" data-field="Pessoa de Contato" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone do Contato</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-fonecontato" data-field="Fone do Contato" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Pessoa que Convidou</h5>
+
+                            <input type="text" class="form-control " id="equipante-nomeconvite" data-field="Pessoa de Convite" />
+                        </div>
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Fone de quem convidou</h5>
+
+                            <input type="text" class="form-control fone" id="equipante-foneconvite" data-field="Fone do Convite" placeholder="+55 (81) 9999-9999" />
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Participa de qual Congregação?</h5>
+                            <input type="text" class="form-control" id="equipante-congregacao" data-field="Congregação" />
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Possui convênio médico?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-convenio" value="true" name="equipante-hasconvenio"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-convenio" checked="" value="false" name="equipante-hasconvenio"> <i></i> Não </label></div>
+
+                            <div class="convenio d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-convenio" data-field="Convênio" />
+                                <h5>Quais hospitais atendem?</h5>
+                                <input type="text" class="form-control" id="equipante-hospitais" data-field="Hospitais" />
+                            </div>
+                        </div>
+
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>É casado(a)?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="is-casado" value="true" name="equipante-iscasado"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-casado" checked="" value="false" name="equipante-iscasado"> <i></i> Não </label></div>
+
+                            <div class="casado d-none">
+                                <h5>Qual a sua data de casamento?</h5>
+                                <input type="text" class="form-control full-date" id="equipante-data-casamento" data-field="Data de Casamento" />
+
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Toma alguma medicação?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-medicacao" value="true" name="equipante-hasmedicacao"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-medicacao" checked="" value="false" name="equipante-hasmedicacao"> <i></i> Não </label></div>
+
+                            <div class="medicacao d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-medicacao" data-field="Medicação" />
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Tem alguma alergia?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-alergia" value="true" name="equipante-hasalergia"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-alergia" checked="" value="false" name="equipante-hasalergia"> <i></i> Não </label></div>
+
+                            <div class="alergia d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-alergia" data-field="Alergia" />
+                            </div>
+                        </div>
+
+                        <div class="p-w-md m-t-md text-center">
+                            <h5>Tem alguma restrição alimentar?</h5>
+
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="has-restricaoalimentar" value="true" name="equipante-hasrestricaoalimentar"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-green inline"><label> <input type="radio" id="not-restricaoalimentar" checked="" value="false" name="equipante-hasrestricaoalimentar"> <i></i> Não </label></div>
+
+                            <div class="restricaoalimentar d-none">
+                                <h5>Qual?</h5>
+                                <input type="text" class="form-control" id="equipante-restricaoalimentar" data-field="Restrição Alimentar" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+@section Styles {
+    <style>
+        .d-none {
+            display: none;
+        }
+    </style>
+}
+
+@section Scripts {
+
+    <script>
+
+        function dadosOriginal() {
+            if ($('#registro-original').val()) {
+                const tableHistoricoConfig = {
+                    language: languageConfig,
+                    lengthMenu: [200, 500, 1000],
+                    colReorder: false,
+                    serverSide: false,
+                    deferloading: 0,
+                    orderCellsTop: true,
+                    fixedHeader: true,
+                    filter: true,
+                    orderMulti: false,
+                    responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+                    destroy: true,
+                    dom: domConfig,
+                    buttons: getButtonsConfig('Histórico'),
+                    columns: [
+                        { data: "Evento", name: "Evento", autoWidth: true },
+                        {
+                            data: "Equipe", name: "Equipe", autoWidth: true, render: function (data, type, row) {
+                                return `<i class="fas fa-${row.Coordenador == "Coordenador" ? "star" : "user"}"></i> ${data}`
+                            }
+                        },
+                    ],
+
+                    order: [
+                        [0, "asc"]
+                    ],
+                    ajax: {
+                        data: { id: $('#registro-original').val(), },
+                        url: '/Equipante/GetHistorico',
+                        datatype: "json",
+                        type: "POST"
+                    }
+                };
+
+                $("#table-historico-original").DataTable(tableHistoricoConfig);
+
+                $.ajax({
+                    url: "/Equipante/GetEquipante/",
+                    data: { Id: $('#registro-original').val() },
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#equipante-id").val(data.Equipante.Id);
+                        $("#equipante-congregacao").val(data.Equipante.Congregacao);
+                        $("#equipante-checkin").val(data.Equipante.Checkin);
+                        $(`#equipante-nome`).val(data.Equipante.Nome);
+                        $(`#equipante-apelido`).val(data.Equipante.Apelido);
+                        $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                        $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                        $(`#equipante-email`).val(data.Equipante.Email);
+                        $(`#equipante-fone`).val(data.Equipante.Fone);
+
+                        $(`#equipante-camisa`).val(data.Equipante.Camisa);
+                        $(`#equipante-nome-pai`).val(data.Equipante.NomePai);
+                        $(`#equipante-fone-pai`).val(data.Equipante.FonePai);
+                        $(`#equipante-nome-mae`).val(data.Equipante.NomeMae);
+                        $(`#equipante-fone-mae`).val(data.Equipante.FoneMae);
+                        $(`#equipante-cep`).val(data.Equipante.CEP);
+                        $(`#equipante-logradouro`).val(data.Equipante.Logradouro);
+                        $(`#equipante-bairro`).val(data.Equipante.Bairro);
+                        $(`#equipante-cidade`).val(data.Equipante.Cidade);
+                        $(`#equipante-estado`).val(data.Equipante.Estado);
+                        $(`#equipante-numero`).val(data.Equipante.Numero);
+                        $(`#equipante-complemento`).val(data.Equipante.Complemento);
+                        $(`#equipante-conjuge`).val(data.Equipante.Conjuge);
+                        $(`#equipante-referencia`).val(data.Equipante.Referencia);
+
+                        $(`#equipante-latitude`).val((data.Equipante.Latitude || '').replaceAll(',', '.'));
+                        $(`#equipante-longitude`).val((data.Equipante.Longitude || '').replaceAll(',', '.'));
+
+
+                        $(`#equipante-nomeconvite`).val(data.Equipante.NomeConvite);
+                        $(`#equipante-foneconvite`).val(data.Equipante.FoneConvite);
+                        $(`#equipante-nomecontato`).val(data.Equipante.NomeContato);
+                        $(`#equipante-fonecontato`).val(data.Equipante.FoneContato);
+                        $(`#equipante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
+                        $(`#equipante-medicacao`).val(data.Equipante.Medicacao);
+                        $(`#equipante-alergia`).val(data.Equipante.Alergia);
+                        $(`#equipante-convenio`).val(data.Equipante.Convenio);
+                        $(`#equipante-hospitais`).val(data.Equipante.Hospitais);
+
+
+                        $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');
+                        $(`input[type=radio][name=equipante-iscasado][value=${data.Equipante.IsCasado}]`).iCheck('check');
+                        $(`input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
+                        $(`input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
+                        $(`input[type=radio][name=equipante-hasconvenio][value=${data.Equipante.HasConvenio}]`).iCheck('check');
+                        $(`input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
+
+                        $('#form-original').removeClass('d-none')
+
+                        if ($('#map').length > 0) {
+
+                            montarMapa()
+
+                        }
+                    }
+                });
+            }
+        }
+
+        function dadosDuplicado() {
+            if ($('#registro-duplicado').val()) {
+
+
+                const tableHistoricoConfig = {
+                    language: languageConfig,
+                    lengthMenu: [200, 500, 1000],
+                    colReorder: false,
+                    serverSide: false,
+                    deferloading: 0,
+                    orderCellsTop: true,
+                    fixedHeader: true,
+                    filter: true,
+                    orderMulti: false,
+                    responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+                    destroy: true,
+                    dom: domConfig,
+                    buttons: getButtonsConfig('Histórico'),
+                    columns: [
+                        { data: "Evento", name: "Evento", autoWidth: true },
+                        {
+                            data: "Equipe", name: "Equipe", autoWidth: true, render: function (data, type, row) {
+                                return `<i class="fas fa-${row.Coordenador == "Coordenador" ? "star" : "user"}"></i> ${data}`
+                            }
+                        },
+                    ],
+
+                    order: [
+                        [0, "asc"]
+                    ],
+                    ajax: {
+                        data: { id: $('#registro-duplicado').val(), },
+                        url: '/Equipante/GetHistorico',
+                        datatype: "json",
+                        type: "POST"
+                    }
+                };
+
+                $("#table-historico-duplicado").DataTable(tableHistoricoConfig);
+
+                $.ajax({
+                    url: "/Equipante/GetEquipante/",
+                    data: { Id: $('#registro-duplicado').val() },
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $("#form-duplicado #equipante-id").val(data.Equipante.Id);
+                        $("#form-duplicado #equipante-congregacao").val(data.Equipante.Congregacao);
+                        $("#form-duplicado #equipante-checkin").val(data.Equipante.Checkin);
+                        $(`#form-duplicado #equipante-nome`).val(data.Equipante.Nome);
+                        $(`#form-duplicado #equipante-apelido`).val(data.Equipante.Apelido);
+                        $("#form-duplicado #equipante-data-nascimento").val(moment(data.Equipante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                        $("#form-duplicado #equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                        $(`#form-duplicado #equipante-email`).val(data.Equipante.Email);
+                        $(`#form-duplicado #equipante-fone`).val(data.Equipante.Fone);
+
+                        $(`#form-duplicado #equipante-camisa`).val(data.Equipante.Camisa);
+                        $(`#form-duplicado #equipante-nome-pai`).val(data.Equipante.NomePai);
+                        $(`#form-duplicado #equipante-fone-pai`).val(data.Equipante.FonePai);
+                        $(`#form-duplicado #equipante-nome-mae`).val(data.Equipante.NomeMae);
+                        $(`#form-duplicado #equipante-fone-mae`).val(data.Equipante.FoneMae);
+                        $(`#form-duplicado #equipante-cep`).val(data.Equipante.CEP);
+                        $(`#form-duplicado #equipante-logradouro`).val(data.Equipante.Logradouro);
+                        $(`#form-duplicado #equipante-bairro`).val(data.Equipante.Bairro);
+                        $(`#form-duplicado #equipante-cidade`).val(data.Equipante.Cidade);
+                        $(`#form-duplicado #equipante-estado`).val(data.Equipante.Estado);
+                        $(`#form-duplicado #equipante-numero`).val(data.Equipante.Numero);
+                        $(`#form-duplicado #equipante-complemento`).val(data.Equipante.Complemento);
+                        $(`#form-duplicado #equipante-conjuge`).val(data.Equipante.Conjuge);
+                        $(`#form-duplicado #equipante-referencia`).val(data.Equipante.Referencia);
+
+                        $(`#form-duplicado #equipante-latitude`).val((data.Equipante.Latitude || '').replaceAll(',', '.'));
+                        $(`#form-duplicado #equipante-longitude`).val((data.Equipante.Longitude || '').replaceAll(',', '.'));
+
+
+                        $(`#form-duplicado #equipante-nomeconvite`).val(data.Equipante.NomeConvite);
+                        $(`#form-duplicado #equipante-foneconvite`).val(data.Equipante.FoneConvite);
+                        $(`#form-duplicado #equipante-nomecontato`).val(data.Equipante.NomeContato);
+                        $(`#form-duplicado #equipante-fonecontato`).val(data.Equipante.FoneContato);
+                        $(`#form-duplicado #equipante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
+                        $(`#form-duplicado #equipante-medicacao`).val(data.Equipante.Medicacao);
+                        $(`#form-duplicado #equipante-alergia`).val(data.Equipante.Alergia);
+                        $(`#form-duplicado #equipante-convenio`).val(data.Equipante.Convenio);
+                        $(`#form-duplicado #equipante-hospitais`).val(data.Equipante.Hospitais);
+
+
+                        $(`#form-duplicado input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');
+                        $(`#form-duplicado input[type=radio][name=equipante-iscasado][value=${data.Equipante.IsCasado}]`).iCheck('check');
+                        $(`#form-duplicado input[type=radio][name=equipante-hasalergia][value=${data.Equipante.HasAlergia}]`).iCheck('check');
+                        $(`#form-duplicado input[type=radio][name=equipante-hasmedicacao][value=${data.Equipante.HasMedicacao}]`).iCheck('check');
+                        $(`#form-duplicado input[type=radio][name=equipante-hasconvenio][value=${data.Equipante.HasConvenio}]`).iCheck('check');
+                        $(`#form-duplicado input[type=radio][name=equipante-hasrestricaoalimentar][value=${data.Equipante.HasRestricaoAlimentar}]`).iCheck('check');
+
+                        $('#form-duplicado').removeClass('d-none')
+                    }
+                });
+            }
+        }
+
+        function RemoverDuplicado() {
+
+            ConfirmMessageDelete().then((result) => {
+                if (result) {
+                    $.ajax({
+                        url: "/Equipante/RemoverDuplicado/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                Original: $('#registro-original').val(),
+                                Duplicado: $('#registro-duplicado').val(),
+                            }),
+                        success: function () {
+                            $('#form-original').addClass('d-none')
+                            $('#form-duplicado').addClass('d-none')
+                            $('#registro-duplicado').val('').trigger('change')
+                            SuccessMesageDelete();
+                            dadosOriginal();
+                        }
+                    });
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+
+            $('#form-duplicado input').prop('disabled', true).iCheck('update')
+            $('#form-duplicado select').prop('disabled', true)
+
+            $('#has-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').removeClass('d-none');
+                $("#equipante-medicacao").addClass('required');
+            });
+
+            $('#not-medicacao').on('ifChecked', function (event) {
+                $('.medicacao').addClass('d-none');
+                $("#equipante-medicacao").removeClass('required');
+            });
+
+            $('#has-convenio').on('ifChecked', function (event) {
+                $('.convenio').removeClass('d-none');
+                $("#equipante-convenio").addClass('required');
+            });
+
+            $('#not-convenio').on('ifChecked', function (event) {
+                $('.convenio').addClass('d-none');
+                $("#equipante-convenio").removeClass('required');
+            });
+
+            $('#has-alergia').on('ifChecked', function (event) {
+                $('.alergia').removeClass('d-none');
+                $("#equipante-alergia").addClass('required');
+            });
+
+            $('#not-alergia').on('ifChecked', function (event) {
+                $('.alergia').addClass('d-none');
+                $("#equipante-alergia").removeClass('required');
+            });
+
+            $('#has-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').removeClass('d-none');
+                $("#equipante-restricaoalimentar").addClass('required');
+            });
+
+            $('#not-restricaoalimentar').on('ifChecked', function (event) {
+                $('.restricaoalimentar').addClass('d-none');
+                $("#equipante-restricaoalimentar").removeClass('required');
+            });
+
+            $('#has-parente').on('ifChecked', function (event) {
+                $('.parente').removeClass('d-none');
+                $("#equipante-parente").addClass('required');
+            });
+
+            $('#not-parente').on('ifChecked', function (event) {
+                $('.parente').addClass('d-none');
+                $("#equipante-parente").removeClass('required');
+            });
+
+            $('#is-casado').on('ifChecked', function (event) {
+                $('.casado').removeClass('d-none');
+                $("#equipante-data-casamento").addClass('required');
+            });
+
+            $('#not-casado').on('ifChecked', function (event) {
+                $('.casado').addClass('d-none');
+                $("#equipante-data-casamento").removeClass('required');
+            });
+            map = initMap('map')
+            markerLayer = createMarkerLayer(map)
+            $('#registro-original').select2({
+                ajax: {
+                    delay: 750,
+                    url: '/Equipante/GetDuplicados',
+                    data: function (params) {
+                        var query = {
+                            Search: params.term
+                        }
+
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: data.Items
+                        };
+                    }
+                },
+                placeholder: "Pesquisar",
+                minimumInputLength: 3
+            });
+
+
+            $('#registro-duplicado').select2({
+                ajax: {
+                    delay: 750,
+                    url: '/Equipante/GetDuplicados',
+                    data: function (params) {
+                        var query = {
+                            Search: params.term,
+                            Original: $('#registro-original').val()
+                        }
+
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: data.Items
+                        };
+                    }
+                },
+                placeholder: "Pesquisar",
+                minimumInputLength: 3
+            });
+        })
+
+        function montarMapa() {
+            markerLayer.getLayers().forEach(mark => mark.remove())
+            var marker = L.marker([$(`#equipante-latitude`).val().toString(), $(`#equipante-longitude`).val().toString()], { icon: getIcon('vermelho') }).addTo(markerLayer);
+            marker.bindPopup(`<h4>${$(`#equipante-nome`).val()}</h4>`).openPopup();
+            $('.div-map').css('display', 'block')
+            map.setView([$(`#equipante-latitude`).val(), $(`#equipante-longitude`).val()], 18);
+        }
+
+        function verificaCep(input) {
+            let cep = $(input).val()
+            if (cep.length == 9) {
+                $.ajax({
+                    url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+                    datatype: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        $(`#equipante-logradouro`).val(data.logradouro)
+                        $(`#equipante-bairro`).val(data.bairro)
+                        $(`#equipante-cidade`).val(data.localidade)
+                        $(`#equipante-estado`).val(data.uf)
+                        $(`#equipante-latitude`).val(data.lat)
+                        $(`#equipante-longitude`).val(data.lon)
+                        montarMapa()
+                    }
+                })
+            }
+        }
+
+
+        function PostEquipante() {
+            if (ValidateForm(`#form-equipante`)) {
+                $.ajax({
+                    url: "/Equipante/PostEquipante/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(
+                        {
+                            Id: $("#registro-original").val(),
+                            Nome: $(`#equipante-nome`).val(),
+                            Apelido: $(`#equipante-apelido`).val(),
+                            Instagram: $('#equipante-instagram').val(),
+                            DataNascimento: moment($("#equipante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                            Email: $(`#equipante-email`).val(),
+                            Fone: $(`#equipante-fone`).val(),
+                            NomePai: $(`#equipante-nomepai`).val(),
+                            FonePai: $(`#equipante-fonepai`).val(),
+                            NomeMae: $(`#equipante-nomemae`).val(),
+                            FoneMae: $(`#equipante-fonemae`).val(),
+                            NomeConvite: $(`#equipante-nomeconvite`).val(),
+                            FoneConvite: $(`#equipante-foneconvite`).val(),
+                            NomeContato: $(`#equipante-nomecontato`).val(),
+                            FoneContato: $(`#equipante-fonecontato`).val(),
+                            Camisa: $(`#equipante-camisa`).val(),
+                            CEP: $(`#equipante-cep`).val(),
+                            Logradouro: $(`#equipante-logradouro`).val(),
+                            Bairro: $(`#equipante-bairro`).val(),
+                            Cidade: $(`#equipante-cidade`).val(),
+                            Estado: $(`#equipante-estado`).val(),
+                            Numero: $(`#equipante-numero`).val(),
+                            Complemento: $(`#equipante-complemento`).val(),
+                            Conjuge: $(`#equipante-conjuge`).val(),
+                            Referencia: $(`#equipante-referencia`).val(),
+                            Latitude: $(`#equipante-latitude`).val(),
+                            Longitude: $(`#equipante-longitude`).val(),
+                            HasRestricaoAlimentar: $("input[type=radio][name=equipante-hasrestricaoalimentar]:checked").val(),
+                            RestricaoAlimentar: $(`#equipante-restricaoalimentar`).val(),
+                            HasMedicacao: $("input[type=radio][name=equipante-hasmedicacao]:checked").val(),
+                            Medicacao: $(`#equipante-medicacao`).val(),
+                            HasAlergia: $("input[type=radio][name=equipante-hasalergia]:checked").val(),
+                            Alergia: $(`#equipante-alergia`).val(),
+                            HasConvenio: $("input[type=radio][name=equipante-hasconvenio]:checked").val(),
+                            Convenio: $(`#equipante-convenio`).val(),
+                            Hospitais: $(`#equipante-hospitais`).val(),
+                            IsCasado: $("input[type=radio][name=equipante-iscasado]:checked").val(),
+                            DataCasamento: moment($("#equipante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+                            HasParente: $("input[type=radio][name=equipante-hasparente]:checked").val(),
+                            Parente: $(`#equipante-parente`).val(),
+                            Congregacao: $(`#equipante-congregacao`).val(),
+                            Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
+                        }),
+                    success: function () {
+                        SuccessMesageOperation();
+                    }
+                });
+            }
+        }
+
+
+    </script>
+}
+

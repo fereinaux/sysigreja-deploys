@@ -1267,6 +1267,7 @@
     <Content Include="Views\Equipante\Montagem.cshtml" />
     <Content Include="Views\Inscricoes\PagamentoConcluido.cshtml" />
     <Content Include="Views\Configuracao\Hierarquia.cshtml" />
+    <Content Include="Views\Equipante\Duplicados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

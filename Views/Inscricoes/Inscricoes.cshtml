@@ -450,7 +450,7 @@
 
         var typingTimer;                //timer identifier
         var doneTypingInterval = 700;  //time in ms, 5 seconds for example
-        var $input = '@ViewBag.Tipo'.includes('Equipe') ? $('#participante-fone') : $('#participante-email');
+        var $input = $('#participante-email');
 
         $input.focus()
         //on keyup, start the countdown
@@ -499,13 +499,13 @@
                        type: "GET",
                        contentType: 'application/json; charset=utf-8',
                        success: function (data) {
-                           $(`#participante-logradouro`).prop("disabled", data.logradouro != undefined);
+                           $(`#participante-logradouro`).prop("disabled", data.logradouro);
                            $(`#participante-logradouro`).val(data.logradouro)
-                           $(`#participante-bairro`).prop("disabled", data.bairro != undefined);
+                           $(`#participante-bairro`).prop("disabled", data.bairro);
                            $(`#participante-bairro`).val(data.bairro)
-                           $(`#participante-cidade`).prop("disabled", data.localidade != undefined);
+                           $(`#participante-cidade`).prop("disabled", data.localidade);
                            $(`#participante-cidade`).val(data.localidade)
-                           $(`#participante-estado`).prop("disabled", data.uf != undefined);
+                           $(`#participante-estado`).prop("disabled", data.uf);
                            $(`#participante-estado`).val(data.uf)
                            $(`#participante-latitude`).val(data.lat)
                            $(`#participante-longitude`).val(data.lon)
@@ -599,6 +599,9 @@
        }
 
         function VerificaCadastro() {
+            if (IsEmail($(`#participante-email`).val())) {
+
+
                $.ajax({
                    url: "/Inscricoes/VerificaCadastro",
                    datatype: "json",
@@ -610,49 +613,77 @@
                        eventoId: @ViewBag.EventoId
                    }),
                    success: function (data) {
-                       if (data.Participante && typeof (data.Participante) != "string") {
-                           if ('(@ViewBag.Tipo)'.includes('Equipe')) {
-                               $('#EquipanteId').val(data.Participante.Id)
+
+                       if (data.MontagemNegado) {
+
+                            var div = document.createElement("div");
+
+                            div.innerHTML = `<div><span>Não será poossível prosseguir seu cadastro pois seu email não consta na nossa lista de montagem</span> </div>`
+                            CustomSwal({
+                                title: "Inscrição Negada",
+                                icon: `logo`,
+                                content: div,
+                                className: "button-center",
+                                dangerMode: true,
+                                buttons: {
+                                    confirmar: {
+                                        text: "OK",
+                                        value: true,
+                                        className: "w-150 btn-confirmar"
+                                    },
+
+                                }
+                            }).then(result => {
+                                window.location.href = window.location.origin;
+                            })
+                       } else {
+
+                           if (data.Participante && typeof (data.Participante) != "string") {
+                               if ('(@ViewBag.Tipo)'.includes('Equipe')) {
+                                   $('#EquipanteId').val(data.Participante.Id)
+                               }
+                               $(`#participante-nome`).val(data.Participante.Nome);
+                               $(`#participante-apelido`).val(data.Participante.Apelido);
+                               $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
+                               $(`#participante-email`).val(data.Participante.Email);
+                               $(`#participante-fone`).val(data.Participante.Fone);
+                               $(`#participante-nome-pai`).val(data.Participante.NomePai);
+                               $(`#participante-fone-pai`).val(data.Participante.FonePai);
+                               $(`#participante-nome-mae`).val(data.Participante.NomeMae);
+                               $(`#participante-fone-mae`).val(data.Participante.FoneMae);
+                               $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
+                               $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
+                               $(`#participante-nome-contato`).val(data.Participante.NomeContato);
+                               $(`#participante-fone-contato`).val(data.Participante.FoneContato);
+                               $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
+                               $(`#participante-medicacao`).val(data.Participante.Medicacao);
+                               $(`#participante-alergia`).val(data.Participante.Alergia);
+                               $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
+                               $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
+                               $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
+                               $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
+                               $('.dados-participante-contato').removeClass('d-none');
+                               $('.dados-participante-contato input[id*="nome"]').addClass('required');
+                               $('.dados-participante-contato input[id*="fone"]').addClass('fone');
+                               if (data.Montagem) {
+                                   $('#equipes-select').remove()
+                               }
                            }
-                           $(`#participante-nome`).val(data.Participante.Nome);
-                           $(`#participante-apelido`).val(data.Participante.Apelido);
-                           $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
-                           $(`#participante-email`).val(data.Participante.Email);
-                           $(`#participante-fone`).val(data.Participante.Fone);
-                           $(`#participante-nome-pai`).val(data.Participante.NomePai);
-                           $(`#participante-fone-pai`).val(data.Participante.FonePai);
-                           $(`#participante-nome-mae`).val(data.Participante.NomeMae);
-                           $(`#participante-fone-mae`).val(data.Participante.FoneMae);
-                           $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
-                           $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
-                           $(`#participante-nome-contato`).val(data.Participante.NomeContato);
-                           $(`#participante-fone-contato`).val(data.Participante.FoneContato);
-                           $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
-                           $(`#participante-medicacao`).val(data.Participante.Medicacao);
-                           $(`#participante-alergia`).val(data.Participante.Alergia);
-                           $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
-                           $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
-                           $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
-                           $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
-                           $('.dados-participante-contato').removeClass('d-none');
-                           $('.dados-participante-contato input[id*="nome"]').addClass('required');
-                           $('.dados-participante-contato input[id*="fone"]').addClass('fone');
-                           if (data.Montagem) {
-                               $('#equipes-select').remove()
+                           else if (data.Url) {
+                               window.location.href = data.Url;
                            }
-                       }
-                       else if (data.Url) {
-                           window.location.href = data.Url;
-                       }
-                       if ($('#participante-cep').val()) {
-                           verificaCep($('#participante-cep')[0])
+                           if ($('#participante-cep').val()) {
+                               verificaCep($('#participante-cep')[0])
+                           }
+
+
                        }
 
 
 
                    }
                })
-
+            }
         }
 
         $(document).ready(() => {

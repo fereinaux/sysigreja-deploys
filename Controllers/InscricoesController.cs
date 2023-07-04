@@ -609,7 +609,13 @@ namespace SysIgreja.Controllers
             {
                 case "Inscrições Equipe":
                     var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Email == Email);
-                    if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Ativo))
+
+                    if (evento.Configuracao.VincularMontagem.HasValue && evento.Configuracao.VincularMontagem.Value == true &&
+                        ((equipante == null) || (!equipante.Equipes.Any(x => x.EventoId == eventoId))))
+                    {
+                        return Json(new { MontagemNegado = true, Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Ativo))
                     {
                         return Json(new { Participante = equipante.Nome, Montagem = equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Montagem), Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Url = Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }) }, JsonRequestBehavior.AllowGet);
                     }
@@ -618,6 +624,7 @@ namespace SysIgreja.Controllers
                         return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", Montagem = equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Montagem), Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
                     }
                     return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
+
 
                 default:
                     var participante = participantesBusiness.GetParticipantesByEvento(eventoId).FirstOrDefault(x => x.Email == Email && (new StatusEnum[] { StatusEnum.Confirmado, StatusEnum.Inscrito, StatusEnum.Espera }).Contains(x.Status));

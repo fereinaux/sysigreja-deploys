@@ -348,25 +348,31 @@ function DistribuirCaronas() {
 
 
 function GetEquipantes(id) {
-    $("#carona-motorista").empty();
 
-    $.ajax({
-        url: "/Carona/GetEquipantes/",
-        data: { EventoId: $("#carona-eventoid").val(), },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            data.Equipantes.forEach(function (equipante, index, array) {
-                $('#carona-motorista').append($(`<option value="${equipante.Id}">${equipante.Nome}</option>`));
-            });
-            $("#carona-motorista").val($("#carona-motorista option:first").val()).trigger("chosen:updated");
-            if ($("#carona-equipantes option").length === 0 && id == 0) {
-                ErrorMessage("Não existem Equipantes disponíveis");
-                $("#modal-carona").modal("hide");
+    $('#carona-motorista').select2({
+        ajax: {
+            delay: 750,
+            url: '/Equipante/GetEquipanteTipoEvento',
+            data: function (params) {
+                var query = {
+                    Search: params.term,
+                    EventoId: $("#eventoid").val()
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.Items
+                };
             }
-        }
+        },
+        placeholder: "Pesquisar",
+        minimumInputLength: 3,
     });
+
 }
 
 mapaSemCarona = []

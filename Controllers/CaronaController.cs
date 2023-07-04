@@ -42,12 +42,12 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetEquipantes(int EventoId)
+        public ActionResult GetEquipantes(int EventoId, string Search)
         {
             var motoristaList = caronasBusiness.GetCaronas().Where(x => x.EventoId == EventoId).Select(x => x.MotoristaId).ToList();
-            var pgList = equipantesBusiness.GetEquipantes().Where(x => !motoristaList.Contains(x.Id)).Select(x => new { x.Id, Nome = x.Nome }).ToList();
+            var pgList = equipantesBusiness.GetEquipantes().Where(x => (x.Nome.Contains(Search) || x.Apelido.Contains(Search)) && !motoristaList.Contains(x.Id)).ToList().Select(x => new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" });
 
-            return Json(new { Equipantes = pgList }, JsonRequestBehavior.AllowGet);
+            return Json(new { Items = pgList }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

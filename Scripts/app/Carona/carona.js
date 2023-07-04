@@ -152,7 +152,7 @@ function GetCarona(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $("#carona-id").val(data.Carona.Id);
-                if (data.Usuario.EquipanteId > 0) {
+                if (data.Carona.MotoristaId > 0) {
                     var newOption = new Option(data.Carona.Motorista, data.Carona.MotoristaId, true, true);
                     $('#carona-motorista').append(newOption)
                 }
@@ -166,6 +166,7 @@ function GetCarona(id) {
     }
     else {
         $("#carona-id").val(0);
+        $("#carona-motorista").val("").trigger("change")
     }
 }
 
@@ -347,11 +348,11 @@ function GetEquipantes(id) {
     $('#carona-motorista').select2({
         ajax: {
             delay: 750,
-            url: '/Equipante/GetEquipanteTipoEvento',
+            url: '/Carona/GetEquipantes',
             data: function (params) {
                 var query = {
                     Search: params.term,
-                    EventoId: $("#eventoid").val()
+                    EventoId: $("#carona-eventoid").val()
                 }
 
                 // Query parameters will be ?search=[term]&type=public

@@ -54,15 +54,6 @@ function CarregarTabelaCarona() {
 
                 GetCaronasComParticipantes(column, dir, search);
             }
-            if (dataArray.length > 0) {
-
-                $('#carona-motoristas').html('')
-                $('#carona-motoristas').append($(`<option value="0">Selecione</option>`));
-                dataArray.forEach(function (carona, index, array) {
-                    $('#carona-motoristas').append($(`<option value="${carona.Id}">${carona.Motorista}</option>`));
-                });
-                $("#carona-motoristas").val($("#carona-motoristas option:first").val()).trigger("chosen:updated");
-            }
         },
         ajax: {
             url: '/Carona/GetCaronas',
@@ -161,8 +152,12 @@ function GetCarona(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 $("#carona-id").val(data.Carona.Id);
-                $('#carona-motorista').append($(`<option value="${data.Carona.MotoristaId}">${data.Carona.Motorista}</option>`));
-                $("#carona-motorista").val(data.Carona.MotoristaId).trigger("chosen:updated");
+                if (data.Usuario.EquipanteId > 0) {
+                    var newOption = new Option(data.Carona.Motorista, data.Carona.MotoristaId, true, true);
+                    $('#carona-motorista').append(newOption)
+                }
+
+                $("#carona-motorista").val(data.Carona.MotoristaId > 0 ? data.Carona.MotoristaId : "").trigger("change");
                 $("#carona-capacidade").val(data.Carona.Capacidade)
 
 
@@ -187,7 +182,7 @@ function getChangeCarona(destinoId) {
                 arrayCaroneiros.push(carona);
             });
             if (destinoId) {
-                $("#carona-motoristas").val(destinoId).trigger("chosen:updated");
+                $("#carona-motoristas").val(destinoId).trigger("change");
 
             }
             $.ajax({
@@ -371,6 +366,7 @@ function GetEquipantes(id) {
         },
         placeholder: "Pesquisar",
         minimumInputLength: 3,
+        dropdownParent: $('#form-carona')
     });
 
 }

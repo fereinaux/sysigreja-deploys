@@ -57,5 +57,5 @@ function GetLabel(functionClick, functionParameter, color, title) {
 }
 
 function GetCheckBox(id, checked) {
-    return `<div class="checkbox i-checks-green"><label> <input type="checkbox" data-id="${id}" value="" ${checked ? 'checked=""' : ''}> <i></i></label></div>`;
+    return `<div class="checkbox i-checks-green"><label> <input type="checkbox" data-id='${id}' value="" ${checked ? 'checked=""' : ''}> <i></i></label></div>`;
 }

@@ -22,7 +22,7 @@
     <div class="ibox">
         <div class="ibox-content">
             <div class="row">
-                <div class="col-xs-12 col-md-4 pull-right">
+                <div class="col-xs-12 col-md-6">
                     <h4>Evento</h4>
                     <select class="form-control" id="presenca-eventoid" onchange="loadScreen()">
                         @foreach (var evento in ViewBag.Eventos)
@@ -31,14 +31,9 @@
                         }
                     </select>
                 </div>
-                <div class="col-xs-12 col-md-4 pull-right">
+                <div class="col-xs-12 col-md-6">
                     <h4>Equipe</h4>
                     <select class="form-control" id="presenca-equipeid" onchange="CarregarTabelaPresenca()"></select>
-                </div>
-
-                <div class="col-xs-12 col-md-4 pull-right">
-                    <h4>Reunião</h4>
-                    <select class="form-control" id="presenca-reuniaoid" onchange="CarregarTabelaPresenca()"></select>
                 </div>
             </div>
         </div>

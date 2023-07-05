@@ -74,7 +74,7 @@
                                 if (type === 'export') {
                                     return row.Reunioes[index] ? '√' : "X"
                                 }
-                                return `${GetCheckBox({ EquipanteId: data, ReuniaoId: coluna.Id }, row.Reunioes[index])}`;
+                                return `${GetCheckBox(JSON.stringify({ EquipanteId: data, ReuniaoId: coluna.Id }), row.Reunioes[index])}`;
                             }
                         }))
                     ],
@@ -110,7 +110,7 @@ $(document).ready(function () {
     loadScreen()
 });
 
-function TogglePresenca(id) {
+function TogglePresenca(obj) {
     $.ajax({
         url: "/Equipe/TogglePresenca/",
         datatype: "json",
@@ -118,8 +118,8 @@ function TogglePresenca(id) {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                EquipanteEventoId: id,
-                ReuniaoId: $("#presenca-reuniaoid").val()
+                EquipanteEventoId: obj.EquipanteId,
+                ReuniaoId: obj.ReuniaoId
             })
     });
 }

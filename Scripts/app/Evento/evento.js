@@ -84,6 +84,7 @@ ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
                             ${GetButton('Lotes', data, 'green', 'far fa-calendar-check', 'Editar')}
                             ${GetAnexosButton('AnexosEvento', data, row.QtdAnexos)}
                             ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}
+                            ${GetButton('CloneEvento', data, 'green', 'fa-clone', 'Clonar Evento')}
                             ${GetButton('DeleteEvento', data, 'red', 'fa-trash', 'Excluir')}`;
                 }
             }
@@ -799,4 +800,22 @@ function selecionaCor(event) {
     }
     $(event).addClass('selected')
     loadCor()
+}
+
+function CloneEvento(id) {
+    $.ajax({
+        url: "/Evento/CloneEvento/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                Id: id
+            }),
+        success: function () {
+            SuccessMesageOperation();
+            CarregarTabelaEvento();
+        }
+    });
+
 }

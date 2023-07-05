@@ -267,13 +267,13 @@ namespace SysIgreja.Controllers
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpPost]
-        //public ActionResult GetEquipesOrigem(int id, int equipeId)
-        //{
-        //    var result = configuracaoBusiness.GetEquipes(id).Where(x => x.EquipesDestinoId.Contains(equipeId));
+        [HttpPost]
+        public ActionResult GetEquipesOrigem(int id, int equipeId)
+        {
+            var result = configuracaoBusiness.GetEquipes(id).Where(x => x.EquipesDestinoId.Contains(equipeId));
 
-        //    return Json(new { data = result }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
 
 
         [HttpGet]
@@ -325,20 +325,12 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-        //[HttpPost]
-        //public ActionResult EditEquipeDestino(EquipesModel equipe)
-        //{
-        //    configuracaoBusiness.EditEquipeDestino(equipe);
-
-        //    return new HttpStatusCodeResult(200);
-        //}
-
         [HttpPost]
         public ActionResult EditEquipeDestino(EquipesModel equipe)
         {
             configuracaoBusiness.EditEquipeDestino(equipe);
 
-           return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200);
         }
 
         [HttpPost]

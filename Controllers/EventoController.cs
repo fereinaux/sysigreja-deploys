@@ -203,6 +203,15 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+
+        [HttpPost]
+        public ActionResult CloneEvento(int id)
+        {
+            eventosBusiness.CloneEvento(id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
         [HttpPost]
         public ActionResult DeleteEvento(int Id)
         {

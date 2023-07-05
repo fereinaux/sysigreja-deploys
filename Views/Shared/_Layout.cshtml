@@ -210,6 +210,31 @@
 
     </script>
     <script>
+
+        window.addEventListener("offline", (event) => {
+            var div = document.createElement("div");
+
+            div.innerHTML = `<div><span>A sua conexão foi perdida</span> </div>`
+            CustomSwal({
+                title: "Você foi Desconectado",
+                icon: `logo`,
+                content: div,
+                className: "button-center",
+                dangerMode: true,
+                buttons: {
+                    confirmar: {
+                        text: "OK",
+                        value: true,
+                        className: "w-150 btn-confirmar"
+                    },
+
+                }
+            }).then(result => {
+                window.location.reload()
+            })
+
+        })
+
         const { jsPDF } = window.jspdf;
         let globalEventoId
         let globalConfigId

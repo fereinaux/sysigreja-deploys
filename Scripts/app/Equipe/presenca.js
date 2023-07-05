@@ -68,15 +68,15 @@
                         },],
                     columns: [
                         { title: "Nome", data: "Nome", name: "Nome", autoWidth: true },
-                        ...data.colunas.map(coluna => ({
-                            title: "Compareceu?", data: "Id", name: "Id", orderable: false, width: "15%",
+                        ...data.colunas.map((coluna, index) => ({
+                            title: coluna.Data, data: "Id", name: "Id", orderable: false, width: "15%",
                             "render": function (data, type, row) {
                                 if (type === 'export') {
-                                    return row.Presenca ? "SIM" : "NÃO"
+                                    return row.Reunioes[index] ? '√' : "X"
                                 }
-                                return `${GetCheckBox(data, row.Presenca)}`;
+                                return `${GetCheckBox({ EquipanteId: data, ReuniaoId: coluna.Id }, row.Reunioes[index])}`;
                             }
-                        }))                                              
+                        }))
                     ],
                     order: [
                         [0, "asc"]

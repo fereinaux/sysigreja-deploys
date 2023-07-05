@@ -134,7 +134,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetPresenca(int EventoId, int EquipeId)
         {
             var evento = eventosBusiness.GetEventos().Where(x => x.Id == EventoId).Include(x => x.Reunioes).Include(x => x.Reunioes.Select(y => y.Presenca)).FirstOrDefault();
-            var colunas = evento.Reunioes.OrderBy(x => x.DataReuniao).Select(x => x.DataReuniao.ToString("dd/MM")).ToList();
+            var colunas = evento.Reunioes.OrderBy(x => x.DataReuniao).Select(x => new { Data = x.DataReuniao.ToString("dd/MM"), Id = x.Id }).ToList();
 
             var result = new List<PresencaViewModel>();
 
@@ -146,7 +146,7 @@ namespace SysIgreja.Controllers
                     {
                         Id = x.Id,
                         Nome = x.Equipante.Nome,
-                        Reunioes = x.Evento.Reunioes.Where(y => y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
+                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
                     }).ToList();
             }
             else
@@ -157,7 +157,7 @@ namespace SysIgreja.Controllers
                     {
                         Id = x.Id,
                         Nome = x.Equipante.Nome,
-                        Reunioes = x.Evento.Reunioes.Where(y => y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
+                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
                     }).ToList();
             }
 

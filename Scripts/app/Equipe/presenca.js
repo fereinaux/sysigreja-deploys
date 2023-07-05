@@ -1,117 +1,103 @@
 ﻿function CarregarTabelaPresenca() {
     if ($("#presenca-eventoid").val() && $("#presenca-equipeid").val()) {
-        const tablePresencaConfig = {
-            language: languageConfig,
-            lengthMenu: [200, 500, 1000],
-            colReorder: true,
-            serverSide: false,
-            scrollX: true,
-            scrollXollapse: true,
-            orderCellsTop: true,
-            fixedHeader: true,
-            filter: true,
-            orderMulti: false,
-            responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
-            destroy: true,
-            dom: domConfig,
-            buttons: [
-
-                {
-                    extend: 'colvis', text: 'Colunas', columns: ':not(.noVis)', action: function (e, dt, node, config) {
-                        dt.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
-
-                            if (node[0].className.includes('Visibility')) {
-                                dt.draw()
-                            }
-                        });
-                        $.fn.dataTable.ext.buttons.collection.action.call(this, e, dt, node, config);
-                        if (typeof (onLoadCampos) == 'function') {
-                            onLoadCampos();
-                        }
-                    }
-                },
-                {
-                    extend: 'pdf', orientation: 'landscape', exportOptions: {
-                        columns: isMobile ? ':not(.noExport), .export' : ':not(.noExport):visible, .export', orthogonal: 'export'
-                    }, customize: function (doc) {
-
-                        doc.content.splice(0, 1, {
-                            columns: [
-                                {
-                                    margin: [5, 5, 25, 15],
-                                    alignment: 'left',
-                                    image: `data:image/png;base64, ${config.LogoRelatorio}`,
-                                    width: 70
-                                },
-                                { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
-
-                            ]
-
-                        });
-                    }
-                },
-                {
-
-                    extend: 'excelHtml5', title: "Ata de Presença", exportOptions: {
-                        columns: [0, 1, 2]
-                    }
-                },],
-            columns: [
-                { data: "Nome", name: "Nome", autoWidth: true },
-                { data: "Congregacao", name: "Congregacao", autoWidth: true },
-                {
-                    data: "Id", name: "Id", orderable: false, width: "15%",
-                    "render": function (data, type, row) {
-                        if (type === 'export') {
-                            return row.Presenca ? "SIM" : "NÃO"
-                        }
-                        return `${GetCheckBox(data, row.Presenca)}`;
-                    }
-                },
-                {
-                    data: "Reunioes", name: "Reunioes", orderable: false, className: 'noSearch', render: function (data, type, row) {
-                        if (type === 'export') {
-                            return `<div>
-
-        ${data?.map(presenca => {
-                                return presenca ? '√' : "X"
-                            }).join(' - ')}</div>`
-                        }
-
-                        return `<div style="    text-wrap: nowrap;">
-                    ${data?.map(presenca => {
-
-                            return `   <i class="fas fa-${presenca ? "check" : "times"}"></i>`
-
-                        }).join().replace(/,/g, '')}
-    </div>`
-                    }
-                },
-            ],
-            order: [
-                [0, "asc"]
-            ],
-            drawCallback: function () {
-                $('.i-checks-green').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green'
-                });
-                $('.i-checks-green').on('ifClicked', function (event) {
-                    TogglePresenca($(event.target).data("id"));
-                });
+        $.ajax({
+            url: '/Equipe/GetPresenca',
+            datatype: "json",
+            data: {
+                EventoId: $("#presenca-eventoid").val(),
+                EquipeId: $("#presenca-equipeid").val(),
             },
-            ajax: {
-                url: '/Equipe/GetPresenca',
-                datatype: "json",
-                data: {
-                    EventoId: $("#presenca-eventoid").val(),
-                    EquipeId: $("#presenca-equipeid").val(),
-                    ReuniaoId: $("#presenca-reuniaoid").val() || 0
-                },
-                type: "POST"
+            type: "POST",
+            success: function (data) {
+                const tablePresencaConfig = {
+                    language: languageConfig,
+                    lengthMenu: [200, 500, 1000],
+                    colReorder: true,
+                    serverSide: false,
+                    scrollX: true,
+                    scrollXollapse: true,
+                    orderCellsTop: true,
+                    fixedHeader: true,
+                    filter: true,
+                    orderMulti: false,
+                    responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
+                    destroy: true,
+                    dom: domConfig,
+                    data: data.data,
+                    buttons: [
+
+                        {
+                            extend: 'colvis', text: 'Colunas', columns: ':not(.noVis)', action: function (e, dt, node, config) {
+                                dt.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
+
+                                    if (node[0].className.includes('Visibility')) {
+                                        dt.draw()
+                                    }
+                                });
+                                $.fn.dataTable.ext.buttons.collection.action.call(this, e, dt, node, config);
+                                if (typeof (onLoadCampos) == 'function') {
+                                    onLoadCampos();
+                                }
+                            }
+                        },
+                        {
+                            extend: 'pdf', orientation: 'landscape', exportOptions: {
+                                columns: isMobile ? ':not(.noExport), .export' : ':not(.noExport):visible, .export', orthogonal: 'export'
+                            }, customize: function (doc) {
+
+                                doc.content.splice(0, 1, {
+                                    columns: [
+                                        {
+                                            margin: [5, 5, 25, 15],
+                                            alignment: 'left',
+                                            image: `data:image/png;base64, ${config.LogoRelatorio}`,
+                                            width: 70
+                                        },
+                                        { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
+
+                                    ]
+
+                                });
+                            }
+                        },
+                        {
+
+                            extend: 'excelHtml5', title: "Ata de Presença", exportOptions: {
+                                columns: [0, 1, 2]
+                            }
+                        },],
+                    columns: [
+                        { title: "Nome", data: "Nome", name: "Nome", autoWidth: true },
+                        ...data.colunas.map(coluna => ({
+                            title: "Compareceu?", data: "Id", name: "Id", orderable: false, width: "15%",
+                            "render": function (data, type, row) {
+                                if (type === 'export') {
+                                    return row.Presenca ? "SIM" : "NÃO"
+                                }
+                                return `${GetCheckBox(data, row.Presenca)}`;
+                            }
+                        }))                                              
+                    ],
+                    order: [
+                        [0, "asc"]
+                    ],
+                    drawCallback: function () {
+                        $('.i-checks-green').iCheck({
+                            checkboxClass: 'icheckbox_square-green',
+                            radioClass: 'iradio_square-green'
+                        });
+                        $('.i-checks-green').on('ifClicked', function (event) {
+                            TogglePresenca($(event.target).data("id"));
+                        });
+                    },
+
+                };
+
+                $("#table-ata-presenca").DataTable(tablePresencaConfig);
             }
-        };
-        $("#table-ata-presenca").DataTable(tablePresencaConfig);
+        })
+
+
     }
 }
 
@@ -171,6 +157,7 @@ function getPresencas() {
                 $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Equipe}</option>`));
             });
             $("#presenca-equipeid").val($("#presenca-equipeid option:first").val()).trigger("chosen:updated");
+            CarregarTabelaPresenca();
         }
     });
 }

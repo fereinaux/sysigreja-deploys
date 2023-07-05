@@ -7,6 +7,7 @@ namespace SysIgreja.ViewModels
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Congregacao { get; set; }
+        public string Equipe { get; set; }
         public bool Presenca { get; set; }
         public List<bool> Reunioes { get; set; }
     }

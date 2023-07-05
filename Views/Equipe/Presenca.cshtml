@@ -38,11 +38,28 @@
             </div>
         </div>
         <div class="ibox-content">
-            <table id="table-ata-presenca" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">     
+            <table id="table-ata-presenca" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
             </table>
         </div>
     </div>
 </div>
+
+@section Styles {
+
+    <style>
+
+        .indeterminate::before {
+            content: "!";
+            color: white;
+            font-size: 17px;
+            margin-left: 8px;
+        }
+
+        .icheckbox_square-green.indeterminate {
+            background: #2c8f7b !important;
+        }
+    </style>
+}
 
 @section Scripts {
 

@@ -72,9 +72,10 @@
                             title: coluna.Data, data: "Id", name: "Id", orderable: false, width: "15%",
                             "render": function (data, type, row) {
                                 if (type === 'export') {
-                                    return row.Reunioes[index] ? '√' : "X"
+                                    return row.Reunioes[index].Presenca ? (row.Reunioes[index].Justificada ? "!" : '√') : "X"
                                 }
-                                return `${GetCheckBox(JSON.stringify({ EquipanteId: data, ReuniaoId: coluna.Id }), row.Reunioes[index])}`;
+
+                                return `<span id="${data}${coluna.Id}" onclick='handlePresenca(${JSON.stringify({ Id: `${data}${coluna.Id}`, EquipanteId: data, ReuniaoId: coluna.Id })})' class="i-checks-green icheckbox_square-green ${row.Reunioes[index].Justificada ? "indeterminate" : (row.Reunioes[index].Presenca ? "checked" : "")}"></span>`
                             }
                         }))
                     ],
@@ -82,13 +83,8 @@
                         [0, "asc"]
                     ],
                     drawCallback: function () {
-                        $('.i-checks-green').iCheck({
-                            checkboxClass: 'icheckbox_square-green',
-                            radioClass: 'iradio_square-green'
-                        });
-                        $('.i-checks-green').on('ifClicked', function (event) {
-                            TogglePresenca($(event.target).data("id"));
-                        });
+
+
                     },
 
                 };
@@ -106,6 +102,28 @@ function loadScreen() {
     getPresencas();
 }
 
+function handlePresenca(obj) {
+    console.log(obj);
+    if ($(`#${obj.Id}`).hasClass('checked')) {
+        ConfirmMessage("Deseja justificar a falta?").then((result) => {
+            if (result) {
+                Justificar(obj);
+                $(`#${obj.Id}`).removeClass('checked')
+                $(`#${obj.Id}`).addClass('indeterminate')
+            }
+        })
+    } else {
+        TogglePresenca(obj);
+        if ($(`#${obj.Id}`).hasClass('indeterminate')) {
+            $(`#${obj.Id}`).removeClass('indeterminate')
+        } else {
+            $(`#${obj.Id}`).addClass('checked')
+        }
+
+    }
+
+}
+
 $(document).ready(function () {
     loadScreen()
 });
@@ -113,6 +131,21 @@ $(document).ready(function () {
 function TogglePresenca(obj) {
     $.ajax({
         url: "/Equipe/TogglePresenca/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                EquipanteEventoId: obj.EquipanteId,
+                ReuniaoId: obj.ReuniaoId
+            })
+    });
+}
+
+function Justificar(obj) {
+
+    $.ajax({
+        url: "/Equipe/Justificar/",
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',

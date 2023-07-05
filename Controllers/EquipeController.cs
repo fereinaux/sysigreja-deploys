@@ -89,6 +89,15 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+
+        [HttpPost]
+        public ActionResult Justificar(int EquipanteEventoId, int ReuniaoId)
+        {
+            equipesBusiness.Justificar(EquipanteEventoId, ReuniaoId);
+
+            return new HttpStatusCodeResult(200);
+        }
+
         [HttpGet]
         public ActionResult GetReunioes(int EventoId)
         {
@@ -146,7 +155,7 @@ namespace SysIgreja.Controllers
                     {
                         Id = x.Id,
                         Nome = x.Equipante.Nome,
-                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
+                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => new PresencaModel { Presenca = x.Presencas.Any(z => z.ReuniaoId == y.Id), Justificada = x.Presencas.Any(z => z.ReuniaoId == y.Id && z.Justificada.HasValue && z.Justificada.Value == true) }).ToList()
                     }).ToList();
             }
             else
@@ -157,7 +166,7 @@ namespace SysIgreja.Controllers
                     {
                         Id = x.Id,
                         Nome = x.Equipante.Nome,
-                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id)).ToList()
+                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => new PresencaModel { Presenca = x.Presencas.Any(z => z.ReuniaoId == y.Id), Justificada = x.Presencas.Any(z => z.ReuniaoId == y.Id && z.Justificada.HasValue && z.Justificada.Value == true) }).ToList()
                     }).ToList();
             }
 

@@ -9,6 +9,12 @@ namespace SysIgreja.ViewModels
         public string Congregacao { get; set; }
         public string Equipe { get; set; }
         public bool Presenca { get; set; }
-        public List<bool> Reunioes { get; set; }
+        public List<PresencaModel> Reunioes { get; set; }
+    }
+
+    public class PresencaModel
+    {
+        public bool Presenca { get; set; }
+        public bool Justificada { get; set; }
     }
 }

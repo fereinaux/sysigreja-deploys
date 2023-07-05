@@ -16,13 +16,13 @@
 
 function GetAnexosButton(functionClick, functionParameter, qtd) {
 
-   return `<span onclick='${functionClick}(${functionParameter})' style="font-size:18px;position:relative" class="text-success  has-badge pointer p-l-xs"  ${qtd > 0 ? 'data-count="' + qtd + '"' : ''}> <i class="fa fa-paperclip data-counter" aria-hidden="true" title="Anexos"></i></span>`
+    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:18px;position:relative" class="text-success  has-badge pointer p-l-xs"  ${qtd > 0 ? 'data-count="' + qtd + '"' : ''}> <i class="fa fa-paperclip data-counter" aria-hidden="true" title="Anexos"></i></span>`
 
-    
+
 }
 
-function GetIconWhatsApp(tel,text) {  
-    
+function GetIconWhatsApp(tel, text) {
+
     return `<a target="_blank" href='${GetLinkWhatsApp(tel, text)}' style="font-size:18px; color:green; " class="pointer p-l-xs"><i class="fab fa-whatsapp" aria-hidden="true" title="${tel}"></i></a>`;
 }
 
@@ -56,6 +56,6 @@ function GetLabel(functionClick, functionParameter, color, title) {
     return `<span onclick='${functionClick}(${functionParameter})' style="font-size:13px" class="m-r-sm pointer text-center label label-${button}">${title}</span>`;
 }
 
-function GetCheckBox(id, checked) {
-    return `<div class="checkbox i-checks-green"><label> <input type="checkbox" data-id='${id}' value="" ${checked ? 'checked=""' : ''}> <i></i></label></div>`;
+function GetCheckBox(id, checked, indeterminate) {
+    return `<div class="checkbox i-checks-green ${indeterminate ? "indeterminate" : ""}"><label> <input type="checkbox" data-id='${id}' value="" ${indeterminate ? "" : (checked ? 'checked=""' : '')}> <i></i></label></div>`;
 }

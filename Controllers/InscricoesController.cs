@@ -388,6 +388,8 @@ namespace SysIgreja.Controllers
                  .Replace("${ValorEvento}", eventoAtual.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
                  .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
 
+                    ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
+
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                     {
                         var casal = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Conjuge == equipante.Nome);
@@ -417,6 +419,7 @@ namespace SysIgreja.Controllers
                  .Replace("${DataEvento}", participante.Evento.DataEvento.ToString("dd/MM/yyyy"))
                  .Replace("${FonePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "")
                  .Replace("${NomePadrinho}", participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? "");
+                    ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
                     if (configP.TipoEventoId == TipoEventoEnum.Casais)
                     {
                         var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);

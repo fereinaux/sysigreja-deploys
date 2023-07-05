@@ -17,6 +17,9 @@
         <div class="cho-container"></div>
 
         <div class="col-sm-12 p-h-sm text-center">
+
+            <img style="width:50%" src="@ViewBag.QRCode" alt="QR Code" />
+
             @Html.Raw(ViewBag.MsgConclusao)
 
             @if (!string.IsNullOrEmpty(ViewBag.Configuracao.PublicTokenMercadoPago))

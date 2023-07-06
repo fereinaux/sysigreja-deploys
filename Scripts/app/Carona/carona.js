@@ -54,6 +54,16 @@ function CarregarTabelaCarona() {
 
                 GetCaronasComParticipantes(column, dir, search);
             }
+
+            if (dataArray.length > 0) {
+
+                $('#carona-motoristas').html('')
+                $('#carona-motoristas').append($(`<option value="0">Selecione</option>`));
+                dataArray.forEach(function (carona, index, array) {
+                    $('#carona-motoristas').append($(`<option value="${carona.Id}">${carona.Motorista}</option>`));
+                });
+                $("#carona-motoristas").val($("#carona-motoristas option:first").val()).trigger("chosen:updated");
+            }
         },
         ajax: {
             url: '/Carona/GetCaronas',

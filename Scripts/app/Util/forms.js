@@ -285,7 +285,7 @@ function IsFone(fone) {
         return fone.indexOf("+55") == 0 && fone.indexOf("(") == 3 && fone.indexOf(")") == 6 && fone.indexOf("9.") == 7 && fone.indexOf("-") == 13 && fone.length == 18;
     } else {
         return true
-    }
+    } 
 }
 
 function IsData(data) {

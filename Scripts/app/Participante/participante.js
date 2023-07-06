@@ -214,7 +214,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return row.Status != Cancelado && row.Status != Espera ?
 
                         `<form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
-${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
+${GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                                             
                         ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
                                 <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
@@ -225,10 +225,10 @@ ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt',
                             ${GetIconWhatsApp(row.Fone)}
                             ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}                               
                             ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}                            
-                            ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
+                            ${GetButton('CancelarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }, 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
                         : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify({Nome: row.Nome, Id: row.Id}), 'green', 'Ativar Inscrição')}
-${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'red', 'Deletar Inscrição') : ''}` : ''}`
+${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }, 'red', 'Deletar Inscrição') : ''}` : ''}`
                 }
             }
         ],

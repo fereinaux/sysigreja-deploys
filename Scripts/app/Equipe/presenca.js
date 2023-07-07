@@ -1,4 +1,6 @@
-﻿function CarregarTabelaPresenca() {
+﻿
+let table
+function CarregarTabelaPresenca() {
     if ($("#presenca-eventoid").val() && $("#presenca-equipeid").val()) {
         $.ajax({
             url: '/Equipe/GetPresenca',
@@ -9,6 +11,12 @@
             },
             type: "POST",
             success: function (data) {
+                if (table) {
+
+                    table.destroy();
+                    $('#table-ata-presenca').empty(); // empty in case the columns change
+                }
+
                 const tablePresencaConfig = {
                     language: languageConfig,
                     lengthMenu: [200, 500, 1000],
@@ -70,12 +78,12 @@
                         { title: "Nome", data: "Nome", name: "Nome", autoWidth: true },
                         ...data.colunas.map((coluna, index) => ({
                             title: coluna.Data, data: "Id", name: "Id", orderable: false, width: "15%",
-                            "render": function (data, type, row) {
+                            "render": function (data, type, row, meta) {
                                 if (type === 'export') {
                                     return row.Reunioes[index].Presenca ? (row.Reunioes[index].Justificada ? "!" : '√') : "X"
                                 }
 
-                                return `<span id="${data}${coluna.Id}" onclick='handlePresenca(${JSON.stringify({ Id: `${data}${coluna.Id}`, EquipanteId: data, ReuniaoId: coluna.Id })})' class="i-checks-green icheckbox_square-green ${row.Reunioes[index].Justificada ? "indeterminate" : (row.Reunioes[index].Presenca ? "checked" : "")}"></span>`
+                                return `<span id="${data}${coluna.Id}" onclick='handlePresenca(${JSON.stringify({ RowIndex: meta.row, ColIndex: meta.col, Id: `${data}${coluna.Id}`, EquipanteId: data, ReuniaoId: coluna.Id, ReuniaoIndex: index })})' class="i-checks-green icheckbox_square-green ${row.Reunioes[index].Justificada ? "indeterminate" : (row.Reunioes[index].Presenca ? "checked" : "")}"></span>`
                             }
                         }))
                     ],
@@ -89,7 +97,7 @@
 
                 };
 
-                $("#table-ata-presenca").DataTable(tablePresencaConfig);
+                table = $("#table-ata-presenca").DataTable(tablePresencaConfig);
             }
         })
 
@@ -107,13 +115,10 @@ function handlePresenca(obj) {
         ConfirmMessage("Deseja justificar a falta?").then((result) => {
             if (result) {
                 Justificar(obj);
-
             }
         })
     } else {
         TogglePresenca(obj);
-
-
     }
 
 }
@@ -123,6 +128,10 @@ $(document).ready(function () {
 });
 
 function TogglePresenca(obj) {
+    let data = table.row(obj.RowIndex).data()
+
+
+
     $.ajax({
         url: "/Equipe/TogglePresenca/",
         datatype: "json",
@@ -133,12 +142,20 @@ function TogglePresenca(obj) {
                 EquipanteEventoId: obj.EquipanteId,
                 ReuniaoId: obj.ReuniaoId
             }),
-        success: function (data) {
+        success: function () {
+
             if ($(`#${obj.Id}`).hasClass('indeterminate')) {
-                $(`#${obj.Id}`).removeClass('indeterminate')
+
+                data.Reunioes[obj.ReuniaoIndex].Justificada = false;
+
+                data.Reunioes[obj.ReuniaoIndex].Presenca = false
             } else {
-                $(`#${obj.Id}`).addClass('checked')
+                data.Reunioes[obj.ReuniaoIndex].Justificada = false;
+
+                data.Reunioes[obj.ReuniaoIndex].Presenca = true
             }
+
+            table.row(obj.RowIndex).data(data).draw()
         }
     });
 }
@@ -155,9 +172,13 @@ function Justificar(obj) {
                 EquipanteEventoId: obj.EquipanteId,
                 ReuniaoId: obj.ReuniaoId
             }),
-        success: function (data) {
-            $(`#${obj.Id}`).removeClass('checked')
-            $(`#${obj.Id}`).addClass('indeterminate')
+        success: function () {
+
+            let data = table.row(obj.RowIndex).data()
+
+            data.Reunioes[obj.ReuniaoIndex].Justificada = true
+
+            table.row(obj.RowIndex).data(data).draw()
         }
     });
 }

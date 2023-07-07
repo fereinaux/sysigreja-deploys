@@ -354,7 +354,7 @@ function GetParticipante() {
                     $('.btn-checkin').removeClass('d-none');
                 }
 
-                if (!checkin) {
+                if (!checkin && isMobile) {
 
                 $('html, body').animate({
                     scrollTop: $('#info-geral').offset().top
@@ -713,9 +713,12 @@ function Checkin() {
                     GetEquipante()
                 }
                 GetTotaisCheckin()
+                if (isMobile) {
+
                 $('html, body').animate({
                     scrollTop: $('#panel-reader').offset().top
                 }, 500);
+                }
 
 
             }

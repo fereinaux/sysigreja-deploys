@@ -103,22 +103,16 @@ function loadScreen() {
 }
 
 function handlePresenca(obj) {
-    console.log(obj);
     if ($(`#${obj.Id}`).hasClass('checked')) {
         ConfirmMessage("Deseja justificar a falta?").then((result) => {
             if (result) {
                 Justificar(obj);
-                $(`#${obj.Id}`).removeClass('checked')
-                $(`#${obj.Id}`).addClass('indeterminate')
+
             }
         })
     } else {
         TogglePresenca(obj);
-        if ($(`#${obj.Id}`).hasClass('indeterminate')) {
-            $(`#${obj.Id}`).removeClass('indeterminate')
-        } else {
-            $(`#${obj.Id}`).addClass('checked')
-        }
+
 
     }
 
@@ -138,7 +132,14 @@ function TogglePresenca(obj) {
             {
                 EquipanteEventoId: obj.EquipanteId,
                 ReuniaoId: obj.ReuniaoId
-            })
+            }),
+        success: function (data) {
+            if ($(`#${obj.Id}`).hasClass('indeterminate')) {
+                $(`#${obj.Id}`).removeClass('indeterminate')
+            } else {
+                $(`#${obj.Id}`).addClass('checked')
+            }
+        }
     });
 }
 
@@ -153,7 +154,11 @@ function Justificar(obj) {
             {
                 EquipanteEventoId: obj.EquipanteId,
                 ReuniaoId: obj.ReuniaoId
-            })
+            }),
+        success: function (data) {
+            $(`#${obj.Id}`).removeClass('checked')
+            $(`#${obj.Id}`).addClass('indeterminate')
+        }
     });
 }
 

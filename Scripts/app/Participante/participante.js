@@ -207,6 +207,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             { data: "Hospitais", title: "Hospitais", name: "Hospitais", autoWidth: true, visible: false },
             { data: "Parente", title: "Parente", name: "Parente", autoWidth: true, visible: false },
             { data: "Quarto", title: "Quarto", name: "Quarto", autoWidth: true, visible: false },
+            { data: "Motorista", title: "Motorista", name: "Motorista", autoWidth: true, visible: false },
             { data: "DataCadastro", visible: false, title: "Data Inscrição", name: "DataCadastro", autoWidth: true },
             {
                 data: "Id", name: "Id", orderable: false, width: "25%", className: 'noVis',

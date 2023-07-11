@@ -755,6 +755,58 @@ namespace SysIgreja.Controllers
                         }
 
                     }
+                    else if (model.columns[model.order[0].column].name == "Fone")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.Equipante.Fone);
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.Equipante.Fone);
+                        }
+
+                    }
+                    else if (model.columns[model.order[0].column].name == "Email")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.Equipante.Email);
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.Equipante.Email);
+                        }
+
+                    }
+                    else if (model.columns[model.order[0].column].name == "Bairro")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.Equipante.Bairro);
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.Equipante.Bairro);
+                        }
+
+                    }
+                    else if (model.columns[model.order[0].column].name == "Cidade")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.Equipante.Cidade);
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.Equipante.Cidade);
+                        }
+
+                    }
                     else if (model.columns[model.order[0].column].name == "Sexo")
                     {
                         if (model.order[0].dir == "asc")

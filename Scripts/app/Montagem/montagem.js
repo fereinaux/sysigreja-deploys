@@ -129,7 +129,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 data: "Nome", name: "Nome", autoWidth: true
             },
             {
-                data: "Etiquetas", name: "Etiquetas", className: 'noSearch', render: function (data, type, row) {
+                data: "Etiquetas", orderable: false, name: "Etiquetas", className: 'noSearch', render: function (data, type, row) {
                     if (type === 'export') {
                         return `<div>
 

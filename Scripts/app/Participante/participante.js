@@ -49,6 +49,20 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         });
 
         $.ajax({
+            url: '/Carona/GetCaronas',
+            data: { eventoId: $("#participante-eventoid").val() },
+            datatype: "json",
+            type: "POST",
+            success: (result) => {
+                eventoId = $("#participante-eventoid").val()
+                $("#participante-motoristaid").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Motorista}</option>`)}
+`)
+                $("#participante-motoristaid").select2()
+            }
+        });
+
+        $.ajax({
             url: '/Etiqueta/GetEtiquetasByEventoId',
             data: { eventoId: $("#participante-eventoid").val() },
             datatype: "json",
@@ -1760,6 +1774,7 @@ function getFiltros(Foto) {
         Etiquetas: $("#participante-marcadores").val(),
         NaoEtiquetas: $("#participante-nao-marcadores").val(),
         QuartoId: $("#participante-quartoid").val(),
+        CaronaId: $("#participante-motoristaid").val(),
         Foto: Foto
     }
 }

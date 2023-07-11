@@ -652,6 +652,12 @@ namespace SysIgreja.Controllers
                 filteredResultsCount = result.Count();
             }
 
+            if (model.CaronaId != null)
+            {
+                result = result.Where(x => (x.Caronas.Any(y => model.CaronaId.Contains(y.CaronaId))));
+                filteredResultsCount = result.Count();
+            }
+
             if (model.search != null && model.search.value != null)
             {
                 result = result.Where(x => (x.Nome.Contains(model.search.value)));

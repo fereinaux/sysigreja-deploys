@@ -271,7 +271,9 @@ function PostCracha() {
                 CarregarTabelaCracha();
                 $("#modal-cracha").modal("hide");
             }, error: function (error) {
+                console.log(error);
                 if (error.responseText.includes('Maximum request length exceeded.')) {
+                    console.log('ta aqui');
                     ErrorMessage('O conteúdo do crachá está ultrapassando o tamanho máximo permitido (2MB)')
                 }
             }

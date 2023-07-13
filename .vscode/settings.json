@@ -79,6 +79,38 @@
       "name": "Consulta",
       "username": "reinaux",
       "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "Local",
+      "database": "trindade",
+      "name": "Trindade",
+      "username": "sa",
+      "password": "Reinaux0)"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "Local",
+      "database": "recon",
+      "name": "Recon",
+      "username": "sa",
+      "password": "Reinaux0)"
     }
   ],
   "dotnet.defaultSolution": "sysigreja-deploys.sln"

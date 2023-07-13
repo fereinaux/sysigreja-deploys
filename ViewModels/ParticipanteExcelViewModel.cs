@@ -49,6 +49,7 @@ namespace SysIgreja.ViewModels
         public string RestricaoAlimentar { get; set; }
         [DisplayName("Medicação")]
         public string Medicacao { get; set; }
+        public string Alergia { get; set; }
 
         [DisplayName("Convênio")]
         public string Convenio { get; set; }

@@ -241,6 +241,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.FoneConvite, opt => opt.MapFrom(x => x.Equipante.FoneConvite))
                     .ForMember(dest => dest.RestricaoAlimentar, opt => opt.MapFrom(x => x.Equipante.RestricaoAlimentar))
                     .ForMember(dest => dest.Medicacao, opt => opt.MapFrom(x => x.Equipante.Medicacao))
+                    .ForMember(dest => dest.Alergia, opt => opt.MapFrom(x => x.Equipante.Alergia))
                     .ForMember(dest => dest.Convenio, opt => opt.MapFrom(x => x.Equipante.Convenio))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
                       .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)))

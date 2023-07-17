@@ -304,7 +304,7 @@ namespace SysIgreja.Controllers
             {
                 Participante participante = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.MercadoPagoId == external_reference);
 
-                if (participante == null)
+                if (participante != null)
                 {
 
 
@@ -337,7 +337,7 @@ namespace SysIgreja.Controllers
                 {
                     Equipante equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.MercadoPagoId == external_reference);
 
-                    if (equipante == null)
+                    if (equipante != null)
                     {
                         var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
 

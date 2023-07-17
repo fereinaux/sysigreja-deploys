@@ -346,7 +346,7 @@ namespace SysIgreja.Controllers
                         lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
                         {
                             Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
-                            Valor = eventoAtualP.Valor,
+                            Valor = eventoAtualP.ValorTaxa,
                             Origem = "Mercado Pago",
                             EquipanteId = equipante.Id,
                             MeioPagamentoId = lancamentoBusiness.GetMercadoPago(eventoAtualP.ConfiguracaoId.Value).Id,
@@ -489,9 +489,11 @@ namespace SysIgreja.Controllers
 
         public ActionResult InscricoesEncerradas(int Id)
         {
-            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
             ViewBag.Title = "Inscrições Encerradas";
-            ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            ViewBag.Login = configuracaoBusiness.GetLogin();
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
+            var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            ViewBag.Configuracao = config;
             return View();
         }
 

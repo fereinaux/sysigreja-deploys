@@ -367,38 +367,7 @@ namespace SysIgreja.Controllers
                 ViewBag.Title = "Pagamento Concluído";
                 return View();
 
-            }
-            else if (equipesBusiness.GetQueryEquipantesEventoSemFiltro().Any(x => x.MercadoPagoId == external_reference))
-            {
-                EquipanteEvento equipanteEv = equipesBusiness.GetQueryEquipantesEventoSemFiltro().Include(x => x.Equipante).Include(x => x.Equipante.Lancamentos).FirstOrDefault(x => x.MercadoPagoId == external_reference);
-                var equipante = equipanteEv.Equipante;
-                var eventoAtual = eventosBusiness.GetEventoById(equipanteEv.EventoId.Value);
-                var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
-
-                if (!equipante.Lancamentos.Any(x => x.EventoId == eventoAtual.Id && x.CentroCustoId == config.CentroCustoTaxaId))
-                {
-
-                    lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
-                    {
-                        Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
-                        Valor = eventoAtual.ValorTaxa,
-                        Origem = "Mercado Pago",
-                        EquipanteId = equipante.Id,
-                        MeioPagamentoId = lancamentoBusiness.GetMercadoPago(config.Id.Value).Id,
-                        EventoId = eventoAtual.Id
-                    });
-                }
-                var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
-                ViewBag.Configuracao = config;
-
-                ViewBag.Participante = equipante;
-                ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == equipante.Nome);
-                ViewBag.Evento = eventoAtual;
-                ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
-
-                ViewBag.Title = "Pagamento Concluído";
-                return View();
-            }
+            }           
             return View("~/Views/NaoAutorizado/Index.cshtml");
         }
 

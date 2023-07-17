@@ -1028,7 +1028,7 @@ namespace SysIgreja.Controllers
 
                 body = body.Replace("{{buttonColor}}", evento.Configuracao.CorBotao);
                 body = body.Replace("{{logoEvento}}", $"https://{Request.Url.Authority}/{evento.Configuracao.Identificador}/Logo");
-                body = body.Replace("{{qrcodeParticipante}}", $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&equipante={equipante.Id.ToString()}");
+                body = body.Replace("{{qrcodeParticipante}}", $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&equipanteid={equipante.Id.ToString()}");
 
 
                 if (evento.Configuracao.TipoEvento == TipoEventoEnum.Casais)

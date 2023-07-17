@@ -300,33 +300,70 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Login = configuracaoBusiness.GetLogin();
 
-            if (participantesBusiness.GetParticipantes().Any(x => x.MercadoPagoId == external_reference))
+            if (participantesBusiness.GetParticipantes().Any(x => x.MercadoPagoId == external_reference) || equipantesBusiness.GetEquipantes().Any(x => x.MercadoPagoId == external_reference))
             {
                 Participante participante = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.MercadoPagoId == external_reference);
-                var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
 
-                if (participante.Status == StatusEnum.Inscrito)
+                if (participante == null)
                 {
 
-                    lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
+
+                    var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
+
+                    if (participante.Status == StatusEnum.Inscrito)
                     {
-                        Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
-                        Valor = eventoAtualP.Valor,
-                        Origem = "Mercado Pago",
-                        ParticipanteId = participante.Id,
-                        MeioPagamentoId = lancamentoBusiness.GetMercadoPago(eventoAtualP.ConfiguracaoId.Value).Id,
-                        EventoId = eventoAtualP.Id
-                    });
+
+                        lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
+                        {
+                            Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+                            Valor = eventoAtualP.Valor,
+                            Origem = "Mercado Pago",
+                            ParticipanteId = participante.Id,
+                            MeioPagamentoId = lancamentoBusiness.GetMercadoPago(eventoAtualP.ConfiguracaoId.Value).Id,
+                            EventoId = eventoAtualP.Id
+                        });
+                    }
+
+                    var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
+                    ViewBag.Configuracao = configP;
+                    ViewBag.Participante = participante;
+                    ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
+                    ViewBag.Evento = eventoAtualP;
+                    ViewBag.Padrinho = participante.Padrinho?.EquipanteEvento?.Equipante;
+                    ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
+
                 }
+                else
+                {
+                    Equipante equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.MercadoPagoId == external_reference);
 
-                var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
-                ViewBag.Configuracao = configP;
-                ViewBag.Participante = participante;
-                ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
-                ViewBag.Evento = eventoAtualP;
-                ViewBag.Padrinho = participante.Padrinho?.EquipanteEvento?.Equipante;
-                ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
+                    if (equipante == null)
+                    {
+                        var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
 
+                        if (equipante.Status == StatusEnum.Inscrito)
+                        {
+
+                            lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
+                            {
+                                Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+                                Valor = eventoAtualP.Valor,
+                                Origem = "Mercado Pago",
+                                EquipanteId = equipante.Id,
+                                MeioPagamentoId = lancamentoBusiness.GetMercadoPago(eventoAtualP.ConfiguracaoId.Value).Id,
+                                EventoId = eventoAtualP.Id
+                            });
+                        }
+
+                        var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
+                        ViewBag.Configuracao = configP;
+                        ViewBag.Participante = equipante;
+                        ViewBag.Casal = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Conjuge == equipante.Nome);
+                        ViewBag.Evento = eventoAtualP;
+                        ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
+
+                    }
+                }
                 ViewBag.Title = "Pagamento Concluído";
                 return View();
 
@@ -399,6 +436,8 @@ namespace SysIgreja.Controllers
                     {
                         ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", equipante.Apelido);
                     }
+                    ViewBag.MercadoPagoId = equipante.MercadoPagoId;
+                    ViewBag.MercadoPagoPreferenceId = equipante.MercadoPagoPreferenceId;
                     ViewBag.Title = "Inscrição Concluída";
                     return View();
                 default:

@@ -15,14 +15,19 @@ using Core.Business.Quartos;
 using Core.Business.Reunioes;
 using Core.Models.Equipantes;
 using Core.Models.Participantes;
+using CsQuery;
 using Data.Entities;
 using Data.Entities.Base;
+using MercadoPago.Client.Preference;
+using MercadoPago.Config;
+using MercadoPago.Resource.Preference;
 using Microsoft.Extensions.Logging;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Threading;
@@ -52,11 +57,13 @@ namespace SysIgreja.Controllers
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
+        private readonly IEmailSender emailSender;
 
 
-        public EquipanteController(IEquipantesBusiness equipantesBusiness, IParticipantesBusiness participantesBusiness, IAccountBusiness accountBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IArquivosBusiness arquivoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EquipanteController(IEquipantesBusiness equipantesBusiness, IEmailSender emailSender,IParticipantesBusiness participantesBusiness, IAccountBusiness accountBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IArquivosBusiness arquivoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.quartosBusiness = quartosBusiness;
+            this.emailSender = emailSender;
             this.participantesBusiness = participantesBusiness;
             this.etiquetasBusiness = etiquetasBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
@@ -955,10 +962,97 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostEquipante(PostInscricaoModel model)
         {
-            var equipante = equipantesBusiness.PostEquipante(model);
+                var evento = eventosBusiness.GetEventoById(model.EventoId);
+            if (model.Inscricao)
+            {
+
+                if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
+                {
+
+                    MercadoPagoConfig.AccessToken = evento.Configuracao.AccessTokenMercadoPago;
+                    Guid g = Guid.NewGuid();
+                    model.MercadoPagoId = g.ToString();
+                    var request = new PreferenceRequest
+                    {
+                        Items = new List<PreferenceItemRequest>
+                {
+                    new PreferenceItemRequest
+                    {
+                        Id = "",
+                        Title = $"Inscrição {evento.Numeracao.ToString()}º {evento.Configuracao.Titulo}",
+                        Quantity = 1,
+                        CurrencyId = "BRL",
+                        UnitPrice = evento.ValorTaxa,
+                        PictureUrl = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
+                    },
+                },
+                        AutoReturn = "approved",
+                        BackUrls = new PreferenceBackUrlsRequest
+                        {
+                            Success = $"https://{System.Web.HttpContext.Current.Request.Url.Host}/Inscricoes/PagamentoConcluido",
+                        },
+                        ExternalReference = model.MercadoPagoId
+                    };
+
+                    // Cria a preferência usando o client
+                    var client = new PreferenceClient();
+                    Preference preference = client.Create(request);
+
+                    model.MercadoPagoPreferenceId = preference.Id;
+                }
+            }
+
+
+                var equipante = equipantesBusiness.PostEquipante(model);
 
             if (model.Inscricao)
             {
+                string body = string.Empty;
+                using (StreamReader reader = new StreamReader(Server.MapPath("~/EmailTemplates/Inscricao.html")))
+
+                {
+                    body = reader.ReadToEnd();
+                }
+                var ValorParticipante = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
+
+                var msgConclusao = evento.Configuracao.MsgConclusaoEquipe.Replace("${Nome}", model.Nome)
+                                              .Replace("${Id}", equipante.Id.ToString())
+                                              .Replace("${EventoId}", evento.Id.ToString())
+                     .Replace("${Evento}", evento.Configuracao.Titulo)
+                              .Replace("${NumeracaoEvento}", evento.Numeracao.ToString())
+                               .Replace("${DescricaoEvento}", evento.Descricao)
+                     .Replace("${ValorEvento}", ValorParticipante)
+                     .Replace("${DataEvento}", evento.DataEvento.ToString("dd/MM/yyyy"));
+   
+
+
+                body = body.Replace("{{buttonColor}}", evento.Configuracao.CorBotao);
+                body = body.Replace("{{logoEvento}}", $"https://{Request.Url.Authority}/{evento.Configuracao.Identificador}/Logo");
+                body = body.Replace("{{qrcodeParticipante}}", $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&equipante={equipante.Id.ToString()}");
+
+
+                if (evento.Configuracao.TipoEvento == TipoEventoEnum.Casais)
+                {
+                    var casal = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Conjuge == equipante.Nome);
+
+                    if (casal != null)
+                    {
+                        msgConclusao = msgConclusao.Replace("${Apelido}", $"{equipante.Apelido} e {casal.Apelido}");
+                        body = body.Replace("{{msgConclusao}}", msgConclusao);
+
+                        emailSender.SendEmail(equipante.Email, "Confirmar Inscrição", body, evento.Configuracao.Titulo);
+                        emailSender.SendEmail(casal.Email, "Confirmar Inscrição", body, evento.Configuracao.Titulo);
+                    }
+                }
+                else
+                {
+                    msgConclusao = msgConclusao.Replace("${Apelido}", equipante.Apelido);
+                    body = body.Replace("{{msgConclusao}}", msgConclusao);
+
+                    emailSender.SendEmail(equipante.Email, "Confirmar Inscrição", body, evento.Configuracao.Titulo);
+                }
+
+
                 return Json(Url.Action("InscricaoConcluida", "Inscricoes", new { Id = equipante.Id, EventoId = model.EventoId, Tipo = "Inscrições Equipe" }));
             }
             else

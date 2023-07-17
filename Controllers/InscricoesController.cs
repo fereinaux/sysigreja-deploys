@@ -300,7 +300,7 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Login = configuracaoBusiness.GetLogin();
 
-            if (participantesBusiness.GetParticipantes().Any(x => x.MercadoPagoId == external_reference) || equipantesBusiness.GetEquipantes().Any(x => x.MercadoPagoId == external_reference))
+            if (participantesBusiness.GetParticipantes().Any(x => x.MercadoPagoId == external_reference) || equipesBusiness.GetQueryEquipantesEventoSemFiltro().Any(x => x.MercadoPagoId == external_reference))
             {
                 Participante participante = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.MercadoPagoId == external_reference);
 
@@ -335,25 +335,24 @@ namespace SysIgreja.Controllers
                 }
                 else
                 {
-                    Equipante equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.MercadoPagoId == external_reference);
+                    EquipanteEvento ev = equipesBusiness.GetQueryEquipantesEventoSemFiltro().Include(x => x.Equipante).FirstOrDefault(x => x.MercadoPagoId == external_reference);
+
+                    Equipante equipante = ev.Equipante;
 
                     if (equipante != null)
                     {
-                        var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
+                        var eventoAtualP = eventosBusiness.GetEventoById(ev.EventoId.Value);
 
-                        if (equipante.Status == StatusEnum.Inscrito)
+                        lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
                         {
+                            Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
+                            Valor = eventoAtualP.Valor,
+                            Origem = "Mercado Pago",
+                            EquipanteId = equipante.Id,
+                            MeioPagamentoId = lancamentoBusiness.GetMercadoPago(eventoAtualP.ConfiguracaoId.Value).Id,
+                            EventoId = eventoAtualP.Id
+                        });
 
-                            lancamentoBusiness.PostPagamento(new Core.Models.Lancamento.PostPagamentoModel
-                            {
-                                Data = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")),
-                                Valor = eventoAtualP.Valor,
-                                Origem = "Mercado Pago",
-                                EquipanteId = equipante.Id,
-                                MeioPagamentoId = lancamentoBusiness.GetMercadoPago(eventoAtualP.ConfiguracaoId.Value).Id,
-                                EventoId = eventoAtualP.Id
-                            });
-                        }
 
                         var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
                         ViewBag.Configuracao = configP;
@@ -367,7 +366,7 @@ namespace SysIgreja.Controllers
                 ViewBag.Title = "Pagamento Concluído";
                 return View();
 
-            }           
+            }
             return View("~/Views/NaoAutorizado/Index.cshtml");
         }
 
@@ -381,6 +380,7 @@ namespace SysIgreja.Controllers
                     var eventoAtual = eventosBusiness.GetEventoById(EventoId.Value);
                     var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
                     Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
+                    var ev = equipesBusiness.GetQueryEquipantesEvento(eventoAtual.Id).FirstOrDefault(x => x.EquipanteId == equipante.Id);
                     var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
                     ViewBag.Configuracao = config;
                     ViewBag.MsgConclusao = config.MsgConclusaoEquipe
@@ -405,8 +405,8 @@ namespace SysIgreja.Controllers
                     {
                         ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", equipante.Apelido);
                     }
-                    ViewBag.MercadoPagoId = equipante.MercadoPagoId;
-                    ViewBag.MercadoPagoPreferenceId = equipante.MercadoPagoPreferenceId;
+                    ViewBag.MercadoPagoId = ev.MercadoPagoId;
+                    ViewBag.MercadoPagoPreferenceId = ev.MercadoPagoPreferenceId;
                     ViewBag.Title = "Inscrição Concluída";
                     return View();
                 default:

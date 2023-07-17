@@ -296,11 +296,23 @@
                     arrValue = decodedText.split('|')
                     console.log(arrValue);
                     if ($("#eventoid").val() == arrValue[0]) {
-                        $("#participantes").val(arrValue[1]).trigger("chosen:updated");
-                        GetParticipante();
+                        if (arrValue[2] == 'EQUIPANTE') {
+                            $("#participantes").val(arrValue[1]).trigger("chosen:updated");
+                            GetParticipante();
+                        } else {
+
+                            $("#equipantes").val(arrValue[1]).trigger("chosen:updated");
+                            GetEquipante();
+                        }
                     } else {
-                        $("#eventoid").val(arrValue[0])
-                        GetParticipantes(arrValue[1])
+                        if (arrValue[2] == 'EQUIPANTE') {
+                            $("#eventoid").val(arrValue[0])
+                            GetEquipantes(arrValue[1])
+                        } else {
+
+                            $("#eventoid").val(arrValue[0])
+                            GetParticipantes(arrValue[1])
+                        }
                     }
 
                 }
@@ -319,9 +331,9 @@
                     scrollTop: $('#reader').offset().top
                 }, 500);
             });
-       
-             
-      
+
+
+
         }
     </script>
 }

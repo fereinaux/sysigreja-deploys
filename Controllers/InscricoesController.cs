@@ -468,8 +468,8 @@ namespace SysIgreja.Controllers
                     {
                         ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", participante.Apelido);
                     }
-                    //ViewBag.MercadoPagoId = participante.MercadoPagoId;
-                    //ViewBag.MercadoPagoPreferenceId = participante.MercadoPagoPreferenceId;
+                    ViewBag.MercadoPagoId = participante.MercadoPagoId;
+                    ViewBag.MercadoPagoPreferenceId = participante.MercadoPagoPreferenceId;
                     ViewBag.Participante = new InscricaoConcluidaViewModel
                     {
                         Apelido = participante.Apelido,

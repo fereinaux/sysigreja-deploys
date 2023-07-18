@@ -195,7 +195,7 @@ function header(doc, evento, page, equipe) {
     doc.line(10, 38, widthP, 38);
 
     doc.setFont('helvetica', "bold")
-    doc.text(17, 43, "Nome e Sobrenome");
+    doc.text(17, 43, "Nome completo");
     doc.text(127, 43, "Credencial");
     doc.text(172, 43, "Idade/Data de Nascimento");
     doc.text(240, 43, "Whatsapp");

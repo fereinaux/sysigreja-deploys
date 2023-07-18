@@ -1449,7 +1449,7 @@ function loadCampos(id) {
 display:none;
     max-height: 100px;        margin: 20px auto auto auto;" src="">
  </div>
-${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+${campos.find(x => x.Campo == "Nome completo") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Nome</h5>
 
                                 <input type="text" class="form-control required" id="participante-nome" data-field="Nome" />

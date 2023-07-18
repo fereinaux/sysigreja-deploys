@@ -52,11 +52,11 @@
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
                         {
                             <div class="form-group">
-                                <label for="participante-nome" class="">Nome e sobrenome do <strong>marido</strong></label>
+                                <label for="participante-nome" class="">Nome completo do <strong>marido</strong></label>
                                 <input type="text" class="form-control required" id="participante-nome-marido" name="name" data-field="Nome do <strong>marido</strong>" value="@ViewBag.Nome" />
                             </div>
                             <div class="form-group">
-                                <label for="participante-nome" class="">Nome e sobrenome da <strong>esposa</strong></label>
+                                <label for="participante-nome" class="">Nome completo da <strong>esposa</strong></label>
                                 <input type="text" class="form-control required" id="participante-nome-esposa" name="name" data-field="Nome da <strong>esposa</strong>" value="@ViewBag.Nome" />
                             </div>
                         }

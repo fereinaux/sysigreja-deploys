@@ -1436,7 +1436,7 @@ function loadCampos(id) {
             campos = data.Campos
             $('.campos-cadastro').html(`
           <input type="hidden" id="equipante-id" />
-${campos.find(x => x.Campo == "Nome e Sobrenome") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
+${campos.find(x => x.Campo == "Nome completo") ? `<div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Nome</h5>
 
                                 <input type="text" class="form-control required" id="equipante-nome" data-field="Nome" />

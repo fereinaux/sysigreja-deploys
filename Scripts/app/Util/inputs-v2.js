@@ -457,7 +457,7 @@ if (Intl) {
 
 function campoRelation(campo) {
     switch (campo) {
-        case "Nome e Sobrenome":
+        case "Nome completo":
             return "Nome";
         case "Apelido":
             return "Apelido";

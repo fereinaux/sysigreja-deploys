@@ -1013,7 +1013,7 @@ namespace SysIgreja.Controllers
                 {
                     body = reader.ReadToEnd();
                 }
-                var ValorParticipante = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
+                var ValorParticipante = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : evento.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
 
                 var msgConclusao = evento.Configuracao.MsgConclusaoEquipe.Replace("${Nome}", model.Nome)
                                               .Replace("${Id}", equipante.Id.ToString())

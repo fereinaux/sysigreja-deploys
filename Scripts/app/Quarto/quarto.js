@@ -379,6 +379,7 @@ function PostQuartoEquipe() {
     }
 }
 
+
 function DistribuirQuartos() {
     $.ajax({
         url: "/Quarto/DistribuirQuartos/",
@@ -387,9 +388,11 @@ function DistribuirQuartos() {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                EventoId: $("#quarto-eventoid").val()
+                EventoId: $("#quarto-eventoid").val(),
+                Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 
             }),
         success: function () {
+            //teste
             SuccessMesageOperation();
             CarregarTabelaQuarto();
             $("#modal-quarto").modal("hide");

@@ -1895,6 +1895,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-m").val(),
+                        EventoId: $("#participante-eventoid").val(),
                         tipo: 1
                     }),
             }))
@@ -1910,6 +1911,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-f").val(),
+                        EventoId: $("#participante-eventoid").val(),
                         tipo: 1
                     }),
             }))
@@ -1925,6 +1927,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-misto").val(),
+                        EventoId: $("#participante-eventoid").val(),
                         tipo: 1
                     }),
             }))

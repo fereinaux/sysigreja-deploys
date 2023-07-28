@@ -519,6 +519,7 @@ function ChangeQuarto(participanteId, destinoId) {
             {
                 ParticipanteId: participanteId,
                 DestinoId: destinoId,
+                EventoId: $("#quarto-eventoid").val(),
                 tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
             }),
         success: function () {

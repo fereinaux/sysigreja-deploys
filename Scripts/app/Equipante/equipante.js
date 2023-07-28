@@ -1333,6 +1333,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-m").val(),
+                        EventoId: $("#equipante-eventoid-filtro").val(),
                         tipo: 0
                     }),
             }))
@@ -1348,6 +1349,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-f").val(),
+                        EventoId: $("#equipante-eventoid-filtro").val(),
                         tipo: 0
                     }),
             }))
@@ -1363,7 +1365,9 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-misto").val(),
+                        EventoId: $("#equipante-eventoid-filtro").val(),
                         tipo: 0
+
                     }),
             }))
         }

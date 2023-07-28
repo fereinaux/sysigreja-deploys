@@ -250,9 +250,9 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangeQuarto(int ParticipanteId, int? DestinoId, TipoPessoaEnum? tipo)
+        public ActionResult ChangeQuarto(int ParticipanteId, int? DestinoId, TipoPessoaEnum? tipo, int EventoId)
         {
-            var mensagem = quartosBusiness.ChangeQuarto(ParticipanteId, DestinoId, tipo);
+            var mensagem = quartosBusiness.ChangeQuarto(ParticipanteId, DestinoId, tipo, EventoId);
             if (mensagem == "OK")
             {
                 return new HttpStatusCodeResult(200);

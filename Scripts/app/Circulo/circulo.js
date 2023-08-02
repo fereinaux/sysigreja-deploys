@@ -16,7 +16,8 @@ function CarregarTabelaCirculo() {
                         <span>${row.Titulo}</br></span>
                        
                     </div>`
-            } },
+            }
+        },
         { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
         {
             data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
@@ -158,7 +159,7 @@ function FillDoc(doc, result) {
         doc.text(117, height, "Apelido");
         doc.text(152, height, "Whatsapp");
     }
-    
+
     height += 2
     doc.line(10, height, 195, height);
     height += 5
@@ -172,7 +173,7 @@ function FillDoc(doc, result) {
             doc.text(117, height, participante.Apelido);
             doc.text(152, height, participante.Fone);
         }
-    
+
         height += 6;
     });
 
@@ -200,7 +201,7 @@ function GetCirculo(id) {
     else {
         $("#circulo-id").val(0);
         $("#circulo-titulo").val("");
-        $("#circulo-cores").val("#bada55");    
+        $("#circulo-cores").val("#bada55");
     }
 }
 
@@ -371,19 +372,31 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
-                    console.log(result);
+                    var bairros = []
+
+
                     data.Circulos.forEach(function (circulo, index, array) {
                         if (circulo.Latitude && circulo.Longitude) {
-                            addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo')
+                            if (!bairros.includes(circulo.Bairro)) {
+                                bairros.push(circulo.Bairro)
+                            }
+
+                            addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo', circulo)
                                 .bindPopup(`<h4>Nome: ${circulo.Nome}</h4><div><span>${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">
-                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',') }
+                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                                 </ul>
                                 </div>`);
                         }
                         $(`#pg-${circulo.CirculoId}`).append($(`<tr><td class="participante" data-id="${circulo.ParticipanteId}">${circulo.Nome}</td></tr>`));
                     });
                     $('.div-map').css('display', 'block')
+                    $("#bairros").html(`
+${bairros.map(p => `<option value=${p}>${p}</option>`)}
+`)
+                    $("#bairros").select2({
+                        placeholder: "Filtro de bairros",
+                    })
                     DragDropg();
                 }
             });
@@ -391,10 +404,21 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
     });
 }
 
-function addMapa(lat, long, nome, cor, id, type) {
-    return L.marker([lat, long], { icon: getIcon(cor.trim()) }).addTo(markerLayer);
+function addMapa(lat, long, nome, cor, id, type, props) {
+    let marker = L.marker([lat, long], { icon: getIcon(cor.trim()) })
+    marker.props = props
+    return marker.addTo(markerLayer);
 
 
+}
+
+function filtrarBairro() {
+    if ($('#bairros').val().length == 0) {
+        Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(100))
+    } else {
+        Object.values(map._layers).filter(e => e.props && $('#bairros').val().includes(e.props.Bairro)).forEach(e => map._layers[e._leaflet_id].setOpacity(100))
+        Object.values(map._layers).filter(e => e.props && !$('#bairros').val().includes(e.props.Bairro)).forEach(e => map._layers[e._leaflet_id].setOpacity(15))
+    }
 }
 
 

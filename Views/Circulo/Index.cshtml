@@ -56,7 +56,10 @@
         <div class="ibox" id="ibox-mapa-circulo" style="margin-top:25px;">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
                 <h4>Mapa</h4>
-
+                <div class="ibox-tools pull-right" style="width:50%">
+                    <select placeholder="Filtrar Bairros" class="form-control" id="bairros" multiple onchange="filtrarBairro()">
+                    </select>
+                </div>
             </div>
             <div class="ibox-content" style="height:650px">
 

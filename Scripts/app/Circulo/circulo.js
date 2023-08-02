@@ -346,8 +346,8 @@ function GetCirculosComParticipantes(column, dir, search) {
         datatype: "json",
         data: { EventoId: $("#circulo-eventoid").val(), columnName: column, columnDir: dir, search },
         type: "POST",
-        success: function (data) {
-            data.data.forEach(function (circulo, index, array) {
+        success: function (result) {
+            result.data.forEach(function (circulo, index, array) {
 
                 htmlCaecalhoCirculo = circulo.Dirigentes.map(dirigente => `<h4 style="padding-top:5px">${dirigente.Nome}</h4>`).join().replace(/,/g, '')
 
@@ -371,10 +371,15 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
+                    console.log(result);
                     data.Circulos.forEach(function (circulo, index, array) {
                         if (circulo.Latitude && circulo.Longitude) {
                             addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo')
-                                .bindPopup(`<h4>Nome: ${circulo.Nome}</h4><div><span>${circulo.Endereco} - ${circulo.Bairro}</span></div>`);
+                                .bindPopup(`<h4>Nome: ${circulo.Nome}</h4><div><span>${circulo.Endereco} - ${circulo.Bairro}</span>
+                                <ul class="change-circulo-ul">
+                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',') }
+                                </ul>
+                                </div>`);
                         }
                         $(`#pg-${circulo.CirculoId}`).append($(`<tr><td class="participante" data-id="${circulo.ParticipanteId}">${circulo.Nome}</td></tr>`));
                     });
@@ -434,6 +439,7 @@ function ChangeCirculo(participanteId, destinoId) {
             }),
         success: function () {
             CarregarTabelaCirculo();
+            map.closePopup()
         }
     });
 }

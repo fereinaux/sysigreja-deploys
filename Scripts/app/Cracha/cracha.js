@@ -156,7 +156,13 @@ function GetCracha(id) {
         $('.quarto-font #font-padding').val(5)
         $('.quarto-font #font-color').val('#000000')
         Align('left', 'quarto')
-        $('#cracha').html(`<img src="./Images/profile.jpg" class="background" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0" />
+        $('#cracha').html(`                                <div id="profile" style="position:absolute;left:0;top:0;height:100%;width:100%;z-index:0">
+
+                                    <img src="./Images/profile.jpg" class="background" style="
+    width: 100%;
+    height: 100%;
+">
+                                </div>
                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="apelido-cracha text-cracha">{Apelido}</span>
                                 <span style="white-space:normal;display:block;position:relative;z-index:999; top:50%; font-size:20px" class="nome-cracha text-cracha">{Nome}</span>
                                 <span style="white-space:normal;display: block;position: relative; z-index: 999; top: 50%; font-size:30px;" class="equipe-cracha text-cracha">{Equipe}</span>
@@ -358,9 +364,17 @@ function dragResize() {
         containment: "#cracha"
     });
 
+    $("#profile").draggable({
+        containment: "#cracha"
+    });
+
 
     function loadResizable() {
         $("*[id*='img-arquivo']").resizable({
+            containment: "#cracha"
+        })
+
+        $("#profile").resizable({
             containment: "#cracha"
         })
 

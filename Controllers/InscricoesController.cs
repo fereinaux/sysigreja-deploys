@@ -265,10 +265,12 @@ namespace SysIgreja.Controllers
             if (evento.ConfiguracaoId.HasValue)
             {
                 ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+                ViewBag.Login = configuracaoBusiness.GetLogin();
             }
             else
             {
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
+                ViewBag.Login = ViewBag.Configuracao;
             }
 
             if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto && evento.Status != StatusEnum.Informativo)

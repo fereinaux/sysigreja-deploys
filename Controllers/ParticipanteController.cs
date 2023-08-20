@@ -284,7 +284,7 @@ namespace SysIgreja.Controllers
                 Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-"),
                 Titulo = x.Quarto.Titulo,
                 Equipante = x.Quarto.Equipante != null ? UtilServices.CapitalizarNome(x.Quarto.Equipante.Nome) : "",
-                Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor?.GetDescription() ?? "",
+                Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Titulo ?? x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor?.GetDescription() ?? "",
                 Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
 
             });

@@ -123,7 +123,7 @@ function GetResultadosAdmin() {
         window.location.href = '/Home/Coordenador'
     }
 
-    if ($('#eventoid option:selected').data('role') == "Administrativo") {
+    if ($('#eventoid option:selected').data('role') == "Administrativo" || $('#eventoid option:selected').data('role') == "Padrinho") {
         $('#resumo-financeiro-bloco').css('display', 'none')
     } else {
         $('#resumo-financeiro-bloco').css('display', 'block')

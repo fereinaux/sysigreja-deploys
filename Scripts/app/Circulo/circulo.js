@@ -83,20 +83,117 @@ $(document).ready(function () {
 });
 
 function PrintCirculo(row) {
-    $.ajax({
+
+    const ajaxPrint = (type) => $.ajax({
         url: '/Participante/GetParticipantesByCirculo',
         data: { CirculoId: row.Id },
         datatype: "json",
         type: "GET",
         success: (result) => {
-            var doc = CriarPDFA4();
-
-            FillDoc(doc, result)
-
-
+            var doc = type == "resume" ? CriarPDFA4() : CriarPDFA4Landscape();
+            if (type == "resume") {
+                FillDoc(doc, result, type)
+            } else {
+                FillDocLandscape(doc, result, type)
+            }
             printDoc(doc);
         }
     });
+
+    CustomSwal(swalCirculos).then(res => { if (res) ajaxPrint(res) })
+}
+
+
+
+
+function FillDocLandscape(doc, result) {
+    if (logoRelatorio) {
+        var img = new Image();
+        img.src = `data:image/png;base64,${logoRelatorio}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
+
+
+    doc.setFont('helvetica', "normal")
+    doc.setFontSize(12);
+    doc.text(77, 15, $("#circulo-eventoid option:selected").text());
+    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
+    doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
+    doc.line(10, 38, 285, 38);
+
+
+    height = 43;
+    if (result.data[0].Dirigentes.length > 0) {
+        doc.setFont('helvetica', "bold")
+        doc.text(12, height, "Dirigentes");
+
+        height += 6;
+        doc.setFont('helvetica', "bold")
+        if (config.TipoEvento == "Casais") {
+            doc.text(12, height, "Nome");
+            doc.text(112, height, "Whatsapp");
+        } else {
+            doc.text(12, height, "Nome");
+            doc.text(117, height, "Apelido");
+            doc.text(152, height, "Whatsapp");
+        }
+
+        height += 2
+        doc.line(10, height, 285, height);
+        height += 5
+        doc.setFont('helvetica', "normal")
+        $(result.data[0].Dirigentes).each((index, dirigente) => {
+            doc.text(12, height, dirigente.Nome);
+
+            if (config.TipoEvento == "Casais") {
+                doc.text(12, height, dirigente.Nome);
+                doc.text(112, height, dirigente.Fone);
+            } else {
+                doc.text(12, height, dirigente.Nome);
+                doc.text(117, height, dirigente.Apelido);
+                doc.text(152, height, dirigente.Fone);
+
+            }
+            height += 6;
+        });
+    }
+
+    doc.setFont('helvetica', "bold")
+    if (config.TipoEvento == "Casais") {
+        doc.text(12, height, "Casal");
+        doc.text(82, height, "Whatsapp");
+        doc.text(182, height, "Bairro");
+        doc.text(222, height, "Cidade");
+    } else {
+        doc.text(12, height, "Nome");
+        doc.text(117, height, "Apelido");
+        doc.text(152, height, "Whatsapp");
+        doc.text(195, height, "Bairro");
+        doc.text(235, height,"Cidade");
+    }
+
+    height += 2
+    doc.line(10, height, 285, height);
+    height += 5
+    doc.setFont('helvetica', "normal")
+    $(result.data).each((index, participante) => {
+        if (config.TipoEvento == "Casais") {
+            doc.text(12, height, participante.Nome);
+            doc.text(82, height, participante.Fone);
+            doc.text(182, height, participante.Bairro || "");
+            doc.text(222, height, participante.Cidade || "");
+        } else {
+            doc.text(12, height, participante.Nome);
+            doc.text(117, height, participante.Apelido);
+            doc.text(152, height, participante.Fone);
+            doc.text(195, height, participante.Bairro || "");
+            doc.text(235, height, participante.Cidade || "");
+        }
+
+        height += 6;
+    });
+
+    AddCount(doc, result.data, height, 285);
 }
 
 function FillDoc(doc, result) {
@@ -449,6 +546,31 @@ function Drag() {
     });
 }
 
+const swalCirculos = {
+    title: `Impressão de ${$('.title-circulo').first().text()}`,
+    icon: "info",
+    text: "Como você deseja imprimir?",
+    className: "button-center",
+    dangerMode: true,
+    buttons: {
+        door: {
+            text: "Resumido",
+            value: "resume",
+            className: "btn-info w-150 btn-resume"
+        },
+        full: {
+            text: "Completo",
+            value: "full",
+            className: "btn-primary w-150 btn-full"
+        }, test: {
+            visible: false
+        }
+    }
+
+
+}
+
+
 function ChangeCirculo(participanteId, destinoId) {
     $.ajax({
         url: "/Circulo/ChangeCirculo/",
@@ -466,41 +588,55 @@ function ChangeCirculo(participanteId, destinoId) {
         }
     });
 }
-function PrintAll() {
-    var doc = CriarPDFA4()
-    $.ajax({
-        url: '/Circulo/GetCirculos',
-        datatype: "json",
-        data: { EventoId: $("#circulo-eventoid").val() },
-        type: "POST",
-        success: function (data) {
-            var arrPromises = []
-            data.data.forEach(element => {
-                if (element.QtdParticipantes > 0) {
-                    arrPromises.push($.ajax({
-                        url: '/Participante/GetParticipantesByCirculo',
-                        data: { CirculoId: element.Id },
-                        datatype: "json",
-                        type: "GET"
 
-                    }))
-                }
-            })
-            Promise.all(arrPromises).then(result => {
-                result.forEach((data, index) => {
-                    if (data.data.length > 0) {
-                        if (index > 0) {
-                            doc.addPage()
-                        } FillDoc(doc, data)
+
+
+function PrintAll() {
+    const ajaxPrint = (type) => {
+        let doc = type == "resume" ? CriarPDFA4() : CriarPDFA4Landscape();
+        $.ajax({
+            url: '/Circulo/GetCirculos',
+            datatype: "json",
+            data: { EventoId: $("#circulo-eventoid").val() },
+            type: "POST",
+            success: function (data) {
+                var arrPromises = []
+                data.data.forEach(element => {
+                    if (element.QtdParticipantes > 0) {
+                        arrPromises.push($.ajax({
+                            url: '/Participante/GetParticipantesByCirculo',
+                            data: { CirculoId: element.Id },
+                            datatype: "json",
+                            type: "GET"
+
+                        }))
                     }
                 })
-                printDoc(doc);
-            })
+                Promise.all(arrPromises).then(result => {
+                    result.forEach((data, index) => {
+                        if (data.data.length > 0) {
+                            if (index > 0) {
+                                doc.addPage()
+                            }
+                            if (type == "resume") {
+                                FillDoc(doc, data)
+                            } else {
+                                FillDocLandscape(doc, data)
+                            }
+                        }
+                    })
+                    printDoc(doc);
+                })
 
-        }
-    })
+            }
+        })
+
+    }
+
+    CustomSwal(swalCirculos).then(res => ajaxPrint(res || "resume"))
 
 }
+
 
 
 function AddDirigente() {

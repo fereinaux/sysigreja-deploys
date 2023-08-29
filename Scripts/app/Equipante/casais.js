@@ -729,13 +729,17 @@ function GetEquipante(id) {
                 $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                 $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                 $(`#equipante-email`).val(data.Equipante.Email);
-                $(`#equipante-fone`).val(data.Equipante.Fone);
 
                 $(`#equipante-camisa`).val(data.Equipante.Camisa);
                 $(`#equipante-nome-pai`).val(data.Equipante.NomePai);
-                $(`#equipante-fone-pai`).val(data.Equipante.FonePai);
                 $(`#equipante-nome-mae`).val(data.Equipante.NomeMae);
-                $(`#equipante-fone-mae`).val(data.Equipante.FoneMae);
+
+                setNumber('equipante-fone', data.Equipante.Fone)
+                setNumber('equipante-fonemae', data.Equipante.FoneMae)
+                setNumber('equipante-fonepai', data.Equipante.FonePai)
+                setNumber('equipante-foneconvite', data.Equipante.FoneConvite)
+                setNumber('equipante-fonecontato', data.Equipante.FoneContato)
+
                 $(`#equipante-cep`).val(data.Equipante.CEP);
                 $(`#equipante-logradouro`).val(data.Equipante.Logradouro);
                 $(`#equipante-bairro`).val(data.Equipante.Bairro);
@@ -755,9 +759,7 @@ function GetEquipante(id) {
 
                 }
                 $(`#equipante-nomeconvite`).val(data.Equipante.NomeConvite);
-                $(`#equipante-foneconvite`).val(data.Equipante.FoneConvite);
                 $(`#equipante-nomecontato`).val(data.Equipante.NomeContato);
-                $(`#equipante-fonecontato`).val(data.Equipante.FoneContato);
                 $(`#equipante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
                 $(`#equipante-medicacao`).val(data.Equipante.Medicacao);
                 $(`#equipante-alergia`).val(data.Equipante.Alergia);
@@ -1004,15 +1006,17 @@ function PostEquipante() {
                     Instagram: $('#equipante-instagram').val(),
                     DataNascimento: moment($("#equipante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#equipante-email`).val(),
-                    Fone: $(`#equipante-fone`).val(),
+
+                    Fone: getNumber('equipante-fone'),
+                    FonePai: getNumber('equipante-fonepai'),
+                    FoneMae: getNumber('equipante-fonemae'),
+                    FoneConvite: getNumber('equipante-foneconvite'),
+                    FoneContato: getNumber('equipante-fonecontato'),
+
                     NomePai: $(`#equipante-nomepai`).val(),
-                    FonePai: $(`#equipante-fonepai`).val(),
                     NomeMae: $(`#equipante-nomemae`).val(),
-                    FoneMae: $(`#equipante-fonemae`).val(),
                     NomeConvite: $(`#equipante-nomeconvite`).val(),
-                    FoneConvite: $(`#equipante-foneconvite`).val(),
                     NomeContato: $(`#equipante-nomecontato`).val(),
-                    FoneContato: $(`#equipante-fonecontato`).val(),
                     Camisa: $(`#equipante-camisa`).val(),
                     CEP: $(`#equipante-cep`).val(),
                     Logradouro: $(`#equipante-logradouro`).val(),
@@ -1444,7 +1448,7 @@ ${campos.find(x => x.Campo == 'Email') ? `<div class="col-sm-12 p-w-md m-t-md te
 ${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>WhatsApp</h5>
 
-                                <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1552,7 +1556,7 @@ ${campos.find(x => x.Campo == 'Dados da Mãe') ? ` <div class="col-sm-12 p-w-md 
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone da Mãe</h5>
 
-                                <input type="text" class="form-control fone" id="equipante-fonemae" data-field="Fone da Mãe" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="equipante-fonemae" data-field="Fone da Mãe"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Dados do Pai') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1563,7 +1567,7 @@ ${campos.find(x => x.Campo == 'Dados do Pai') ? `<div class="col-sm-12 p-w-md m-
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone do Pai</h5>
 
-                                <input type="text" class="form-control fone" id="equipante-fonepai" data-field="Fone do Pai" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="equipante-fonepai" data-field="Fone do Pai"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Dados do Contato') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1574,7 +1578,7 @@ ${campos.find(x => x.Campo == 'Dados do Contato') ? ` <div class="col-sm-12 p-w-
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone do Contato</h5>
 
-                                <input type="text" class="form-control fone" id="equipante-fonecontato" data-field="Fone do Contato" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="equipante-fonecontato" data-field="Fone do Contato"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1585,7 +1589,7 @@ ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-12 p-w-m
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone de quem convidou</h5>
 
-                                <input type="text" class="form-control fone" id="equipante-foneconvite" data-field="Fone do Convite" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="equipante-foneconvite" data-field="Fone do Convite"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Parente') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">

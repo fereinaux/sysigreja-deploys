@@ -57,7 +57,7 @@ namespace SysIgreja
                       "~/Scripts/app/util/constants.js",
                       "~/Scripts/app/util/messages.js",
                       "~/Scripts/app/util/inputs-v2.js",
-                      "~/Scripts/app/util/forms.js",
+                      "~/Scripts/app/util/forms-v2.js",
                       "~/Scripts/app/util/pdf.js",
                       "~/Scripts/app/util/extensions.js",
                       "~/Scripts/app/util/buttons.js"));

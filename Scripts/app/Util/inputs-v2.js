@@ -474,9 +474,9 @@ function campoRelation(campo) {
         case "Camisa":
             return "Camisa";
         case "Endereço":
-            return ["CEP", "Logradouro", "Bairro", "Cidade", "Estado", "Numero", "Complemento","Referencia"];
+            return ["CEP", "Logradouro", "Bairro", "Cidade", "Estado", "Numero", "Complemento", "Referencia"];
         case "Dados da Mãe":
-            return ["NomeMae","FoneMae"];
+            return ["NomeMae", "FoneMae"];
         case "Dados do Pai":
             return ["NomePai", "FonePai"];
         case "Dados do Contato":
@@ -488,7 +488,7 @@ function campoRelation(campo) {
         case "Congregação":
             return "Congregacao";
         case "Convênio":
-            return ["Convenio","Hospitais"];
+            return ["Convenio", "Hospitais"];
         case "Casamento":
             return "DataCasamento";
         case "Medicação":
@@ -496,7 +496,7 @@ function campoRelation(campo) {
         case "Alergia":
             return "Alergia";
         case "Restrição Alimentar":
-            return "RestricaoAlimentar";      
+            return "RestricaoAlimentar";
         case "Equipe":
             return "Equipe";
         default:
@@ -519,6 +519,21 @@ function campoRelation(campo) {
         return result;
     };
 })(jQuery);
+
+var fones = []
+
+function getReference(id) {
+   return fones.find(fone => fone.id == id)?.reference || null
+}
+
+function getNumber(id) {
+    return getReference(id)?.getNumber() || ''
+}
+
+function setNumber(id, number) {    
+    return getReference(id)?.setNumber(number || '')
+}
+
 
 function initInputs() {
 
@@ -589,17 +604,41 @@ function initInputs() {
         radioClass: 'iradio_square-brown'
     });
 
-    $('.fone').each((i) => {
-        if (userCountry == "Brazil") {
-            IMask($('.fone')[i], {
-                mask: '+{55}(00)0.0000-0000'
-            });
 
-        } else {
-            IMask($('.fone')[i], {
-                mask: '+0(000)000-0000'
-            });
-        }
+    fones = []
+    $('.fone').each((i, element) => {
+
+
+        fones.push({
+            id: element.id, reference:
+                window.intlTelInput(element, {
+                    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+                    preferredCountries: [
+                        'br', 'us', 'ca'
+                    ],
+                    autoInsertDialCode: true,
+                    placeholderNumberType: "MOBILE",
+
+
+                })
+        })
+
+
+
+    });
+
+    $('.fone').on('focus', function () {
+        var $this = $(this),
+            // Get active country's phone number format from input placeholder attribute
+            activePlaceholder = $this.attr('placeholder'),
+            // Convert placeholder as exploitable mask by replacing all 1-9 numbers with 0s
+            newMask = activePlaceholder.replace(/[1-9]/g, "0");
+        // console.log(activePlaceholder + ' => ' + newMask);
+
+        // Init new mask for focused input
+        IMask($this[0], {
+            mask: newMask
+        });
     });
 
     $('.cpf').each((i) => {

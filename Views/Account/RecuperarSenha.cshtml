@@ -102,7 +102,7 @@
 
 <script src="~/Scripts/jquery-3.1.1.min.js"></script>
 <script src="~/Scripts/app/Util/extensions.js"></script>
-<script src="~/Scripts/app/Util/forms.js"></script>
+<script src="~/Scripts/app/Util/forms-v2.js"></script>
 <script src="~/Scripts/app/Util/messages.js"></script>
 @Scripts.Render("~/bundles/sweetalert")
 <script>
@@ -204,7 +204,6 @@
         });
         $('body').on('DOMNodeInserted', '.swal-title', function () {
             $('.swal-modal').css('background', '@ViewBag.Configuracao.CorBotao')
-
             $('.swal-modal').css('color', 'white')
             $('.swal-title').css('color', 'white')
 
@@ -213,7 +212,6 @@
         });
         $('body').on('DOMNodeInserted', '.swal-content', function () {
             $('.swal-content').css('color', 'white')
-               $('.swal-content__input').css('background', '@ViewBag.Configuracao.CorBotao')
 
         });
 

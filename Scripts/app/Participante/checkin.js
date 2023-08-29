@@ -77,7 +77,13 @@ function PostParticipante() {
                         Instagram: $('#participante-instagram').val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
-                        Fone: $(`#participante-fone`).val(),
+
+                        Fone: getNumber('participante-fone'),
+                        FonePai: getNumber('participante-fone-pai'),
+                        FoneMae: getNumber('participante-fone-mae'),
+                        FoneConvite: getNumber('participante-fone-convite'),
+                        FoneContato: getNumber('participante-fone-contato'),
+
                         CEP: $(`#participante-cep`).val(),
                         Conjuge: $(`#participante-conjuge`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),
@@ -104,13 +110,10 @@ function PostParticipante() {
                         Alergia: $(`#participante-alergia`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         NomePai: $(`#participante-nome-pai`).val(),
-                        FonePai: $(`#participante-fone-pai`).val(),
+                        
                         NomeMae: $(`#participante-nome-mae`).val(),
-                        FoneMae: $(`#participante-fone-mae`).val(),
                         NomeConvite: $(`#participante-nome-convite`).val(),
-                        FoneConvite: $(`#participante-fone-convite`).val(),
                         NomeContato: $(`#participante-nome-contato`).val(),
-                        FoneContato: $(`#participante-fone-contato`).val(),
                     }),
                 success: function (data) {
                     $.ajax({
@@ -152,7 +155,13 @@ function PostParticipante() {
                         Instagram: $('#participante-instagram').val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
-                        Fone: $(`#participante-fone`).val(),
+                        
+                        Fone: getNumber('participante-fone'),
+                        FonePai: getNumber('participante-fone-pai'),
+                        FoneMae: getNumber('participante-fone-mae'),
+                        FoneConvite: getNumber('participante-fone-convite'),
+                        FoneContato: getNumber('participante-fone-contato'),
+
                         HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").val(),
                         RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
                         HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").val(),
@@ -174,13 +183,9 @@ function PostParticipante() {
                         Latitude: $(`#participante-latitude`).val(),
                         Longitude: $(`#participante-longitude`).val(),
                         NomePai: $(`#participante-nome-pai`).val(),
-                        FonePai: $(`#participante-fone-pai`).val(),
                         NomeMae: $(`#participante-nome-mae`).val(),
-                        FoneMae: $(`#participante-fone-mae`).val(),
                         NomeConvite: $(`#participante-nome-convite`).val(),
-                        FoneConvite: $(`#participante-fone-convite`).val(),
                         NomeContato: $(`#participante-nome-contato`).val(),
-                        FoneContato: $(`#participante-fone-contato`).val(),
                         HasConvenio: $("input[type=radio][name=participante-hasconvenio]:checked").val(),
                         Convenio: $(`#participante-convenio`).val(),
                         Hospitais: $(`#participante-hospitais`).val(),
@@ -228,13 +233,24 @@ function GetParticipante() {
                 $(`#participante-nome`).val(data.Participante.Nome);
                 $(`#participante-apelido`).val(data.Participante.Apelido);
                 $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
-            
                 $(`#participante-email`).val(data.Participante.Email);
+            
                 $(`#participante-fone`).val(data.Participante.Fone);
-                $(`#participante-nome-pai`).val(data.Participante.NomePai);
                 $(`#participante-fone-pai`).val(data.Participante.FonePai);
-                $(`#participante-nome-mae`).val(data.Participante.NomeMae);
                 $(`#participante-fone-mae`).val(data.Participante.FoneMae);
+                $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
+                $(`#participante-fone-contato`).val(data.Participante.FoneContato);
+
+
+                setNumber('participante-fone', data.Participante.Fone)
+                setNumber('participante-fone-mae', data.Participante.FoneMae)
+                setNumber('participante-fone-pai', data.Participante.FonePai)
+                setNumber('participante-fone-convite', data.Participante.FoneConvite)
+                setNumber('participante-fone-contato', data.Participante.FoneContato)
+
+
+                $(`#participante-nome-pai`).val(data.Participante.NomePai);
+                $(`#participante-nome-mae`).val(data.Participante.NomeMae);
                 $(`#participante-cep`).val(data.Participante.CEP);
                 $(`#participante-logradouro`).val(data.Participante.Logradouro);
                 $(`#participante-bairro`).val(data.Participante.Bairro);
@@ -256,9 +272,7 @@ function GetParticipante() {
                 }
 
                 $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
-                $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
                 $(`#participante-nome-contato`).val(data.Participante.NomeContato);
-                $(`#participante-fone-contato`).val(data.Participante.FoneContato);
                 $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Participante.Medicacao);
                 $(`#participante-convenio`).val(data.Participante.Convenio);
@@ -392,12 +406,15 @@ function GetEquipante() {
                 $(`#participante-apelido`).val(data.Equipante.Apelido);
                 $("#participante-data-nascimento").val(moment(data.Equipante.DataNascimento).format('DD/MM/YYYY'));
                 $(`#participante-email`).val(data.Equipante.Email);
-                $(`#participante-fone`).val(data.Equipante.Fone);
                 $(`#participante-camisa`).val(data.Equipante.Camisa);
                 $(`#participante-nome-pai`).val(data.Equipante.NomePai);
-                $(`#participante-fone-pai`).val(data.Equipante.FonePai);
-                $(`#participante-nome-mae`).val(data.Equipante.NomeMae);
-                $(`#participante-fone-mae`).val(data.Equipante.FoneMae);
+
+                setNumber('participante-fone', data.Equipante.Fone)
+                setNumber('participante-fone-mae', data.Equipante.FoneMae)
+                setNumber('participante-fone-pai', data.Equipante.FonePai)
+                setNumber('participante-fone-convite', data.Equipante.FoneConvite)
+                setNumber('participante-fone-contato', data.Equipante.FoneContato)
+
                 $(`#participante-cep`).val(data.Equipante.CEP);
                 $(`#participante-logradouro`).val(data.Equipante.Logradouro);
                 $(`#participante-bairro`).val(data.Equipante.Bairro);
@@ -417,9 +434,7 @@ function GetEquipante() {
 
                 }
                 $(`#participante-nome-convite`).val(data.Equipante.NomeConvite);
-                $(`#participante-fone-convite`).val(data.Equipante.FoneConvite);
                 $(`#participante-nome-contato`).val(data.Equipante.NomeContato);
-                $(`#participante-fone-contato`).val(data.Equipante.FoneContato);
                 $(`#participante-restricaoalimentar`).val(data.Equipante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Equipante.Medicacao);
                 $(`#participante-alergia`).val(data.Equipante.Alergia);
@@ -927,7 +942,7 @@ ${campos.find(x => x.Campo == 'Email') ? ` <div class="col-sm-6 p-w-md m-t-md te
 ${campos.find(x => x.Campo == 'Fone') ? ` <div class="col-sm-6 p-w-md m-t-md text-center">
                             <h5>WhatsApp</h5>
 
-                            <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                            <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp"  />
                         </div>` : ''}
 
 
@@ -1047,7 +1062,7 @@ ${campos.find(x => x.Campo == 'Dados do Contato') ? `<div class="col-sm-6 p-w-md
                             <div class="col-sm-6 p-w-md m-t-md text-center">
                                 <h5>Fone do Contato</h5>
 
-                                <input type="text" class="form-control fone" id="participante-fone-contato" data-field="Fone do Contato" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="participante-fone-contato" data-field="Fone do Contato"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
@@ -1058,7 +1073,7 @@ ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-6 p-w-md
                             <div class="col-sm-6 p-w-md m-t-md text-center">
                                 <h5>Fone de quem convidou</h5>
 
-                                <input type="text" class="form-control fone" id="participante-fone-convite" data-field="Fone de quem convidou" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="participante-fone-convite" data-field="Fone de quem convidou"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Congregação') ? `<div class="col-sm-6 p-w-md m-t-md text-center">

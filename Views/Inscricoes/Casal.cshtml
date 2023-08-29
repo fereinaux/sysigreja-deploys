@@ -570,11 +570,14 @@
                                $(`#participante-apelido-marido`).val(data.Participante.Apelido);
                                $("#participante-data-nascimento-marido").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                                $(`#participante-email-marido`).val(data.Participante.Email);
-                               $(`#participante-fone-marido`).val(data.Participante.Fone);
                                $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
-                               $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
+                   
+
+                               setNumber('participante-fone-marido', data.Participante.Fone)
+                               setNumber('participante-fone-convite', data.Participante.FoneConvite)
+                               setNumber('participante-fone-contato', data.Participante.FoneContato)
+
                                $(`#participante-nome-contato`).val(data.Participante.NomeContato);
-                               $(`#participante-fone-contato`).val(data.Participante.FoneContato);
                                $(`#participante-restricaoalimentar-marido`).val(data.Participante.RestricaoAlimentar);
                                $(`input[type=radio][name=participante-hasrestricaoalimentar-marido][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
                                $('.dados-participante-contato').removeClass('d-none');
@@ -585,11 +588,13 @@
                                $(`#participante-apelido-esposa`).val(data.Participante.Apelido);
                                $("#participante-data-nascimento-esposa").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                                $(`#participante-email-esposa`).val(data.Participante.Email);
-                               $(`#participante-fone-esposa`).val(data.Participante.Fone);
-                               $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
-                               $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
+                               $(`#participante-nome-convite`).val(data.Participante.NomeConvite);        
+
+                               setNumber('participante-fone-esposa', data.Participante.Fone)
+                               setNumber('participante-fone-convite', data.Participante.FoneConvite)
+                               setNumber('participante-fone-contato', data.Participante.FoneContato)
+
                                $(`#participante-nome-contato`).val(data.Participante.NomeContato);
-                               $(`#participante-fone-contato`).val(data.Participante.FoneContato);
                                $(`#participante-restricaoalimentar-esposa`).val(data.Participante.RestricaoAlimentar);
                                $(`input[type=radio][name=participante-hasrestricaoalimentar-esposa][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
                                $('.dados-participante-contato').removeClass('d-none');
@@ -767,7 +772,6 @@
                                 Apelido: $(`#participante-apelido-marido`).val(),
                                 DataNascimento: moment($("#participante-data-nascimento-marido").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                 Email: $(`#participante-email-marido`).val(),
-                                Fone: $(`#participante-fone-marido`).val(),
                                 Camisa: $(`#participante-camisa-marido`).val(),
                                 CEP: $(`#participante-cep`).val(),
                                 Congregacao: $("input[type=radio][name=participante-congregacao]:checked").data("valor") != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).data("valor"),
@@ -788,9 +792,10 @@
                                 DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                 Sexo: 1,
                                 NomeConvite: $(`#participante-nome-convite`).val(),
-                                FoneConvite: $(`#participante-fone-convite`).val(),
                                 NomeContato: $(`#participante-nome-contato`).val(),
-                                FoneContato: $(`#participante-fone-contato`).val(),
+                                Fone: getNumber('participante-fone-marido'),
+                                FoneConvite: getNumber('participante-fone-convite'),
+                                FoneContato: getNumber('participante-fone-contato'),
                             }),
                         success: function (url) {
 
@@ -809,7 +814,6 @@
                                         DataNascimento: moment($("#participante-data-nascimento-esposa").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                         Email: $(`#participante-email-esposa`).val(),
                                         Conjuge: $(`#participante-nome-marido`).val(),
-                                        Fone: $(`#participante-fone-esposa`).val(),
                                         Camisa: $(`#participante-camisa-esposa`).val(),
                                         CEP: $(`#participante-cep`).val(),
                                         Congregacao: $("input[type=radio][name=participante-congregacao]:checked").data("valor") != "Outra" ? $("input[type=radio][name=participante-congregacao]:checked").val() : $(`#participante-congregacaodescricao`).data("valor"),
@@ -829,9 +833,11 @@
                                         DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                         Sexo: 2,
                                         NomeConvite: $(`#participante-nome-convite`).val(),
-                                        FoneConvite: $(`#participante-fone-convite`).val(),
                                         NomeContato: $(`#participante-nome-contato`).val(),
-                                        FoneContato: $(`#participante-fone-contato`).val(),
+                                        Fone: getNumber('participante-fone-esposa'),
+                                        FoneConvite: getNumber('participante-fone-convite'),
+                                        FoneContato: getNumber('participante-fone-contato'),
+                           
                                     }),
                                 success: function (url) {
                                     window.location.href = url;

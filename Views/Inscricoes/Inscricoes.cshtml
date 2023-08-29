@@ -650,15 +650,15 @@
                                $(`#participante-apelido`).val(data.Participante.Apelido);
                                $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                                $(`#participante-email`).val(data.Participante.Email);
-                               $(`#participante-fone`).val(data.Participante.Fone);
+                               setNumber('participante-fone', data.Participante.Fone)
                                $(`#participante-nome-pai`).val(data.Participante.NomePai);
-                               $(`#participante-fone-pai`).val(data.Participante.FonePai);
+                               setNumber('participante-fone-pai', data.Participante.FonePai)
                                $(`#participante-nome-mae`).val(data.Participante.NomeMae);
-                               $(`#participante-fone-mae`).val(data.Participante.FoneMae);
+                               setNumber('participante-fone-mae', data.Participante.FoneMae)
                                $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
-                               $(`#participante-fone-convite`).val(data.Participante.FoneConvite);
+                               setNumber('participante-fone-convite', data.Participante.FoneConvite)
                                $(`#participante-nome-contato`).val(data.Participante.NomeContato);
-                               $(`#participante-fone-contato`).val(data.Participante.FoneContato);
+                               setNumber('participante-fone-contato', data.Participante.FoneContato)
                                $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                                $(`#participante-medicacao`).val(data.Participante.Medicacao);
                                $(`#participante-alergia`).val(data.Participante.Alergia);
@@ -907,7 +907,7 @@
                                 Instagram: $('#participante-instagram').val(),
                                 DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                 Email: $(`#participante-email`).val(),
-                                Fone: $(`#participante-fone`).val(),
+                                Fone: getNumber('participante-fone'),
                                 Instagram: $(`#participante-instagram`).val(),
                                 Camisa: $(`#participante-camisa`).val(),
                                 Profissao: $(`#participante-profissao`).val(),
@@ -937,13 +937,13 @@
                                 DataCasamento: moment($("#participante-data-casamento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                 Sexo: $("input[type=radio][name=participante-sexo]:checked").data('valor'),
                                 NomePai: $(`#participante-nome-pai`).val(),
-                                FonePai: $(`#participante-fone-pai`).val(),
+                                FonePai: getNumber('participante-fone-pai'),
                                 NomeMae: $(`#participante-nome-mae`).val(),
-                                FoneMae: $(`#participante-fone-mae`).val(),
+                                FoneMae: getNumber('participante-fone-mae'),
                                 NomeConvite: $(`#participante-nome-convite`).val(),
-                                FoneConvite: $(`#participante-fone-convite`).val(),
+                                FoneConvite: getNumber('participante-fone-convite'),
                                 NomeContato: $(`#participante-nome-contato`).val(),
-                                FoneContato: $(`#participante-fone-contato`).val(),
+                                FoneContato: getNumber('participante-fone-contato'),
                             }),
                         success: function (url) {
                             window.location.href = url;

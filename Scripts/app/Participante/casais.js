@@ -1006,47 +1006,6 @@ function Opcoes(row) {
 
 }
 
-function GetParticipanteContato(id) {
-    $.ajax({
-        url: "/Participante/GetParticipante/",
-        data: { Id: id },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            $("#participantecontato-id").val(data.Participante.Id);
-            $(`#participante-nome`).val(data.Participante.Nome);
-            $(`#participante-apelido`).val(data.Participante.Apelido);
-            $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
-            $(`#participante-email`).val(data.Participante.Email);
-            $(`#participante-fone`).val(data.Participante.Fone);
-            $(`#participante-nomepai`).val(data.Participante.NomePai);
-            $(`#participante-fonepai`).val(data.Participante.FonePai);
-            $(`#participante-nomemae`).val(data.Participante.NomeMae);
-            $(`#participante-fonemae`).val(data.Participante.FoneMae);
-            $(`#participante-nomeconvite`).val(data.Participante.NomeConvite);
-            $(`#participante-foneconvite`).val(data.Participante.FoneConvite);
-            $(`#participante-nomecontato`).val(data.Participante.NomeContato);
-            $(`#participante-fonecontato`).val(data.Participante.FoneContato);
-            $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
-            $(`#participante-medicacao`).val(data.Participante.Medicacao);
-            $(`#participante-convenio`).val(data.Participante.Convenio);
-            $(`#participante-hospitais`).val(data.Participante.Hospitais);
-            $(`input[type=radio][name=participante-iscasado][value=${data.Participante.IsCasado}]`).iCheck('check');
-            $("#participante-data-casamento").val(moment(data.Participante.DataCasamento).format('DD/MM/YYYY'));
-            $(`#participante-alergia`).val(data.Participante.Alergia);
-            $(`#participante-parente`).val(data.Participante.Parente);
-            $(`input[type=radio][name=participante-sexo][value=${data.Participante.Sexo}]`).iCheck('check');
-            $(`input[type=radio][name=participante-hasalergia][value=${data.Participante.HasAlergia}]`).iCheck('check');
-            $(`input[type=radio][name=participante-hasmedicacao][value=${data.Participante.HasMedicacao}]`).iCheck('check');
-            $(`input[type=radio][name=participante-hasconvenio][value=${data.Participante.HasConvenio}]`).iCheck('check');
-            $(`input[type=radio][name=participante-hasrestricaoalimentar][value=${data.Participante.HasRestricaoAlimentar}]`).iCheck('check');
-
-            $("#participante-numeracao").val(data.Participante.Numeracao);
-        }
-    });
-}
-
 function GetParticipante(id) {
     if (id > 0) {
         $.ajax({
@@ -1061,17 +1020,19 @@ function GetParticipante(id) {
                 $(`#participante-apelido`).val(data.Participante.Apelido);
                 $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
                 $(`#participante-email`).val(data.Participante.Email);
-                $(`#participante-fone`).val(data.Participante.Fone);
                 $(`#participante-nomepai`).val(data.Participante.NomePai);
-                $(`#participante-fonepai`).val(data.Participante.FonePai);
                 $(`#participante-camisa`).val(data.Participante.Camisa);
                 $(`#participante-instagram`).val(data.Participante.Instagram);
                 $(`#participante-nomemae`).val(data.Participante.NomeMae);
-                $(`#participante-fonemae`).val(data.Participante.FoneMae);
                 $(`#participante-nomeconvite`).val(data.Participante.NomeConvite);
-                $(`#participante-foneconvite`).val(data.Participante.FoneConvite);
+
+                setNumber('participante-fone', data.Participante.Fone)
+                setNumber('participante-fonemae', data.Participante.FoneMae)
+                setNumber('participante-fonepai', data.Participante.FonePai)
+                setNumber('participante-foneconvite', data.Participante.FoneConvite)
+                setNumber('participante-fonecontato', data.Participante.FoneContato)
+
                 $(`#participante-nomecontato`).val(data.Participante.NomeContato);
-                $(`#participante-fonecontato`).val(data.Participante.FoneContato);
                 $(`#participante-restricaoalimentar`).val(data.Participante.RestricaoAlimentar);
                 $(`#participante-medicacao`).val(data.Participante.Medicacao);
 
@@ -1137,20 +1098,22 @@ function GetParticipante(id) {
         $("#participante-data-nascimento").val("");
 
         $(`#participante-email`).val("");
-        $(`#participante-fone`).val("");
         $(`#participante-restricaoalimentar`).val("");
         $(`#participante-medicacao`).val("");
         $(`#participante-convenio`).val("");
         $(`#participante-hospitais`).val("");
         $(`#participante-alergia`).val("");
         $(`#participante-nomepai`).val("");
-        $(`#participante-fonepai`).val("");
         $(`#participante-nomemae`).val("");
-        $(`#participante-fonemae`).val("");
         $(`#participante-nomeconvite`).val("");
-        $(`#participante-foneconvite`).val("");
         $(`#participante-nomecontato`).val("");
-        $(`#participante-fonecontato`).val("");
+
+        setNumber('participante-fone', "")
+        setNumber('participante-fonemae', "")
+        setNumber('participante-fonepai', "")
+        setNumber('participante-foneconvite', "")
+        setNumber('participante-fonecontato', "")
+
         $(`#participante-cep`).val("");
         $(`#participante-logradouro`).val("");
         $(`#participante-bairro`).val('');
@@ -1255,15 +1218,17 @@ function PostParticipante() {
                     Instagram: $('#participante-instagram').val(),
                     DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#participante-email`).val(),
-                    Fone: $(`#participante-fone`).val(),
                     NomePai: $(`#participante-nomepai`).val(),
-                    FonePai: $(`#participante-fonepai`).val(),
                     NomeMae: $(`#participante-nomemae`).val(),
-                    FoneMae: $(`#participante-fonemae`).val(),
                     NomeConvite: $(`#participante-nomeconvite`).val(),
-                    FoneConvite: $(`#participante-foneconvite`).val(),
+
+                    Fone: getNumber('participante-fone'),
+                    FonePai: getNumber('participante-fonepai'),
+                    FoneMae: getNumber('participante-fonemae'),
+                    FoneConvite: getNumber('participante-foneconvite'),
+                    FoneContato: getNumber('participante-fonecontato'),
+
                     NomeContato: $(`#participante-nomecontato`).val(),
-                    FoneContato: $(`#participante-fonecontato`).val(),
                     Camisa: $(`#participante-camisa`).val(),
                     CEP: $(`#participante-cep`).val(),
                     Logradouro: $(`#participante-logradouro`).val(),
@@ -1480,7 +1445,7 @@ ${campos.find(x => x.Campo == 'Email') ? `<div class="col-sm-12 p-w-md m-t-md te
 ${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>WhatsApp</h5>
 
-                                <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="participante-fone" data-field="WhatsApp"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1588,7 +1553,7 @@ ${campos.find(x => x.Campo == 'Dados da Mãe') ? ` <div class="col-sm-12 p-w-md 
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone da Mãe</h5>
 
-                                <input type="text" class="form-control fone" id="participante-fonemae" data-field="Fone da Mãe" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="participante-fonemae" data-field="Fone da Mãe"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Dados do Pai') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1599,7 +1564,7 @@ ${campos.find(x => x.Campo == 'Dados do Pai') ? `<div class="col-sm-12 p-w-md m-
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone do Pai</h5>
 
-                                <input type="text" class="form-control fone" id="participante-fonepai" data-field="Fone do Pai" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="participante-fonepai" data-field="Fone do Pai"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Dados do Contato') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1610,7 +1575,7 @@ ${campos.find(x => x.Campo == 'Dados do Contato') ? ` <div class="col-sm-12 p-w-
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone do Contato</h5>
 
-                                <input type="text" class="form-control fone" id="participante-fonecontato" data-field="Fone do Contato" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="participante-fonecontato" data-field="Fone do Contato"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-12 p-w-md m-t-md text-center">
@@ -1621,7 +1586,7 @@ ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-12 p-w-m
                             <div class="col-sm-12 p-w-md m-t-md text-center">
                                 <h5>Fone de quem convidou</h5>
 
-                                <input type="text" class="form-control fone" id="participante-foneconvite" data-field="Fone do Convite" placeholder="+55 (81) 9999-9999" />
+                                <input type="text" class="form-control fone" id="participante-foneconvite" data-field="Fone do Convite"  />
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Parente') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">

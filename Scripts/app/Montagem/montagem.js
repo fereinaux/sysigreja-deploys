@@ -754,7 +754,7 @@ ${campos.find(x => x.Campo == 'Email') ? `<div class="col-sm-12 p-w-md m-t-md te
 ${campos.find(x => x.Campo == 'Fone') ? `  <div class="col-sm-12 p-w-md m-t-md text-center">
                                                     <h5>WhatsApp</h5>
 
-                                                    <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" placeholder="+55 (81) 9999-9999" />
+                                                    <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp"  />
                                                 </div>` : ''}`)
 
 
@@ -778,7 +778,7 @@ function PostEquipante() {
                     Nome: $(`#equipante-nome`).val(),
                     DataNascimento: moment($("#equipante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#equipante-email`).val(),
-                    Fone: $(`#equipante-fone`).val(),
+                    Fone: getNumber('equipante-fone'),
                     Sexo: $("input[type=radio][name=equipante-sexo]:checked").val()
                 }),
             success: function () {
@@ -812,7 +812,7 @@ function GetEquipante(id) {
                 $("#equipante-data-nascimento").val(moment(data.Equipante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                 $("#equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                 $(`#equipante-email`).val(data.Equipante.Email);
-                $(`#equipante-fone`).val(data.Equipante.Fone);
+                setNumber('equipante-fone', data.Equipante.Fone)
                 $(`input[type=radio][name=equipante-sexo][value=${data.Equipante.Sexo == 'Feminino' ? 2 : 1}]`).iCheck('check');
             }
         });
@@ -823,7 +823,7 @@ function GetEquipante(id) {
         $(`#equipante-apelido`).val("");
         $("#equipante-data-nascimento").val("");
         $(`#equipante-email`).val("");
-        $(`#equipante-fone`).val("");
+        setNumber('equipante-fone', '')
         $(`input[type=radio][name=equipante-sexo][value=1]`).iCheck('check');
     }
 

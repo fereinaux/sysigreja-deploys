@@ -242,7 +242,7 @@ namespace SysIgreja.Controllers
                         return RedirectToAction("InscricoesEncerradas", new { Id = Id });
                     ViewBag.Sujeito = "voluntário";
                     ViewBag.Campos = evento.ConfiguracaoId.HasValue ? configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value).Select(x => x.Campo).ToList() : null;
-                    ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao) ? evento.Configuracao.Equipes.Where(x => x.ShowInscricao).Select(x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }).ToList() : evento.Configuracao.Equipes.Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Equipe.Nome }).ToList();
+                    ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao) ? evento.Configuracao.Equipes.Where(x => x.ShowInscricao).Select(x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }).ToList() : evento.Configuracao.Equipes.Select(x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }).ToList();
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                         return View("Casal");
                     return View("Inscricoes");

@@ -1,4 +1,5 @@
-﻿const copyContent = async (text) => {
+﻿
+const copyContent = async (text) => {
     try {
         await navigator.clipboard.writeText(text);
         console.log('Content copied to clipboard');

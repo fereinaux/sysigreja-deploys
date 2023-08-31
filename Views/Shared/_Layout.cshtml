@@ -18,6 +18,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
     <!-- Chrome for Android theme color -->
     <meta name="theme-color" content="#c20935">
 
@@ -112,7 +114,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.3.0/css/rowGroup.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="https://datatables.net/release-datatables/extensions/FixedHeader/css/fixedHeader.dataTables.css" type="text/css" />
-  
+
 
     @Styles.Render("~/plugins/sweetalert")
     @Styles.Render("~/plugins/dataPickerStyles")
@@ -159,7 +161,7 @@
     @Scripts.Render("~/bundles/imaskjs")
     @Scripts.Render("~/plugins/slimScroll")
     @Scripts.Render("~/bundles/inspinia")
-    @Scripts.Render("~/bundles/util")
+    @Scripts.Render(System.Web.Optimization.BundleTable.Bundles.ResolveBundleUrl("~/bundles/util", true))
     @Scripts.Render("~/plugins/iCheck")
     @Scripts.Render("~/bundles/moment")
     @Scripts.Render("~/bundles/sweetalert")
@@ -188,7 +190,7 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/rowgroup/1.3.0/js/dataTables.rowGroup.min.js"></script>
     <script src="https://datatables.net/release-datatables/extensions/FixedHeader/js/dataTables.fixedHeader.js"></script>
-    
+
 
     <script src="https://cdn.datatables.net/colreorder/1.5.6/js/dataTables.colReorder.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
@@ -201,15 +203,7 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js" integrity="sha512-YeeA/Qxn5hYdkukScTCNNOhTrv1C2RubAGButJ1rmgQwZf/HdRaCGl+JAVkqsqaNRaYNHdheiuKKuPf9mDcqKg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        if (localStorage.getItem("version") == undefined) {
-            localStorage.setItem("version", "1.0.0");
-            window.location.reload(true); // force page reload
-
-        }
-
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js" integrity="sha512-YeeA/Qxn5hYdkukScTCNNOhTrv1C2RubAGButJ1rmgQwZf/HdRaCGl+JAVkqsqaNRaYNHdheiuKKuPf9mDcqKg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     <script>
 
@@ -291,38 +285,6 @@
             });
             localStorage.setItem('configId', this.value)
         })
-
-        const version = '1.0.1'
-
-        function clearCache() {
-            var theCookies = document.cookie.split(';');
-            for (var i = 1; i <= theCookies.length; i++) {
-                var acookie = theCookies[i - 1];
-                var cookieArr = acookie.split('=');
-                console.log(cookieArr[0]);
-                document.cookie = cookieArr[0] + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            }
-
-            // Get cache storage and clear cache storage
-            window.caches.keys().then(function (names) {
-                for (let name of names)
-                    window.caches.delete(name);
-            });
-
-            // Get indexed db and delete indexed db
-            window.indexedDB.databases().then(dbs => {
-
-            dbs.forEach(db => { window.indexedDB.deleteDatabase(db.name) })
-            })
-
-            // clear localStorage
-            window.localStorage.clear();
-
-            // clear sessionStorage
-            window.sessionStorage.clear();
-
-            window.location.reload()
-        }
 
         $(document).ready(function () {
             loadAvatar()

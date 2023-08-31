@@ -53,7 +53,7 @@ namespace SysIgreja
                       "~/Scripts/plugins/pace/pace.min.js",
                       "~/Scripts/app/inspinia.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/util").Include(
+            bundles.Add(new Bundle("~/bundles/util").Include(
                       "~/Scripts/app/util/constants.js",
                       "~/Scripts/app/util/messages.js",
                       "~/Scripts/app/util/inputs-v2.js",

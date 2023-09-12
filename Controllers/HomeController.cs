@@ -296,7 +296,7 @@ namespace SysIgreja.Controllers
                     Equipe = x.Equipe.Nome,
                     Faltas = x.Evento.Reunioes.Where(y => y.DataReuniao < TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))).ToList().Count - x.Presencas.Count,
                     Oferta = x.Equipante.Lancamentos.Any(y => y.EventoId == eventoId),
-                })
+                }).OrderBy(x => x.Equipe).ThenBy(x => x.Nome)
             };
 
 

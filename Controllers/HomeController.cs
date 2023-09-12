@@ -281,14 +281,6 @@ namespace SysIgreja.Controllers
                 EquipePai = equipeFilhas.Count > 1,
                 EquipeEnum = equipanteEvento.EquipeId,
                 QtdMembros = membrosEquipe.Count(),
-                Configuracao = new
-                {
-                    Titulo = equipanteEvento.Evento.Configuracao.Titulo,
-                    Id =
-                equipanteEvento.Evento.ConfiguracaoId.Value,
-                    Cor = equipanteEvento.Evento.Configuracao.CorBotao,
-                    Logo = equipanteEvento.Evento.Configuracao.Logo != null ? Convert.ToBase64String(equipanteEvento.Evento.Configuracao.Logo.Conteudo) : ""
-                },
                 Reunioes = reunioesBusiness.GetReunioes(eventoId)
                 .ToList()
                 .OrderBy(x => TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays < 0 ? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays * -1 : TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays)
@@ -311,6 +303,8 @@ namespace SysIgreja.Controllers
             jsonRes.MaxJsonLength = Int32.MaxValue;
             return jsonRes;
         }
+
+
         public ActionResult Coordenador()
         {
             ViewBag.Title = "Coordenador";

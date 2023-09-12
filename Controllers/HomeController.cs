@@ -287,7 +287,7 @@ namespace SysIgreja.Controllers
                 .Select(x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }),
                 Membros = membrosEquipe.Select(x => new EquipanteViewModel
                 {
-                    Id = x.Equipante.Id,
+                    Id = x.Equipante?.Id,
                     EquipanteEventoId = x.Id,
                     Sexo = x.Equipante?.Sexo.GetDescription(),
                     Fone = x.Equipante?.Fone,

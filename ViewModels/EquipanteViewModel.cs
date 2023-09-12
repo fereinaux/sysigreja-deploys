@@ -2,7 +2,7 @@
 {
     public class EquipanteViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public int EquipanteEventoId { get; set; }
         
         public string Nome { get; set; }

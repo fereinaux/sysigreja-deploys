@@ -110,8 +110,8 @@ namespace SysIgreja.Controllers
         public ActionResult GetArquivosEquipeByEventoId(int Equipe, bool IsComunEquipe, int EventoId)
         {
 
-            var config = configuracaoBusiness.GetConfiguracaoByEventoId(EventoId);
-            var query = arquivosBusiness.GetArquivosByEquipe(Equipe, IsComunEquipe, config.Id.Value);
+            var evento = eventosBusiness.GetEventoById(EventoId);
+            var query = arquivosBusiness.GetArquivosByEquipe(Equipe, IsComunEquipe, evento.ConfiguracaoId.Value);
 
             return MapAqruivos(query);
         }

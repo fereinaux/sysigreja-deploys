@@ -18,6 +18,7 @@ namespace SysIgreja.Controllers
     public class ArquivoController : SysIgrejaControllerBase
     {
         private readonly IEventosBusiness eventosBusiness;
+        private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
 
@@ -26,6 +27,7 @@ namespace SysIgreja.Controllers
             this.eventosBusiness = eventosBusiness;
             this.equipesBusiness = equipesBusiness;
             this.arquivosBusiness = arquivosBusiness;
+            this.configuracaoBusiness = configuracaoBusiness;
         }
 
         public ActionResult Index()
@@ -100,6 +102,16 @@ namespace SysIgreja.Controllers
         public ActionResult GetArquivosEquipe(int Equipe, bool IsComunEquipe, int ConfiguracaoId)
         {
             var query = arquivosBusiness.GetArquivosByEquipe(Equipe, IsComunEquipe, ConfiguracaoId);
+
+            return MapAqruivos(query);
+        }
+
+        [HttpPost]
+        public ActionResult GetArquivosEquipeByEventoId(int Equipe, bool IsComunEquipe, int EventoId)
+        {
+
+            var config = configuracaoBusiness.GetConfiguracaoByEventoId(EventoId);
+            var query = arquivosBusiness.GetArquivosByEquipe(Equipe, IsComunEquipe, config.Id.Value);
 
             return MapAqruivos(query);
         }

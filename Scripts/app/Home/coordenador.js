@@ -32,6 +32,35 @@ function ExportarExcel() {
 
 let EquipeId
 
+function CarregarTabelaArquivos(id) {
+    $.ajax({
+        url: '/Arquivo/GetArquivosEquipeByEventoId',
+        datatype: "json",
+        data: { Equipe: id, IsComunEquipe: true, EventoId: $('#eventoid').val(), },
+        type: "POST",
+        success: (data) => {
+            html = '';
+            if (data.data.length == 0) {
+                $('.col-arquivo').css('display', 'none')
+            } else {
+                $('.col-arquivo').css('display', 'block')
+            }
+            $('.qtd-arquivos').text(`Quantidade: ${data.data.length}`)
+            $(data.data).each((i, element) => {
+                html += `<tr>                        
+                        <td>${element.Nome}</td>
+                        <td>${GetButton('GetArquivo', element.Id, 'blue', 'fa-download', 'Download')}</td>
+                    </tr>`;
+            });
+            $('.tbarquivos').html(html);
+
+            $("td.fa").css("font-size", "25px");
+            $("td").css("font-size", "15px");
+            $("th").css("font-size", "15px");
+        }
+    });
+}
+
 function loadCampos() {
     $.ajax({
         url: "/Configuracao/GetCamposEquipeByEventoId/",
@@ -80,6 +109,8 @@ function CarregarTela() {
             $('#reuniaoid').html(`${data.result.Reunioes.map(reuniao => `
 <option value="${reuniao.Id}">${reuniao.DataReuniao}</option>
 `)}`)
+
+            CarregarTabelaArquivos(data.result.EquipeEnum)
             CarregarTabelaPresenca()
         }
     });

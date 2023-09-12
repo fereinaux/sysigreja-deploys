@@ -268,13 +268,13 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult CoordenadorGet(int eventoId)
+        public async Task<ActionResult> CoordenadorGet(int eventoId)
         {
 
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
             var equipeFilhas = GetEquipesFilhas(equipanteEvento.EquipeId.Value, eventoId);
-            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas).Include(x => x.Evento).Include(x => x.Evento.Reunioes).Include(x => x.Presencas).Include(x => x.Equipante.Lancamentos).ToList();
+            var membrosEquipe = await equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas).Include(x => x.Evento).Include(x => x.Evento.Reunioes).Include(x => x.Presencas).Include(x => x.Equipante.Lancamentos).ToListAsync();
             var result = new
             {
                 Equipe = equipanteEvento.Equipe.Nome,
@@ -287,15 +287,15 @@ namespace SysIgreja.Controllers
                 .Select(x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }),
                 Membros = membrosEquipe.Select(x => new EquipanteViewModel
                 {
-                    Id = x.Equipante?.Id,
+                    Id = x.Equipante.Id,
                     EquipanteEventoId = x.Id,
-                    Sexo = x.Equipante?.Sexo.GetDescription(),
-                    Fone = x.Equipante?.Fone,
-                    Idade = x.Equipante != null && x.Equipante.DataNascimento.HasValue ? UtilServices.GetAge(x.Equipante.DataNascimento) : 0,
-                    Nome = x.Equipante?.Nome,
-                    Equipe = x.Equipe?.Nome,
-                    Faltas = x.Evento?.Reunioes.Where(y => y.DataReuniao > TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))).ToList().Count - x.Presencas.ToList().Count,
-                    Oferta = x.Equipante.Lancamentos?.Any(y => y.EventoId == eventoId) ?? false,
+                    Sexo = x.Equipante.Sexo.GetDescription(),
+                    Fone = x.Equipante.Fone,
+                    Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
+                    Nome = x.Equipante.Nome,
+                    Equipe = x.Equipe.Nome,
+                    Faltas = x.Evento.Reunioes.Where(y => y.DataReuniao < TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))).ToList().Count - x.Presencas.Count,
+                    Oferta = x.Equipante.Lancamentos.Any(y => y.EventoId == eventoId),
                 })
             };
 

@@ -291,11 +291,11 @@ namespace SysIgreja.Controllers
                     EquipanteEventoId = x.Id,
                     Sexo = x.Equipante.Sexo.GetDescription(),
                     Fone = x.Equipante.Fone,
-                    Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
+                    Idade = x.Equipante.DataNascimento.HasValue ? UtilServices.GetAge(x.Equipante.DataNascimento) : 0,
                     Nome = x.Equipante.Nome,
                     Equipe = x.Equipe.Nome,
                     Faltas = x.Evento.Reunioes.Count - x.Presencas.Count,
-                    Oferta = x.Equipante.Lancamentos.Any(y => y.EventoId == eventoId),
+                    Oferta = x.Equipante.Lancamentos?.Any(y => y.EventoId == eventoId) ?? false,
                 })
             };
 

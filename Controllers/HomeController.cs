@@ -294,7 +294,7 @@ namespace SysIgreja.Controllers
                     Idade = x.Equipante.DataNascimento.HasValue ? UtilServices.GetAge(x.Equipante.DataNascimento) : 0,
                     Nome = x.Equipante.Nome,
                     Equipe = x.Equipe.Nome,
-                    Faltas = x.Evento.Reunioes?.Count ?? 0 - x.Presencas?.Count?? 0,
+                    Faltas = x.Evento.Reunioes.Where(y => y.DataReuniao > TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))).ToList().Count - x.Presencas.ToList().Count,
                     Oferta = x.Equipante.Lancamentos?.Any(y => y.EventoId == eventoId) ?? false,
                 })
             };

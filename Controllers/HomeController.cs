@@ -268,13 +268,13 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> CoordenadorGet(int eventoId)
+        public ActionResult CoordenadorGet(int eventoId)
         {
 
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
             var equipeFilhas = GetEquipesFilhas(equipanteEvento.EquipeId.Value, eventoId);
-            var membrosEquipe = await equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas).Include(x => x.Evento).Include(x => x.Evento.Reunioes).Include(x => x.Presencas).Include(x => x.Equipante.Lancamentos).ToListAsync();
+            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas).Include(x => x.Evento).Include(x => x.Evento.Reunioes).Include(x => x.Presencas).Include(x => x.Equipante.Lancamentos).ToList();
             var result = new
             {
                 Equipe = equipanteEvento.Equipe.Nome,
@@ -289,12 +289,12 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Equipante.Id,
                     EquipanteEventoId = x.Id,
-                    Sexo = x.Equipante.Sexo.GetDescription(),
-                    Fone = x.Equipante.Fone,
-                    Idade = x.Equipante.DataNascimento.HasValue ? UtilServices.GetAge(x.Equipante.DataNascimento) : 0,
-                    Nome = x.Equipante.Nome,
-                    Equipe = x.Equipe.Nome,
-                    //Faltas = x.Evento.Reunioes.Where(y => y.DataReuniao > TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))).ToList().Count - x.Presencas.ToList().Count,
+                    Sexo = x.Equipante?.Sexo.GetDescription(),
+                    Fone = x.Equipante?.Fone,
+                    Idade = x.Equipante != null && x.Equipante.DataNascimento.HasValue ? UtilServices.GetAge(x.Equipante.DataNascimento) : 0,
+                    Nome = x.Equipante?.Nome,
+                    Equipe = x.Equipe?.Nome,
+                    Faltas = x.Evento?.Reunioes.Where(y => y.DataReuniao > TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))).ToList().Count - x.Presencas.ToList().Count,
                     Oferta = x.Equipante.Lancamentos?.Any(y => y.EventoId == eventoId) ?? false,
                 })
             };

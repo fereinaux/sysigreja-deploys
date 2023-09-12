@@ -288,6 +288,7 @@ namespace SysIgreja.Controllers
                 Membros = membrosEquipe.Select(x => new EquipanteViewModel
                 {
                     Id = x.Equipante.Id,
+                    EquipanteEventoId = x.Id,
                     Sexo = x.Equipante.Sexo.GetDescription(),
                     Fone = x.Equipante.Fone,
                     Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
@@ -309,7 +310,7 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Coordenador";
             var user = GetApplicationUser();
-            var equipanteEvento = equipesBusiness.GetCoordByUser(user.Id).OrderByDescending(x => x.Evento.DataEvento);
+            var equipanteEvento = equipesBusiness.GetCoordByUser(user.Id).OrderByDescending(x => x.Id);
             if (equipanteEvento.Count() > 0)
             {
 
@@ -328,19 +329,7 @@ namespace SysIgreja.Controllers
         {
             var presenca = equipesBusiness.GetPresenca(ReuniaoId).Select(x => x.EquipanteEventoId).ToList();
 
-            var user = GetApplicationUser();
-            var eventoId = reunioesBusiness.GetReuniaoById(ReuniaoId).EventoId;
-
-            var result = equipesBusiness
-                .GetMembrosEquipe(eventoId, GetEquipesFilhas(equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id).EquipeId.Value, eventoId)).ToList().Select(x => new PresencaViewModel
-                {
-                    Id = x.Id,
-                    Nome = x.Equipante.Nome,
-                    Congregacao = x.Equipante.Congregacao,
-                    Presenca = presenca.Contains(x.Id)
-                });
-
-            return Json(new { result }, JsonRequestBehavior.AllowGet);
+            return Json(new { presenca }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

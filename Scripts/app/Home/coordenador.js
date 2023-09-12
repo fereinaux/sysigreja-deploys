@@ -45,6 +45,8 @@ function loadCampos() {
     })
 }
 
+var membros = []
+
 function CarregarTela() {
     $.ajax({
         url: '/Home/CoordenadorGet',
@@ -56,9 +58,9 @@ function CarregarTela() {
             $('#col-equipe').css('display', data.result.EquipePai ? 'block' : 'none' )
             $('.equipe').text(data.result.Equipe)
             $('#btn-excel').prop('disabled', false)
-            $('#img-logo').attr('src', data.result.Configuracao.Logo ? `data:image/png;base64,${data.result.Configuracao.Logo}` : logoLogin)
+            
             $('.qtd-membros').text(data.result.QtdMembros)
-            $('.navy-bg').css('background-color', data.result.Configuracao.Cor)
+            membros = data.result.Membros;
             $('.membros').html(`${data.result.Membros.map(membro => `
 <tr>
     <td data-label="Sexo"><span style="font-size:24px;" class="p-l-xs"> <i class="fa  ${membro.Sexo == "Masculino" ? "fa-male" : "fa-female"} " aria-hidden="true"></i></span></td>
@@ -78,37 +80,7 @@ function CarregarTela() {
             $('#reuniaoid').html(`${data.result.Reunioes.map(reuniao => `
 <option value="${reuniao.Id}">${reuniao.DataReuniao}</option>
 `)}`)
-            CarregarTabelaArquivos(data.result.EquipeEnum, data.result.Configuracao.Id)
             CarregarTabelaPresenca()
-        }
-    });
-}
-
-function CarregarTabelaArquivos(id, configID) {
-    $.ajax({
-        url: '/Arquivo/GetArquivosEquipe',
-        datatype: "json",
-        data: { Equipe: id, IsComunEquipe: true, ConfiguracaoId: configID },
-        type: "POST",
-        success: (data) => {
-            html = '';
-            if (data.data.length == 0) {
-                $('.col-arquivo').css('display', 'none')
-            } else {
-                $('.col-arquivo').css('display', 'block')
-            }
-            $('.qtd-arquivos').text(`Quantidade: ${data.data.length}`)
-            $(data.data).each((i, element) => {
-                html += `<tr>                        
-                        <td>${element.Nome}</td>
-                        <td>${GetButton('GetArquivo', element.Id, 'blue', 'fa-download', 'Download')}</td>
-                    </tr>`;
-            });
-            $('.tbarquivos').html(html);
-
-            $("td.fa").css("font-size", "25px");
-            $("td").css("font-size", "15px");
-            $("th").css("font-size", "15px");
         }
     });
 }
@@ -125,10 +97,10 @@ function CarregarTabelaPresenca() {
         type: "GET",
         success: (data) => {
             html = '';
-            $(data.result).each((i, element) => {
+            $(membros).each((i, element) => {
                 html += `<tr>                        
                         <td>${element.Nome}</td>                        
-                        <td class="membro-fone"><div class="checkbox i-checks-green"><label> <input type="checkbox" data-id="${element.Id}" value="" ${element.Presenca ? 'checked=""' : ''}> <i></i></label></div></td>
+                        <td class="membro-fone"><div class="checkbox i-checks-green"><label> <input type="checkbox" data-id="${element.EquipanteEventoId}" value="" ${data.presenca.indexOf(element.EquipanteEventoId) > 0 ? 'checked=""' : ''}> <i></i></label></div></td>
                     </tr>`;
             });
 

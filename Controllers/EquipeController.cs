@@ -59,28 +59,6 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult GetEquipesByUser(int EventoId)
-        {
-            var user = GetApplicationUser();
-
-            if (user.Claims.Any(x => x.ClaimType == ClaimTypes.Role && x.ClaimValue == $"Coordenador{EventoId.ToString()}"))
-            {
-                return Json(new
-                {
-                    Equipes = equipesBusiness.GetEquipesGrouped(EventoId).Include(x => x.Equipe).Select(x => new EquipeViewModel { Id = x.Id, Nome = x.Equipe.Nome }).ToList()
-                    .Where(x =>
-                    x.Id == equipesBusiness.GetEquipanteEventoByUser(EventoId, user.Id)
-                        .EquipeId)
-                        .ToList()
-                }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { Equipes = equipesBusiness.GetEquipesGrouped(EventoId).Include(x => x.Equipe).Select(x => new { x.Id, x.Equipe.Nome }).ToList() }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
         [HttpPost]
         public ActionResult TogglePresenca(int EquipanteEventoId, int ReuniaoId)
         {

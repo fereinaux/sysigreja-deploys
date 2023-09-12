@@ -14,8 +14,10 @@ using Newtonsoft.Json;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
@@ -266,13 +268,13 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult CoordenadorGet(int eventoId)
+        public async Task<ActionResult> CoordenadorGet(int eventoId)
         {
 
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
             var equipeFilhas = GetEquipesFilhas(equipanteEvento.EquipeId.Value, eventoId);
-            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas);
+            var membrosEquipe = await equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas).Include(x => x.Evento).Include(x => x.Evento.Reunioes).Include(x => x.Presencas).Include(x => x.Equipante.Lancamentos).ToListAsync();
             var result = new
             {
                 Equipe = equipanteEvento.Equipe.Nome,
@@ -291,7 +293,7 @@ namespace SysIgreja.Controllers
                 .ToList()
                 .OrderBy(x => TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays < 0 ? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays * -1 : TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays)
                 .Select(x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }),
-                Membros = membrosEquipe.ToList().Select(x => new EquipanteViewModel
+                Membros = membrosEquipe.Select(x => new EquipanteViewModel
                 {
                     Id = x.Equipante.Id,
                     Sexo = x.Equipante.Sexo.GetDescription(),
@@ -299,8 +301,8 @@ namespace SysIgreja.Controllers
                     Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
                     Nome = x.Equipante.Nome,
                     Equipe = x.Equipe.Nome,
-                    Faltas = reunioesBusiness.GetFaltasByEquipanteId(x.EquipanteId.Value, eventoId),
-                    Oferta = lancamentoBusiness.GetPagamentosEquipante(x.EquipanteId.Value, x.EventoId.Value).Any(),
+                    Faltas = x.Evento.Reunioes.Count - x.Presencas.Count,
+                    Oferta = x.Equipante.Lancamentos.Any(y => y.EventoId == eventoId),
                 })
             };
 

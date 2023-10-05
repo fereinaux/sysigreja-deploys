@@ -95,8 +95,8 @@ namespace SysIgreja.Controllers
             var result = equipesBusiness.GetEquipesGrouped(EventoId)
             .Select(x => new ListaEquipesViewModel
             {
-                QuantidadeMembros = x.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
-                QtdAnexos = x.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
+                QuantidadeMembros = x.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count(),
+                QtdAnexos = x.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count(),
                 Equipe = x.Equipe.Nome,
                 Id = x.EquipeId
             });

@@ -126,7 +126,7 @@ namespace SysIgreja.Controllers
                 Eventos = x.Claims
                 .Where(y => y.ClaimType == "Permissões")
                 .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
-                .FirstOrDefault()?.Select(z =>
+                .FirstOrDefault()?.Where(y => y.Role == "Admin" || y.Eventos.Any(z => z.Role == "Admin")).Select(z =>
                     z.ConfiguracaoId)
             }).FirstOrDefault(x => x.Id == Id);
 

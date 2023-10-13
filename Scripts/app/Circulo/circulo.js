@@ -169,7 +169,7 @@ function FillDocLandscape(doc, result) {
         doc.text(117, height, "Apelido");
         doc.text(152, height, "Whatsapp");
         doc.text(195, height, "Bairro");
-        doc.text(235, height,"Cidade");
+        doc.text(235, height, "Cidade");
     }
 
     height += 2
@@ -472,8 +472,14 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                     var bairros = []
 
 
+                    var setView = false
+
                     data.Circulos.forEach(function (circulo, index, array) {
                         if (circulo.Latitude && circulo.Longitude) {
+                            if (!setView) {
+                                setView = true
+                                map.setView([circulo.Latitude, circulo.Longitude], 13);
+                            }
                             if (!bairros.includes(circulo.Bairro)) {
                                 bairros.push(circulo.Bairro)
                             }

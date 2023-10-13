@@ -74,12 +74,12 @@ namespace SysIgreja.Controllers
 
             var result = configuracaoBusiness.GetConfiguracoes()
                 .Where(x => configId.Contains(x.Id))
-                .ToList()
                 .Select(x => new
                 {
                     Id = x.Id,
                     Titulo = x.Titulo,
-                });
+                })
+                .ToList();
 
             var jsonRes = Json(new { data = result }, JsonRequestBehavior.AllowGet);
             jsonRes.MaxJsonLength = Int32.MaxValue;
@@ -108,6 +108,7 @@ namespace SysIgreja.Controllers
                     Identificador = x.Identificador,
                     BackgroundId = x.BackgroundId,
                     EquipeCirculoId = x.EquipeCirculoId,
+                    EquipeCaronaId = x.EquipeCaronaId,
                     CentroCustoInscricaoId = x.CentroCustoInscricaoId,
                     CentroCustoTaxaId = x.CentroCustoTaxaId,
                     PublicTokenMercadoPago = x.PublicTokenMercadoPago,

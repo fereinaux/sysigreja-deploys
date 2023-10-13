@@ -308,6 +308,11 @@
                                     }
                                 </select>
                             </div>
+
+                            <div class="form-group vagas d-none">
+                                <label for="participante-vagas" class="">Quantidade de Vagas?</label>
+                                <input type="number" class="form-control" id="participante-vagas" data-field="Quantidade de Vagas" />
+                            </div>
                         }
 
                         <div class="text-right">
@@ -441,11 +446,22 @@
 
 @section scripts {
     <script>
+        var equipeCarona =  @ViewBag.Configuracao.EquipeCaronaId
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
         $(window).on('load', function () {
             $(`input`).val("");
-            console.log('aqui');
+
             $('#preloader').fadeOut();
+
+            $('#participante-equipe').on('change', function () {
+                if ($('#participante-equipe').val() == equipeCarona) {
+                    $('.vagas').removeClass('d-none');
+                    $("#participante-vagas").addClass('required');
+                } else {
+                    $('.vagas').addClass('d-none');
+                    $("#participante-vagas").removeClass('required');
+                }
+            })
         })
 
         var typingTimer;                //timer identifier
@@ -924,6 +940,7 @@
                                 Referencia: $(`#participante-referencia`).val(),
                                 Latitude: $(`#participante-latitude`).val(),
                                 Longitude: $(`#participante-longitude`).val(),
+                                Vagas: $('#participante-vagas').val(),
                                 HasRestricaoAlimentar: $("input[type=radio][name=participante-hasrestricaoalimentar]:checked").data('valor'),
                                 RestricaoAlimentar: $(`#participante-restricaoalimentar`).val(),
                                 HasMedicacao: $("input[type=radio][name=participante-hasmedicacao]:checked").data('valor'),

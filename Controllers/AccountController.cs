@@ -374,9 +374,12 @@ namespace SysIgreja.Controllers
 
 
             List<Permissoes> permissoes = new List<Permissoes>();
+            List<Permissoes> permissoesNaoAdm = new List<Permissoes>();
             if (user != null)
             {
-                permissoes = user.Claims.Any(y => y.ClaimType == "Permissões") ? JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue) : permissoes;
+                permissoes = (user.Claims.Any(y => y.ClaimType == "Permissões") ? JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue) : permissoes) ;
+                permissoesNaoAdm = permissoes.Where(x => x.Role != "Admin" && !x.Eventos.Any(y => y.Role == "Admin")).ToList();
+                permissoes = permissoes.Where(x => x.Role == "Admin" || x.Eventos.Any(y => y.Role == "Admin")).ToList();
                 var claims = UserManager.GetClaims(user.Id);
                 if (claims.Any(x => x.Type == "Permissões"))
                 {
@@ -409,6 +412,8 @@ namespace SysIgreja.Controllers
 
                 });
             }
+
+            permissoes.AddRange(permissoesNaoAdm);
 
 
             UserManager.AddClaim(user.Id, new Claim(ClaimTypes.Role, model.Perfil));

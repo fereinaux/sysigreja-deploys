@@ -213,6 +213,7 @@ checkin = false
 
 
 function GetParticipante() {
+    
     AplicarCssPadrao($('input'));
     id = $("#participantes").val() == "Pesquisar" ? 0 : $("#participantes").val();
     if (id > 0) {
@@ -368,6 +369,8 @@ function GetParticipante() {
                     $('.btn-checkin').removeClass('d-none');
                 }
 
+                $(`#participante-nome`).prop("disabled", !isAdm);
+
                 if (!checkin && isMobile) {
 
                 $('html, body').animate({
@@ -384,6 +387,7 @@ function GetParticipante() {
 equipanteId = null
 
 function GetEquipante() {
+
     AplicarCssPadrao($('input'));
     id = $("#equipantes").val() == "Pesquisar" ? 0 : $("#equipantes").val();
     if (id > 0) {
@@ -471,6 +475,7 @@ function GetEquipante() {
 
 
                 $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
+                $(`#participante-nome`).prop("disabled", !isAdm);
 
                 if (data.Equipante.Checkin) {
                     $('.status').text("Presente");
@@ -1248,9 +1253,13 @@ function verificaCep(input) {
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
+                $(`#participante-logradouro`).prop("disabled", typeof (data.logradouro) == "string");
                 $(`#participante-logradouro`).val(data.logradouro)
+                $(`#participante-bairro`).prop("disabled", typeof (data.bairro) == "string");
                 $(`#participante-bairro`).val(data.bairro)
+                $(`#participante-cidade`).prop("disabled", typeof (data.localidade) == "string");
                 $(`#participante-cidade`).val(data.localidade)
+                $(`#participante-estado`).prop("disabled", typeof (data.uf) == "string");
                 $(`#participante-estado`).val(data.uf)
                 $(`#participante-latitude`).val(data.lat)
                 $(`#participante-longitude`).val(data.lon)

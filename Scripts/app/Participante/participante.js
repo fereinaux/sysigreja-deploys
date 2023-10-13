@@ -1224,6 +1224,11 @@ function GetParticipante(id) {
 }
 
 function EditParticipante(id) {
+    $(`#participante-nome`).prop("disabled", !isAdm);
+    $(`#participante-logradouro`).prop("disabled",true);
+    $(`#participante-bairro`).prop("disabled", true);
+    $(`#participante-cidade`).prop("disabled", true);
+    $(`#participante-estado`).prop("disabled", true);
     GetParticipante(id);
     $("#modal-participantes").modal();
 }
@@ -1357,9 +1362,13 @@ function verificaCep(input) {
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
+                $(`#participante-logradouro`).prop("disabled", typeof (data.logradouro) == "string");
                 $(`#participante-logradouro`).val(data.logradouro)
+                $(`#participante-bairro`).prop("disabled", typeof (data.bairro) == "string");
                 $(`#participante-bairro`).val(data.bairro)
+                $(`#participante-cidade`).prop("disabled", typeof (data.localidade) == "string");
                 $(`#participante-cidade`).val(data.localidade)
+                $(`#participante-estado`).prop("disabled", typeof (data.uf) == "string");
                 $(`#participante-estado`).val(data.uf)
                 $(`#participante-latitude`).val(data.lat)
                 $(`#participante-longitude`).val(data.lon)

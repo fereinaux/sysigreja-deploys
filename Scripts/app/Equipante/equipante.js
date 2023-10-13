@@ -902,6 +902,11 @@ function GetEquipante(id) {
 }
 
 function EditEquipante(id) {
+    $(`#equipante-nome`).prop("disabled", !isAdm);
+    $(`#equipante-logradouro`).prop("disabled", true);
+    $(`#equipante-bairro`).prop("disabled", true);
+    $(`#equipante-cidade`).prop("disabled", true);
+    $(`#equipante-estado`).prop("disabled", true);
     GetEquipante(id);
     $("#modal-equipantes").modal();
 }
@@ -1749,9 +1754,13 @@ function verificaCep(input) {
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
+                $(`#equipante-logradouro`).prop("disabled", typeof (data.logradouro) == "string");
                 $(`#equipante-logradouro`).val(data.logradouro)
+                $(`#equipante-bairro`).prop("disabled", typeof (data.bairro) == "string");
                 $(`#equipante-bairro`).val(data.bairro)
+                $(`#equipante-cidade`).prop("disabled", typeof (data.localidade) == "string");
                 $(`#equipante-cidade`).val(data.localidade)
+                $(`#equipante-estado`).prop("disabled", typeof (data.uf) == "string");
                 $(`#equipante-estado`).val(data.uf)
                 $(`#equipante-latitude`).val(data.lat)
                 $(`#equipante-longitude`).val(data.lon)

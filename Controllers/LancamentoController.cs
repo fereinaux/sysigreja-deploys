@@ -93,14 +93,14 @@ namespace SysIgreja.Controllers
         }
 
         private LancamentosViewModel MapLancamentoViewModel(Data.Entities.Lancamento x)
-        {
-            int qtdAnexos = arquivosBusiness.GetArquivosByLancamento(x.Id).Count();
+        {           
 
             return new LancamentosViewModel
             {
                 Id = x.Id,
                 CentroCusto = x.CentroCusto.Descricao,
                 Observacao = x.Observacao,
+                Evento = $"{x.Evento.Configuracao.Titulo} ${x.Evento.Numeracao}",
                 Descricao = UtilServices.CapitalizarNome(x.Descricao),
                 Origem = !string.IsNullOrEmpty(x.Origem) ? UtilServices.CapitalizarNome(x.Origem) : "",
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),
@@ -111,7 +111,7 @@ namespace SysIgreja.Controllers
                     Id = y.Id,
                     Nome = y.Nome
                 }).ToList(),
-                QtdAnexos = qtdAnexos
+                QtdAnexos = x.Arquivos.Count
             };
         }
 
@@ -131,7 +131,12 @@ namespace SysIgreja.Controllers
             {
                 query = query.Where(x => x.CentroCustoId == model.CentroCustoId);
             }
-        
+
+            if (model.ConfiguracaoId.HasValue)
+            {
+                query = query.Where(x => x.Evento.ConfiguracaoId == model.ConfiguracaoId);
+            }
+
 
             if (model.DataIni.HasValue && model.DataFim.HasValue)
             {

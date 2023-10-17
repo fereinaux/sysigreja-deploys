@@ -5,6 +5,44 @@ setInterval(function () {
     map.invalidateSize();
 }, 100);
 
+
+new L.Control.Draw({
+    draw: {
+        marker: false,
+        polygon: false,
+        polyline: false,
+        rectangle: true,
+        circle: false,
+        circlemarker: false
+    },
+    edit: false
+}).addTo(map);
+
+L.Rectangle.include({
+    contains: function (latLng) {
+        return this.getBounds().contains(latLng);
+    }
+});
+
+let selectedMarkers = []
+
+map.on(L.Draw.Event.CREATED, function (e) {
+    selectedMarkers = []
+    markerLayer.eachLayer(function (marker) {
+        if (!e.layer.contains(marker.getLatLng())) {
+            marker.setOpacity(0.27);
+        } else {
+            marker.setOpacity(1);
+            selectedMarkers.push(marker)
+        }
+    });
+    setTimeout(() => {
+
+        selectedMarkers[0].openPopup()
+    }, 100)
+
+});
+
 let circuloId
 function CarregarTabelaCirculo() {
 
@@ -578,21 +616,69 @@ const swalCirculos = {
 
 
 function ChangeCirculo(participanteId, destinoId) {
-    $.ajax({
-        url: "/Circulo/ChangeCirculo/",
-        datatype: "json",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(
-            {
-                ParticipanteId: participanteId,
-                DestinoId: destinoId
-            }),
-        success: function () {
+
+    if (selectedMarkers.length > 0) {
+        let arrPromises = []
+
+        selectedMarkers.forEach(marker => {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: `<div class="spinner">
+  <div style="background-color:${config.CorBotao}" class="rect1"></div>
+  <div style="background-color:${config.CorBotao}" class="rect2"></div>
+  <div style="background-color:${config.CorBotao}" class="rect3"></div>
+  <div style="background-color:${config.CorBotao}" class="rect4"></div>
+  <div style="background-color:${config.CorBotao}" class="rect5"></div>
+</div>`,
+                baseZ: 1500,
+                overlayCSS: {
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
+
+            arrPromises.push($.ajax({
+                url: "/Circulo/ChangeCirculo/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: marker.props.ParticipanteId,
+                        DestinoId: destinoId
+                    })
+            }))
+        })
+
+        Promise.all(arrPromises).then((r) => {
             CarregarTabelaCirculo();
             map.closePopup()
-        }
-    });
+            selectedMarkers = []
+            $.unblockUI();
+        })
+
+    } else {
+
+        $.ajax({
+            url: "/Circulo/ChangeCirculo/",
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                {
+                    ParticipanteId: participanteId,
+                    DestinoId: destinoId
+                }),
+            success: function () {
+                CarregarTabelaCirculo();
+                map.closePopup()
+                selectedMarkers = []
+            }
+        });
+    }
 }
 
 

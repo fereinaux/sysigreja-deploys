@@ -129,6 +129,9 @@ function CarregarTabelaEquipante(callbackFunction) {
                 data: "Nome", name: "Nome", autoWidth: true
             },
             {
+                data: "Apelido", name: "Apelido", autoWidth: true, class: "noSearch"            
+            },
+            {
                 data: "Etiquetas", orderable: false, name: "Etiquetas", className: 'noSearch', render: function (data, type, row) {
                     if (type === 'export') {
                         return `<div>

@@ -462,6 +462,52 @@
                     $("#participante-vagas").removeClass('required');
                 }
             })
+
+            var nome = localStorage.getItem('nome_cadastro')
+            var email = localStorage.getItem('email_cadastro')
+
+            if (nome && email) {
+
+                var div = document.createElement("div");
+                div.innerHTML = `
+
+                                <h4 style="color:white" class="swal-text">Você é <strong>${nome}</strong>?</h4>
+                <p style="color:white" class="swal-text">continuar inscrição com <strong>${email}</strong>?</p>
+                `
+
+                CustomSwal({
+                    icon: `logo`,
+                    content: div,
+                    className: "button-center",
+                    buttons: {
+                        cancel: "Não",
+                        confirm: "Sim"
+                    }
+                }).then(result => {
+                    if (result) {
+                        $('#participante-email').val(email)
+                        $.blockUI({
+                            css: {
+                                backgroundColor: 'transparent',
+                                border: 'none'
+                            },
+                            message: `<div class="spinner">
+  <div style="background-color:${corBotao}" class="rect1"></div>
+  <div style="background-color:${corBotao}" class="rect2"></div>
+  <div style="background-color:${corBotao}" class="rect3"></div>
+  <div style="background-color:${corBotao}" class="rect4"></div>
+  <div style="background-color:${corBotao}" class="rect5"></div>
+</div>`,
+                            baseZ: 1500,
+                            overlayCSS: {
+                                opacity: 0.7,
+                                cursor: 'wait'
+                            }
+                        });
+                        VerificaCadastro()
+                    }
+                })
+            }
         })
 
         var typingTimer;                //timer identifier
@@ -633,8 +679,8 @@
                        eventoId: @ViewBag.EventoId
                    }),
                    success: function (data) {
-
                        if (data.MontagemNegado) {
+                       $.unblockUI();
 
                             var div = document.createElement("div");
 
@@ -688,6 +734,7 @@
                                if (data.Montagem) {
                                    $('#equipes-select').remove()
                                }
+                               $.unblockUI();
                            }
                            else if (data.Url) {
                                window.location.href = data.Url;
@@ -872,6 +919,11 @@
         }
 
         function executePostInscricao() {
+
+            localStorage.setItem('email_cadastro', $('#participante-email').val())
+            localStorage.setItem('nome_cadastro', $('#participante-nome').val())
+
+
             var div = document.createElement("div");
 
             div.innerHTML = `<div><h4><strong>${$('#participante-nome').val()}</strong></h4> <p>Ao confirmar sua inscrição, você concorda que o <strong>${evento}</strong> proceda com o tratamento de seus dados.</p>

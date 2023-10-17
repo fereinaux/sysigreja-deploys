@@ -473,6 +473,7 @@ function GetParticipantesSemCirculo() {
     });
 }
 
+var setView = false
 
 function GetCirculosComParticipantes(column, dir, search) {
     $("#circulos").empty();
@@ -510,7 +511,7 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                     var bairros = []
 
 
-                    var setView = false
+             
 
                     data.Circulos.forEach(function (circulo, index, array) {
                         if (circulo.Latitude && circulo.Longitude) {

@@ -100,7 +100,7 @@ namespace SysIgreja.Controllers
                 Id = x.Id,
                 CentroCusto = x.CentroCusto.Descricao,
                 Observacao = x.Observacao,
-                Evento = $"{x.Evento.Configuracao.Titulo} ${x.Evento.Numeracao}",
+                Evento = $"{x.Evento?.Configuracao?.Titulo} ${x.Evento?.Numeracao}",
                 Descricao = UtilServices.CapitalizarNome(x.Descricao),
                 Origem = !string.IsNullOrEmpty(x.Origem) ? UtilServices.CapitalizarNome(x.Origem) : "",
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),

@@ -30,7 +30,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
     selectedMarkers = []
     markerLayer.eachLayer(function (marker) {
         if (!e.layer.contains(marker.getLatLng())) {
-            marker.setOpacity(0.27);
+            marker.setOpacity(0.25);
         } else {
             marker.setOpacity(1);
             selectedMarkers.push(marker)
@@ -39,9 +39,29 @@ map.on(L.Draw.Event.CREATED, function (e) {
     setTimeout(() => {
 
         selectedMarkers[0].openPopup()
+
+
     }, 100)
 
 });
+
+map.on('popupopen', function (e) {
+
+    if (selectedMarkers.length > 1) {
+        $('.hide-multiple').css('display', 'none')
+    } else {
+        $('.hide-multiple').css('display', 'block')
+    }
+})
+
+
+map.on('popupclose', function (e) {
+
+    selectedMarkers = []
+    Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
+
+
+})
 
 let circuloId
 function CarregarTabelaCirculo() {
@@ -510,9 +530,6 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                 success: function (data) {
                     var bairros = []
 
-
-             
-
                     data.Circulos.forEach(function (circulo, index, array) {
                         if (circulo.Latitude && circulo.Longitude) {
                             if (!setView) {
@@ -523,12 +540,38 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                                 bairros.push(circulo.Bairro)
                             }
 
-                            addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo', circulo)
-                                .bindPopup(`<h4>Nome: ${circulo.Nome}</h4><div><span>${circulo.Endereco} - ${circulo.Bairro}</span>
+
+                            let addPin = true
+                            map.eachLayer(function (layer) {
+
+                                if (layer._latlng?.lat == circulo.Latitude && layer._latlng?.lng == circulo.Longitude) {
+                                    addPin = false
+                                    var div = document.createElement("div");
+
+                                    div.innerHTML = layer._popup?._content
+
+                                    $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${$('.title-circulo').first().text()}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">
                                    ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                                 </ul>
-                                </div>`);
+                                </div></div>`)
+
+
+                                    layer.bindPopup(div, {
+                                        maxWidth: 710
+                                    })
+                                }
+                            })
+                            if (addPin) {
+
+                                addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo', circulo)
+                                    .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${$('.title-circulo').first().text()}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div class="hide-multiple"><span >${circulo.Endereco} - ${circulo.Bairro}</span>
+                                <ul class="change-circulo-ul">
+                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
+                                </ul>
+                                </div></div></div>`);
+                            }
+
                         }
                         $(`#pg-${circulo.CirculoId}`).append($(`<tr><td class="participante" data-id="${circulo.ParticipanteId}">${circulo.Nome}</td></tr>`));
                     });
@@ -539,6 +582,7 @@ ${bairros.map(p => `<option value=${p}>${p}</option>`)}
                     $("#bairros").select2({
                         placeholder: "Filtro de bairros",
                     })
+
                     DragDropg();
                 }
             });
@@ -560,6 +604,15 @@ function filtrarBairro() {
     } else {
         Object.values(map._layers).filter(e => e.props && $('#bairros').val().includes(e.props.Bairro)).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
         Object.values(map._layers).filter(e => e.props && !$('#bairros').val().includes(e.props.Bairro)).forEach(e => map._layers[e._leaflet_id].setOpacity(0.25))
+    }
+}
+
+function filtrarNome() {
+    if (!$('#filtro-nome').val()) {
+        Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
+    } else {
+        Object.values(map._layers).filter(e => e.props && removeDiacritics(e.props.Nome.trim().toLowerCase()).includes(removeDiacritics($('#filtro-nome').val().trim().toLowerCase()))).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
+        Object.values(map._layers).filter(e => e.props && !removeDiacritics(e.props.Nome.trim().toLowerCase()).includes(removeDiacritics($('#filtro-nome').val().trim().toLowerCase()))).forEach(e => map._layers[e._leaflet_id].setOpacity(0.25))
     }
 }
 

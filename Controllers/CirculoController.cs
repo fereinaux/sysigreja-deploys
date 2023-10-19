@@ -164,6 +164,7 @@ namespace SysIgreja.Controllers
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 x.Participante.SequencialEvento,
                 x.Participante.Sexo,
+                x.Circulo.Titulo,
                 ParticipanteId = x.ParticipanteId,
                 Latitude = x.Participante.Latitude,
                 Longitude = x.Participante.Longitude,

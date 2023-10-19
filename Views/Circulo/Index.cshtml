@@ -33,7 +33,7 @@
                         </select>
                     </div>
                     <div class="col-xs-12 col-lg-8">
-                          <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosCirculo()">Esvaziar</button>
+                        <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosCirculo()">Esvaziar</button>
                         <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirCirculos()">Distribuir</button>
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditCirculo(0)">Adicionar</button>
                         <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
@@ -59,6 +59,7 @@
                 <div class="ibox-tools pull-right" style="width:50%">
                     <select placeholder="Filtrar Bairros" class="form-control" id="bairros" multiple onchange="filtrarBairro()">
                     </select>
+                    <input placeholder="Filtro por Nome" class="form-control" id="filtro-nome" onkeyup="filtrarNome()" />
                 </div>
             </div>
             <div class="ibox-content" style="height:650px">
@@ -172,6 +173,11 @@
 @section Styles {
     <style>
 
+        #ibox-mapa-circulo .ibox-tools {
+            display: flex;
+            gap: 5px;
+        }
+
         .change-circulo-ul {
             list-style: none;
             padding: 0;
@@ -188,12 +194,11 @@
             margin: 10px;
             color: white;
             border-radius: 8px;
-
         }
 
-        .change-circulo-li:hover {
-            filter:brightness(0.7)
-        }
+            .change-circulo-li:hover {
+                filter: brightness(0.7)
+            }
     </style>
 }
 

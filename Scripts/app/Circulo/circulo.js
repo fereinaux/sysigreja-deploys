@@ -59,7 +59,8 @@ map.on('popupclose', function (e) {
 
     selectedMarkers = []
     Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
-
+    $("#bairros").val([]).trigger('change');
+    $('#filtro-nome').val('')
 
 })
 

@@ -157,6 +157,10 @@ function ValidateRequired(form, formResult) {
             formResult.IsValid = false;
             AplicarCssErro(input);
             formResult.ErrorsInput += AddErro(input.data("field"));
+        } else if (input.attr('multiple') != 'multiple' && input.val() == "") {
+            formResult.IsValid = false;
+            AplicarCssErro(input);
+            formResult.ErrorsInput += AddErro(input.data("field"));
         }
     });
 

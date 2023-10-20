@@ -243,8 +243,8 @@ namespace SysIgreja.Controllers
                     Bairro = x.Homem?.Participante.Bairro,
                     Cidade = x.Homem?.Participante.Cidade,
                     SequencialEvento = x.Homem?.Participante?.SequencialEvento ?? x.Mulher?.Participante?.SequencialEvento,
-                    Dirigentes = x.Homem?.Circulo?.Dirigentes?.Select(y => 
-                    new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome), Apelido = UtilServices.CapitalizarNome(y.Equipante.Equipante.Apelido), Fone = y.Equipante.Equipante.Fone }) ?? x.Mulher?.Circulo?.Dirigentes?.Select(y => 
+                    Dirigentes = x.Homem?.Circulo?.Dirigentes?.Select(y =>
+                    new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome), Apelido = UtilServices.CapitalizarNome(y.Equipante.Equipante.Apelido), Fone = y.Equipante.Equipante.Fone }) ?? x.Mulher?.Circulo?.Dirigentes?.Select(y =>
                     new DirigenteViewModel { Id = y.Id, Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome), Apelido = UtilServices.CapitalizarNome(y.Equipante.Equipante.Apelido), Fone = y.Equipante.Equipante.Fone }),
                     Fone = $"{x.Homem?.Participante?.Fone} e {x.Mulher?.Participante?.Fone}"
                 }); ;
@@ -460,7 +460,34 @@ namespace SysIgreja.Controllers
                 }
             }
 
-            result = result.OrderBy(x => x.Nome);
+            try
+            {
+                if (model.columns[model.order[0].column].name == "Quarto")
+                {
+                    if (model.order[0].dir == "asc")
+                    {
+
+                        result = result.OrderBy(x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : "");
+                    }
+                    else
+                    {
+                        result = result.OrderByDescending(x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : "");
+                    }
+                }
+                else
+                {
+
+                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
+                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
+                    result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+                }
+            }
+            catch (Exception)
+            {
+                result = result.OrderBy(x => x.Nome);
+            }
+
+
 
             var json = Json(new
             {
@@ -471,7 +498,7 @@ namespace SysIgreja.Controllers
         }
 
 
-          [HttpPost]
+        [HttpPost]
         public ActionResult GetCrachaCasal(FilterModel model)
         {
 
@@ -681,9 +708,25 @@ namespace SysIgreja.Controllers
 
             try
             {
-                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
-                model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
-                result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+                if (model.columns[model.order[0].column].name == "Quarto")
+                {
+                    if (model.order[0].dir == "asc")
+                    {
+
+                        result = result.OrderBy(x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : "");
+                    }
+                    else
+                    {
+                        result = result.OrderByDescending(x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : "");
+                    }
+                }
+                else
+                {
+
+                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Padrinho" ? model.columns[model.order[0].column].name = "Padrinho.Nome" : model.columns[model.order[0].column].name;
+                    model.columns[model.order[0].column].name = model.columns[model.order[0].column].name == "Idade" ? model.columns[model.order[0].column].name = "DataNascimento" : model.columns[model.order[0].column].name;
+                    result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+                }
             }
             catch (Exception)
             {
@@ -707,7 +750,7 @@ namespace SysIgreja.Controllers
         }
 
 
-       [HttpPost]
+        [HttpPost]
         public ActionResult GetCasaisDatatable(FilterModel model)
         {
             var extract = Request.QueryString["extract"];

@@ -927,6 +927,10 @@ function DeleteEquipante(id) {
                 success: function () {
                     SuccessMesageDelete();
                     CarregarTabelaEquipante();
+                }, error: function (error) {
+                    if (error.responseText.includes('CirculoDirigentes')) {
+                        ErrorMessage('O Voluntário está vinculado a dirgência de um(a) ' + $('.title-circulo').first().text())
+                    }
                 }
             });
         }

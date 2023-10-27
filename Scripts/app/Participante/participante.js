@@ -2093,7 +2093,7 @@ function enviarMensagens(tipo) {
                                 session: username,
                                 messages: data.Equipantes.map(equipante => ({
                                     number: `${equipante[`Fone${tipo}`].replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
-                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante[`Nome`]).replaceAll('${Nome Contato}', equipante[`Nome${tipo}`])
+                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante[`Nome`]).replaceAll('${Nome Contato}', equipante[`Nome${tipo}`]).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.MercadoPagoPreferenceId}`)
                                 }))
                             }),
                         success: function () {

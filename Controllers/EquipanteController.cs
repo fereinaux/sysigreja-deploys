@@ -939,11 +939,11 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetTelefones(int[] ids)
+        public ActionResult GetTelefones(int[] ids,  int eventoId)
         {
             var query = equipantesBusiness.GetEquipantes().Where(x => ids.Contains(x.Id));
 
-            var result = query.Select(x => new { x.Fone, x.Nome }).ToList();
+            var result = query.Select(x => new { x.Fone, x.Nome, x.Equipes.FirstOrDefault(y => y.EventoId == eventoId).MercadoPagoPreferenceId }).ToList();
 
             return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
         }

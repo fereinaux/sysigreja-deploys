@@ -25,7 +25,7 @@
                         <select class="form-control" id="mensagem-configId" onchange="CarregarTabelaMensagem()">
                             @foreach (var config in ViewBag.Configuracoes)
                             {
-                                <option value="@config.Id">@config.Titulo</option>
+                                <option data-mercadopago="@config.PublicTokenMercadoPago" value="@config.Id">@config.Titulo</option>
                             }
                         </select>
                     </div>
@@ -77,7 +77,8 @@
 
                             <ul class="list-opcoes-msg">
                                 <li><span onclick="AddText('${Nome Participante}')" class="badge m-r-xs badge-primary">Nome Participante</span></li>
-                                <li><span onclick="AddText('${Nome Contato}')" class="badge m-r-xs badge-info">Nome Contato</span></li>
+                                <li><span onclick="AddText('${Nome Contato}')" class="badge m-r-xs badge-info">Nome Contato</span></li>                                
+                                <li id="mercado-pago-link"><span onclick="AddText('${Link do MercadoPago}')" class="badge m-r-xs badge-info">Link do MercadoPago</span></li>
                             </ul>
                             <textarea style="height: 200px" class="form-control required" id="mensagem-conteudo" data-field="Conteúdo"></textarea>
                         </div>

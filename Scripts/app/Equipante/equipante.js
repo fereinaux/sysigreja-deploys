@@ -1867,7 +1867,7 @@ function enviarMensagens() {
                 datatype: "json",
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ ids }),
+                data: JSON.stringify({ ids, EventoId: $("#equipante-eventoid-filtro").val(), }),
                 success: function (data) {
 
                     $.ajax({
@@ -1880,7 +1880,7 @@ function enviarMensagens() {
                                 session: username,
                                 messages: data.Equipantes.map(equipante => ({
                                     number: `${equipante.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
-                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome)
+                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.MercadoPagoPreferenceId}`)
                                 }))
                             }),
                         success: function () {

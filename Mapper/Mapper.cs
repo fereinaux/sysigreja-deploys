@@ -149,6 +149,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Latitude, opt => opt.MapFrom(x => x.Equipante.Latitude))
                     .ForMember(dest => dest.Referencia, opt => opt.MapFrom(x => x.Equipante.Referencia))
                     .ForMember(dest => dest.Numero, opt => opt.MapFrom(x => x.Equipante.Numero))
+                    .ForMember(dest => dest.MercadoPagoPreferenceId, opt => opt.MapFrom(x => x.MercadoPagoPreferenceId))
                     .ForMember(dest => dest.Estado, opt => opt.MapFrom(x => x.Equipante.Estado))
                     .ForMember(dest => dest.Camisa, opt => opt.MapFrom(x => x.Equipante.Camisa))
                     .ForMember(dest => dest.HasConvenio, opt => opt.MapFrom(x => x.Equipante.HasConvenio))

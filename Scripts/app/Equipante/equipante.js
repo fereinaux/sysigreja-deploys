@@ -948,7 +948,7 @@ function enviar() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome);
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.MercadoPagoPreferenceId}`);
             windowReference.location = GetLinkWhatsApp(equipante.Fone, text)
         }
     });
@@ -1867,7 +1867,9 @@ function enviarMensagens() {
                 datatype: "json",
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ ids, EventoId: $("#equipante-eventoid-filtro").val(), }),
+                data: JSON.stringify({
+                    ids, EventoId: $("#equipante-eventoid-filtro").val(),
+                }),
                 success: function (data) {
 
                     $.ajax({

@@ -93,6 +93,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Situacao, opt => opt.MapFrom(x => x.Status.GetDescription()));
                 cfg.CreateMap<Participante, ParticipanteListModel>()
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
+                    .ForMember(dest => dest.MercadoPagoPreferenceId, opt => opt.MapFrom(x => x.MercadoPagoPreferenceId))
                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)))
                     .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()))

@@ -155,6 +155,7 @@ namespace SysIgreja.Controllers
                 Sexo = x.Sexo,
                 Status = x.Status.GetDescription(),
                 Observacao = x.Observacao,
+                MercadoPagoPreferenceId = x.MercadoPagoPreferenceId,
                 EtiquetasList = etiquetasBusiness.GetEtiquetasByParticipante(x.Id)?.Select(y => new PostEtiquetaModel { Id = y.Id, Cor = y.Cor, Nome = y.Nome }),
                 Foto = x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""
             };
@@ -173,7 +174,7 @@ namespace SysIgreja.Controllers
             var dadosAdicionais = new
             {
                 Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Titulo ?? "",
-                Status = result.Status.GetDescription(),
+                Status = result.Status.GetDescription(),                
                 Quarto = quartosBusiness.GetQuartosComParticipantes(result.EventoId, TipoPessoaEnum.Participante).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "",
                 Motorista = caronasBusiness.GetCaronasComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Carona?.Motorista?.Nome ?? "",
                 QuartoAtual = new

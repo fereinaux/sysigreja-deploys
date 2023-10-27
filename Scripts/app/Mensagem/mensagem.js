@@ -42,7 +42,7 @@
 
     $("#table-mensagem").DataTable(tableMensagemConfig);
 
-    if ($('#mensagem-configId option:selected').data('data-mercadopago')) {
+    if ($('#mensagem-configId option:selected').data('mercadopago') !== '') {
         $('#mercado-pago-link').css('display', 'block')
     } else {
         $('#mercado-pago-link').css('display', 'none')

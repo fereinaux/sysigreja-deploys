@@ -18,7 +18,6 @@
     </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Configuracao.Identificador | @ViewBag.Action</title>
 
     <link href="~/Fonts/font-awesome/css/all.css" rel="stylesheet">
     <link rel="stylesheet"
@@ -598,7 +597,6 @@
     let action = isEquipe ? "Inscrições Equipe" : "Inscrições"
     let corBotao = '@ViewBag.Configuracao.CorBotao'
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
-    $('title').text(`@ViewBag.Configuracao.Identificador | ${isEquipe ? "Inscrições Equipe" : "Inscrições"}`)
 
     if (isMobile) {
         $('.mobile').css('display', 'flex')

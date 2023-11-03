@@ -147,6 +147,23 @@ namespace SysIgreja.Controllers
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
         }
 
+        [HttpGet]
+        public ActionResult GetFotoByParticipanteId(int Id)
+        {
+            var arquivo = arquivosBusiness.GetArquivosByParticipante(Id).FirstOrDefault(x => x.IsFoto);
+
+            return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+        }
+
+        [HttpGet]
+        public ActionResult GetFotoByEquipanteId(int Id)
+        {
+            var arquivo = arquivosBusiness.GetArquivosByEquipante(Id).FirstOrDefault(x => x.IsFoto);
+
+            return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+        }
+
+
         [AllowAnonymous]
         [HttpGet]
         public ActionResult GetBoletim(int Id)

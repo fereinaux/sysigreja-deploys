@@ -130,6 +130,12 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         orderCellsTop: true,
         fixedHeader: true,
         filter: true,
+        createdRow: function (row, data, dataIndex) {
+            if (data.HasFoto) {
+                $(row).addClass('foto')
+                $(row).data('id', data.Id)
+            }
+        },
         orderMulti: false,
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
@@ -242,7 +248,7 @@ ${GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row
                             ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}                            
                             ${GetButton('CancelarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
-                        : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify({Nome: row.Nome, Id: row.Id}), 'green', 'Ativar Inscrição')}
+                        : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'green', 'Ativar Inscrição')}
 ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'red', 'Deletar Inscrição') : ''}` : ''}`
                 }
             }
@@ -255,7 +261,17 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
 
             if (callbackFunction) {
                 callbackFunction()
+
             }
+
+            tippy(`.foto`, {
+                content: '',
+                allowHTML: true,
+                followCursor: true,
+                onTrigger: (instance, event) => {
+                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByParticipanteId/${$(event.target).data('id')}" />`)
+                },
+            });
         },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
@@ -1135,7 +1151,7 @@ function GetParticipante(id) {
         $(`#participante-nomeconvite`).val("");
         $(`#participante-nomecontato`).val("");
 
-        setNumber('participante-fone', "")        
+        setNumber('participante-fone', "")
         setNumber('participante-fonemae', "")
         setNumber('participante-fonepai', "")
         setNumber('participante-foneconvite', "")
@@ -1225,7 +1241,7 @@ function GetParticipante(id) {
 
 function EditParticipante(id) {
     $(`#participante-nome`).prop("disabled", !isAdm);
-    $(`#participante-logradouro`).prop("disabled",true);
+    $(`#participante-logradouro`).prop("disabled", true);
     $(`#participante-bairro`).prop("disabled", true);
     $(`#participante-cidade`).prop("disabled", true);
     $(`#participante-estado`).prop("disabled", true);
@@ -2065,7 +2081,7 @@ function enviarMensagens(tipo) {
             msgId = $("#bulk-mensagem").val()
             tipo = ""
             break;
-    } 
+    }
 
     $.ajax({
         url: "/Mensagem/GetMensagem/",

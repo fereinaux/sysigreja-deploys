@@ -219,6 +219,7 @@ namespace SysIgreja.Controllers
             var igrejas = eventosBusiness.GetEventosGlobais().Where(x => !string.IsNullOrEmpty(x.Identificador)).Select(x => x.Identificador).Distinct().ToList();
             ViewBag.Igrejas = igrejas;
             ViewBag.CountIgrejas = igrejas.Count;
+            ViewBag.Title = "Inscrições";
             return View("Index");
         }
 
@@ -280,6 +281,7 @@ namespace SysIgreja.Controllers
             ViewBag.EventoId = Id;
             evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : evento.Valor;
             ViewBag.Evento = evento;
+            ViewBag.Title = "Inscrições";
 
             return View("Detalhes");
         }

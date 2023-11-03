@@ -175,7 +175,7 @@
 
 <script>
 
-    document.querySelector('title').innerHTML = '@ViewBag.Configuracao.Titulo | @ViewBag.Title'
+    document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
     let corBotao = '@ViewBag.Configuracao.CorBotao'
         $(window).on('load', function () {
             var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" :"data:image/png;base64,@(ViewBag.Login.Logo)"

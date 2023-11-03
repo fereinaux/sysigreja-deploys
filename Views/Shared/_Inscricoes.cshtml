@@ -177,7 +177,8 @@
 
     let corBotao = '@ViewBag.Configuracao.CorBotao'
         $(window).on('load', function () {
-    document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
+            document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
+    console.log(decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title'))
             var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" :"data:image/png;base64,@(ViewBag.Login.Logo)"
 
             $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {

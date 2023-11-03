@@ -391,11 +391,11 @@
         }(jQuery));
     </script>
     <script>
-          document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
+
     let corBotao = '@ViewBag.Configuracao.CorBotao'
         document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
     $(document).ready(function () {
-
+                  document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
             @if (ViewBag.Configuracao.BackgroundId != null)
             {
                  <text> document.styleSheets[0].addRule('.intro:before', `background: url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed !important;`); </text>

@@ -597,7 +597,7 @@
     let action = isEquipe ? "Inscrições Equipe" : "Inscrições"
     let corBotao = '@ViewBag.Configuracao.CorBotao'
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
-      document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
+
     if (isMobile) {
         $('.mobile').css('display', 'flex')
         $('.desktop').css('display', 'none')
@@ -851,8 +851,8 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
     });
 
     $(document).ready(function () {
+              document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
         carregarEventos()
-
     })
 
 

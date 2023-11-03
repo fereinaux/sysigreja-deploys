@@ -176,6 +176,7 @@
 <script>
 
     let corBotao = '@ViewBag.Configuracao.CorBotao'
+    consloe.log('teste')
         $(window).on('load', function () {
             document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
             var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" :"data:image/png;base64,@(ViewBag.Login.Logo)"

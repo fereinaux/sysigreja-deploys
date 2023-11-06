@@ -129,36 +129,12 @@ function GetResultadosAdmin() {
         $('#resumo-financeiro-bloco').css('display', 'block')
     }
     $.ajax({
-        url: '/Home/GetResultadosAdmin',
+        url: '/Home/GetResumoFinanceiroEvento',
         datatype: "json",
         data: { EventoId: $("#eventoid").val() },
         type: "GET",
-        success: (data) => {
-          
-            result = data.result;
-            if (result.Total == 0) {
-                $('.zero-participantes').css('display', 'none')
-            } else {
-                $('.zero-participantes').css('display', 'block')
-            }
-            $("#total").text(result.Total);
-            $("#espera").text(result.Espera);
-            $("#confirmados").text(result.Confirmados);
-            $("#isencoes").text(result.Isencoes);
-            $("#presentes").text(result.Presentes);
-            $("#cancelados").text(result.Cancelados);
-            $("#meninos").text(result.Meninos);
-            $("#meninas").text(result.Meninas);
-            $("#equipe-male").text(result.EquipeMeninos);
-            $("#equipe-female").text(result.EquipeMeninas);
-            $("#boletos").text(result.Boletos);
-            $("#contatos").text(result.Contatos);
-            $("#saldo").text(result.SaldoGeral);
-            $("#saldodinheiro").text(result.SaldoDinheir);
-            $("#saldopix").text(result.SaldoPix);
-            $("#receita").text(result.TotalReceber);
-            $("#despesa").text(result.TotalPagar);
-
+        success: (data) => {          
+            result = data.result;            
             htmlResumoFinanc = ''
             receberTotal = 0
             pagarTotal = 0
@@ -180,18 +156,22 @@ function GetResultadosAdmin() {
             $('#resumo-financeiro').html(htmlResumoFinanc);
             $('#receberTotal').text(`R$ ${receberTotal.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
             $('#pagarTotal').text(`R$ ${pagarTotal.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
-            $('#saldoTotal').text(`R$ ${(receberTotal - pagarTotal).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)
+            $('#saldoTotal').text(`R$ ${(receberTotal - pagarTotal).toLocaleString('pt-br', { minimumFractionDigits: 2 })}`)           
+        }
+    });
 
 
-            htmlInscritos = '';
-            $(result.UltimosInscritos).each((i, element) => {
-                htmlInscritos += `<tr>                        
-                        <td>${element.Nome}</td>                        
-                        <td class="td-idade">${element.Idade}</td>                                                
-                    </tr>`;
-            });
-
-            $('#ultimos-inscritos').html(htmlInscritos);
+    $.ajax({
+        url: '/Home/GetEquipesEvento',
+        datatype: "json",
+        data: { EventoId: $("#eventoid").val() },
+        type: "GET",
+        success: (data) => {
+            result = data.result; 
+          
+            $("#equipe-male").text(result.EquipeMeninos);
+            $("#equipe-female").text(result.EquipeMeninas);
+          
 
             htmlEquipes = '';
             htmlEquipesMobile = '';
@@ -225,6 +205,22 @@ function GetResultadosAdmin() {
             $('.equipe-mobile-container').html(htmlEquipesMobile);
             $('#totalEquipe').text(totalEquipe);
 
+
+
+
+        }
+    });
+
+    $.ajax({
+        url: '/Home/GetReunioesEvento',
+        datatype: "json",
+        data: { EventoId: $("#eventoid").val() },
+        type: "GET",
+        success: (data) => {
+
+            result = data.result;
+     
+
             htmlReunioes = '';
             $(result.Reunioes).each((i, element) => {
                 htmlReunioes += `<tr>
@@ -235,11 +231,63 @@ function GetResultadosAdmin() {
             });
             $('#tb-reunioes').html(htmlReunioes);
 
-            var randomColorGenerator = function () {
-                return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
-            };
+    
 
-            if (config.TipoEvento == "Casais") {
+        }
+    });
+
+    $.ajax({
+        url: '/Home/GetUltimosInscritosEvento',
+        datatype: "json",
+        data: { EventoId: $("#eventoid").val() },
+        type: "GET",
+        success: (data) => {
+
+            result = data.result;
+           
+            htmlInscritos = '';
+            $(result.UltimosInscritos).each((i, element) => {
+                htmlInscritos += `<tr>                        
+                        <td>${element.Nome}</td>                        
+                        <td class="td-idade">${element.Idade}</td>                                                
+                    </tr>`;
+            });
+
+            $('#ultimos-inscritos').html(htmlInscritos);
+
+
+        }
+    });
+    $('.zero-participantes').css('display', 'none')
+  
+ 
+
+    $.ajax({
+        url: "/Home/GetParticipantesEvento",
+        datatype: "json",
+        data: { EventoId: $("#eventoid").val() },
+        type: "GET",
+        success: (data) => {
+
+            result = data.result;
+            if (result.Total == 0) {
+                $('.zero-participantes').css('display', 'none')
+            } else {
+                $('.zero-participantes').css('display', 'block')
+            }
+            $("#total").text(result.Total);
+            $("#espera").text(result.Espera);
+            $("#confirmados").text(result.Confirmados);
+            $("#isencoes").text(result.Isencoes);
+            $("#presentes").text(result.Presentes);
+            $("#cancelados").text(result.Cancelados);
+            $("#meninos").text(result.Meninos);
+            $("#meninas").text(result.Meninas);
+            $("#equipe-male").text(result.EquipeMeninos);
+            $("#equipe-female").text(result.EquipeMeninas);
+
+
+            if (result.Tipo == "Casais") {
                 $('#total~small').text('Casais')
                 $('#meninos').parent().parent().css('display', 'none')
                 $('#meninas').parent().parent().css('display', 'none')
@@ -250,7 +298,7 @@ function GetResultadosAdmin() {
                 $('#meninas').parent().parent().css('display', 'block')
                 $('.td-idade').css('display', 'block')
             }
-
+            
         }
     });
 }

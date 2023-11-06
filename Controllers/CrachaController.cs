@@ -34,6 +34,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Customização de Credenciais";
+            Response.AddHeader("Title", ViewBag.Title);
             GetConfiguracoes(new string[] { "Admin" });
             return View();
         }

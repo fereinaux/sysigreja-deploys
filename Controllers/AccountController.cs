@@ -56,6 +56,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Administradores";
+            Response.AddHeader("Title", ViewBag.Title);
             var user = accountBusiness.GetUsuarioById(User.Identity.GetUserId());
             if (!user.Claims.Any(x => x.ClaimType == ClaimTypes.Role && (x.ClaimValue == "Master" || x.ClaimValue == "Geral")))
             {

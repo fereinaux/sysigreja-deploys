@@ -1,5 +1,5 @@
 ﻿
-let table
+table = undefined
 function CarregarTabelaPresenca() {
     if ($("#presenca-eventoid").val() && $("#presenca-equipeid").val()) {
         $.ajax({

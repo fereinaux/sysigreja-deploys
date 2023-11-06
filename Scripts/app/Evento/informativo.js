@@ -1,4 +1,5 @@
-﻿let eventoId
+﻿
+eventoId = undefined
 function CarregarTabelaEvento() {
     const tableEventoConfig = {
         language: languageConfig,

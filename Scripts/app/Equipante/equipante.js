@@ -1,8 +1,8 @@
-﻿var realista;
-let table
+﻿realista = undefined;
+table = undefined
 
-var oldEventoId
-var newEventoId
+oldEventoId = undefined
+newEventoId = undefined
 
 
 function checkEvento() {

@@ -26,6 +26,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Mensagens";
+            Response.AddHeader("Title", ViewBag.Title);
             GetConfiguracoes();
             return View();
         }

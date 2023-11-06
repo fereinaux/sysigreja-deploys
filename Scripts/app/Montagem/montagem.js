@@ -1,4 +1,9 @@
-﻿
+﻿realista = undefined;
+table = undefined
+
+oldEventoId = undefined
+newEventoId = undefined
+
 isConvite = $('#eventoid option:selected').data('role') == "Convites"
 HideMenu();
 $(document).ready(function () {
@@ -448,14 +453,6 @@ function DeleteMembroEquipe(id) {
     });
 }
 
-
-var realista;
-let table
-
-var oldEventoId
-var newEventoId
-
-
 function AddMembroEquipe() {
     if ($("#listagem").val()) {
         $.ajax({
@@ -481,7 +478,7 @@ function AddMembroEquipe() {
     }
 }
 
-let tipo
+tipo = undefined
 
 
 async function openBulkActions() {

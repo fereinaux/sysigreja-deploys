@@ -37,6 +37,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Círculos";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos();
 
             return View();

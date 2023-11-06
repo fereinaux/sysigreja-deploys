@@ -40,6 +40,7 @@ namespace SysIgreja.Controllers
         {
             GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Igrejas";
+            Response.AddHeader("Title", ViewBag.Title);
 
             return View();
         }

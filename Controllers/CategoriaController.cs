@@ -27,6 +27,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Categorias";
+            Response.AddHeader("Title", ViewBag.Title);
             return View();
         }
 

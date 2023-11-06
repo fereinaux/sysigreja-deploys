@@ -1,4 +1,5 @@
-﻿let eventoId
+﻿
+eventoId = undefined
 function CarregarTabelaEvento() {
     const tableEventoConfig = {
         language: languageConfig,
@@ -619,7 +620,7 @@ function exibirQrCode(id) {
     loadQRCode(eventoId)
 }
 
-let loadedColors = []
+loadedColors = []
 
 function loadQRCode(id, color1, color2) {
     $.ajax({

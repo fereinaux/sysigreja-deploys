@@ -782,6 +782,7 @@
   <ItemGroup>
     <Compile Include="App_Start\ClaimsAuthorizeAttribute .cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\SpaResponseAttribute .cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -1267,6 +1268,7 @@
     <Content Include="Views\Inscricoes\PagamentoConcluido.cshtml" />
     <Content Include="Views\Configuracao\Hierarquia.cshtml" />
     <Content Include="Views\Equipante\Duplicados.cshtml" />
+    <Content Include="Views\Shared\_SpaLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

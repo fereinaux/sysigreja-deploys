@@ -68,6 +68,7 @@ namespace SysIgreja.Controllers
         public ActionResult Checkin()
         {
             ViewBag.Title = "Check-in";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
             GetConfiguracao();
 
@@ -77,6 +78,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Participantes";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
             GetConfiguracao();
 
@@ -86,6 +88,7 @@ namespace SysIgreja.Controllers
         public ActionResult Casais()
         {
             ViewBag.Title = "Casais";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
             GetConfiguracao();
 

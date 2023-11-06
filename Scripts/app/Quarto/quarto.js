@@ -1,5 +1,28 @@
-﻿let table
-let columnsParticipantes = [
+﻿table = undefined
+swalQuartos = {
+    title: "Impressão de Quartos",
+    icon: "info",
+    text: "Como você deseja imprimir?",
+    className: "button-center",
+    dangerMode: true,
+    buttons: {
+        door: {
+            text: "Resumido",
+            value: "resume",
+            className: "btn-info w-150 btn-resume"
+        },
+        full: {
+            text: "Completo",
+            value: "full",
+            className: "btn-primary w-150 btn-full"
+        }, test: {
+            visible: false
+        }
+    }
+
+
+}
+columnsParticipantes = [
     { data: "Titulo", name: "Titulo", autoWidth: true },
     { data: "Equipante", name: "Equipante", autoWidth: true },
     { data: "Sexo", name: "Sexo", autoWidth: true },
@@ -16,7 +39,7 @@ let columnsParticipantes = [
     }
 ]
 
-let columnsEquipantes = [
+columnsEquipantes = [
     { data: "Titulo", name: "Titulo", autoWidth: true },
     { data: "Sexo", name: "Sexo", autoWidth: true },
     { data: "Capacidade", name: "Capacidade", autoWidth: true },
@@ -114,29 +137,7 @@ function PrintQuarto(row) {
 
 }
 
-const swalQuartos = {
-    title: "Impressão de Quartos",
-    icon: "info",
-    text: "Como você deseja imprimir?",
-    className: "button-center",
-    dangerMode: true,
-    buttons: {
-        door: {
-            text: "Resumido",
-            value: "resume",
-            className: "btn-info w-150 btn-resume"
-        },
-        full: {
-            text: "Completo",
-            value: "full",
-            className: "btn-primary w-150 btn-full"
-        }, test: {
-            visible: false
-        }
-    }
 
-
-}
 
 function headerLandscape(doc, evento, page, quarto) {
     if (logoRelatorio) {
@@ -257,7 +258,7 @@ function GetQuarto(id) {
                 $(`#quarto-latitude`).val((data.Quarto.Latitude || '').replaceAll(',', '.'));
                 $(`#quarto-longitude`).val((data.Quarto.Longitude || '').replaceAll(',', '.'));
 
-               
+
             }
         });
     }
@@ -333,7 +334,7 @@ function PostQuarto() {
                     Sexo: $("input[type=radio][name=quarto-sexo]:checked").val(),
                     EquipanteId: $("#quarto-equipante").val() != "Pesquisar" ? $("#quarto-equipante").val() : null,
                     Capacidade: $("#quarto-capacidade").val(),
-                  
+
                 }),
             success: function () {
                 SuccessMesageOperation();
@@ -389,7 +390,7 @@ function DistribuirQuartos() {
         data: JSON.stringify(
             {
                 EventoId: $("#quarto-eventoid").val(),
-                Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 
+                Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
             }),
         success: function () {
             //teste
@@ -650,15 +651,18 @@ function addMapa(lat, long, nome, cor, id, type) {
 
 }
 
-let markerLayerLocal
-let mapLocal 
+markerLayerLocal = undefined
+mapLocal = undefined
 
-const map = initMap('map-geral')
-const markerLayer = createMarkerLayer(map)
-map.setView([-8.050000, -34.900002], 13);
-setInterval(function () {
-    map.invalidateSize();
-}, 100);
+if ($('#map-geral').length > 0) {
+
+    map = initMap('map-geral')
+    markerLayer = createMarkerLayer(map)
+    map.setView([-8.050000, -34.900002], 13);
+    setInterval(function () {
+        map.invalidateSize();
+    }, 100);
+}
 
 function verificaCep(input) {
     let cep = $(input).val()
@@ -724,7 +728,7 @@ function EsvaziarTodosQuarto() {
                 data: JSON.stringify(
                     {
                         Id: $("#quarto-eventoid").val(),
-                        Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 
+                        Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
                     }),
                 success: function () {
                     SuccessMesageOperation();

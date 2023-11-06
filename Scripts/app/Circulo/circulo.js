@@ -1,9 +1,35 @@
-﻿const map = initMap('map')
-const markerLayer = createMarkerLayer(map)
+﻿map = initMap('map')
+markerLayer = createMarkerLayer(map)
 map.setView([-8.050000, -34.900002], 13);
 setInterval(function () {
     map.invalidateSize();
 }, 100);
+selectedMarkers = []
+circuloId = null
+swalCirculos = {
+    title: `Impressão de ${$('.title-circulo').first().text()}`,
+    icon: "info",
+    text: "Como você deseja imprimir?",
+    className: "button-center",
+    dangerMode: true,
+    buttons: {
+        door: {
+            text: "Resumido",
+            value: "resume",
+            className: "btn-info w-150 btn-resume"
+        },
+        full: {
+            text: "Completo",
+            value: "full",
+            className: "btn-primary w-150 btn-full"
+        }, test: {
+            visible: false
+        }
+    }
+
+
+}
+
 
 
 new L.Control.Draw({
@@ -24,7 +50,6 @@ L.Rectangle.include({
     }
 });
 
-let selectedMarkers = []
 
 map.on(L.Draw.Event.CREATED, function (e) {
     selectedMarkers = []
@@ -62,9 +87,9 @@ map.on('popupclose', function (e) {
     $("#bairros").val([]).trigger('change');
     $('#filtro-nome').val('')
 
+
 })
 
-let circuloId
 function CarregarTabelaCirculo() {
 
     var columnsTb = [
@@ -507,11 +532,11 @@ function GetCirculosComParticipantes(column, dir, search) {
         success: function (result) {
             result.data.forEach(function (circulo, index, array) {
 
-                htmlCaecalhoCirculo = circulo.Dirigentes.map(dirigente => `<h4 style="padding-top:5px">${dirigente.Nome}</h4>`).join().replace(/,/g, '')
+                let htmlCabecalhoCirculo = circulo.Dirigentes.map(dirigente => `<h4 style="padding-top:5px">${dirigente.Nome}</h4>`).join().replace(/,/g, '')
 
 
                 $("#circulos").append($(`<div data-id="${circulo.Id}" style="margin-bottom:25px;background-color:${circulo.Cor};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
-                       ${htmlCaecalhoCirculo}
+                       ${htmlCabecalhoCirculo}
 ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                                     <table class="table">
                                         <tbody id="pg-${circulo.Id}">
@@ -643,30 +668,6 @@ function Drag() {
             revertDuration: 0
         });
     });
-}
-
-const swalCirculos = {
-    title: `Impressão de ${$('.title-circulo').first().text()}`,
-    icon: "info",
-    text: "Como você deseja imprimir?",
-    className: "button-center",
-    dangerMode: true,
-    buttons: {
-        door: {
-            text: "Resumido",
-            value: "resume",
-            className: "btn-info w-150 btn-resume"
-        },
-        full: {
-            text: "Completo",
-            value: "full",
-            className: "btn-primary w-150 btn-full"
-        }, test: {
-            visible: false
-        }
-    }
-
-
 }
 
 

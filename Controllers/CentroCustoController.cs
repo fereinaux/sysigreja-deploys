@@ -29,6 +29,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Centros de Custo";
+            Response.AddHeader("Title", ViewBag.Title);
             GetConfiguracoes(new string[] { "Financeiro" });
             ViewBag.Tipos = GetDescriptions<TiposCentroCustoEnum>().ToList();
 

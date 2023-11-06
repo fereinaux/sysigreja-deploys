@@ -32,6 +32,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Parâmetros";
+            Response.AddHeader("Title", ViewBag.Title);
 
             return View();
         }
@@ -40,6 +41,7 @@ namespace SysIgreja.Controllers
         {
             GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Login";
+            Response.AddHeader("Title", ViewBag.Title);
 
             return View();
         }
@@ -48,6 +50,7 @@ namespace SysIgreja.Controllers
         {
             GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Equipes";
+            Response.AddHeader("Title", ViewBag.Title);
 
             return View();
         }
@@ -56,6 +59,7 @@ namespace SysIgreja.Controllers
         {
             base.GetConfiguracoes();
             ViewBag.Title = "Hierarquia das Equipes";
+            Response.AddHeader("Title", ViewBag.Title);
 
             return View();
         }

@@ -18,6 +18,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Relatórios";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos(new string[] { "Admin" });
 
             return View();

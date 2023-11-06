@@ -1,3 +1,8 @@
-﻿@{
+﻿@if (IsAjax)
+{
+    Layout = "~/Views/Shared/_SpaLayout.cshtml";
+}
+else
+{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }

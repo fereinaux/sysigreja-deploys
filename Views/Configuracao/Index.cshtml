@@ -44,7 +44,10 @@
 @section Scripts {
 
     <script>
-        let configMsg, configMsgEquipe, camposConfig, equipes
+        configMsg = undefined
+        configMsgEquipe = undefined
+        camposConfig = undefined
+        equipes = undefined
         function addConfig() {
             $.ajax({
                 url: "/Configuracao/PostConfiguracao/",

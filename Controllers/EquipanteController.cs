@@ -83,6 +83,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Equipantes";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos();
 
             return View();
@@ -92,6 +93,7 @@ namespace SysIgreja.Controllers
         public ActionResult Duplicados()
         {
             ViewBag.Title = "Remover Duplicados";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos();
 
             return View();
@@ -100,6 +102,7 @@ namespace SysIgreja.Controllers
         public ActionResult Montagem()
         {
             ViewBag.Title = "Montagem";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Convites" });
 
             return View();
@@ -108,6 +111,7 @@ namespace SysIgreja.Controllers
         public ActionResult Casais()
         {
             ViewBag.Title = "Casais";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
             GetConfiguracao();
 

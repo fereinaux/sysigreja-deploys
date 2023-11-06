@@ -1,5 +1,5 @@
-﻿let EquipeId = 0
-let Titulo = ''
+﻿EquipeId = 0
+Titulo = ''
 
 function CarregarTabelaEquipe() {
     const tableEquipeConfig = {

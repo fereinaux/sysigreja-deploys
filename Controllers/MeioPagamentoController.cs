@@ -24,6 +24,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Formas de Pagamento";
+            Response.AddHeader("Title", ViewBag.Title);
             GetConfiguracoes(new string[] {  "Financeiro" });
             return View();
         }

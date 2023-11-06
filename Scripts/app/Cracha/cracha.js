@@ -1,10 +1,10 @@
-﻿let lid = 0;
+﻿lid = 0;
 
-let arquivos = 1
-let selected
-let razao = 37.79
+arquivos = 1
+selected = undefined
+razao = 37.79
 
-let eventoId
+eventoId = undefined
 function CarregarTabelaCracha() {
     const tableCrachaConfig = {
         language: languageConfig,

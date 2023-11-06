@@ -1,7 +1,7 @@
 ﻿arrayCaronas = []
 arrayCaroneiros = []
-const map = initMap('map')
-const markerLayer = createMarkerLayer(map)
+map = initMap('map')
+markerLayer = createMarkerLayer(map)
 map.setView([-8.050000, -34.900002], 13);
 setInterval(function () {
     map.invalidateSize();

@@ -1,9 +1,61 @@
 ﻿HideMenu();
-let map, markerLayer
+map = undefined
+markerLayer = undefined
 $(document).ready(() => {
     Refresh();
     loadCampos($("[id$='eventoid']").val());
+
+
+    html5QrCode = new Html5Qrcode("reader");
+    qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        html5QrCode.stop().then((ignore) => {
+            console.log(decodedText);
+            {
+                arrValue = decodedText.split('|')
+                console.log(arrValue);
+                if ($("#eventoid").val() == arrValue[0]) {
+                    if (arrValue[2] == 'EQUIPANTE') {
+                        $("#participantes").val(arrValue[1]).trigger("chosen:updated");
+                        GetParticipante();
+                    } else {
+
+                        $("#equipantes").val(arrValue[1]).trigger("chosen:updated");
+                        GetEquipante();
+                    }
+                } else {
+                    if (arrValue[2] == 'EQUIPANTE') {
+                        $("#eventoid").val(arrValue[0])
+                        GetEquipantes(arrValue[1])
+                    } else {
+
+                        $("#eventoid").val(arrValue[0])
+                        GetParticipantes(arrValue[1])
+                    }
+                }
+
+            }
+        }).catch((err) => {
+            // Stop failed, handle it.
+        });
+    };
+    configCam = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    // If you want to prefer back camera
+
+    function startCam() {
+
+        html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback).then(() => {
+            $('html, body').animate({
+                scrollTop: $('#reader').offset().top
+            }, 500);
+        });
+
+
+
+    }
 });
+
+
 
 function GetParticipantes(id) {
     $("#participantes").empty();
@@ -110,7 +162,7 @@ function PostParticipante() {
                         Alergia: $(`#participante-alergia`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         NomePai: $(`#participante-nome-pai`).val(),
-                        
+
                         NomeMae: $(`#participante-nome-mae`).val(),
                         NomeConvite: $(`#participante-nome-convite`).val(),
                         NomeContato: $(`#participante-nome-contato`).val(),
@@ -155,7 +207,7 @@ function PostParticipante() {
                         Instagram: $('#participante-instagram').val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
-                        
+
                         Fone: getNumber('participante-fone'),
                         FonePai: getNumber('participante-fone-pai'),
                         FoneMae: getNumber('participante-fone-mae'),
@@ -170,7 +222,7 @@ function PostParticipante() {
                         Alergia: $(`#participante-alergia`).val(),
                         Sexo: $("input[type=radio][name=participante-sexo]:checked").val(),
                         CEP: $(`#participante-cep`).val(),
-                        Congregacao: $(`#participante-congregacao`).val() ,
+                        Congregacao: $(`#participante-congregacao`).val(),
                         Conjuge: $(`#participante-conjuge`).val(),
                         Logradouro: $(`#participante-logradouro`).val(),
                         Bairro: $(`#participante-bairro`).val(),
@@ -213,7 +265,7 @@ checkin = false
 
 
 function GetParticipante() {
-    
+
     AplicarCssPadrao($('input'));
     id = $("#participantes").val() == "Pesquisar" ? 0 : $("#participantes").val();
     if (id > 0) {
@@ -235,7 +287,7 @@ function GetParticipante() {
                 $(`#participante-apelido`).val(data.Participante.Apelido);
                 $("#participante-data-nascimento").val(moment(data.Participante.DataNascimento).format('DD/MM/YYYY'));
                 $(`#participante-email`).val(data.Participante.Email);
-            
+
                 $(`#participante-fone`).val(data.Participante.Fone);
                 $(`#participante-fone-pai`).val(data.Participante.FonePai);
                 $(`#participante-fone-mae`).val(data.Participante.FoneMae);
@@ -373,9 +425,9 @@ function GetParticipante() {
 
                 if (!checkin && isMobile) {
 
-                $('html, body').animate({
-                    scrollTop: $('#info-geral').offset().top
-                }, 500);
+                    $('html, body').animate({
+                        scrollTop: $('#info-geral').offset().top
+                    }, 500);
                     checkin = false
                 }
             }
@@ -735,9 +787,9 @@ function Checkin() {
                 GetTotaisCheckin()
                 if (isMobile) {
 
-                $('html, body').animate({
-                    scrollTop: $('#panel-reader').offset().top
-                }, 500);
+                    $('html, body').animate({
+                        scrollTop: $('#panel-reader').offset().top
+                    }, 500);
                 }
 
 

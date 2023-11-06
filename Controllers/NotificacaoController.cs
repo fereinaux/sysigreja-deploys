@@ -43,7 +43,8 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Notificações";
-            
+            Response.AddHeader("Title", ViewBag.Title);
+
             return View();
         }
 

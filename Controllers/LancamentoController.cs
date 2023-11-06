@@ -47,6 +47,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Financeiro";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos(new string[] { "Admin", "Financeiro" });
             return View();
         }

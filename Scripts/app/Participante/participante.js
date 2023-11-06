@@ -1,8 +1,6 @@
-﻿var realista = {}
-var selected = false
+﻿realista = {}
+selected = false
 eventoId = 0
-let table
-let map, markerLayer
 function CarregarTabelaParticipante(callbackFunction) {
     $('#btn_bulk').css('display', 'none')
     if ($("#participante-eventoid").val() != eventoId) {
@@ -155,6 +153,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             {
                 data: "Sexo", orderData: 0, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {
+                    var icon, cor
                     if (data == "Masculino") {
                         icon = "fa-male";
                         cor = "#0095ff";
@@ -195,6 +194,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             { data: "Padrinho", name: "Padrinho", width: "25%" },
             {
                 data: "Status", name: "Status", width: "5%", render: function (data, type, row) {
+                    var data, cor
                     if (row.Checkin) {
                         data = "Presente";
                         cor = "warning";

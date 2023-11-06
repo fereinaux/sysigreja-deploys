@@ -40,6 +40,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Padrinhos";
+            Response.AddHeader("Title", ViewBag.Title);
             GetEventos();
 
             return View();

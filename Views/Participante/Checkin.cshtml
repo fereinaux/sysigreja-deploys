@@ -280,60 +280,8 @@
 }
 
 @section Scripts {
-
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="~/Scripts/app/Participante/checkin.js?@ViewBag.Numero"></script>
     <script src="~/Scripts/app/Cracha/print.js?@ViewBag.Numero"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-    <script>
-
-
-        const html5QrCode = new Html5Qrcode("reader");
-        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-            html5QrCode.stop().then((ignore) => {
-                console.log(decodedText);
-                {
-                    arrValue = decodedText.split('|')
-                    console.log(arrValue);
-                    if ($("#eventoid").val() == arrValue[0]) {
-                        if (arrValue[2] == 'EQUIPANTE') {
-                            $("#participantes").val(arrValue[1]).trigger("chosen:updated");
-                            GetParticipante();
-                        } else {
-
-                            $("#equipantes").val(arrValue[1]).trigger("chosen:updated");
-                            GetEquipante();
-                        }
-                    } else {
-                        if (arrValue[2] == 'EQUIPANTE') {
-                            $("#eventoid").val(arrValue[0])
-                            GetEquipantes(arrValue[1])
-                        } else {
-
-                            $("#eventoid").val(arrValue[0])
-                            GetParticipantes(arrValue[1])
-                        }
-                    }
-
-                }
-            }).catch((err) => {
-                // Stop failed, handle it.
-            });
-        };
-        const configCam = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-        // If you want to prefer back camera
-
-        function startCam() {
-
-            html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback).then(() => {
-                $('html, body').animate({
-                    scrollTop: $('#reader').offset().top
-                }, 500);
-            });
-
-
-
-        }
-    </script>
 }

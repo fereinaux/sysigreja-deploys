@@ -1,8 +1,9 @@
-﻿var realista = {}
-var selected = false
+﻿realista = {}
+selected = false
 eventoId = 0
-let table
-let map, markerLayer
+table = undefined
+map = undefined
+markerLayer = undefined
 function CarregarTabelaParticipante(callbackFunction) {
     $('#btn_bulk').css('display', 'none')
     if ($("#participante-eventoid").val() != eventoId) {

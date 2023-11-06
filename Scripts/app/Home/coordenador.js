@@ -30,7 +30,7 @@ function ExportarExcel() {
     })
 }
 
-let EquipeId
+EquipeId = null
 
 function CarregarTabelaArquivos(id) {
     $.ajax({

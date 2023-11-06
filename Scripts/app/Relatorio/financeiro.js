@@ -303,7 +303,7 @@ function SetHeight(height, doc) {
     return height;
 }
 
-let div2 = document.createElement("div");
+div2 = document.createElement("div");
 
 $(document).ready(function () {
     getCentroCustoRel()

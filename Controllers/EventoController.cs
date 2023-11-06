@@ -40,6 +40,7 @@ namespace SysIgreja.Controllers
         {
             GetConfiguracoes();
             ViewBag.Title = "Eventos";
+            Response.AddHeader("Title", ViewBag.Title);
 
             return View();
         }
@@ -48,6 +49,7 @@ namespace SysIgreja.Controllers
         {
             GetConfiguracoes();
             ViewBag.Title = "Informativos";
+            Response.AddHeader("Title", ViewBag.Title);
 
             return View();
         }

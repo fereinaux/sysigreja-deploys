@@ -63,7 +63,7 @@
                         <select class="chosen-select" id="eventoid" onchange="Refresh()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
-                                <option value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
+                                <option data-casal="@evento.IsCasal" value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                             }
                         </select>
                     </div>

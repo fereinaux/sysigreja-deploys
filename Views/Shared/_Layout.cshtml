@@ -715,33 +715,6 @@
                 linkClick(e, $(this));
             });
 
-            $(document).on('submit', 'form', function (e) {
-                if (e.isDefaultPrevented()) {
-                    return;
-                }
-                e.preventDefault();
-                var form = $(this);
-                if (!form.valid()) {
-                    return;
-                }
-                var action = form.attr('action');
-                var method = form.attr('method');
-                var data = form.serialize();
-
-                // submit clicked button value
-                var submitValue = form.data('submit');
-                if (submitValue != null) {
-                    var submit = $('input[type=submit][value="' + submitValue + '"]', form);
-                    if (submit.length == 1) {
-                        var submitName = submit.attr('name');
-                        if (submitName != null) {
-                            data += '&' + encodeURI(submitName) + '=' + encodeURI(submit.attr('value'));
-                        }
-                    }
-                }
-
-                spaLoad(action, method, data);
-            });
         });
 
 
@@ -800,12 +773,19 @@
                 // location will be null by custom asp.net error page
                 var location = xhr.getResponseHeader('Location');
                 history.pushState('', '', location);
+                if (location == '/Participante/Casais') {
+                    location = 'participante-menu'
+                }
+
+                if (location == '/Equipante/Casais') {
+                    location = 'equipante-menu'
+                }
                 $('#title').text(xhr.getResponseHeader('Title'))
                 $('#side-menu').find('a').parent().removeClass('active');
-                $('#side-menu').find(`a[href="${location}"]`).parent().addClass('active');
+                $('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().addClass('active');
 
-                if ($('#side-menu').find(`a[href="${location}"]`).parent().parent().parent().is('li')) {
-                    $('#side-menu').find(`a[href="${location}"]`).parent().parent().parent().addClass('active')
+                if ($('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().parent().parent().is('li')) {
+                    $('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().parent().parent().addClass('active')
                 }
             }
 
@@ -863,6 +843,30 @@
         }
 
 
+    </script>
+    <script>
+        function handleParticipantes(opt) {
+            action = "/Participante"
+            if ($("*[id*='eventoid'] option:selected").data('casal') == 'True') {
+                action = "/Participante/Casais"
+
+            }
+            if ((opt !== undefined && opt != $("*[id*='eventoid'] option:selected").data('casal')) || opt == undefined) {
+                spaLoad(action, "GET");
+            }
+        }
+
+        function handleEquipantes(opt) {
+            console.log(opt);
+            action = "/Equipante"
+            if ($("*[id*='eventoid'] option:selected").data('casal') == 'True') {
+                action = "/Equipante/Casais"
+
+            }
+            if ((opt !== undefined && opt != $("*[id*='eventoid'] option:selected").data('casal')) || opt == undefined) {
+                spaLoad(action, "GET");
+            }
+        }
     </script>
     <!-- Handler for local scripts -->
     @RenderSection("scripts", required: false)

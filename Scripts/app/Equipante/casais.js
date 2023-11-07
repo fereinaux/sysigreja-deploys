@@ -1693,7 +1693,9 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
     });
 }
 
+casal = 'True'
 $("*[id*='eventoid']").change(function () {
+    handleEquipantes(casal)
     loadCampos(this.value)
 })
 

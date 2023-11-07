@@ -827,6 +827,7 @@ function CarregarTabelaPagamentos(id) {
 }
 
 $(document).ready(function () {
+  
     HideMenu()
     CarregarTabelaParticipante();
     loadCampos($("[id$='eventoid']").val());
@@ -1409,9 +1410,11 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     });
 });
 
-
+casal = 'False'
 $("[id$='eventoid']").change(function () {
+    handleParticipantes(casal)
     loadCampos(this.value)
+
 })
 
 function onLoadCampos() {

@@ -331,7 +331,7 @@ namespace SysIgreja.Controllers
                     var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
                     ViewBag.Configuracao = configP;
                     ViewBag.Participante = participante;
-                    ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
+                    ViewBag.Casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome && x.EventoId == participante.EventoId);
                     ViewBag.Evento = eventoAtualP;
                     ViewBag.Padrinho = participante.Padrinho?.EquipanteEvento?.Equipante;
                     ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
@@ -434,7 +434,7 @@ namespace SysIgreja.Controllers
                     ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
                     if (configP.TipoEventoId == TipoEventoEnum.Casais)
                     {
-                        var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
+                        var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome && x.EventoId == participante.EventoId);
                         ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace("${Apelido}", $"{participante.Apelido} e {casal.Apelido}");
                     }
                     else
@@ -473,7 +473,7 @@ namespace SysIgreja.Controllers
             var apelido = participante.Apelido;
             if (config.TipoEventoId == TipoEventoEnum.Casais)
             {
-                var casal = participantesBusiness.GetParticipantesByEvento(participante.EventoId).FirstOrDefault(x => x.Conjuge == participante.Nome);
+                var casal = participantesBusiness.GetParticipantesByEvento(participante.EventoId).FirstOrDefault(x => x.Conjuge == participante.Nome && x.EventoId == participante.EventoId);
                 apelido = $"{participante.Apelido} e {casal?.Apelido}";
             }
 
@@ -587,7 +587,7 @@ namespace SysIgreja.Controllers
 
             if (config.TipoEvento == TipoEventoEnum.Casais)
             {
-                var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome);
+                var casal = participantesBusiness.GetParticipantes().FirstOrDefault(x => x.Conjuge == participante.Nome && x.EventoId == participante.EventoId);
 
                 if (casal != null)
                 {

@@ -1361,7 +1361,9 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
 });
 
 
+casal = 'True'
 $("[id$='eventoid']").change(function () {
+    handleParticipantes(casal)
     loadCampos(this.value)
 })
 
@@ -2030,7 +2032,7 @@ function enviarMensagens(tipo) {
             msgId = $("#bulk-mensagem").val()
             tipo = ""
             break;
-    } 
+    }
 
     $.ajax({
         url: "/Mensagem/GetMensagem/",

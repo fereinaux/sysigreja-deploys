@@ -47,7 +47,7 @@
                                 <select class="form-control text-center bg-coord text-white" id="eventoid" onchange="CarregarTela()">
                                     @foreach (var evento in ViewBag.Eventos)
                                     {
-                                        <option data-status="@evento.Status" data-casal="@evento.IsCasal" value="@evento.Id">@evento.Configuracao.Titulo @evento.Numeracao.ToString()</option>
+                                        <option data-status="@evento.Status" data-casal="@evento.IsCasal" value="@evento.Id">@evento.TipoEvento @evento.Numeracao.ToString()</option>
                                     }
                                 </select>
                             </div>

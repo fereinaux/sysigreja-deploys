@@ -110,7 +110,7 @@ namespace SysIgreja.Controllers
                     Capacidade = x.Capacidade,
                     CorBotao = x.Configuracao.CorBotao,
                     DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
-                    EquipeCirculo = x.Configuracao.EquipeCirculo.Nome,
+                    EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,
                     Identificador = x.Configuracao.Identificador,
                     LogoId = x.Configuracao.LogoId,
                     LogoRelatorioId = x.Configuracao.LogoRelatorioId,

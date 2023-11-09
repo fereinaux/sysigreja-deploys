@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using Core.Models.Carona;
+using Core.Models.Configuracao;
 using Core.Models.Cracha;
 using Core.Models.Equipantes;
 using Core.Models.Etiquetas;
@@ -54,6 +55,9 @@ namespace SysIgreja.Controllers
         public bool Coordenador { get; set; }
         public int Valor { get; set; }
         public int ValorTaxa { get; set; }
+        public IEnumerable<MeioPagamentoModel> MeioPagamentos { get; set; }
+        public IEnumerable<EtiquetaModel> Etiquetas { get; set; }
+        public IEnumerable<CentroCustoModel> CentroCustos { get; set; }
     }
 
     public class CrachaCasalModel

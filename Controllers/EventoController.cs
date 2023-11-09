@@ -6,6 +6,7 @@ using Core.Business.Arquivos;
 using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Models;
+using Core.Models.Configuracao;
 using Core.Models.Eventos;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
@@ -123,7 +124,24 @@ namespace SysIgreja.Controllers
                     TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
                     Valor = x.Valor,
                     ValorTaxa = x.ValorTaxa,
-                    Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador)
+                    Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador),
+                    MeioPagamentos = x.Configuracao.MeioPagamentos.Select(y => new MeioPagamentoModel
+                    {
+                        Descricao = y.Descricao,
+                        Id = y.Id
+                    }),
+                    CentroCustos = x.Configuracao.CentroCustos.Select(y => new CentroCustoModel
+                    {
+                        Descricao = y.Descricao,
+                        Tipo = y.Tipo.GetDescription(),
+                        Id = y.Id
+                    }),
+                    Etiquetas = x.Configuracao.Etiquetas.Select(y => new EtiquetaModel
+                    {
+                        Cor = y.Cor,
+                        Id = y.Id,
+                        Nome = y.Nome
+                    }),
                 }).ToList();
 
             return Json(new { Eventos = (eventosReturn) }, JsonRequestBehavior.AllowGet);

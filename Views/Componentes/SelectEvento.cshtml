@@ -41,6 +41,25 @@
 
         $('.btn.btn-flat').css('background', SelectedEvent.CorBotao)
         $('.btn.btn-flat').css('margin-left', '7px')
+
+        if (SelectedEvent.MeioPagamentos.length > 0) {
+            $("[id$='meiopagamento']").html(`${SelectedEvent.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
+            $("#busca-meiopagamento").html(`<option value="0">Selecione</option>${SelectedEvent.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
+
+        }
+        if (SelectedEvent.Etiquetas.length > 0) {
+            $("[id$='-etiquetas']").html(`${SelectedEvent.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)}`)
+        }
+        if (SelectedEvent.CentroCustos.length > 0) {
+            $("[id$='-centrocusto']").html(`${SelectedEvent.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
+
+            $("#busca-centrocusto").html(`<option value="0">Selecione</option>${SelectedEvent.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
+
+        }
+
+        if ($("#busca-centrocusto").length > 0 && $("#busca-meiopagamento").length > 0) {
+            Filtrar()
+        }
     }
 
     function changeEvento_@(Model.OnChange)() {

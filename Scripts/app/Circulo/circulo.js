@@ -7,7 +7,7 @@ setInterval(function () {
 selectedMarkers = []
 circuloId = null
 swalCirculos = {
-    title: `Impressão de ${$('.title-circulo').first().text()}`,
+    title: `Impressão de ${SelectedEvent.EquipeCirculo}`,
     icon: "info",
     text: "Como você deseja imprimir?",
     className: "button-center",
@@ -51,20 +51,21 @@ L.Rectangle.include({
 });
 
 
-selectedMarkers = []
+selectedMarkersCirculo = []
+
 map.on(L.Draw.Event.CREATED, function (e) {
-    selectedMarkers = []
+    selectedMarkersCirculo = []
     markerLayer.eachLayer(function (marker) {
         if (!e.layer.contains(marker.getLatLng())) {
             marker.setOpacity(0.25);
         } else {
             marker.setOpacity(1);
-            selectedMarkers.push(marker)
+            selectedMarkersCirculo.push(marker)
         }
     });
     setTimeout(() => {
 
-        selectedMarkers[0].openPopup()
+        selectedMarkersCirculo[0].openPopup()
 
 
     }, 100)
@@ -73,7 +74,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
 
 map.on('popupopen', function (e) {
 
-    if (selectedMarkers.length > 1) {
+    if (selectedMarkersCirculo.length > 1) {
         $('.hide-multiple').css('display', 'none')
     } else {
         $('.hide-multiple').css('display', 'block')
@@ -83,11 +84,10 @@ map.on('popupopen', function (e) {
 
 map.on('popupclose', function (e) {
 
-    selectedMarkers = []
+    selectedMarkersCirculo = []
     Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
     $("#bairros").val([]).trigger('change');
     $('#filtro-nome').val('')
-
 
 })
 
@@ -201,8 +201,8 @@ function FillDocLandscape(doc, result) {
 
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    doc.text(77, 15, $("#eventoid option:selected").text());
-    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
+    doc.text(77, 15, `${ SelectedEvent.Titulo } ${ SelectedEvent.Numeracao }`);
+    doc.text(77, 20, `${SelectedEvent.EquipeCirculo} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 285, 38);
 
@@ -291,8 +291,8 @@ function FillDoc(doc, result) {
 
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    doc.text(77, 15, $("#eventoid option:selected").text());
-    doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
+    doc.text(77, 15, `${ SelectedEvent.Titulo } ${ SelectedEvent.Numeracao }`);
+    doc.text(77, 20, `${SelectedEvent.EquipeCirculo} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 195, 38);
 
@@ -416,7 +416,7 @@ function DeleteCirculo(id) {
 
 
 function EsvaziarCirculo(id) {
-    ConfirmMessage(`Essa ação ira esvaziar o(a) ${$('.title-circulo').first().text()}, você confirma a operação?`).then((result) => {
+    ConfirmMessage(`Essa ação ira esvaziar o(a) ${SelectedEvent.EquipeCirculo}, você confirma a operação?`).then((result) => {
         if (result) {
             $.ajax({
                 url: "/Circulo/EsvaziarCirculo/",
@@ -439,7 +439,7 @@ function EsvaziarCirculo(id) {
 
 
 function EsvaziarTodosCirculo() {
-    ConfirmMessage(`Essa ação ira esvaziar TODOS(AS) os(as) ${$('.title-circulo').first().text()}, você confirma a operação?`).then((result) => {
+    ConfirmMessage(`Essa ação ira esvaziar TODOS(AS) os(as) ${SelectedEvent.EquipeCirculo}, você confirma a operação?`).then((result) => {
         if (result) {
             $.ajax({
                 url: "/Circulo/EsvaziarTodosCirculo/",
@@ -577,7 +577,7 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
 
                                     div.innerHTML = layer._popup?._content
 
-                                    $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${$('.title-circulo').first().text()}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
+                                    $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">
                                    ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                                 </ul>
@@ -592,7 +592,7 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                             if (addPin) {
 
                                 addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo', circulo)
-                                    .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${$('.title-circulo').first().text()}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div class="hide-multiple"><span >${circulo.Endereco} - ${circulo.Bairro}</span>
+                                    .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div class="hide-multiple"><span >${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">
                                    ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                                 </ul>

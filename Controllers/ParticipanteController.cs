@@ -10,6 +10,7 @@ using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
+using Core.Business.Padrinhos;
 using Core.Business.Participantes;
 using Core.Business.Quartos;
 using Core.Models.Etiquetas;
@@ -37,6 +38,7 @@ namespace SysIgreja.Controllers
     public class ParticipanteController : SysIgrejaControllerBase
     {
         private readonly IParticipantesBusiness participantesBusiness;
+        private readonly IPadrinhosBusiness padrinhosBusiness;
         private readonly IEquipesBusiness equipesBusiness;
         private readonly ICirculosBusiness circulosBusiness;
         private readonly IArquivosBusiness arquivoBusiness;
@@ -49,7 +51,7 @@ namespace SysIgreja.Controllers
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
 
-        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, ICaronasBusiness caronasBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public ParticipanteController(ILancamentoBusiness lancamentoBusiness, IPadrinhosBusiness padrinhosBusiness, ICaronasBusiness caronasBusiness, IEtiquetasBusiness etiquetasBusiness, IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivoBusiness, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.participantesBusiness = participantesBusiness;
             this.caronasBusiness = caronasBusiness;
@@ -62,6 +64,7 @@ namespace SysIgreja.Controllers
             this.lancamentoBusiness = lancamentoBusiness;
             this.meioPagamentoBusiness = meioPagamentoBusiness;
             this.datatableService = datatableService;
+            this.padrinhosBusiness = padrinhosBusiness;
             mapper = new MapperRealidade().mapper;
         }
 
@@ -70,7 +73,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Check-in";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetConfiguracao();
 
             return View();
         }
@@ -79,7 +81,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Participantes";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetConfiguracao();
 
             return View();
         }
@@ -88,7 +89,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Casais";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetConfiguracao();
 
             return View();
         }
@@ -175,7 +175,7 @@ namespace SysIgreja.Controllers
             var dadosAdicionais = new
             {
                 Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Titulo ?? "",
-                Status = result.Status.GetDescription(),                
+                Status = result.Status.GetDescription(),
                 Quarto = quartosBusiness.GetQuartosComParticipantes(result.EventoId, TipoPessoaEnum.Participante).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "",
                 Motorista = caronasBusiness.GetCaronasComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Carona?.Motorista?.Nome ?? "",
                 QuartoAtual = new
@@ -977,7 +977,17 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetPadrinhos(int eventoId)
         {
-            return Json(new { Padrinhos = participantesBusiness.GetParticipantesByEvento(eventoId).Select(x => new { Id = x.PadrinhoId, Nome = x.PadrinhoId.HasValue ? x.Padrinho.EquipanteEvento.Equipante.Nome : "Sem Padrinho" }).Distinct().ToList() }, JsonRequestBehavior.AllowGet);
+
+            return Json(new
+            {
+                Padrinhos = padrinhosBusiness
+                 .GetPadrinhos()
+                 .Where(x => x.EquipanteEvento.EventoId == eventoId).Select(x => new
+                 {
+                     Id = x.Id,
+                     Nome = x.EquipanteEvento.Equipante.Nome
+                 })
+            }, JsonRequestBehavior.AllowGet);
 
         }
     }

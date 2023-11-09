@@ -31,7 +31,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Reuniões";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetEventos();
 
             return View();
         }

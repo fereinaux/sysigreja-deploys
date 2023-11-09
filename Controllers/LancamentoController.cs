@@ -49,7 +49,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Financeiro";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetEventos(new string[] { "Admin", "Financeiro" });
             return View();
         }
 

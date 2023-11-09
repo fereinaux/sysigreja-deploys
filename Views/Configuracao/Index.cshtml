@@ -502,21 +502,21 @@
                                                             $(`#config-corhoverscroll${config.Id}`).val(config.CorHoverScroll)
                                                             if (config.LogoId) {
                                                                 $(`#img-logo${config.Id}`).css(`display`, `block`)
-                                                                $(`#img-logo${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Logo)
+                                                                $(`#img-logo${config.Id}`).attr("src", `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
                                                             } else {
                                                                 $(`#img-logo${config.Id}`).css(`display`, `none`)
                                                             }
 
                                                             if (config.BackgroundId) {
                                                                 $(`#img-background${config.Id}`).css(`display`, `block`)
-                                                                $(`#img-background${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.Background)
+                                                                $(`#img-background${config.Id}`).attr("src", `/Arquivo/GetArquivo/${SelectedEvent.BackgroundId}`)
                                                             } else {
                                                                 $(`#img-background${config.Id}`).css(`display`, `none`)
                                                             }
 
                                                             if (config.LogoRelatorioId) {
                                                                 $(`#img-logorelatorio${config.Id}`).css(`display`, `block`)
-                                                                $(`#img-logorelatorio${config.Id}`).attr("src", `data:image/jpeg;base64,` + config.LogoRelatorio)
+                                                                $(`#img-logorelatorio${config.Id}`).attr("src", `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`)
                                                             } else {
                                                                 $(`#img-logorelatorio${config.Id}`).css(`display`, `none`)
                                                             }

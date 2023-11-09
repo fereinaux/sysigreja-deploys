@@ -20,7 +20,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Relatórios";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetEventos(new string[] { "Admin" });
 
             return View();
         }

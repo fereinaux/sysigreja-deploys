@@ -37,7 +37,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Quartos dos Participantes";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetEventos();
 
             return View();
         }
@@ -46,7 +45,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Quartos da Equipe";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetEventos();
 
             return View();
         }

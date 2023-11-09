@@ -49,7 +49,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Equipes";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetEventos();
 
             return View();
         }
@@ -58,7 +57,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Ata de Presença";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Convites" });
             return View();
         }
 

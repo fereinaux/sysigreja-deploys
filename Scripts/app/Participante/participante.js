@@ -2,6 +2,7 @@
 selected = false
 eventoId = 0
 function CarregarTabelaParticipante(callbackFunction) {
+    loadCampos(SelectedEvent.Id)
     $("#table-participantes").DataTable().destroy()
     casal = false
     handleParticipantes(casal)

@@ -12,7 +12,9 @@ using SysIgreja.ViewModels;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
@@ -40,7 +42,7 @@ namespace SysIgreja.Controllers
         {
             GetConfiguracoes();
             ViewBag.Title = "Eventos";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }
@@ -49,7 +51,7 @@ namespace SysIgreja.Controllers
         {
             GetConfiguracoes();
             ViewBag.Title = "Informativos";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }
@@ -66,6 +68,65 @@ namespace SysIgreja.Controllers
 
 
             return Json(new { Tipos = result }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult PopulateEventosByUser()
+        {
+
+            var user = GetApplicationUser();
+            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões").Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                 .Select(x => x.Select(y => new { ConfigId = y.ConfiguracaoId, Eventos = y.Eventos, Role = y.Role })).ToList();
+            List<int> eventosId = new List<int>();
+            List<int> configId = new List<int>();
+            var eventoPermissao = new List<EventoPermissao>();
+            permissoes.ForEach(permissao =>
+            {
+                configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));
+                var eventos = permissao.Where(x => x.Eventos != null).Select(x => x.Eventos);
+                eventos.ToList().ForEach(evento =>
+                {
+                    evento.ToList().ForEach(levento =>
+                    {
+                        eventosId.Add(levento.EventoId);
+                        eventoPermissao.Add(new EventoPermissao { EventoId = levento.EventoId, Role = levento.Role });
+
+                    });
+
+                });
+
+            });
+
+            List<EventoClaimModel> eventosReturn = eventosBusiness
+                .GetEventos()
+                .OrderByDescending(x => x.DataEvento)
+                .Where(x => eventosId.Contains(x.Id) || x.ConfiguracaoId.HasValue && configId.Contains(x.ConfiguracaoId.Value)).ToList().Select(x => new EventoClaimModel
+                {
+                    Role = configId.Contains(x.ConfiguracaoId.Value) ? "Admin" : eventoPermissao.FirstOrDefault(y => y.EventoId == x.Id).Role,
+                    Id = x.Id,
+                    ConfiguracaoId = x.ConfiguracaoId,
+                    AccessTokenMercadoPago = x.Configuracao.AccessTokenMercadoPago,
+                    BackgroundId = x.Configuracao.BackgroundId,
+                    Capacidade = x.Capacidade,
+                    CorBotao = x.Configuracao.CorBotao,
+                    DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
+                    EquipeCirculo = x.Configuracao.EquipeCirculo.Nome,
+                    Identificador = x.Configuracao.Identificador,
+                    LogoId = x.Configuracao.LogoId,
+                    LogoRelatorioId = x.Configuracao.LogoRelatorioId,
+                    Numeracao = x.Numeracao,
+                    PublicTokenMercadoPago = x.Configuracao.PublicTokenMercadoPago,
+                    Status = x.Status.GetDescription(),
+                    StatusEquipe = x.StatusEquipe.GetDescription(),
+                    Titulo = x.Configuracao.Titulo,
+                    TipoEvento = x.Configuracao.TipoEvento?.GetDescription(),
+                    TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
+                    Valor = x.Valor,
+                    ValorTaxa = x.ValorTaxa,
+                    Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador)
+                }).ToList();
+
+            return Json(new { Eventos = (eventosReturn) }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

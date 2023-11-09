@@ -140,14 +140,14 @@ function CarregarTabelaCirculo() {
                 let dir = settings.aaSorting[0][1]
                 let search = settings.oPreviousSearch.sSearch
 
-                GetCirculosComParticipantes(column, dir, search);
             }
+            GetCirculosComParticipantes('id', 'asc', '');
 
         },
         ajax: {
             url: '/Circulo/GetCirculos',
             datatype: "json",
-            data: { EventoId: $("#circulo-eventoid").val() },
+            data: { EventoId: SelectedEvent.Id },
             type: "POST"
         }
     };
@@ -200,7 +200,7 @@ function FillDocLandscape(doc, result) {
 
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    doc.text(77, 15, $("#circulo-eventoid option:selected").text());
+    doc.text(77, 15, $("#eventoid option:selected").text());
     doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 285, 38);
@@ -290,7 +290,7 @@ function FillDoc(doc, result) {
 
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    doc.text(77, 15, $("#circulo-eventoid option:selected").text());
+    doc.text(77, 15, $("#eventoid option:selected").text());
     doc.text(77, 20, `${$('.title-circulo').first().text()} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 195, 38);
@@ -447,7 +447,7 @@ function EsvaziarTodosCirculo() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        Id: $("#circulo-eventoid").val()
+                        Id: SelectedEvent.Id
                     }),
                 success: function () {
                     SuccessMesageOperation();
@@ -469,7 +469,7 @@ function PostCirculo() {
             data: JSON.stringify(
                 {
                     Id: $("#circulo-id").val(),
-                    EventoId: $("#circulo-eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     Cor: $("#circulo-cores").val(),
                     Titulo: $("#circulo-titulo").val()
                 }),
@@ -490,7 +490,7 @@ function DistribuirCirculos() {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                EventoId: $("#circulo-eventoid").val()
+                EventoId: SelectedEvent.Id
             }),
         success: function () {
             SuccessMesageOperation();
@@ -505,7 +505,7 @@ function GetParticipantesSemCirculo() {
 
     $.ajax({
         url: "/Circulo/GetParticipantesSemCirculo/",
-        data: { EventoId: $("#circulo-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -527,7 +527,7 @@ function GetCirculosComParticipantes(column, dir, search) {
     $.ajax({
         url: '/Circulo/GetCirculos',
         datatype: "json",
-        data: { EventoId: $("#circulo-eventoid").val(), columnName: column, columnDir: dir, search },
+        data: { EventoId: SelectedEvent.Id, columnName: column, columnDir: dir, search },
         type: "POST",
         success: function (result) {
             result.data.forEach(function (circulo, index, array) {
@@ -549,13 +549,13 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
 
             $.ajax({
                 url: "/Circulo/GetCirculosComParticipantes/",
-                data: { EventoId: $("#circulo-eventoid").val() },
+                data: { EventoId: SelectedEvent.Id },
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     var bairros = []
-
+                    markerLayer.clearLayers();
                     data.Circulos.forEach(function (circulo, index, array) {
                         if (circulo.Latitude && circulo.Longitude) {
                             if (!setView) {
@@ -745,7 +745,7 @@ function PrintAll() {
         $.ajax({
             url: '/Circulo/GetCirculos',
             datatype: "json",
-            data: { EventoId: $("#circulo-eventoid").val() },
+            data: { EventoId: SelectedEvent.Id },
             type: "POST",
             success: function (data) {
                 var arrPromises = []
@@ -893,7 +893,7 @@ function GetDirigentes() {
 
     $.ajax({
         url: "/Circulo/GetEquipantes/",
-        data: { EventoId: $("#circulo-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -908,6 +908,15 @@ function GetDirigentes() {
 }
 
 function loadCirculo() {
+
+    $('title').text(`${SelectedEvent.Titulo} | ${SelectedEvent.EquipeCirculo}`)
+    $('.title-circulo').text(SelectedEvent.EquipeCirculo)
+    if (SelectedEvent.TipoCirculo == 'Endereco') {
+        $('#ibox-mapa-circulo').css('display', 'block')
+    } else {
+        $('#ibox-mapa-circulo').css('display', 'none')
+    }
+
     CarregarTabelaCirculo();
     GetParticipantesSemCirculo();
 }

@@ -68,7 +68,7 @@ function CarregarTabelaCarona() {
         ajax: {
             url: '/Carona/GetCaronas',
             datatype: "json",
-            data: { EventoId: $("#carona-eventoid").val() },
+            data: { EventoId: SelectedEvent.Id },
             type: "POST"
         }
     };
@@ -185,7 +185,7 @@ function getChangeCarona(destinoId) {
     $.ajax({
         url: '/Carona/GetCaronas',
         datatype: "json",
-        data: { EventoId: $("#carona-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST",
         success: function (data) {
             arrayCaroneiros = []
@@ -198,7 +198,7 @@ function getChangeCarona(destinoId) {
             }
             $.ajax({
                 url: "/Carona/GetCaronasComParticipantes/",
-                data: { EventoId: $("#carona-eventoid").val() },
+                data: { EventoId: SelectedEvent.Id },
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
@@ -322,7 +322,7 @@ function PostCarona() {
             data: JSON.stringify(
                 {
                     Id: $("#carona-id").val(),
-                    EventoId: $("#carona-eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     MotoristaId: $("#carona-motorista").val(),
                     Capacidade: $("#carona-capacidade").val()
                 }),
@@ -343,7 +343,7 @@ function DistribuirCaronas() {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                EventoId: $("#carona-eventoid").val()
+                EventoId: SelectedEvent.Id
             }),
         success: function () {
             SuccessMesageOperation();
@@ -362,7 +362,7 @@ function GetEquipantes(id) {
             data: function (params) {
                 var query = {
                     Search: params.term,
-                    EventoId: $("#carona-eventoid").val()
+                    EventoId: SelectedEvent.Id
                 }
 
                 // Query parameters will be ?search=[term]&type=public
@@ -389,7 +389,7 @@ function GetParticipantesSemCarona() {
 
     $.ajax({
         url: "/Carona/GetParticipantesSemCarona/",
-        data: { EventoId: $("#carona-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -426,7 +426,7 @@ function GetCaronasComParticipantes(column, dir, search) {
     $.ajax({
         url: '/Carona/GetCaronas',
         datatype: "json",
-        data: { EventoId: $("#carona-eventoid").val(), columnName: column, columnDir: dir, search },
+        data: { EventoId: SelectedEvent.Id, columnName: column, columnDir: dir, search },
         type: "POST",
         success: function (data) {
             data.data.forEach(function (carona, index, array) {
@@ -443,7 +443,7 @@ function GetCaronasComParticipantes(column, dir, search) {
 
             $.ajax({
                 url: "/Carona/GetCaronasComParticipantes/",
-                data: { EventoId: $("#carona-eventoid").val() },
+                data: { EventoId: SelectedEvent.Id },
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
@@ -510,7 +510,7 @@ function PrintAll() {
     $.ajax({
         url: '/Carona/GetCaronas',
         datatype: "json",
-        data: { EventoId: $("#carona-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST",
         success: function (data) {
             var arrPromises = []

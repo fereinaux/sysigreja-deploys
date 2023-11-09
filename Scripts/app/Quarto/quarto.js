@@ -82,13 +82,15 @@ function CarregarTabelaQuarto() {
                 let search = settings.oPreviousSearch.sSearch
 
                 GetQuartosComParticipantes(column, dir, search);
+            } else {
+                GetQuartosComParticipantes('id','asc','')
             }
 
         },
         ajax: {
             url: '/Quarto/GetQuartos',
             datatype: "json",
-            data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
+            data: { EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
             type: "POST"
         }
     };
@@ -329,7 +331,7 @@ function PostQuarto() {
             data: JSON.stringify(
                 {
                     Id: $("#quarto-id").val(),
-                    EventoId: $("#quarto-eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     Titulo: $("#quarto-titulo").val(),
                     Sexo: $("input[type=radio][name=quarto-sexo]:checked").val(),
                     EquipanteId: $("#quarto-equipante").val() != "Pesquisar" ? $("#quarto-equipante").val() : null,
@@ -355,7 +357,7 @@ function PostQuartoEquipe() {
             data: JSON.stringify(
                 {
                     Id: $("#quarto-id").val(),
-                    EventoId: $("#quarto-eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     Titulo: $("#quarto-titulo").val(),
                     Sexo: $("input[type=radio][name=quarto-sexo]:checked").val(),
                     Capacidade: $("#quarto-capacidade").val(),
@@ -389,7 +391,7 @@ function DistribuirQuartos() {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                EventoId: $("#quarto-eventoid").val(),
+                EventoId: SelectedEvent.Id,
                 Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
             }),
         success: function () {
@@ -406,7 +408,7 @@ function GetParticipantesSemQuarto() {
 
     $.ajax({
         url: "/Quarto/GetParticipantesSemQuarto/",
-        data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
+        data: { EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -428,7 +430,7 @@ function GetQuartosComParticipantes(column, dir, search) {
         url: '/Quarto/GetQuartos',
         datatype: "json",
         data: {
-            EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1,
+            EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1,
             columnName: column, columnDir: dir, search
         },
         type: "POST",
@@ -455,7 +457,7 @@ function GetQuartosComParticipantes(column, dir, search) {
             $('.div-map-geral').css('display', 'block')
             $.ajax({
                 url: "/Quarto/GetQuartosComParticipantes/",
-                data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
+                data: { EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
@@ -520,7 +522,7 @@ function ChangeQuarto(participanteId, destinoId) {
             {
                 ParticipanteId: participanteId,
                 DestinoId: destinoId,
-                EventoId: $("#quarto-eventoid").val(),
+                EventoId: SelectedEvent.Id,
                 tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
             }),
         success: function () {
@@ -540,7 +542,7 @@ function PrintAll() {
         $.ajax({
             url: '/Quarto/GetQuartos',
             datatype: "json",
-            data: { EventoId: $("#quarto-eventoid").val(), Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
+            data: { EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
             type: "POST",
             success: function (data) {
                 var arrPromises = []
@@ -630,7 +632,7 @@ function GetEquipantes(id) {
 
     $.ajax({
         url: "/Quarto/GetEquipantes/",
-        data: { EventoId: $("#quarto-eventoid").val(), },
+        data: { EventoId: SelectedEvent.Id, },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -727,7 +729,7 @@ function EsvaziarTodosQuarto() {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        Id: $("#quarto-eventoid").val(),
+                        Id: SelectedEvent.Id,
                         Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
                     }),
                 success: function () {

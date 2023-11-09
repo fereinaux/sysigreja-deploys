@@ -24,12 +24,7 @@
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <h4>Evento</h4>
-                    <select class="form-control" id="presenca-eventoid" onchange="loadScreen()">
-                        @foreach (var evento in ViewBag.Eventos)
-                        {
-                            <option data-casal="@evento.IsCasal" value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
-                        }
-                    </select>
+                    @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel {  Id = "presenca-eventoid", OnChange = "loadScreen", Roles = "Convites,Admin,Administrativo,Financeiro" })                  
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <h4>Equipe</h4>

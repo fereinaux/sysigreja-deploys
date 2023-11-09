@@ -14,6 +14,7 @@ using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
+using System.Web;
 
 namespace SysIgreja.Controllers
 {
@@ -35,7 +36,7 @@ namespace SysIgreja.Controllers
         public ActionResult Participantes()
         {
             ViewBag.Title = "Quartos dos Participantes";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetEventos();
 
             return View();
@@ -44,7 +45,7 @@ namespace SysIgreja.Controllers
         public ActionResult Voluntarios()
         {
             ViewBag.Title = "Quartos da Equipe";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetEventos();
 
             return View();

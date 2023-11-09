@@ -1,19 +1,23 @@
 ﻿HideMenu();
 map = undefined
 markerLayer = undefined
+
+function changeEventoCheckin() {
+    $(".participante-info").addClass('d-none');
+    Refresh()
+}
+
 $(document).ready(() => {
     Refresh();
-    loadCampos($("[id$='eventoid']").val());
+    loadCampos(SelectedEvent.Id);
 
 
     html5QrCode = new Html5Qrcode("reader");
     qrCodeSuccessCallback = (decodedText, decodedResult) => {
         html5QrCode.stop().then((ignore) => {
-            console.log(decodedText);
             {
                 arrValue = decodedText.split('|')
-                console.log(arrValue);
-                if ($("#eventoid").val() == arrValue[0]) {
+                if (SelectedEvent.Id == arrValue[0]) {
                     if (arrValue[2] == 'EQUIPANTE') {
                         $("#participantes").val(arrValue[1]).trigger("chosen:updated");
                         GetParticipante();
@@ -62,7 +66,7 @@ function GetParticipantes(id) {
     $('#participantes').append($('<option>Pesquisar</option>'));
     $.ajax({
         url: '/Participante/GetParticipantesSelect',
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "POST",
         success: (result) => {
@@ -87,7 +91,7 @@ function GetEquipantes(id) {
     $('#equipantes').append($('<option>Pesquisar</option>'));
     $.ajax({
         url: '/Equipe/GetEquipantesByEventoSelect',
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         success: (result) => {
@@ -398,7 +402,7 @@ function GetParticipante() {
                 }
 
                 $('.status').text(data.Participante.Status);
-                $('.circulo').text(data.DadosAdicionais.Circulo || `Sem ${config.EquipeCirculo}`);
+                $('.circulo').text(data.DadosAdicionais.Circulo || `Sem ${SelectedEvent.EquipeCirculo}`);
                 $('.quarto').text(data.DadosAdicionais.Quarto || "Sem Quarto");
 
                 var quartoAtual = data.DadosAdicionais.QuartoAtual;
@@ -445,7 +449,7 @@ function GetEquipante() {
     if (id > 0) {
         $.ajax({
             url: "/Equipante/GetEquipanteEvento/",
-            data: { Id: id, EventoId: $("#eventoid").val(), },
+            data: { Id: id, EventoId: SelectedEvent.Id, },
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',
@@ -580,7 +584,7 @@ function PostPagamento() {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(
                 {
-                    EventoId: $("#eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     Origem: $("#pagamentos-origem").val(),
                     Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     ParticipanteId: $("#pagamentos-participanteid").val() > 0 ? $("#pagamentos-participanteid").val() : null,
@@ -665,7 +669,7 @@ function GetAnexos(id) {
         ],
         ajax: {
             url: $("#participante-id").val() > 0 ? '/Arquivo/GetArquivosParticipante' : '/Arquivo/GetArquivosEquipanteEvento',
-            data: $("#participante-id").val() > 0 ? { ParticipanteId: $("#participante-id").val() } : { EquipanteId: $("#equipante-id").val(), eventoid: $("#eventoid").val() },
+            data: $("#participante-id").val() > 0 ? { ParticipanteId: $("#participante-id").val() } : { EquipanteId: $("#equipante-id").val(), eventoid: SelectedEvent.Id },
             datatype: "json",
             type: "POST"
         }
@@ -681,7 +685,7 @@ function PostArquivo() {
     dataToPost.set('Arquivo', arquivo)
     dataToPost.set('ParticipanteId', $("#participante-id").val() > 0 ? $("#participante-id").val() : null)
     dataToPost.set('EquipanteId', $("#equipante-id").val() > 0 ? $("#equipante-id").val() : null)
-    dataToPost.set('EventoId', $("#eventoid").val())
+    dataToPost.set('EventoId', SelectedEvent.Id)
     $.ajax(
         {
             processData: false,
@@ -755,7 +759,7 @@ function CarregarTabelaPagamentos(id) {
         ],
         ajax: {
             url: '/Lancamento/GetPagamentos',
-            data: $("#participante-id").val() > 0 ? { ParticipanteId: id } : { EquipanteId: id, EventoId: $("#eventoid").val() },
+            data: $("#participante-id").val() > 0 ? { ParticipanteId: id } : { EquipanteId: id, EventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST"
         }
@@ -774,7 +778,7 @@ function Checkin() {
             data: JSON.stringify(
                 {
                     Id: $("#participante-id").val() > 0 ? $("#participante-id").val() : $("#equipantes").val(),
-                    EventoId: $("#eventoid").val()
+                    EventoId: SelectedEvent.Id
                 }),
 
             success: function () {
@@ -836,7 +840,7 @@ function CarregarEtiquetaIndividual(position) {
 function GetTotaisCheckin() {
     $.ajax({
         url: "/Participante/GetTotaisCheckin/",
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -1282,11 +1286,11 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
 }
 
 $("#participantes").change(function () {
-    loadCampos($('#eventoid').val())
+    loadCampos(SelectedEvent.Id)
 })
 
 $("#equipantes").change(function () {
-    loadCampos($('#eventoid').val())
+    loadCampos(SelectedEvent.Id)
 })
 
 function montarMapa() {
@@ -1338,7 +1342,7 @@ async function loadCrachaImprimir(Foto) {
                 contentType: false,
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ Ids: [$("#participante-id").val()], Foto: Foto, EventoId: $("#eventoid").val() }),
+                data: JSON.stringify({ Ids: [$("#participante-id").val()], Foto: Foto, EventoId: SelectedEvent.Id }),
                 url: "/Participante/GetCracha",
             });
     } else {
@@ -1349,7 +1353,7 @@ async function loadCrachaImprimir(Foto) {
                 contentType: false,
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ Ids: [$("#equipante-id").val()], Foto: Foto, EventoId: $("#eventoid").val() }),
+                data: JSON.stringify({ Ids: [$("#equipante-id").val()], Foto: Foto, EventoId: SelectedEvent.Id }),
                 url: "/Equipante/GetCracha",
             });
     }

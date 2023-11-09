@@ -29,7 +29,7 @@
         ajax: {
             url: $("#table-arquivos").length > 0 ? '/Arquivo/GetArquivos' : '/Arquivo/GetArquivosComunEquipe',
             data: {
-                EventoId: $("#table-arquivos").length > 0 ? null : $("[id$='eventoid']").val()
+                EventoId: $("#table-arquivos").length > 0 ? null : SelectedEvent.Id
             }, 
             datatype: "json",
             type: "POST"

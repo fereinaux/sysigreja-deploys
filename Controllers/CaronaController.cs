@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Services;
 using System.Linq.Dynamic;
+using System.Web;
 
 namespace SysIgreja.Controllers
 {
@@ -36,8 +37,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Caronas";
-            Response.AddHeader("Title", ViewBag.Title);
-            GetEventos();
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }

@@ -28,7 +28,7 @@ function PrintFinanceiro() {
             }).get().join();
             $.ajax({
                 url: '/Lancamento/GetConsolidado',
-                data: { EventoId: $("#relatorio-eventoid").val(), Relatorio: centroCustos },
+                data: { EventoId: SelectedEvent.Id, Relatorio: centroCustos },
                 datatype: "json",
                 type: "GET",
                 success: (result) => {
@@ -99,7 +99,7 @@ function PrintFinanceiro() {
 
                     $.ajax({
                         url: '/Lancamento/GetDetalhado',
-                        data: { EventoId: $("#relatorio-eventoid").val(), Relatorio: centroCustos },
+                        data: { EventoId: SelectedEvent.Id, Relatorio: centroCustos },
                         datatype: "json",
                         type: "GET",
                         success: (result) => {
@@ -320,7 +320,7 @@ function getCentroCustoRel() {
 
     $.ajax({
         url: '/CentroCusto/GetCentroCustosByEventoId',
-        data: { eventoid: $('#relatorio-eventoid').val() },
+        data: { eventoid: SelectedEvent.Id },
         datatype: "json",
         type: "POST",
         success: (result) => {

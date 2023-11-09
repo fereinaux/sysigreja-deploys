@@ -3,7 +3,7 @@
         url: url,
         data:
         {
-            EventoId: $('#lancamento-eventoid').val(),
+            EventoId: SelectedEvent.Id,
             MeioPagamentoId: $('#busca-meiopagamento').val() == 0 ? null : $('#busca-meiopagamento').val(),
             CentroCustoId: $('#busca-centrocusto').val() == 0 ? null : $('#busca-centrocusto').val()
         },
@@ -160,7 +160,7 @@ function PostLancamento() {
                     Tipo: $("#lancamento-tipo").val(),
                     Data: moment($("#lancamento-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#lancamento-meiopagamento").val(),
-                    EventoId: $('#lancamento-eventoid').val(),
+                    EventoId: SelectedEvent.Id,
                     CentCustoId: $("#lancamento-centrocusto").val(),
                     ContaBancariaId: $('.contabancaria').hasClass('d-none') ? 0 : $("#lancamento-contabancaria").val(),
                     Valor: Number($("#lancamento-valor").val())

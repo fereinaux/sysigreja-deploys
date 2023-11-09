@@ -4,20 +4,19 @@ table = undefined
 oldEventoId = undefined
 newEventoId = undefined
 
-isConvite = $('#eventoid option:selected').data('role') == "Convites"
+isConvite = SelectedEvent.Role == "Convites"
 HideMenu();
 $(document).ready(function () {
     $('.not-convite').css('display', isConvite ? 'none' : 'block')
-    loadPage()
+    loadMontagem()
     loadCampos(999)
 })
 
 
-function loadPage() {
-
+function loadMontagem() {
     $.ajax({
         url: '/Etiqueta/GetEtiquetasByEventoId',
-        data: { eventoId: $("#eventoid").val() },
+        data: { eventoId: SelectedEvent.Id },
         datatype: "json",
         type: "POST",
         success: (result) => {
@@ -41,7 +40,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
             data: function (params) {
                 var query = {
                     Search: params.term,
-                    EventoId: $("#eventoid").val()
+                    EventoId: SelectedEvent.Id
                 }
 
                 // Query parameters will be ?search=[term]&type=public
@@ -59,7 +58,6 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 
         templateSelection: function (data) {
             tipo = data.Tipo
-            console.log(data);
             $('#getHistButton').css('display', tipo == "Equipante" ? 'block' : 'none')
             return data.text;
         }
@@ -67,7 +65,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
     $.ajax({
         url: '/Equipe/GetEquipes',
         datatype: "json",
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST",
         success: (result) => {
             $("#equipe-select").html(`
@@ -85,7 +83,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
 }
 
 function CarregarTabelaEquipante(callbackFunction) {
-    newEventoId = $("#eventoid").val()
+    newEventoId = SelectedEvent.Id
     $('#btn_bulk').css('display', 'none')
 
     const tableEquipanteConfig = {
@@ -149,7 +147,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                     }
 
                     return `<div>
-        ${$("#eventoid").val() != 999 ? row.Etiquetas.map(etiqueta => {
+        ${SelectedEvent.Id != 999 ? row.Etiquetas.map(etiqueta => {
                         if (etiqueta) {
                             return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
                         }
@@ -229,13 +227,13 @@ function CarregarTabelaEquipante(callbackFunction) {
             if (callbackFunction) {
                 callbackFunction()
             }
-            if ($("#eventoid").val() != 999) {
+            if (SelectedEvent.Id != 999) {
                 $('.hide-tipoevento').removeClass('d-none')
             } else {
                 $('.hide-tipoevento').addClass('d-none')
             }
 
-            changeEvento = false
+            changeEventoMontagem = false
             var idx = 0
             var api = this.api()
             api
@@ -252,7 +250,7 @@ function CarregarTabelaEquipante(callbackFunction) {
 
                         if (oldEventoId != newEventoId) {
                             input.val(api.state().columns[colIdx].search.search)
-                            changeEvento = true
+                            changeEventoMontagem = true
                         }
 
 
@@ -262,15 +260,15 @@ function CarregarTabelaEquipante(callbackFunction) {
                     }
 
                 });
-            if (changeEvento) {
+            if (changeEventoMontagem) {
                 oldEventoId = newEventoId
             }
-            newEventoId = $("#eventoid").val()
+            newEventoId = SelectedEvent.Id
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
             data: {
-                EventoId: $("#eventoid").val(),
+                EventoId: SelectedEvent.Id,
                 Origem: "Montagem",
                 Etiquetas: $("#equipante-marcadores").val(),
                 NaoEtiquetas: $("#equipante-nao-marcadores").val(),
@@ -376,7 +374,7 @@ function Opcoes(row) {
     $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Equipante/GetEquipante/",
-        data: { Id: row.Id, eventoId: $("#eventoid").val() },
+        data: { Id: row.Id, eventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -388,7 +386,7 @@ function Opcoes(row) {
                     datatype: "json",
                     data: JSON.stringify(
                         {
-                            eventoId: $("#eventoid").val(), tipos: ["Equipe"]
+                            eventoId: SelectedEvent.Id, tipos: ["Equipe"]
                         }),
                     type: "POST",
                     contentType: 'application/json; charset=utf-8',
@@ -439,7 +437,7 @@ function DeleteMembroEquipe(id) {
                 data: JSON.stringify(
                     {
                         Id: id,
-                        EventoId: $('#eventoid').val()
+                        EventoId: SelectedEvent.Id
                     }),
                 success: function () {
                     SuccessMesageDelete();
@@ -463,7 +461,7 @@ function AddMembroEquipe() {
             data: JSON.stringify(
                 {
                     EquipanteId: $("#listagem").val(),
-                    EventoId: $("#eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     EquipeId: $("#equipe-select").val(),
                     Tipo: tipo,
                     Origem: "Montagem"
@@ -484,7 +482,7 @@ tipo = undefined
 async function openBulkActions() {
     let ids = getCheckedIds()
 
-    if ($("#eventoid").val() == 999) {
+    if (SelectedEvent.Id == 999) {
         $('.evento-bulk').css('display', 'block');
         $('.not-evento-bulk').css('display', 'none');
     } else {
@@ -499,7 +497,7 @@ async function openBulkActions() {
         datatype: "json",
         data: JSON.stringify(
             {
-                eventoId: $("#eventoid").val(), tipos: ["Equipe"]
+                eventoId: SelectedEvent.Id, tipos: ["Equipe"]
             }),
         type: "POST",
         contentType: 'application/json; charset=utf-8',
@@ -543,7 +541,7 @@ async function applyBulk() {
                 data: JSON.stringify(
                     {
                         EquipanteId: id,
-                        EventoId: $("#eventoid").val(),
+                        EventoId: SelectedEvent.Id,
                         EquipeId: $("#bulk-change-equipe").val(),
                         Origem: "Montagem"
                     }),
@@ -562,7 +560,7 @@ async function loadEquipesBulk() {
     const equipes = await $.ajax({
         url: '/Equipe/GetEquipes',
         datatype: "json",
-        data: { EventoId: $('#eventoid').val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST"
     })
 
@@ -653,7 +651,7 @@ function ToggleMembroEquipeTipo(row) {
         data: JSON.stringify(
             {
                 Id: row.Id,
-                EventoId: $('#eventoid').val()
+                EventoId: SelectedEvent.Id
             }),
         success: function (data) {
             CarregarTabelaEquipante();
@@ -679,7 +677,7 @@ function ToggleStatusMontagem(row) {
         data: JSON.stringify(
             {
                 Id: row.Id,
-                EventoId: $('#eventoid').val()
+                EventoId: SelectedEvent.Id
             }),
         success: function (data) {
             CarregarTabelaEquipante();
@@ -703,7 +701,7 @@ function PostInfo(callback) {
         data: JSON.stringify(
             {
                 Id: equipante.Id,
-                eventoId: $("#eventoid").val(),
+                eventoId: SelectedEvent.Id,
                 Etiquetas: $('.equipante-etiquetas').val(),
                 Obs: $('#equipante-obs').val(),
             }),

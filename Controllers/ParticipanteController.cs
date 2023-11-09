@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Threading;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -68,8 +69,7 @@ namespace SysIgreja.Controllers
         public ActionResult Checkin()
         {
             ViewBag.Title = "Check-in";
-            Response.AddHeader("Title", ViewBag.Title);
-            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracao();
 
             return View();
@@ -78,8 +78,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Participantes";
-            Response.AddHeader("Title", ViewBag.Title);
-            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracao();
 
             return View();
@@ -88,8 +87,7 @@ namespace SysIgreja.Controllers
         public ActionResult Casais()
         {
             ViewBag.Title = "Casais";
-            Response.AddHeader("Title", ViewBag.Title);
-            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Padrinho" });
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracao();
 
             return View();

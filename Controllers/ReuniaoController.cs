@@ -7,6 +7,7 @@ using Core.Business.Reunioes;
 using Core.Models.Reunioes;
 using SysIgreja.ViewModels;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Extensions;
@@ -29,7 +30,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Reuniões";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetEventos();
 
             return View();

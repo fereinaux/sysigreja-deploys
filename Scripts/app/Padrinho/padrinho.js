@@ -47,7 +47,7 @@ function CarregarTabelaPadrinho() {
         ajax: {
             url: '/Padrinho/GetPadrinhos',
             datatype: "json",
-            data: { EventoId: $("#padrinho-eventoid").val() },
+            data: { EventoId: SelectedEvent.Id },
             type: "POST"
         }
     };
@@ -214,7 +214,7 @@ function DistribuirPadrinhos() {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                EventoId: $("#padrinho-eventoid").val()
+                EventoId: SelectedEvent.Id
             }),
         success: function () {
             SuccessMesageOperation();
@@ -229,7 +229,7 @@ function GetEquipantes(id) {
 
     $.ajax({
         url: "/Padrinho/GetEquipantes/",
-        data: { EventoId: $("#padrinho-eventoid").val(), },
+        data: { EventoId: SelectedEvent.Id, },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -252,7 +252,7 @@ function GetParticipantesSemPadrinho() {
 
     $.ajax({
         url: "/Padrinho/GetParticipantesSemPadrinho/",
-        data: { EventoId: $("#padrinho-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -272,7 +272,7 @@ function GetPadrinhosComParticipantes(column, dir, search) {
     $.ajax({
         url: '/Padrinho/GetPadrinhos',
         datatype: "json",
-        data: { EventoId: $("#padrinho-eventoid").val(), columnName: column, columnDir: dir, search },
+        data: { EventoId: SelectedEvent.Id, columnName: column, columnDir: dir, search },
         type: "POST",
         success: function (data) {
             data.data.forEach(function (padrinho, index, array) {
@@ -289,7 +289,7 @@ function GetPadrinhosComParticipantes(column, dir, search) {
 
             $.ajax({
                 url: "/Padrinho/GetPadrinhosComParticipantes/",
-                data: { EventoId: $("#padrinho-eventoid").val() },
+                data: { EventoId: SelectedEvent.Id },
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
@@ -356,7 +356,7 @@ function PrintAll() {
     $.ajax({
         url: '/Padrinho/GetPadrinhos',
         datatype: "json",
-        data: { EventoId: $("#padrinho-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST",
         success: function (data) {
             var arrPromises = []

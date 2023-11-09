@@ -12,6 +12,7 @@ using Core.Models.Padrinhos;
 using SysIgreja.ViewModels;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Services;
@@ -40,8 +41,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Padrinhos";
-            Response.AddHeader("Title", ViewBag.Title);
-            GetEventos();
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }

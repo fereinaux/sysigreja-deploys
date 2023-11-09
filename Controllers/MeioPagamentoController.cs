@@ -5,6 +5,7 @@ using Core.Business.Eventos;
 using Core.Business.MeioPagamento;
 using Core.Models.MeioPagamento;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 
@@ -24,7 +25,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Formas de Pagamento";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracoes(new string[] {  "Financeiro" });
             return View();
         }

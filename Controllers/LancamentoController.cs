@@ -14,6 +14,7 @@ using SysIgreja.ViewModels;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -47,7 +48,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Financeiro";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetEventos(new string[] { "Admin", "Financeiro" });
             return View();
         }

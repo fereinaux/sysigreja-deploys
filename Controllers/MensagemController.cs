@@ -5,6 +5,7 @@ using Core.Business.Eventos;
 using Core.Business.Mensagem;
 using Core.Models.Mensagem;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 
@@ -26,7 +27,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Mensagens";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracoes();
             return View();
         }

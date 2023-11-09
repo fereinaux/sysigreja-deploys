@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -32,7 +33,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Parâmetros";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }
@@ -41,7 +42,7 @@ namespace SysIgreja.Controllers
         {
             GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Login";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }
@@ -50,7 +51,7 @@ namespace SysIgreja.Controllers
         {
             GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Equipes";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }
@@ -59,7 +60,7 @@ namespace SysIgreja.Controllers
         {
             base.GetConfiguracoes();
             ViewBag.Title = "Hierarquia das Equipes";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }

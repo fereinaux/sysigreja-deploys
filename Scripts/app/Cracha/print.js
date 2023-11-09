@@ -121,7 +121,7 @@
         $('#crachaid').append($('<option>Pesquisar</option>'));
         $.ajax({
             url: '/Cracha/GetCrachasByEventoId',
-            data: { eventoId: $("*[id*='eventoid']").val() },
+            data: { eventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST",
             success: (result) => {

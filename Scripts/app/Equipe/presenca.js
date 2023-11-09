@@ -1,12 +1,12 @@
 ﻿
 table = undefined
 function CarregarTabelaPresenca() {
-    if ($("#presenca-eventoid").val() && $("#presenca-equipeid").val()) {
+    if (SelectedEvent.Id && $("#presenca-equipeid").val()) {
         $.ajax({
             url: '/Equipe/GetPresenca',
             datatype: "json",
             data: {
-                EventoId: $("#presenca-eventoid").val(),
+                EventoId: SelectedEvent.Id,
                 EquipeId: $("#presenca-equipeid").val(),
             },
             type: "POST",
@@ -188,7 +188,7 @@ function getReunioes() {
 
     $.ajax({
         url: "/Equipe/GetReunioes/",
-        data: { EventoId: $("#presenca-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -208,7 +208,7 @@ function getPresencas() {
     $.ajax({
         url: '/Equipe/GetEquipes',
         datatype: "json",
-        data: { EventoId: $("#presenca-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST",
         success: (result) => {
             $('#presenca-equipeid').append($(`<option value="0">Selecione</option>`));

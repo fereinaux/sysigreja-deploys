@@ -30,6 +30,32 @@ namespace SysIgreja.Controllers
         public string Circulo { get; set; }
     }
 
+    public class EventoClaimModel
+    {
+        public int Id { get; set; }
+        public int? ConfiguracaoId { get; set; }
+        public string Role { get; set; }
+        public int Numeracao { get; set; }
+        public int? Capacidade { get; set; }
+        public string DataEvento { get; set; }
+        public string Status { get; set; }
+        public string StatusEquipe { get; set; }
+        public string Titulo { get; set; }
+        public string PublicTokenMercadoPago { get; set; }
+        public string AccessTokenMercadoPago { get; set; }
+        public int? BackgroundId { get; set; }
+        public int? LogoId { get; set; }
+        public int? LogoRelatorioId { get; set; }
+        public string Identificador { get; set; }
+        public string EquipeCirculo { get; set; }
+        public string CorBotao { get; set; }
+        public string TipoEvento { get; set; }
+        public string TipoCirculo { get; set; }
+        public bool Coordenador { get; set; }
+        public int Valor { get; set; }
+        public int ValorTaxa { get; set; }
+    }
+
     public class CrachaCasalModel
     {
         public int Id { get; set; }

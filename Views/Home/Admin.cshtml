@@ -30,12 +30,7 @@
     }*@
     <div class="row">
         <div class="col-lg-12 col-sm-12" style="padding:5px">
-            <select class="form-control" id="eventoid" onchange="GetResultadosAdmin()">
-                @foreach (var evento in ViewBag.Eventos)
-                {
-                    <option data-casal="@evento.IsCasal" data-casal="@evento.IsCasal" value="@evento.Id" data-valor="@evento.Valor" data-pendente="@evento.IsPendente" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
-                }
-            </select>
+            @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "eventoid", OnChange = "GetResultadosAdmin", Roles = "Financeiro, Administrativo,Admin" })
         </div>
         <div class="col-lg-6 col-xs-12 p-w-xs">
             <div class="row vertical-align">

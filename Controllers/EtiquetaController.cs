@@ -5,6 +5,7 @@ using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models.Etiquetas;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -27,7 +28,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Marcadores";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracoes();
             return View();
         }

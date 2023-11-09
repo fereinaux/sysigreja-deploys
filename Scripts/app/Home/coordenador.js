@@ -1,6 +1,5 @@
 ﻿$(document).ready(() => {
 
-    $('#eventoid').val($('#eventoid option:first').val())
     CarregarTela()
     loadCampos()
 });
@@ -11,7 +10,7 @@ function ExportarExcel() {
         url: "/Equipante/GetEquipantesDataTable?extract=excel",
         dataType: "text",
         data: {
-            EventoId: $('#eventoid').val(),
+            EventoId: SelectedEvent.Id,
             Equipe: [EquipeId],
             Campos: mapCampos(campos.map(campo => campo.Campo)).concat(["Quarto", "Equipe", "Situacao"]).flatMap(campo => campo).join(','),
             columns:
@@ -36,7 +35,7 @@ function CarregarTabelaArquivos(id) {
     $.ajax({
         url: '/Arquivo/GetArquivosEquipeByEventoId',
         datatype: "json",
-        data: { Equipe: id, IsComunEquipe: true, EventoId: $('#eventoid').val(), },
+        data: { Equipe: id, IsComunEquipe: true, EventoId: SelectedEvent.Id, },
         type: "POST",
         success: (data) => {
             html = '';
@@ -64,7 +63,7 @@ function CarregarTabelaArquivos(id) {
 function loadCampos() {
     $.ajax({
         url: "/Configuracao/GetCamposEquipeByEventoId/",
-        data: { Id: $('#eventoid').val() },
+        data: { Id: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -80,7 +79,7 @@ function CarregarTela() {
     $.ajax({
         url: '/Home/CoordenadorGet',
         datatype: "json",
-        data: { eventoId: $('#eventoid').val() },
+        data: { eventoId: SelectedEvent.Id },
         type: "GET",
         success: (data) => {
             EquipeId = data.result.EquipeEnum

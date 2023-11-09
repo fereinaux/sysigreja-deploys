@@ -7,6 +7,7 @@ using Core.Business.Eventos;
 using Core.Models.Etiquetas;
 using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -27,7 +28,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Categorias";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             return View();
         }
 

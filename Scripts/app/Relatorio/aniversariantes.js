@@ -25,7 +25,7 @@
         if (type) {
             $.ajax({
                 url: '/Participante/GetAniversariantesByEvento',
-                data: { EventoId: $("#relatorio-eventoid").val(), type },
+                data: { EventoId: SelectedEvent.Id, type },
                 datatype: "json",
                 type: "GET",
                 success: (result) => {

@@ -6,13 +6,13 @@ newEventoId = undefined
 
 
 function checkEvento() {
-    newEventoId = $("#equipante-eventoid-filtro").val()
-    if ($("#equipante-eventoid-filtro").val() != 999) {
+    newEventoId = SelectedEvent.Id
+    if (SelectedEvent.Id != 999) {
         $('.hide-tipoevento').removeClass('d-none')
 
         $.ajax({
             url: '/Etiqueta/GetEtiquetasByEventoId',
-            data: { eventoId: $("#equipante-eventoid-filtro").val() },
+            data: { eventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST",
             success: (result) => {
@@ -35,6 +35,9 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 }
 
 function loadEquipes() {
+    casal = false
+    handleEquipantes(casal)
+    loadCampos(SelectedEvent.Id)
     $("#table-equipantes").DataTable().destroy()
     checkEvento()
 
@@ -109,7 +112,7 @@ function CarregarTabelaEquipante(callbackFunction) {
 
                     return `<div>
                         <span>${row.Nome}</br></span>
-                        ${$("#equipante-eventoid-filtro").val() != 999 ? row.Etiquetas.map(etiqueta => {
+                        ${SelectedEvent.Id != 999 ? row.Etiquetas.map(etiqueta => {
                         if (etiqueta) {
                             return `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`
                         }
@@ -119,10 +122,10 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
             { data: "Idade", name: "Idade", class: "noSearch" },
             {
-                data: "Equipe", className: `hide-tipoevento noVis`, name: "Equipe", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999
+                data: "Equipe", className: `hide-tipoevento noVis`, name: "Equipe", autoWidth: true, visible: SelectedEvent.Id != 999
             },
             {
-                data: "Faltas", className: `hide-tipoevento noSearch noVis`, name: "Faltas", visible: $("#equipante-eventoid-filtro").val() != 999
+                data: "Faltas", className: `hide-tipoevento noSearch noVis`, name: "Faltas", visible: SelectedEvent.Id != 999
             },
             { data: "Congregacao", name: "Congregacao", autoWidth: true, visible: false },
             {
@@ -147,7 +150,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "HasOferta", className: `hide-tipoevento noSearch noVis`, name: "HasOferta", autoWidth: true, visible: $("#equipante-eventoid-filtro").val() != 999, render: function (data, type, row) {
+                data: "HasOferta", className: `hide-tipoevento noSearch noVis`, name: "HasOferta", autoWidth: true, visible: SelectedEvent.Id != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {
                         return `<span style="font-size:13px" class="text-center label label-default}">Em espera</span>`;
                     }
@@ -169,9 +172,9 @@ ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                            ${GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico')}
           ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
-                            ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
+                            ${SelectedEvent.Id != 999 ? GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
                            ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
-${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.stringify({Id: row.Id}), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
+${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({Id: row.Id}), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 
 `;
@@ -195,7 +198,7 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
             if (callbackFunction) {
                 callbackFunction()
             }
-            if ($("#equipante-eventoid-filtro").val() != 999) {
+            if (SelectedEvent.Id != 999) {
                 $('.hide-tipoevento').removeClass('d-none')
             } else {
                 $('.hide-tipoevento').addClass('d-none')
@@ -240,7 +243,7 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
             if (changeEvento) {
                 oldEventoId = newEventoId
             }
-            newEventoId = $("#equipante-eventoid-filtro").val()
+            newEventoId = SelectedEvent.Id
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
@@ -342,12 +345,12 @@ ${$("#equipante-eventoid-filtro").val() != 999 ? GetButton('Opcoes', JSON.string
 }
 
 function getEquipes() {
-    if ($("#equipante-eventoid-filtro").val() != 999) {
+    if (SelectedEvent.Id != 999) {
 
         $.ajax({
             url: '/Equipe/GetEquipes',
             datatype: "json",
-            data: { EventoId: $("#equipante-eventoid-filtro").val() },
+            data: { EventoId: SelectedEvent.Id },
             type: "POST",
             success: (result) => {
                 $("#equipe-select").html(`
@@ -937,7 +940,7 @@ function DeleteEquipante(id) {
                 data: JSON.stringify(
                     {
                         Id: id,
-                        EventoId: $("#equipante-eventoid-filtro").val()
+                        EventoId: SelectedEvent.Id
                     }),
                 success: function () {
                     SuccessMesageDelete();
@@ -974,7 +977,7 @@ function Opcoes(row) {
     $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Equipante/GetEquipante/",
-        data: { Id: row.Id, eventoId: $("#equipante-eventoid-filtro").val() },
+        data: { Id: row.Id, eventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -986,7 +989,7 @@ function Opcoes(row) {
                     datatype: "json",
                     data: JSON.stringify(
                         {
-                            eventoId: $("#equipante-eventoid-filtro").val(), tipos: ["Equipe"]
+                            eventoId: SelectedEvent.Id, tipos: ["Equipe"]
                         }),
                     type: "POST",
                     contentType: 'application/json; charset=utf-8',
@@ -1038,7 +1041,7 @@ function PostInfo(callback) {
         data: JSON.stringify(
             {
                 Id: equipante.Id,
-                eventoId: $("#equipante-eventoid-filtro").val(),
+                eventoId: SelectedEvent.Id,
                 Etiquetas: $('.equipante-etiquetas').val(),
                 Obs: $('#equipante-obs').val(),
             }),
@@ -1144,7 +1147,7 @@ function PostPagamento() {
             data: JSON.stringify(
                 {
                     EquipanteId: $("#pagamentos-equipanteid").val(),
-                    EventoId: $("#equipante-eventoid-filtro").val(),
+                    EventoId: SelectedEvent.Id,
                     Origem: $("#pagamentos-origem").val(),
                     Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
@@ -1163,7 +1166,7 @@ function PostPagamento() {
 
 $(document).ready(function () {
     loadEquipes()
-    loadCampos($("[id$='eventoid']").val());
+    loadCampos(SelectedEvent.Id);
 
 });
 
@@ -1203,7 +1206,7 @@ async function loadCrachaImprimir(Foto) {
             contentType: false,
             type: "POST",
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(ids.length > 0 ? { Ids: ids, Foto: Foto, EventoId: $("#equipante-eventoid-filtro").val() } : getFiltros(Foto)),
+            data: JSON.stringify(ids.length > 0 ? { Ids: ids, Foto: Foto, EventoId: SelectedEvent.Id } : getFiltros(Foto)),
             url: "Equipante/GetCracha",
         });
 
@@ -1212,7 +1215,7 @@ async function loadCrachaImprimir(Foto) {
 
 function getFiltros(Foto) {
     return {
-        EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : null,
+        EventoId: SelectedEvent.Id != 999 ? SelectedEvent.Id : null,
         Status: $("#equipante-status").val(),
         Etiquetas: $("#equipante-marcadores").val(),
         NaoEtiquetas: $("#equipante-nao-marcadores").val(),
@@ -1234,7 +1237,7 @@ async function loadEquipesBulk() {
     const equipes = await $.ajax({
         url: '/Equipe/GetEquipes',
         datatype: "json",
-        data: { EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val() },
+        data: { EventoId: SelectedEvent.Id != 999 ? SelectedEvent.Id : SelectedEvent.Id },
         type: "POST"
     })
 
@@ -1247,7 +1250,7 @@ async function loadEquipesBulk() {
 async function openBulkActions() {
     let ids = getCheckedIds()
 
-    if ($("#equipante-eventoid-filtro").val() == 999) {
+    if (SelectedEvent.Id == 999) {
         $('.evento-bulk').css('display', 'block');
         $('.not-evento-bulk').css('display', 'none');
     } else {
@@ -1259,7 +1262,7 @@ async function openBulkActions() {
         url: '/Quarto/GetQuartos',
         datatype: "json",
         data: {
-            EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val(), Tipo: 0
+            EventoId: SelectedEvent.Id != 999 ? SelectedEvent.Id : SelectedEvent.Id, Tipo: 0
         },
         type: "POST"
     })
@@ -1268,7 +1271,7 @@ async function openBulkActions() {
 
     const etiquetas = await $.ajax({
         url: '/Etiqueta/GetEtiquetasByEventoId',
-        data: { eventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val() },
+        data: { eventoId: SelectedEvent.Id != 999 ? SelectedEvent.Id : SelectedEvent.Id },
         datatype: "json",
         type: "POST",
     });
@@ -1278,7 +1281,7 @@ async function openBulkActions() {
         datatype: "json",
         data: JSON.stringify(
             {
-                eventoId: $("#equipante-eventoid-filtro").val(), tipos: ["Equipe"]
+                eventoId: SelectedEvent.Id, tipos: ["Equipe"]
             }),
         type: "POST",
         contentType: 'application/json; charset=utf-8',
@@ -1369,7 +1372,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-m").val(),
-                        EventoId: $("#equipante-eventoid-filtro").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 0
                     }),
             }))
@@ -1385,7 +1388,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-f").val(),
-                        EventoId: $("#equipante-eventoid-filtro").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 0
                     }),
             }))
@@ -1401,7 +1404,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-misto").val(),
-                        EventoId: $("#equipante-eventoid-filtro").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 0
 
                     }),
@@ -1418,7 +1421,7 @@ async function applyBulk() {
                     {
                         destinoId: id,
                         etiquetaId: $("#bulk-add-etiqueta").val(),
-                        EventoId: $("#equipante-eventoid-filtro").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 0
                     }),
 
@@ -1435,7 +1438,7 @@ async function applyBulk() {
                     {
                         destinoId: id,
                         etiquetaId: $("#bulk-remove-etiqueta").val(),
-                        EventoId: $("#equipante-eventoid-filtro").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 0
                     }),
 
@@ -1451,7 +1454,7 @@ async function applyBulk() {
                 data: JSON.stringify(
                     {
                         EquipanteId: id,
-                        EventoId: $("#equipante-eventoid-filtro").val() != 999 ? $("#equipante-eventoid-filtro").val() : $('#equipante-eventoid-bulk').val(),
+                        EventoId: SelectedEvent.Id != 999 ? SelectedEvent.Id : SelectedEvent.Id,
                         EquipeId: $("#bulk-equipe").val()
                     }),
 
@@ -1750,11 +1753,7 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
     });
 }
 
-casal = 'False'
-$("*[id*='eventoid']").change(function () {
-    handleEquipantes(casal)
-    loadCampos(this.value)
-})
+
 
 
 
@@ -1885,7 +1884,7 @@ function enviarMensagens() {
                 type: "POST",
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify({
-                    ids, EventoId: $("#equipante-eventoid-filtro").val(),
+                    ids, EventoId: SelectedEvent.Id,
                 }),
                 success: function (data) {
 

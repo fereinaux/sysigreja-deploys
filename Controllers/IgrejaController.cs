@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Enums;
 using Utils.Extensions;
@@ -40,7 +41,7 @@ namespace SysIgreja.Controllers
         {
             GetEventos(new string[] { "Geral" });
             ViewBag.Title = "Igrejas";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }

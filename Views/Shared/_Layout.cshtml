@@ -43,6 +43,41 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/av01d/fontpicker-jquery-plugin@1.5/dist/jquery.fontpicker.min.css" integrity="sha256-urFh3EMgi9s3j3w+TsAP1TfUQiE0yUZmmLX7JRyvjqE=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+    @Scripts.Render("~/bundles/jquery")
+
+    <script>
+        Claims = { Eventos: [] }
+        SelectedEvent = {}
+        xhrPopulate = undefined
+
+        async function getClaims() {
+            if (xhrPopulate) {
+                Claims = await xhrPopulate
+
+                return Claims
+            }
+            if (Claims.Eventos.length > 0) {
+                return Claims
+            } else {
+                xhrPopulate = $.ajax(
+                    {
+                        type: "GET",
+                        url: "/Evento/PopulateEventosByUser",
+                    })
+                Claims = await xhrPopulate
+
+                SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId'))
+                return Claims
+            }
+        }
+
+
+
+        $.holdReady(true);
+        getClaims().then(() => $.holdReady(false))
+
+
+    </script>
     <!-- Add local styles, mostly for plugins css file -->
 
     @RenderSection("Styles", required: false)
@@ -162,7 +197,7 @@
     </div>
     <!-- End wrapper-->
     <!-- Section for main scripts render -->
-    @Scripts.Render("~/bundles/jquery")
+
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/imaskjs")
     @Scripts.Render("~/plugins/slimScroll")
@@ -307,8 +342,8 @@
 
                 }
             }
-            if ($("*[id*='eventoid']").val()) {
-                getConfig($("*[id*='eventoid']").val())
+            if (SelectedEvent.Id) {
+                $('title').text(`${SelectedEvent.Titulo} | ${$('#title').text()}`)
             } else if ($("*[id*='configId']").val()) {
                 $.ajax({
                     url: "/Configuracao/GetConfiguracaoResumido/",
@@ -348,7 +383,6 @@
             }
 
             $("*[id*='eventoid']").change(function () {
-                getConfig(this.value)
                 if (this.value != 999) {
                     localStorage.setItem('eventoId', this.value)
                 }
@@ -420,10 +454,12 @@
                     login = data.Login
                     logoLogin = `data:image/png;base64,${login.Logo}`
 
-                    if (!config.LogoId) {
+                    if (!SelectedEvent.LogoId) {
                         $('#home-button-logo img').attr('src', `data:image/png;base64,${login.Logo}`)
                         $('link[rel="icon"]').attr('href', `data:image/png;base64,${login.Logo}`)
                     }
+
+
                 }
             });
         }
@@ -468,58 +504,19 @@
             }
         })
 
-
-        function getConfig(id) {
-            if (id != 999) {
+        $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
 
 
-                $.ajax({
-                    url: "/Evento/GetValorEvento/",
-                    data: { Id: id },
-                    datatype: "json",
-                    type: "GET",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        $('#pagamentos-valor').data('valor-realista',data)
-                    }
-                })
-
-                $.ajax({
-                    url: "/Evento/GetTaxaEvento/",
-                    data: { Id: id },
-                    datatype: "json",
-                    type: "GET",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        $('#pagamentos-valor').data('valor-equipante', data)
-                    }
-                })
+            $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
+                max-height: 150px;
+                padding: 15px;" src="/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}">`)
 
 
-
-                $.ajax({
-                    url: "/Configuracao/GetConfiguracaoByEventoId/",
-                    data: { Id: id },
-                    datatype: "json",
-                    type: "GET",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        config = data.Configuracao
-                        loadConfig(config)
-                    }
-                });
-            }
-        }
+        });
 
         function loadConfig(config) {
             globalConfigId = config.Id
             $('title').text(`${config.Titulo} | ${$('#title').text()}`)
-
-            if (config.TipoCirculo == 'Endereco') {
-                $('#ibox-mapa-circulo').css('display', 'block')
-            } else {
-                $('#ibox-mapa-circulo').css('display', 'none')
-            }
 
             if (config.TipoQuarto == "Endereco") {
                 $('.quarto-endereco').css('display', 'block')
@@ -528,20 +525,7 @@
             }
 
             $('.title-circulo').text(config.EquipeCirculo)
-            if (config.LogoId) {
-                $('link[rel="icon"]').attr('href', `data:image/png;base64,${config.Logo}`)
-                $('#home-button-logo img').attr('src', `data:image/png;base64,${config.Logo}`)
 
-                $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
-
-                    $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
-    max-height: 150px;
-    padding: 15px;" src="data:image/png;base64,${config.LogoRelatorio}">`)
-
-                });
-
-
-            }
 
             if (config.CorBotao) {
                 $('body').on('DOMNodeInserted', '.swal-title', function () {
@@ -594,9 +578,6 @@
             } else {
                 logoRelatorio = config.Logo
             }
-
-            $('#img-logo').attr('src', `data:image/png;base64,${config.Logo}`)
-            $('.bg-coord').css('background-color', config.CorBotao)
 
             if (config.MeioPagamentos.length > 0) {
                 $("[id$='meiopagamento']").html(`${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
@@ -773,19 +754,20 @@
                 // location will be null by custom asp.net error page
                 var location = xhr.getResponseHeader('Location');
                 history.pushState('', '', location);
-                if (location == '/Participante/Casais') {
+                if (location == '/Participante/Casais' || location == "/Participante") {
                     location = 'participante-menu'
                 }
 
-                if (location == '/Equipante/Casais') {
+                if (location == '/Equipante/Casais' || location == "/Equipante") {
                     location = 'equipante-menu'
                 }
-                $('#title').text(xhr.getResponseHeader('Title'))
+                $('#title').html(xhr.getResponseHeader('Title'))
                 $('#side-menu').find('a').parent().removeClass('active');
                 $('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().addClass('active');
 
                 if ($('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().parent().parent().is('li')) {
                     $('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().parent().parent().addClass('active')
+                    $('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().parent().addClass('in')
                 }
             }
 
@@ -845,30 +827,32 @@
 
     </script>
     <script>
+
         function handleParticipantes(opt) {
             action = "/Participante"
-            if ($("*[id*='eventoid'] option:selected").data('casal') == 'True') {
-                action = "/Participante/Casais"
 
+            if (SelectedEvent.TipoEvento == "Casais") {
+                action = "/Participante/Casais"
             }
-            if ((opt !== undefined && opt != $("*[id*='eventoid'] option:selected").data('casal')) || opt == undefined) {
+            if ((opt !== undefined && opt != (SelectedEvent.TipoEvento == "Casais") || opt == undefined)) {
                 spaLoad(action, "GET");
             }
         }
 
         function handleEquipantes(opt) {
-            console.log(opt);
             action = "/Equipante"
-            if ($("*[id*='eventoid'] option:selected").data('casal') == 'True') {
-                action = "/Equipante/Casais"
 
+            if (SelectedEvent.TipoEvento == "Casais") {
+                action = "/Equipante/Casais"
             }
-            if ((opt !== undefined && opt != $("*[id*='eventoid'] option:selected").data('casal')) || opt == undefined) {
+            if ((opt !== undefined && opt != (SelectedEvent.TipoEvento == "Casais") || opt == undefined)) {
                 spaLoad(action, "GET");
             }
         }
     </script>
     <!-- Handler for local scripts -->
     @RenderSection("scripts", required: false)
+    @Html.RenderScripts()
+
 </body>
 </html>

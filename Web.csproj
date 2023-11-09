@@ -782,6 +782,7 @@
   <ItemGroup>
     <Compile Include="App_Start\ClaimsAuthorizeAttribute .cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\HtmlHelperExtensions.cs" />
     <Compile Include="App_Start\SpaResponseAttribute .cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -839,6 +840,7 @@
     <Compile Include="ViewModels\CirculoViewModel.cs" />
     <Compile Include="ViewModels\ReuniaoViewModel.cs" />
     <Compile Include="ViewModels\ListaEquipesViewModel.cs" />
+    <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\UsuarioViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1183,6 +1185,7 @@
     <Content Include="assets\js\scrolling-nav.js" />
     <Content Include="assets\js\vegas.min.js" />
     <Content Include="assets\js\wow.js" />
+    <Content Include="Scripts\app\Componentes\select-evento.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1269,6 +1272,7 @@
     <Content Include="Views\Configuracao\Hierarquia.cshtml" />
     <Content Include="Views\Equipante\Duplicados.cshtml" />
     <Content Include="Views\Shared\_SpaLayout.cshtml" />
+    <Content Include="Views\Componentes\SelectEvento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

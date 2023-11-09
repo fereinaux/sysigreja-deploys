@@ -16,6 +16,7 @@ using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
 using Core.Business.Quartos;
+using System.Web;
 
 namespace SysIgreja.Controllers
 {
@@ -37,8 +38,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Círculos";
-            Response.AddHeader("Title", ViewBag.Title);
-            GetEventos();
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
         }

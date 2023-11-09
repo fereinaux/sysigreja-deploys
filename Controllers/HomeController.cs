@@ -58,9 +58,8 @@ namespace SysIgreja.Controllers
         public ActionResult Admin()
         {
             ViewBag.Title = "Sistema de Gestão";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
-            GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo" });
             return View();
         }
 
@@ -326,7 +325,7 @@ namespace SysIgreja.Controllers
         public ActionResult Coordenador()
         {
             ViewBag.Title = "Coordenador";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetCoordByUser(user.Id).OrderByDescending(x => x.Id);
             if (equipanteEvento.Count() > 0)

@@ -1,7 +1,7 @@
 ﻿function PrintParentes() {
     $.ajax({
         url: '/Participante/GetParentesByEvento',
-        data: { EventoId: $("#relatorio-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         success: (result) => {

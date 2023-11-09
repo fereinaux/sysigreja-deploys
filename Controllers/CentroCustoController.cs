@@ -6,6 +6,7 @@ using Core.Business.Eventos;
 using Core.Models.CentroCusto;
 using SysIgreja.ViewModels;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -29,7 +30,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Centros de Custo";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracoes(new string[] { "Financeiro" });
             ViewBag.Tipos = GetDescriptions<TiposCentroCustoEnum>().ToList();
 

@@ -18,6 +18,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Enums;
 using Utils.Extensions;
@@ -47,6 +48,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Equipes";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetEventos();
 
             return View();
@@ -55,6 +57,7 @@ namespace SysIgreja.Controllers
         public ActionResult Presenca()
         {
             ViewBag.Title = "Ata de Presença";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetEventos(new string[] { "Financeiro", "Admin", "Geral", "Administrativo", "Convites" });
             return View();
         }

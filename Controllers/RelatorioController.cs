@@ -2,6 +2,7 @@
 using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Eventos;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 
@@ -18,7 +19,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Relatórios";
-            Response.AddHeader("Title", ViewBag.Title);
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetEventos(new string[] { "Admin" });
 
             return View();

@@ -7,6 +7,7 @@ using Core.Business.Eventos;
 using Core.Models.Arquivos;
 using SysIgreja.ViewModels;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
@@ -33,6 +34,7 @@ namespace SysIgreja.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Arquivos";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracoes();
             return View();
         }
@@ -40,6 +42,7 @@ namespace SysIgreja.Controllers
         public ActionResult Boletim()
         {
             ViewBag.Title = "Boletins";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             GetConfiguracoes();
             return View();
         }

@@ -1,4 +1,4 @@
-﻿+$(document).ready(() => {
+﻿$(document).ready(() => {
     HideMenu();
     GetResultadosAdmin();
     //GetResultadosGeral();
@@ -11,10 +11,10 @@ function getEquipantesExcel() {
         type: "POST",
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
-            { EventoId: $("#eventoid").val() }),
+            { EventoId: SelectedEvent.Id }),
         success: (data) => {
 
-            window.location = `DownloadTempFile?fileName=Equipe ${$("#eventoid option:selected").text()}.xlsx&g=` + data;
+            window.location = `DownloadTempFile?fileName=Equipe ${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}.xlsx&g=` + data;
         }
     });
 }
@@ -26,7 +26,7 @@ function GetResultadosGeral() {
         $.ajax({
             url: '/Home/GetResultadosGeral',
             datatype: "json",
-            data: { EventoId: $("#eventoid").val() },
+            data: { EventoId: SelectedEvent.Id },
             type: "GET",
             success: (data) => {
                 result = data.result;
@@ -119,11 +119,11 @@ $('body').on('DOMNodeInserted', '.div-calendar', function () {
 
 
 function GetResultadosAdmin() {
-    if ($('#eventoid option:selected').data('role') == 'Coordenador') {
+    if (SelectedEvent.Role == 'Coordenador') {
         window.location.href = '/Home/Coordenador'
     }
 
-    if ($('#eventoid option:selected').data('role') == "Administrativo" || $('#eventoid option:selected').data('role') == "Padrinho") {
+    if (SelectedEvent.Role == "Administrativo" || SelectedEvent.Role == "Padrinho") {
         $('#resumo-financeiro-bloco').css('display', 'none')
     } else {
         $('#resumo-financeiro-bloco').css('display', 'block')
@@ -131,7 +131,7 @@ function GetResultadosAdmin() {
     $.ajax({
         url: '/Home/GetResumoFinanceiroEvento',
         datatype: "json",
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "GET",
         success: (data) => {          
             result = data.result;            
@@ -164,7 +164,7 @@ function GetResultadosAdmin() {
     $.ajax({
         url: '/Home/GetEquipesEvento',
         datatype: "json",
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "GET",
         success: (data) => {
             result = data.result; 
@@ -214,7 +214,7 @@ function GetResultadosAdmin() {
     $.ajax({
         url: '/Home/GetReunioesEvento',
         datatype: "json",
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "GET",
         success: (data) => {
 
@@ -239,7 +239,7 @@ function GetResultadosAdmin() {
     $.ajax({
         url: '/Home/GetUltimosInscritosEvento',
         datatype: "json",
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "GET",
         success: (data) => {
 
@@ -265,7 +265,7 @@ function GetResultadosAdmin() {
     $.ajax({
         url: "/Home/GetParticipantesEvento",
         datatype: "json",
-        data: { EventoId: $("#eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "GET",
         success: (data) => {
 

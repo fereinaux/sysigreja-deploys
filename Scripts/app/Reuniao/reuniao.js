@@ -35,7 +35,7 @@
         ],
         ajax: {
             url: '/Reuniao/GetReunioes',
-            data: { EventoId: $("#reuniao-eventoid-consulta").val() },
+            data: { EventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST"
         }
@@ -129,7 +129,7 @@ function PostReuniao() {
             data: JSON.stringify(
                 {
                     Id: $("#reuniao-id").val(),
-                    EventoId: $("#reuniao-eventoid-consulta").val(),
+                    EventoId: SelectedEvent.Id,
                     Titulo: $("#reuniao-titulo").val(),
                     //Pauta: pauta.summernote('code'),
                     DataReuniao: moment($("#reuniao-data").val(), 'DD/MM/YYYY HH:mm', 'pt-br').toJSON()

@@ -2,15 +2,18 @@
 selected = false
 eventoId = 0
 function CarregarTabelaParticipante(callbackFunction) {
+    $("#table-participantes").DataTable().destroy()
+    casal = false
+    handleParticipantes(casal)
     $('#btn_bulk').css('display', 'none')
-    if ($("#participante-eventoid").val() != eventoId) {
+    if (SelectedEvent.Id != eventoId) {
         $.ajax({
             url: '/Participante/GetPadrinhos',
-            data: { eventoId: $("#participante-eventoid").val() },
+            data: { eventoId: SelectedEvent.Id },
             datatype: "json",
             type: "GET",
             success: (result) => {
-                eventoId = $("#participante-eventoid").val()
+                eventoId = SelectedEvent.Id
                 $("#participante-padrinhoid").html(`
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
@@ -20,11 +23,11 @@ ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 
         $.ajax({
             url: '/Circulo/GetCirculos',
-            data: { eventoId: $("#participante-eventoid").val() },
+            data: { eventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST",
             success: (result) => {
-                eventoId = $("#participante-eventoid").val()
+                eventoId = SelectedEvent.Id
                 $("#participante-circuloid").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
 `)
@@ -34,11 +37,11 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
 
         $.ajax({
             url: '/Quarto/GetQuartos',
-            data: { eventoId: $("#participante-eventoid").val() },
+            data: { eventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST",
             success: (result) => {
-                eventoId = $("#participante-eventoid").val()
+                eventoId = SelectedEvent.Id
                 $("#participante-quartoid").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
@@ -48,11 +51,11 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 
         $.ajax({
             url: '/Carona/GetCaronas',
-            data: { eventoId: $("#participante-eventoid").val() },
+            data: { eventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST",
             success: (result) => {
-                eventoId = $("#participante-eventoid").val()
+                eventoId = SelectedEvent.Id
                 $("#participante-motoristaid").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Motorista}</option>`)}
 `)
@@ -62,11 +65,11 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Motorista}</option>`)}
 
         $.ajax({
             url: '/Etiqueta/GetEtiquetasByEventoId',
-            data: { eventoId: $("#participante-eventoid").val() },
+            data: { eventoId: SelectedEvent.Id },
             datatype: "json",
             type: "POST",
             success: (result) => {
-                eventoId = $("#participante-eventoid").val()
+                eventoId = SelectedEvent.Id
                 $("#participante-marcadores").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
@@ -85,7 +88,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
             datatype: "json",
             data: JSON.stringify(
                 {
-                    eventoId: $("#participante-eventoid").val(), tipos: ["Participante"]
+                    eventoId: SelectedEvent.Id, tipos: ["Participante"]
                 }),
             type: "POST",
             contentType: 'application/json; charset=utf-8',
@@ -102,7 +105,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             datatype: "json",
             data: JSON.stringify(
                 {
-                    eventoId: $("#participante-eventoid").val(), tipos: ["Contato"]
+                    eventoId: SelectedEvent.Id, tipos: ["Contato"]
                 }),
             type: "POST",
             contentType: 'application/json; charset=utf-8',
@@ -138,13 +141,13 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
-        buttons: getButtonsConfig(`Participantes ${$("#participante-eventoid option:selected").text()}`),
+        buttons: getButtonsConfig(`Participantes ${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`),
         colReorder: {
             fixedColumnsLeft: 1
         },
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
+                data: "Id", name: "Id", title:'<div class="checkbox i-checks-green"><label> <input type="checkbox" id="select-all" data-id="all"> <i></i></label></div>', orderable: false, width: "2%", className: 'noVis',
                 "render": function (data, type, row) {
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, false) : '';
                 }
@@ -166,7 +169,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }
             },
             {
-                data: "Nome", name: "Nome", width: "25%", render: function (data, type, row) {
+                data: "Nome", name: "Nome", title:"Nome", width: "25%", render: function (data, type, row) {
                     var reg = /^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/i
                     var titulo = row.Circulo?.trim()
                     var isCor = reg.test(titulo)
@@ -180,20 +183,20 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     </div>`
                 }
             },
-            { data: "Apelido", name: "Apelido", autoWidth: true, visible: false },
+            { data: "Apelido", name: "Apelido", title: "Apelido", autoWidth: true, visible: false },
             { data: "Conjuge", title: "Cônjuge", name: "Conjuge", autoWidth: true, visible: false },
-            { data: "NomeMae", name: "NomeMae", autoWidth: true, visible: false },
-            { data: "FoneMae", name: "FoneMae", autoWidth: true, visible: false },
-            { data: "NomePai", name: "NomePai", autoWidth: true, visible: false },
-            { data: "FonePai", name: "FonePai", autoWidth: true, visible: false },
-            { data: "NomeContato", name: "NomeContato", autoWidth: true, visible: false },
-            { data: "FoneContato", name: "FoneContato", autoWidth: true, visible: false },
-            { data: "NomeConvite", name: "NomeConvite", autoWidth: true, visible: false },
-            { data: "FoneConvite", name: "FoneConvite", autoWidth: true, visible: false },
-            { data: "Idade", name: "Idade", width: "5%", },
-            { data: "Padrinho", name: "Padrinho", width: "25%" },
+            { data: "NomeMae", name: "NomeMae", title: "NomeMae", autoWidth: true, visible: false },
+            { data: "FoneMae", name: "FoneMae", title: "FoneMae", autoWidth: true, visible: false },
+            { data: "NomePai", name: "NomePai", title: "NomePai", autoWidth: true, visible: false },
+            { data: "FonePai", name: "FonePai", title: "FonePai", autoWidth: true, visible: false },
+            { data: "NomeContato", name: "NomeContato", title: "NomeContato", autoWidth: true, visible: false },
+            { data: "FoneContato", name: "FoneContato", title: "FoneContato", autoWidth: true, visible: false },
+            { data: "NomeConvite", name: "NomeConvite", title: "NomeConvite", autoWidth: true, visible: false },
+            { data: "FoneConvite", name: "FoneConvite", title: "FoneConvite", autoWidth: true, visible: false },
+            { data: "Idade", name: "Idade", title: "Idade", width: "5%", },
+            { data: "Padrinho", name: "Padrinho", title: "Padrinho", width: "25%" },
             {
-                data: "Status", name: "Status", width: "5%", render: function (data, type, row) {
+                data: "Status", name: "Status", title: "Status", width: "5%", render: function (data, type, row) {
                     var data, cor
                     if (row.Checkin) {
                         data = "Presente";
@@ -363,7 +366,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
                             tableParticipanteConfig.ajax.url + "?extract=excel",
                             data,
                             function (o) {
-                                window.location = `/Participante/DownloadTempFile?fileName=Participantes ${$("#participante-eventoid option:selected").text()}.xlsx&g=` + o;
+                                window.location = `/Participante/DownloadTempFile?fileName=Participantes ${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}.xlsx&g=` + o;
                             }
                         );
                     };
@@ -830,7 +833,6 @@ $(document).ready(function () {
   
     HideMenu()
     CarregarTabelaParticipante();
-    loadCampos($("[id$='eventoid']").val());
     const searchParams = new URLSearchParams(window.location.search)
     const queryId = searchParams.get('Id')
     if (queryId) {
@@ -973,7 +975,7 @@ function PostPagamento() {
             data: JSON.stringify(
                 {
                     Origem: $("#pagamentos-origem").val(),
-                    EventoId: $("#participante-eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     ParticipanteId: $("#pagamentos-participanteid").val(),
                     Data: moment($("#pagamentos-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     MeioPagamentoId: $("#pagamentos-meiopagamento").val(),
@@ -993,7 +995,7 @@ function PostPagamento() {
 function getMensagensByTipo(tipos) {
     $.ajax({
         url: "/Mensagem/GetMensagensByTipo/",
-        data: JSON.stringify({ eventoId: $("#participante-eventoid").val(), tipos: tipos }),
+        data: JSON.stringify({ eventoId: SelectedEvent.Id, tipos: tipos }),
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',
@@ -1261,7 +1263,7 @@ function PostParticipante() {
             data: JSON.stringify(
                 {
                     Id: $("#participante-id").val(),
-                    EventoId: $("#participante-eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     Nome: $(`#participante-nome`).val(),
                     Apelido: $(`#participante-apelido`).val(),
                     Instagram: $('#participante-instagram').val(),
@@ -1410,12 +1412,6 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     });
 });
 
-casal = 'False'
-$("[id$='eventoid']").change(function () {
-    handleParticipantes(casal)
-    loadCampos(this.value)
-
-})
 
 function onLoadCampos() {
     $('button span:contains("Apelido")').parent().css('display', $('#participante-apelido').length > 0 ? 'block' : 'none')
@@ -1445,10 +1441,10 @@ function onLoadCampos() {
     $('button span:contains("Fone do Convite")').parent().css('display', $('#participante-nomeconvite').length > 0 ? 'block' : 'none')
 }
 
-function loadCampos(id) {
+function loadCampos() {
     $.ajax({
         url: "/Configuracao/GetCamposByEventoId/",
-        data: { Id: id },
+        data: { Id: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -1643,7 +1639,7 @@ ${campos.find(x => x.Campo == 'Dados do Convite') ? `<div class="col-sm-12 p-w-m
                             </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Parente') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Tem algum Parente fazendo o ${$('#participante-eventoid option:selected').text()}?</h5>
+                                <h5>Tem algum Parente fazendo o ${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}?</h5>
 
                                 <div class="radio i-checks-green inline"><label> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
                                 <div class="radio i-checks-green inline"><label> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>
@@ -1750,7 +1746,7 @@ async function loadCrachaImprimir(Foto) {
             contentType: false,
             type: "POST",
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify($.extend(ids.length > 0 ? { Ids: ids, Foto: Foto, EventoId: $("#participante-eventoid").val() } : getFiltros(Foto), $("#table-participante").DataTable().ajax.params())),
+            data: JSON.stringify($.extend(ids.length > 0 ? { Ids: ids, Foto: Foto, EventoId: SelectedEvent.Id } : getFiltros(Foto), $("#table-participante").DataTable().ajax.params())),
             url: "Participante/GetCracha",
         });
 
@@ -1759,7 +1755,7 @@ async function loadCrachaImprimir(Foto) {
 
 function getFiltros(Foto) {
     return {
-        EventoId: $("#participante-eventoid").val(),
+        EventoId: SelectedEvent.Id,
         CirculoId: $("#participante-circuloid").val(),
         PadrinhoId: $("#participante-padrinhoid").val(),
         Status: $("#participante-status").val(),
@@ -1784,34 +1780,34 @@ async function openBulkActions() {
     const quartos = await $.ajax({
         url: '/Quarto/GetQuartos',
         datatype: "json",
-        data: { EventoId: $("#participante-eventoid").val(), Tipo: 1 },
+        data: { EventoId: SelectedEvent.Id, Tipo: 1 },
         type: "POST"
     })
 
     const caronas = await $.ajax({
         url: '/Carona/GetCaronas',
         datatype: "json",
-        data: { EventoId: $("#participante-eventoid").val(), Tipo: 1 },
+        data: { EventoId: SelectedEvent.Id, Tipo: 1 },
         type: "POST"
     })
 
     const circulos = await $.ajax({
         url: '/Circulo/GetCirculos',
         datatype: "json",
-        data: { EventoId: $("#participante-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST"
     })
 
     const padrinhos = await $.ajax({
         url: '/Padrinho/GetPadrinhos',
         datatype: "json",
-        data: { EventoId: $("#participante-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST"
     })
 
     const etiquetas = await $.ajax({
         url: '/Etiqueta/GetEtiquetasByEventoId',
-        data: { eventoId: $("#participante-eventoid").val() },
+        data: { eventoId: SelectedEvent.Id },
         datatype: "json",
         type: "POST",
     });
@@ -1915,7 +1911,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-m").val(),
-                        EventoId: $("#participante-eventoid").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 1
                     }),
             }))
@@ -1931,7 +1927,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-f").val(),
-                        EventoId: $("#participante-eventoid").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 1
                     }),
             }))
@@ -1947,7 +1943,7 @@ async function applyBulk() {
                     {
                         ParticipanteId: id,
                         DestinoId: $("#bulk-quarto-misto").val(),
-                        EventoId: $("#participante-eventoid").val(),
+                        EventoId: SelectedEvent.Id,
                         tipo: 1
                     }),
             }))

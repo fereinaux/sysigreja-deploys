@@ -35,13 +35,7 @@
             <div class="row">
                 <div class="col-xs-12 col-lg-2">
                     <h5>Evento</h5>
-                    <select class="form-control" id="equipante-eventoid-filtro" onchange="loadEquipes()">
-                        <option data-status="Selecione" value=999>Selecione</option>
-                        @foreach (var evento in ViewBag.Eventos)
-                        {
-                            <option data-status="@evento.Status" data-casal="@evento.IsCasal" value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
-                        }
-                    </select>
+                    @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-filtro", OnChange = "loadEquipes", Roles = "Financeiro,Administrativo,Admin,Padrinho" })                   
                 </div>
                 <div class="col-xs-12 col-lg-2 hide-tipoevento">
                     <h5>Status</h5>
@@ -171,12 +165,7 @@
                 <div class="moldura-modal p-h-xs">
 
                     <div class="row p-md">
-                        <select class="form-control m-b-sm" id="equipante-eventoid">
-                            @foreach (var evento in ViewBag.Eventos)
-                            {
-                                <option data-casal="@evento.IsCasal" value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
-                            }
-                        </select>
+                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid", OnChange = "LoadArquivosEquipante", Roles = "Financeiro,Administrativo,Admin,Padrinho" })                       
                         <form enctype="multipart/form-data" id="frm-upload-arquivo-modal" method="post" novalidate="novalidate">
                             <input type="hidden" name="EquipanteIdModal" id="EquipanteIdModal" />
                             <input type="hidden" name="EventoIdModal" id="EventoIdModal" />
@@ -356,12 +345,7 @@
 
                         <div class="col-sm-12 p-w-md text-center evento-bulk" style="display:none">
                             <h5>Evento</h5>
-                            <select class="form-control" id="equipante-eventoid-bulk" onchange="loadEquipesBulk()">
-                                @foreach (var evento in ViewBag.Eventos)
-                                {
-                                    <option data-status="@evento.Status" data-casal="@evento.IsCasal" value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
-                                }
-                            </select>
+                            @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-bulk", OnChange = "loadEquipesBulk", Roles = "Financeiro,Administrativo,Admin,Padrinho" })                            
                         </div>
 
                         <div class="col-sm-12 p-w-md text-center quarto-m not-evento-bulk">

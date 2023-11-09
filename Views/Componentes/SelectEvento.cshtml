@@ -1,0 +1,81 @@
+﻿@model SysIgreja.ViewModels.SelectViewModel
+
+<select class="form-control @(Model.Class)" id="@(Model.Id)" onchange="changeEvento_@(Model.OnChange)()">
+</select>
+
+<script>
+    $.holdReady(true);
+
+    function handleGlobals() {
+        $('#pagamentos-valor').data('valor-realista', SelectedEvent.Valor)
+        $('#pagamentos-valor').data('valor-equipante', SelectedEvent.ValorTaxa)
+        $('.bg-coord').css('background-color', SelectedEvent.CorBotao)
+        if (SelectedEvent.LogoId) {
+            $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
+            $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
+            $('#home-button-logo').css('display', 'block')
+            $('#img-logo').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
+        } else {
+            $('#home-button-logo').css('display', 'none')
+        }
+
+        $('body').on('DOMNodeInserted', '.swal-title', function () {
+            $('.swal-modal').css('background', SelectedEvent.CorBotao)
+            $('.swal-modal').css('color', 'white')
+            $('.swal-title').css('color', 'white')
+
+
+            $('.swal-modal').css('background', SelectedEvent.CorBotao)
+            $('.swal-modal').css('color', 'white')
+        });
+        $('body').on('DOMNodeInserted', '.swal-content', function () {
+            $('.swal-content').css('color', 'white')
+            $('.swal-content__input').css('background', SelectedEvent.CorBotao)
+
+        });
+
+        $('body').on('DOMNodeInserted', '.swal-text', function () {
+            $('.swal-text').css('color', 'white')
+
+        });
+
+        $('.btn.btn-flat').css('background', SelectedEvent.CorBotao)
+        $('.btn.btn-flat').css('margin-left', '7px')
+    }
+
+    function changeEvento_@(Model.OnChange)() {
+        getClaims().then(claims => {
+            SelectedEvent = claims.Eventos.find(evento => evento.Id == $(`#@(Model.Id)`).val())
+            handleGlobals()
+            if (typeof @(Model.OnChange) != 'undefined') {
+                @(Model.OnChange)()
+            }
+        })
+    }
+
+    getClaims().then(claims => {
+        roles = '@Model.Roles'.replaceAll(' ', '').split(',')
+        if (roles.length == 1 && roles[0] == "Coordenador") {
+            eventos = claims.Eventos.filter(evento => evento.Coordenador == true)
+        } else {
+            eventos = claims.Eventos.filter(evento => roles.includes(evento.Role))
+        }
+  
+        if (eventos.length > 0) {
+            eventos.forEach(function (evento) {
+                $(`#@(Model.Id)`).append($(`<option ${localStorage.getItem('eventoId') == evento.Id ? 'selected' : ''} data-casal="${evento.TipoEvento == 'Casais'}" value="${evento.Id}" data-role="${evento.Role}">${evento.Titulo} ${evento.Numeracao}</option>`));
+            });
+
+            handleGlobals()
+            $.holdReady(false);
+
+            if (eventos.length == 1 || !eventos.map(evento => evento.Id).includes(SelectedEvent.Id)) {
+                SelectedEvent = eventos[0]
+                localStorage.setItem('eventoId', SelectedEvent.Id)
+            }
+        } else {
+            window.location.href = 'Account/NaoAutorizado'
+        }
+    })
+
+</script>

@@ -15,7 +15,7 @@ function CarregarTabelaEquipe() {
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
         dom: domConfig,
-        buttons: getButtonsConfig(`Equipes ${$("#equipe-eventoid option:selected").text()}`),
+        buttons: getButtonsConfig(`Equipes ${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`),
         columns: [
             { data: "Equipe", name: "Equipe", autoWidth: true },
             { data: "QuantidadeMembros", name: "QuantidadeMembros", autoWidth: true },
@@ -34,7 +34,7 @@ function CarregarTabelaEquipe() {
         ajax: {
             url: '/Equipe/GetEquipes',
             datatype: "json",
-            data: { EventoId: $("#equipe-eventoid").val() },
+            data: { EventoId: SelectedEvent.Id },
             type: "POST"
         }
     };
@@ -46,7 +46,7 @@ function PrintAll() {
     $.ajax({
         url: '/Equipe/GetEquipes',
         datatype: "json",
-        data: { EventoId: $("#equipe-eventoid").val() },
+        data: { EventoId: SelectedEvent.Id },
         type: "POST",
         success: function (data) {
             var arrPromises = []
@@ -54,7 +54,7 @@ function PrintAll() {
                 if (equipe.QuantidadeMembros > 0) {
                     arrPromises.push($.ajax({
                         url: '/Equipe/GetMembrosEquipeDatatable',
-                        data: { EventoId: $("#equipe-eventoid").val(), EquipeId: equipe.Id },
+                        data: { EventoId: SelectedEvent.Id, EquipeId: equipe.Id },
                         datatype: "json",
                         type: "POST"
 
@@ -207,7 +207,7 @@ function header(doc, evento, page, equipe) {
 function PrintEquipe(id) {
     $.ajax({
         url: '/Equipe/GetMembrosEquipeDatatable',
-        data: { EventoId: $("#equipe-eventoid").val(), EquipeId: id },
+        data: { EventoId: SelectedEvent.Id, EquipeId: id },
         datatype: "json",
         type: "POST",
         success: (result) => {
@@ -222,7 +222,7 @@ function PrintEquipe(id) {
 function FillDoc(doc, result) {
 
     var widthP = 285
-    var evento = $("#equipe-eventoid option:selected").text();
+    var evento = `${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`;
     header(doc, evento, 1, result.data[0].Equipe)
 
 
@@ -288,7 +288,7 @@ function CarregarTabelaMembrosEquipe(equipeId, titulo) {
         ],
         ajax: {
             url: '/Equipe/GetMembrosEquipeDatatable',
-            data: { EventoId: $("#equipe-eventoid").val(), EquipeId: equipeId },
+            data: { EventoId: SelectedEvent.Id, EquipeId: equipeId },
             datatype: "json",
             type: "POST"
         }
@@ -305,7 +305,7 @@ $(document).ready(function () {
             data: function (params) {
                 var query = {
                     Search: params.term,
-                    EventoId: $("#equipe-eventoid").val()
+                    EventoId: SelectedEvent.Id
                 }
 
                 // Query parameters will be ?search=[term]&type=public
@@ -331,7 +331,7 @@ $("#modal-membros-equipe").on('hidden.bs.modal', function () {
 function ListarEquipe(row) {
     $("#equipe-equipantes").val("Pesquisar").trigger("chosen:updated");
     EquipeId = row.Id
-    Titulo = `${row.Equipe} - ${$("#equipe-eventoid option:selected").text()}`;
+    Titulo = `${row.Equipe} - ${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`;
     CarregarTabelaMembrosEquipe(row.Id, Titulo);
     $("#equipe-id").val(row.Id);
     $('.titulo-equipe').text(Titulo);
@@ -348,7 +348,7 @@ function AddMembroEquipe() {
             data: JSON.stringify(
                 {
                     EquipanteId: $("#equipe-equipantes").val(),
-                    EventoId: $("#equipe-eventoid").val(),
+                    EventoId: SelectedEvent.Id,
                     EquipeId: $("#equipe-id").val()
                 }),
             success: function () {

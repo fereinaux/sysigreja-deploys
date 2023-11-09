@@ -2037,7 +2037,7 @@ async function applyBulk() {
 async function printFicha() {
     var element = document.getElementById('form-participante');
     $('#form-participante').find('.col-sm-12').addClass('col-sm-6')
-    $('#logo-relatorio-participante').attr('src', `data:image/png;base64,${logoRelatorio}`)
+    $('#logo-relatorio-participante').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`)
     $('#logo-relatorio-participante').css('display', 'block')
     changeMap = $('#map').css('display') == 'block'
     $('#map').css('display', 'none')

@@ -51,6 +51,7 @@ L.Rectangle.include({
 });
 
 
+selectedMarkers = []
 map.on(L.Draw.Event.CREATED, function (e) {
     selectedMarkers = []
     markerLayer.eachLayer(function (marker) {

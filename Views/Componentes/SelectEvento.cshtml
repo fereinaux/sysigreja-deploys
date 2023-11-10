@@ -9,7 +9,7 @@
     function handleGlobals() {
         if (SelectedEvent) {
 
-
+        $('title').text(`${SelectedEvent.Titulo} | ${$('#title').text()}`)
         $('#pagamentos-valor').data('valor-realista', SelectedEvent.Valor)
         $('#pagamentos-valor').data('valor-equipante', SelectedEvent.ValorTaxa)
         $('.bg-coord').css('background-color', SelectedEvent.CorBotao)

@@ -702,7 +702,7 @@
         function renderPage(xhr, pushHistory) {
             var naoAutorizado = xhr.getResponseHeader('NaoAutorizado');
             if (naoAutorizado) {
-                window.location.href = "/NaoAutorizado"
+                window.location.href = '/Account/NaoAutorizado'
                 return
             }
             // clear/reset js state

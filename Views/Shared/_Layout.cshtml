@@ -66,7 +66,7 @@
                     })
                 Claims = await xhrPopulate
 
-                SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId'))
+                SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 return Claims
             }
         }
@@ -329,19 +329,7 @@
         }
     </script>
     <script>
-        function loadEvery() {
-            if (!window.location.href.includes('Coordenador')) {
-                globalEventoId = localStorage.getItem('eventoId')
-                globalConfigId = localStorage.getItem('configId')
-                if (globalConfigId != null) {
-                    $("*[id*='configId']").val(globalConfigId)
-                }
-                if (globalEventoId != 999 && globalEventoId != null) {
-
-                    $("*[id*='eventoid']").val(globalEventoId).trigger("chosen:updated");
-
-                }
-            }
+        function loadEvery() { 
             if (SelectedEvent.Id) {
                 $('title').text(`${SelectedEvent.Titulo} | ${$('#title').text()}`)
             } else if ($("*[id*='configId']").val()) {
@@ -432,14 +420,9 @@
         })
 
         const { jsPDF } = window.jspdf;
-        let globalEventoId
-        let globalConfigId
         var config = {}
         var campos = []
-        let isAdm = @User.IsInRole(Usuario.Admin).ToString().ToLower() || @User.IsInRole("Geral").ToString().ToLower();
         let username = '@UtilServices.CapitalizarNome(User.Identity.GetUserName())'
-        let logoRelatorio;
-        let logoLogin;
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
 
@@ -514,32 +497,31 @@
 
         });
 
-        function loadConfig(config) {
-            globalConfigId = config.Id
-            $('title').text(`${config.Titulo} | ${$('#title').text()}`)
+        function loadConfig() {
+            $('title').text(`${SelectedEvent.Titulo} | ${$('#title').text()}`)
 
-            if (config.TipoQuarto == "Endereco") {
+            if (SelectedEvent.TipoQuarto == "Endereco") {
                 $('.quarto-endereco').css('display', 'block')
             } else {
                 $('.quarto-endereco').css('display', 'none')
             }
 
-            $('.title-circulo').text(config.EquipeCirculo)
+            $('.title-circulo').text(SelectedEvent.EquipeCirculo)
 
 
-            if (config.CorBotao) {
+            if (SelectedEvent.CorBotao) {
                 $('body').on('DOMNodeInserted', '.swal-title', function () {
-                    $('.swal-modal').css('background', config.CorBotao)
+                    $('.swal-modal').css('background', SelectedEvent.CorBotao)
                     $('.swal-modal').css('color', 'white')
                     $('.swal-title').css('color', 'white')
 
 
-                    $('.swal-modal').css('background', config.CorBotao)
+                    $('.swal-modal').css('background', SelectedEvent.CorBotao)
                     $('.swal-modal').css('color', 'white')
                 });
                 $('body').on('DOMNodeInserted', '.swal-content', function () {
                     $('.swal-content').css('color', 'white')
-                    $('.swal-content__input').css('background', config.CorBotao)
+                    $('.swal-content__input').css('background', SelectedEvent.CorBotao)
 
                 });
 
@@ -548,7 +530,7 @@
 
                 });
 
-                $('.btn.btn-flat').css('background', config.CorBotao)
+                $('.btn.btn-flat').css('background', SelectedEvent.CorBotao)
                 $('.btn.btn-flat').css('margin-left', '7px')
 
             } else {
@@ -572,31 +554,8 @@
                 });
             }
 
-            $('#home-button-logo').css('display', 'block')
-            if (config.LogoRelatorioId) {
-                logoRelatorio = config.LogoRelatorio
-            } else {
-                logoRelatorio = config.Logo
-            }
-
-            if (config.MeioPagamentos.length > 0) {
-                $("[id$='meiopagamento']").html(`${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
-                $("#busca-meiopagamento").html(`<option value="0">Selecione</option>${config.MeioPagamentos.map(mp => `<option value=${mp.Id}>${mp.Descricao}</option>`)}`)
-
-            }
-            if (config.Etiquetas.length > 0) {
-                $("[id$='-etiquetas']").html(`${config.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)}`)
-            }
-            if (config.CentroCustos.length > 0) {
-                $("[id$='-centrocusto']").html(`${config.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
-
-                $("#busca-centrocusto").html(`<option value="0">Selecione</option>${config.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
-
-            }
-
-            if ($("#busca-centrocusto").length > 0 && $("#busca-meiopagamento").length > 0) {
-                Filtrar()
-            }
+            $('#home-button-logo').css('display', 'block')  
+    
         }
 
 

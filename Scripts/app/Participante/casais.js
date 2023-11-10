@@ -223,7 +223,7 @@ ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt',
                             ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}                            
                             ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
-                        : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
+                        : `${(SelectedEvent.Role == 'Admin') ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
 ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'red', 'Deletar Inscrição') : ''}` : ''}`
                 }
             }
@@ -309,7 +309,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
 <label style="display:${$('#is-casado').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataCasamento"> Data de Casamento <i></i></label>
 <label style="display:${$('.congregacao').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Congregacao"> Congregação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> ${config.EquipeCirculo} <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Circulo"> ${SelectedEvent.EquipeCirculo} <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Carona <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Padrinho"> Padrinho <i></i></label>
@@ -1347,7 +1347,7 @@ function verificaCep(input) {
     let cep = $(input).val()
     if (cep.length == 9) {
         $.ajax({
-            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            url: `https://api.iecbeventos.com.br/api/cep/${cep.replaceAll('-', '')}`,
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',

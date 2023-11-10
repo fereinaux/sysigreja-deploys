@@ -425,7 +425,7 @@ function GetParticipante() {
                     $('.btn-checkin').removeClass('d-none');
                 }
 
-                $(`#participante-nome`).prop("disabled", !isAdm);
+                $(`#participante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
 
                 if (!checkin && isMobile) {
 
@@ -531,7 +531,7 @@ function GetEquipante() {
 
 
                 $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
-                $(`#participante-nome`).prop("disabled", !isAdm);
+                $(`#participante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
 
                 if (data.Equipante.Checkin) {
                     $('.status').text("Presente");
@@ -1304,7 +1304,7 @@ function verificaCep(input) {
     let cep = $(input).val()
     if (cep.length == 9) {
         $.ajax({
-            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            url: `https://api.iecbeventos.com.br/api/cep/${cep.replaceAll('-', '')}`,
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',

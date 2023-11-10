@@ -920,7 +920,7 @@ function GetEquipante(id) {
 }
 
 function EditEquipante(id) {
-    $(`#equipante-nome`).prop("disabled", !isAdm);
+    $(`#equipante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
     $(`#equipante-logradouro`).prop("disabled", true);
     $(`#equipante-bairro`).prop("disabled", true);
     $(`#equipante-cidade`).prop("disabled", true);
@@ -1769,7 +1769,7 @@ function verificaCep(input) {
     let cep = $(input).val()
     if (cep.length == 9) {
         $.ajax({
-            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            url: `https://api.iecbeventos.com.br/api/cep/${cep.replaceAll('-', '')}`,
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',

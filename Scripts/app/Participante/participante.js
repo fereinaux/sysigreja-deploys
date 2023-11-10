@@ -252,7 +252,7 @@ ${GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row
                             ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}                            
                             ${GetButton('CancelarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
-                        : `${isAdm ? ` ${GetLabel('AtivarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'green', 'Ativar Inscrição')}
+                        : `${(SelectedEvent.Role == 'Admin') ? ` ${GetLabel('AtivarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'green', 'Ativar Inscrição')}
 ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'red', 'Deletar Inscrição') : ''}` : ''}`
                 }
             }
@@ -1244,7 +1244,7 @@ function GetParticipante(id) {
 }
 
 function EditParticipante(id) {
-    $(`#participante-nome`).prop("disabled", !isAdm);
+    $(`#participante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
     $(`#participante-logradouro`).prop("disabled", true);
     $(`#participante-bairro`).prop("disabled", true);
     $(`#participante-cidade`).prop("disabled", true);
@@ -1377,7 +1377,7 @@ function verificaCep(input) {
     let cep = $(input).val()
     if (cep.length == 9) {
         $.ajax({
-            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            url: `https://api.iecbeventos.com.br/api/cep/${cep.replaceAll('-', '')}`,
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',

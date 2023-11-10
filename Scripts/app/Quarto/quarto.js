@@ -142,9 +142,9 @@ function PrintQuarto(row) {
 
 
 function headerLandscape(doc, evento, page, quarto) {
-    if (logoRelatorio) {
+    if (SelectedEvent.LogoRelatorioId) {
         var img = new Image();
-        img.src = `data:image/png;base64,${logoRelatorio}`;
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
     doc.setFont("helvetica", "normal");
@@ -158,7 +158,7 @@ function headerLandscape(doc, evento, page, quarto) {
 
     doc.setFont('helvetica', "bold")
     doc.text(12, 43, "Nome");
-    doc.text(115, 43, config.EquipeCirculo);
+    doc.text(115, 43, SelectedEvent.EquipeCirculo);
     doc.text(165, 43, "Medicamento/Alergia");
 
     doc.line(10, 45, widthP, 45);
@@ -166,9 +166,9 @@ function headerLandscape(doc, evento, page, quarto) {
 }
 
 function header(doc, evento, page, quarto) {
-    if (logoRelatorio) {
+    if (SelectedEvent.LogoRelatorioId) {
         var img = new Image();
-        img.src = `data:image/png;base64,${logoRelatorio}`;
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
     doc.setFont("helvetica", "normal");
@@ -182,7 +182,7 @@ function header(doc, evento, page, quarto) {
 
     doc.setFont('helvetica', "bold")
     doc.text(12, 43, "Nome");
-    doc.text(115, 43, window.location.href.includes('Quarto/Voluntarios') ? "Apelido" : config.EquipeCirculo);
+    doc.text(115, 43, window.location.href.includes('Quarto/Voluntarios') ? "Apelido" : SelectedEvent.EquipeCirculo);
 
     doc.line(10, 45, widthP, 45);
     doc.setFont('helvetica', "normal")
@@ -593,7 +593,7 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     Nome
   </li>
   <li>
-    ${config.EquipeCirculo}
+    ${SelectedEvent.EquipeCirculo}
   </li> 
 </ul>`,
         interactive: true,
@@ -608,7 +608,7 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     Nome
   </li>
   <li>
-      ${config.EquipeCirculo}
+      ${SelectedEvent.EquipeCirculo}
   </li>
   <li>
     Medicamentos
@@ -670,7 +670,7 @@ function verificaCep(input) {
     let cep = $(input).val()
     if (cep.length == 9) {
         $.ajax({
-            url: `https://api.iecbeventos.com.br/cep/${cep.replaceAll('-', '')}`,
+            url: `https://api.iecbeventos.com.br/api/cep/${cep.replaceAll('-', '')}`,
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',

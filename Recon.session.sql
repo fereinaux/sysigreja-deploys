@@ -1,3 +1,4 @@
-select * from EquipanteEventoes where EquipanteId = 2
+select avg(contador) from (
 
-select * from eventoes where id = 1128
+select count(*) as contador, month(DataEvento) as mes from Eventoes where YEAR(DataEvento) = 2023 group by month(DataEvento) order by 2 
+)

@@ -7,6 +7,9 @@
     $.holdReady(true);
 
     function handleGlobals() {
+        if (SelectedEvent) {
+
+
         $('#pagamentos-valor').data('valor-realista', SelectedEvent.Valor)
         $('#pagamentos-valor').data('valor-equipante', SelectedEvent.ValorTaxa)
         $('.bg-coord').css('background-color', SelectedEvent.CorBotao)
@@ -59,6 +62,7 @@
 
         if ($("#busca-centrocusto").length > 0 && $("#busca-meiopagamento").length > 0) {
             Filtrar()
+            }
         }
     }
 
@@ -79,7 +83,7 @@
         } else {
             eventos = claims.Eventos.filter(evento => roles.includes(evento.Role))
         }
-  
+
         if (eventos.length > 0) {
             eventos.forEach(function (evento) {
                 $(`#@(Model.Id)`).append($(`<option ${localStorage.getItem('eventoId') == evento.Id ? 'selected' : ''} data-casal="${evento.TipoEvento == 'Casais'}" value="${evento.Id}" data-role="${evento.Role}">${evento.Titulo} ${evento.Numeracao}</option>`));

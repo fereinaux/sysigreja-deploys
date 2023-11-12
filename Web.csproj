@@ -1091,7 +1091,7 @@
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\plugins\chosen\chosen.jquery.js" />
-    <Content Include="Scripts\plugins\dataTables\datatable-config-v4.js" />
+    <Content Include="Scripts\plugins\dataTables\datatable-config-v5.js" />
     <Content Include="Scripts\app\Util\constants.js" />
     <Content Include="Scripts\app\Evento\evento.js" />
     <Content Include="Scripts\app\inspinia.js" />

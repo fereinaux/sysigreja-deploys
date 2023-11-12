@@ -100,27 +100,24 @@ function getButtonsConfig(fileName) {
                 columns: isMobile ? ':not(.noExport), .export' : ':not(.noExport):visible, .export', orthogonal: 'export'
             }, customize: function (doc) {
 
-                $.ajax({
-                    url: `/Arquivo/GetArquivoBase64/${SelectedEvent.LogoRelatorioId}`,
-                    datatype: "json",
-                   type: "GET",                  
-                }).then(img => {
-                    doc.content.splice(0, 1, {
-                        columns: [
-                            {
-                                margin: [5, 5, 25, 15],
-                                alignment: 'left',
-                                image: `data:image/png;base64,${img}` ,
-                                width: 70
-                            },
-                            { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
+                doc.content.images = {
+                    logo = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`
+                }
+                doc.content.splice(0, 1, {
+                    columns: [
+                        {
+                            margin: [5, 5, 25, 15],
+                            alignment: 'left',
+                            image: logo,
+                            width: 70
+                        },
+                        { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
 
-                        ]
+                    ]
 
-                    });
-
-                    doc.defaultStyle.icon = { font: 'emoji' }
                 });
+
+                doc.defaultStyle.icon = { font: 'emoji' }
 
                
             }

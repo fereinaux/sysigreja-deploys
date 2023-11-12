@@ -90,7 +90,7 @@ namespace SysIgreja
                       "~/Scripts/plugins/dataTables/dataTables.responsive.min.js",
                       "~/Scripts/plugins/dataTables/dataTables.colReorder.min.js",
                       "~/Scripts/plugins/dataTables/vsfonts.js",
-                      "~/Scripts/plugins/dataTables/datatable-config-v6.js",
+                      "~/Scripts/plugins/dataTables/datatable-config-v7.js",
                       "~/Scripts/plugins/dataTables/dataTables.fixedColumns.min.js"));
 
             // dataPicker styles

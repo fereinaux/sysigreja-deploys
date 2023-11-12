@@ -144,20 +144,20 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public string GetArquivo(int Id)
+        public ActionResult GetArquivo(int Id)
         {
             var arquivo = arquivosBusiness.GetArquivoById(Id);
+            return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
 
-            return Convert.ToBase64String(arquivo.Conteudo);
         }
 
 
         [HttpGet]
-        public ActionResult GetArquivoBase64(int Id)
+        public string GetArquivoBase64(int Id)
         {
             var arquivo = arquivosBusiness.GetArquivoById(Id);
 
-            return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+            return Convert.ToBase64String(arquivo.Conteudo);
         }
 
         [HttpGet]

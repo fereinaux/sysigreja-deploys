@@ -107,7 +107,7 @@ function CarregarTabelaCirculo() {
         {
             data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
             "render": function (data, type, row) {
-                return `${GetButton('ListarDirigentes', JSON.stringify(row), 'blue', 'fa-list-alt', `Listar Dirigentes do(a) ${config.EquipeCirculo}`)}
+                return `${GetButton('ListarDirigentes', JSON.stringify(row), 'blue', 'fa-list-alt', `Listar Dirigentes do(a) ${SelectedEvent.EquipeCirculo}`)}
                             ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
                             ${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
                             ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}
@@ -192,9 +192,9 @@ function PrintCirculo(row) {
 
 
 function FillDocLandscape(doc, result) {
-    if (logoRelatorio) {
+    if (SelectedEvent.LogoRelatorioId) {
         var img = new Image();
-        img.src = `data:image/png;base64,${logoRelatorio}`;
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
 
@@ -214,7 +214,7 @@ function FillDocLandscape(doc, result) {
 
         height += 6;
         doc.setFont('helvetica', "bold")
-        if (config.TipoEvento == "Casais") {
+        if (SelectedEvent.TipoEvento == "Casais") {
             doc.text(12, height, "Nome");
             doc.text(112, height, "Whatsapp");
         } else {
@@ -230,7 +230,7 @@ function FillDocLandscape(doc, result) {
         $(result.data[0].Dirigentes).each((index, dirigente) => {
             doc.text(12, height, dirigente.Nome);
 
-            if (config.TipoEvento == "Casais") {
+            if (SelectedEvent.TipoEvento == "Casais") {
                 doc.text(12, height, dirigente.Nome);
                 doc.text(112, height, dirigente.Fone);
             } else {
@@ -244,7 +244,7 @@ function FillDocLandscape(doc, result) {
     }
 
     doc.setFont('helvetica', "bold")
-    if (config.TipoEvento == "Casais") {
+    if (SelectedEvent.TipoEvento == "Casais") {
         doc.text(12, height, "Casal");
         doc.text(82, height, "Whatsapp");
         doc.text(182, height, "Bairro");
@@ -262,7 +262,7 @@ function FillDocLandscape(doc, result) {
     height += 5
     doc.setFont('helvetica', "normal")
     $(result.data).each((index, participante) => {
-        if (config.TipoEvento == "Casais") {
+        if (SelectedEvent.TipoEvento == "Casais") {
             doc.text(12, height, participante.Nome);
             doc.text(82, height, participante.Fone);
             doc.text(182, height, participante.Bairro || "");
@@ -282,9 +282,9 @@ function FillDocLandscape(doc, result) {
 }
 
 function FillDoc(doc, result) {
-    if (logoRelatorio) {
+    if (SelectedEvent.LogoRelatorioId) {
         var img = new Image();
-        img.src = `data:image/png;base64,${logoRelatorio}`;
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
 
@@ -304,7 +304,7 @@ function FillDoc(doc, result) {
 
         height += 6;
         doc.setFont('helvetica', "bold")
-        if (config.TipoEvento == "Casais") {
+        if (SelectedEvent.TipoEvento == "Casais") {
             doc.text(12, height, "Nome");
             doc.text(112, height, "Whatsapp");
         } else {
@@ -320,7 +320,7 @@ function FillDoc(doc, result) {
         $(result.data[0].Dirigentes).each((index, dirigente) => {
             doc.text(12, height, dirigente.Nome);
 
-            if (config.TipoEvento == "Casais") {
+            if (SelectedEvent.TipoEvento == "Casais") {
                 doc.text(12, height, dirigente.Nome);
                 doc.text(112, height, dirigente.Fone);
             } else {
@@ -333,7 +333,7 @@ function FillDoc(doc, result) {
     }
 
     doc.setFont('helvetica', "bold")
-    if (config.TipoEvento == "Casais") {
+    if (SelectedEvent.TipoEvento == "Casais") {
         doc.text(12, height, "Casal");
         doc.text(112, height, "Whatsapp");
     } else {
@@ -347,7 +347,7 @@ function FillDoc(doc, result) {
     height += 5
     doc.setFont('helvetica', "normal")
     $(result.data).each((index, participante) => {
-        if (config.TipoEvento == "Casais") {
+        if (SelectedEvent.TipoEvento == "Casais") {
             doc.text(12, height, participante.Nome);
             doc.text(112, height, participante.Fone);
         } else {
@@ -684,11 +684,11 @@ function ChangeCirculo(participanteId, destinoId) {
                     border: 'none'
                 },
                 message: `<div class="spinner">
-  <div style="background-color:${config.CorBotao}" class="rect1"></div>
-  <div style="background-color:${config.CorBotao}" class="rect2"></div>
-  <div style="background-color:${config.CorBotao}" class="rect3"></div>
-  <div style="background-color:${config.CorBotao}" class="rect4"></div>
-  <div style="background-color:${config.CorBotao}" class="rect5"></div>
+  <div style="background-color:${SelectedEvent.CorBotao}" class="rect1"></div>
+  <div style="background-color:${SelectedEvent.CorBotao}" class="rect2"></div>
+  <div style="background-color:${SelectedEvent.CorBotao}" class="rect3"></div>
+  <div style="background-color:${SelectedEvent.CorBotao}" class="rect4"></div>
+  <div style="background-color:${SelectedEvent.CorBotao}" class="rect5"></div>
 </div>`,
                 baseZ: 1500,
                 overlayCSS: {

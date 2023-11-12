@@ -6,6 +6,7 @@ using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.Arquivos;
 using SysIgreja.ViewModels;
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -143,7 +144,16 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetArquivo(int Id)
+        public string GetArquivo(int Id)
+        {
+            var arquivo = arquivosBusiness.GetArquivoById(Id);
+
+            return Convert.ToBase64String(arquivo.Conteudo);
+        }
+
+
+        [HttpGet]
+        public ActionResult GetArquivoBase64(int Id)
         {
             var arquivo = arquivosBusiness.GetArquivoById(Id);
 

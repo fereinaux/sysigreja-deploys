@@ -102,7 +102,7 @@ function getButtonsConfig(fileName) {
                         {
                             margin: [5, 5, 25, 15],
                             alignment: 'left',
-                            image: `data:image/png;base64, ${config.LogoRelatorio}`,
+                            image: await getBase64ImageFromURL(`/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`),
                             width: 70
                         },
                         { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
@@ -122,6 +122,32 @@ function getButtonsConfig(fileName) {
     ];
 }
 
+
+getBase64ImageFromURL(url) {
+    return new Promise((resolve, reject) => {
+        var img = new Image();
+        img.setAttribute("crossOrigin", "anonymous");
+
+        img.onload = () => {
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+
+            var dataURL = canvas.toDataURL("image/png");
+
+            resolve(dataURL);
+        };
+
+        img.onerror = error => {
+            reject(error);
+        };
+
+        img.src = url;
+    });
+}
 
 function stateSaveCallback(settings, data) {
     localStorage.setItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val(), JSON.stringify(data))

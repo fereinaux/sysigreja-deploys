@@ -2019,10 +2019,9 @@ async function printFicha() {
     });
 }
 
-function enviarMensagens(tipo) {
+async function loadMensagens(tipo) {
 
     let ids = getCheckedIds()
-
     let msgId
 
     switch (tipo) {
@@ -2048,45 +2047,6 @@ function enviarMensagens(tipo) {
             break;
     }
 
-    $.ajax({
-        url: "/Mensagem/GetMensagem/",
-        data: { Id: msgId },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (dataMsg) {
-
-            $.ajax({
-                url: "/Participante/GetTelefones/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ ids }),
-                success: function (data) {
-
-                    $.ajax({
-                        url: "https://api.iecbeventos.com.br/whatsapp/message",
-                        datatype: "json",
-                        type: "POST",
-                        contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify(
-                            {
-                                session: username,
-                                messages: data.Equipantes.map(equipante => ({
-                                    number: `${equipante[`Fone${tipo}`].replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
-                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante[`Nome`]).replaceAll('${Nome Contato}', equipante[`Nome${tipo}`])
-                                }))
-                            }),
-                        success: function () {
-                            SuccessMesageOperation();
-                        }
-                    });
-
-                }
-            })
-        }
-    });
-
+    await enviarMensagens(msgId, ids, tipo)
 
 }
-

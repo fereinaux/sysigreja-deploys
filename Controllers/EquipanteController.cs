@@ -947,7 +947,7 @@ namespace SysIgreja.Controllers
 
             var result = query.Select(x => new { x.Fone, x.Nome, x.Equipes.FirstOrDefault(y => y.EventoId == eventoId).MercadoPagoPreferenceId }).ToList();
 
-            return Json(new { Equipantes = result }, JsonRequestBehavior.AllowGet);
+            return Json(new { Pessoas = result }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

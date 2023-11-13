@@ -72,7 +72,7 @@ Para entrar no sistema, acesse: *${window.location.hostname}/login*
 *Dados de Login:*
 
 Usuário: ${user.UserName}
-${!user.hasChangedPassword ? `Senha: ${user.Senha}` : "" }
+${!user.hasChangedPassword ? `Senha: ${user.Senha}` : ""}
 `
 }
 
@@ -82,12 +82,12 @@ function getPerfilName(user) {
             return "Usuário Financeiro"
         case "Administrativo":
             return "Usuário Administrativo"
-        case "Geral": 
+        case "Geral":
             return "Administrador Geral"
         case "Admin":
             return "Administrador"
-     default:
-    return user.Perfil
+        default:
+            return user.Perfil
     }
 }
 
@@ -96,6 +96,57 @@ function getDestino(user) {
         case "Geral":
             return `${window.location.hostname}`
         default:
-            return `${user.Evento.Titulo} ${user.Evento.Numeracao }`
+            return `${user.Evento.Titulo} ${user.Evento.Numeracao}`
     }
+}
+
+async function enviarMensagens(mensagemId, ids, tipo) {
+
+    const status_response = await handleWhatsappConnected()
+
+
+
+    const dataMsg = await $.ajax({
+        url: "/Mensagem/GetMensagem/",
+        data: { Id: mensagemId },
+        datatype: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+
+    });
+
+    const data = await $.ajax({
+        url: "/Equipante/GetTelefones/",
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({
+            ids, EventoId: SelectedEvent.Id,
+        }),
+    })
+
+    async function callback() {
+        Promise.all(data.Pessoas.map(pessoa => ($.ajax({
+            url: `https://api.iecbeventos.com.br/api/${status_response.token}/send-message`,
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                {
+                    phone: `${pessoa.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
+                    message: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', pessoa.Nome).replaceAll('${Nome Contato}', pessoa[`Nome${tipo}`]).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${pessoa.MercadoPagoPreferenceId}`)
+                }),
+        })))).then(() => {
+            SuccessMesageOperation()
+        })
+    }
+
+    if (status_response.status != "CONNECTED") {
+        console.log('teste');
+        await connectWhatsapp(status_response.token, callback)
+    } else {
+        await callback()
+    }
+
+
 }

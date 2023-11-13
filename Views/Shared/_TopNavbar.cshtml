@@ -202,7 +202,11 @@
             </div>
             <div class="modal-body">
                 <div class="moldura-modal p-h-xs" style="display:flex">
-                    <img style="margin:auto" src="" id="whats-qr" />
+                    <img style="margin:auto;display:none" src="" id="whats-qr" />
+                    <div id="loader-qr" class="sk-spinner sk-spinner-chasing-dots">
+                        <div class="sk-dot1"></div>
+                        <div class="sk-dot2"></div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -216,11 +220,11 @@
 
 
 
-    <script>
+<script>
 
-        const divBase = (tipo, quantidade, valor) => {
-            const { titulo, link, icon, onClick } = handleTipo(tipo, quantidade, valor);
-            return `
+    const divBase = (tipo, quantidade, valor) => {
+        const { titulo, link, icon, onClick } = handleTipo(tipo, quantidade, valor);
+        return `
                 <li class="hover-menu-notification item-notificacao">
                     <a ${link ? `href="${link}"` : `onclick="${onClick}"`}  class="dropdown-item">
                         <div>
@@ -230,125 +234,174 @@
                     </a>
                 </li>
                 `
+    }
+
+    function logoff() {
+        localStorage.removeItem('UserName')
+        localStorage.removeItem('Password')
+        document.getElementById('frm-upload-avatar').submit()
+    }
+
+    async function handleWhatsappConnected() {
+        const token = await $.ajax({
+            url: `https://api.iecbeventos.com.br/api/${username}/SysIgrejaToken/generate-token`,
+            datatype: "json",
+            type: "POST",
+        })
+
+        const status_response = await $.ajax({
+            url: `https://api.iecbeventos.com.br/api/${token.full}/status-session`,
+            datatype: "json",
+            type: "GET",
+        })
+
+        return {
+            token: token.full,
+            status: status_response.status
+        }
+    }
+
+    async function whatsBot() {
+        const status_response = await handleWhatsappConnected()
+
+        if (status_response.status == "CLOSED") {
+            await connectWhatsapp(status_response.token)
+        } else if (status_response.status == "CONNECTED") {
+            SuccessMessage("Whatsapp conectado com sucesso!")
         }
 
-        function logoff() {
-            localStorage.removeItem('UserName')
-            localStorage.removeItem('Password')
-            document.getElementById('frm-upload-avatar').submit()
-        }
+    }
 
-        function whatsBot() {
-            var socket = io.connect('https://api.iecbeventos.com.br');
-            socket.emit('session', username)
+    async function connectWhatsapp(token, callback) {
+        $('#modal-qr').modal()
+        $('#loader-qr').css('display', 'blocked')
+        const start_response = await $.ajax({
+            url: `https://api.iecbeventos.com.br/api/${token}/start-session`,
+            data: {
+                "webhook": "",
+                "waitQrCode": true
 
-            socket.on('session', function (status) {
-                console.log(status);
-                if (!status.connected) {
-                    $("#whats-qr").attr('src', `data:image/png;base64,${status.base64}`)
-                    $('#modal-qr').modal()
-                } else {
-                    SuccessMessage("Whatsapp conectado com sucesso!")
-                    $('#modal-qr').modal("hide")
+            },
+            datatype: "json",
+            type: "POST",
+        })
+
+        $("#whats-qr").attr('src', `data:image/png;base64,${start_response.qrcode}`)
+        $('#loader-qr').css('display', 'none')
+        $("#whats-qr").css('display', 'block')
+
+        const socket = io.connect('https://api.iecbeventos.com.br/');
+
+        socket.on('session-logged', function (session) {
+            if (session.session == username) {
+
+                SuccessMessage("Whatsapp conectado com sucesso!")
+                $('#modal-qr').modal("hide")
+                socket.close()
+                if (callback) {
+                    callback().then(() => { })
                 }
-            });
-        }
-
-        function pagarSistema(id, valor) {
-            let input = document.createElement("input");
-            input.type = 'number';
-            input.value = valor;
-            input.className = 'swal-content__input';
-            CustomSwal({
-                title: "Oferta do Sistema",
-                text: "Quanto você deseja ofertar?",
-                icon: "info",
-                content: input,
-                button: {
-                    text: "Ofertar"
-                },
-                className: "button-center",
-
-            }).then(result => {
-                if (result)
-                    ofertar(id, input.value)
-
-            })
-        }
-
-        const handleTipo = (tipo, quantidade, valor) => {
-            switch (tipo) {
-                case "Inscrição":
-                    return {
-                        titulo: `${quantidade} ${quantidade > 1 ? "novas inscrições" : "nova inscrição"}`,
-                        link: "/Participante",
-                        icon: '<i class="fas fa-user-plus"></i>'
-                    }
-                default:
-                    return {
-                        titulo: `Oferta do ${tipo}`,
-                        onClick: `pagarSistema(${quantidade},${valor})`,
-                        icon: '<i class="fas fa-money-bill-alt"></i>'
-                    }
             }
-        }
 
+        });
 
-        const consultarNotificacoes = () => {
-            $.ajax({
-                url: "/Notificacao/GetNotificacoesNaoLidas/",
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    const { Notificacoes, Eventos } = data
+    }
 
-                    const qtdNofitificacoes = Notificacoes.length + Eventos.length;
+    function pagarSistema(id, valor) {
+        let input = document.createElement("input");
+        input.type = 'number';
+        input.value = valor;
+        input.className = 'swal-content__input';
+        CustomSwal({
+            title: "Oferta do Sistema",
+            text: "Quanto você deseja ofertar?",
+            icon: "info",
+            content: input,
+            button: {
+                text: "Ofertar"
+            },
+            className: "button-center",
 
-                    $('#contador-notificacoes').text(qtdNofitificacoes);
+        }).then(result => {
+            if (result)
+                ofertar(id, input.value)
 
-                    $('#contador-notificacoes').css('display', qtdNofitificacoes > 0 ? 'block' : 'none')
+        })
+    }
 
-                    $('.item-notificacao').remove()
-
-                    Notificacoes.forEach(notificacao => {
-                        $('#panel-notificao').prepend(divBase(notificacao.Titulo, notificacao.Quantidade))
-                    })
-
-                    Eventos.forEach(evento => {
-                        $('#panel-notificao').prepend(divBase(evento.Evento, evento.Id, evento.Valor))
-                    })
+    const handleTipo = (tipo, quantidade, valor) => {
+        switch (tipo) {
+            case "Inscrição":
+                return {
+                    titulo: `${quantidade} ${quantidade > 1 ? "novas inscrições" : "nova inscrição"}`,
+                    link: "/Participante",
+                    icon: '<i class="fas fa-user-plus"></i>'
                 }
-            })
-
-
-        }
-
-        function ofertar(id, valor) {
-
-
-            $.ajax({
-                url: "/Evento/OfertaEvento/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(
-                    { Id: id, Valor: valor }),
-                success: (data) => {
-                    consultarNotificacoes()
-
-                    let div = document.createElement("div");
-
-                    $(div).html(`<h4>Informações para transferência</h4><p>PIX CPF: <strong>100.778.704-09</strong> - Felipe Reinaux </p><p>Enviar comprovante para <strong>(81)9.9718-7441</strong></p>`)
-                    swal({
-                        className: "button-center",
-                        title: "Oferta Computada",
-                        icon: "success",
-                        content: div
-                    });
+            default:
+                return {
+                    titulo: `Oferta do ${tipo}`,
+                    onClick: `pagarSistema(${quantidade},${valor})`,
+                    icon: '<i class="fas fa-money-bill-alt"></i>'
                 }
-            });
         }
+    }
 
-    </script>
+
+    const consultarNotificacoes = () => {
+        $.ajax({
+            url: "/Notificacao/GetNotificacoesNaoLidas/",
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                const { Notificacoes, Eventos } = data
+
+                const qtdNofitificacoes = Notificacoes.length + Eventos.length;
+
+                $('#contador-notificacoes').text(qtdNofitificacoes);
+
+                $('#contador-notificacoes').css('display', qtdNofitificacoes > 0 ? 'block' : 'none')
+
+                $('.item-notificacao').remove()
+
+                Notificacoes.forEach(notificacao => {
+                    $('#panel-notificao').prepend(divBase(notificacao.Titulo, notificacao.Quantidade))
+                })
+
+                Eventos.forEach(evento => {
+                    $('#panel-notificao').prepend(divBase(evento.Evento, evento.Id, evento.Valor))
+                })
+            }
+        })
+
+
+    }
+
+    function ofertar(id, valor) {
+
+
+        $.ajax({
+            url: "/Evento/OfertaEvento/",
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                { Id: id, Valor: valor }),
+            success: (data) => {
+                consultarNotificacoes()
+
+                let div = document.createElement("div");
+
+                $(div).html(`<h4>Informações para transferência</h4><p>PIX CPF: <strong>100.778.704-09</strong> - Felipe Reinaux </p><p>Enviar comprovante para <strong>(81)9.9718-7441</strong></p>`)
+                swal({
+                    className: "button-center",
+                    title: "Oferta Computada",
+                    icon: "success",
+                    content: div
+                });
+            }
+        });
+    }
+
+</script>
 

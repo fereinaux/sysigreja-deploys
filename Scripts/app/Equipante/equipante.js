@@ -166,7 +166,7 @@ function CarregarTabelaEquipante(callbackFunction) {
 ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                                 ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
                                 <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
-                                <input accept="image/*" onchange='Foto(${JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }) })' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
+                                <input accept="image/*" onchange='Foto(${JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone })})' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
                         }
                            ${GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico')}
@@ -174,7 +174,7 @@ ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconTel(row.Fone)}
                             ${SelectedEvent.Id != 999 ? GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
                            ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
-${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({Id: row.Id}), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
+${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({ Id: row.Id }), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 
 `;
@@ -779,7 +779,7 @@ function GetEquipante(id) {
 
                 $(`#equipante-camisa`).val(data.Equipante.Camisa);
                 $(`#equipante-nome-pai`).val(data.Equipante.NomePai);
-    
+
                 setNumber('equipante-fone', data.Equipante.Fone)
                 setNumber('equipante-fonemae', data.Equipante.FoneMae)
                 setNumber('equipante-fonepai', data.Equipante.FonePai)
@@ -1865,52 +1865,8 @@ function CarregarTabelaHistorico(id) {
     $("#table-historico-participacao").DataTable(tableHistoricoParticipacaoConfig);
 }
 
-function enviarMensagens() {
-
+async function loadMensagens() {
     let ids = getCheckedIds()
-
-
-    $.ajax({
-        url: "/Mensagem/GetMensagem/",
-        data: { Id: $("#bulk-mensagem").val() },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (dataMsg) {
-         
-            $.ajax({
-                url: "/Equipante/GetTelefones/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({
-                    ids, EventoId: SelectedEvent.Id,
-                }),
-                success: function (data) {
-
-                    $.ajax({
-                        url: "https://api.iecbeventos.com.br/whatsapp/message",
-                        datatype: "json",
-                        type: "POST",
-                        contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify(
-                            {
-                                session: username,
-                                messages: data.Equipantes.map(equipante => ({
-                                    number: `${equipante.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
-                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.MercadoPagoPreferenceId}`)
-                                }))
-                            }),
-                        success: function () {
-                            SuccessMesageOperation();
-                        }
-                    });
-
-                }
-            })
-        }
-    });
-
-
+    await enviarMensagens($("#bulk-mensagem").val() ,ids)
 }
 

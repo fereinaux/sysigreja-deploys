@@ -571,54 +571,11 @@ async function loadEquipesBulk() {
         dropdownParent: $('#modal-bulk')
     })
 }
-function enviarMensagens() {
 
+async function loadMensagens() {
     let ids = getCheckedIds()
-
-
-    $.ajax({
-        url: "/Mensagem/GetMensagem/",
-        data: { Id: $("#bulk-mensagem").val() },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (dataMsg) {
-
-            $.ajax({
-                url: "/Equipante/GetTelefones/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({ ids }),
-                success: function (data) {
-
-                    $.ajax({
-                        url: "https://api.iecbeventos.com.br/whatsapp/message",
-                        datatype: "json",
-                        type: "POST",
-                        contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify(
-                            {
-                                session: username,
-                                messages: data.Equipantes.map(equipante => ({
-                                    number: `${equipante.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')} @c.us`,
-                                    text: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome)
-                                }))
-                            }),
-                        success: function () {
-                            SuccessMesageOperation();
-                        }
-                    });
-
-                }
-            })
-        }
-    });
-
-
-
+    await enviarMensagens($("#bulk-mensagem").val(), ids)
 }
-
 
 
 function enviar() {

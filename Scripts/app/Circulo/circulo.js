@@ -1,6 +1,7 @@
 ﻿map = initMap('map')
 markerLayer = createMarkerLayer(map)
 map.setView([-8.050000, -34.900002], 13);
+initTableCirculo = false
 setInterval(function () {
     map.invalidateSize();
 }, 100);
@@ -135,6 +136,7 @@ function CarregarTabelaCirculo() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
+
             if (settings.aoData.length > 0) {
 
                 let column = settings.aoColumns[settings.aaSorting[0][0]].data
@@ -142,8 +144,12 @@ function CarregarTabelaCirculo() {
                 let search = settings.oPreviousSearch.sSearch
 
             }
-            GetCirculosComParticipantes('id', 'asc', '');
 
+            if (initTableCirculo) {
+                GetCirculosComParticipantes('id', 'asc', '');
+            }
+
+            initTableCirculo = true
         },
         ajax: {
             url: '/Circulo/GetCirculos',
@@ -201,7 +207,7 @@ function FillDocLandscape(doc, result) {
 
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    doc.text(77, 15, `${ SelectedEvent.Titulo } ${ SelectedEvent.Numeracao }`);
+    doc.text(77, 15, `${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`);
     doc.text(77, 20, `${SelectedEvent.EquipeCirculo} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 285, 38);
@@ -291,7 +297,7 @@ function FillDoc(doc, result) {
 
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    doc.text(77, 15, `${ SelectedEvent.Titulo } ${ SelectedEvent.Numeracao }`);
+    doc.text(77, 15, `${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`);
     doc.text(77, 20, `${SelectedEvent.EquipeCirculo} ${result.data[0].Titulo?.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim() || result.data[0].Cor}`);
     doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
     doc.line(10, 38, 195, 38);

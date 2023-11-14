@@ -45,7 +45,23 @@
 
 
 <div class="fixed-footer">
+    <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5">Inscreva-se já</span>
+</div>
+
+
+<div class="modal inmodal" id="modal-decisao" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs">
+                    <div class="row p-md">
+                      
     <a href="/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições" class="btn btn-juventude mt-5">Inscreva-se já</a>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -69,7 +85,7 @@
         background: #fff;
     }
 
-        .fixed-footer a {
+        .fixed-footer span {
             margin: 0 auto;
             width: 100%;
             font-size: 14px;

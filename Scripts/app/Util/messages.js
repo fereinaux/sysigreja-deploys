@@ -141,7 +141,7 @@ async function enviarMensagens(mensagemId, ids, tipo,controller) {
 
         if (pResult.filter(x => x.status == 'rejected' && x.reason.responseJSON.response.error == 'notExists').length > 0) {
 
-            ErrorMessage(`Os números das pessoas a seguir estão incorretos: \n${pResult.filter(x => x.status == 'rejected' && x.reason.responseJSON.response.error == 'notExists').map(x => `${x.reason.responseJSON.response.nome
+            ErrorMessage(`Os números das pessoas a seguir estão incorretos: \n${pResult.filter(x => x.status == 'rejected' && x.reason.responseJSON.response.error == 'notExists').map(x => `- ${x.reason.responseJSON.response.nome
                 } \n`).join().replaceAll(',','')}`)
         } else {
             SuccessMesageOperation()

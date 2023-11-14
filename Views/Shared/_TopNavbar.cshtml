@@ -257,7 +257,8 @@
 
         return {
             token: token.full,
-            status: status_response.status
+            status: status_response.status,
+            qrcode: status_response.qrcode
         }
     }
 
@@ -268,26 +269,15 @@
             await connectWhatsapp(status_response.token)
         } else if (status_response.status == "CONNECTED") {
             SuccessMessage("Whatsapp conectado com sucesso!")
+        } else if (status_response.status == "QRCODE") {
+            status_response.qrcode
         }
 
     }
 
-    async function connectWhatsapp(token, callback) {
-        $('#modal-qr').modal()
-        $('#loader-qr').css('display', 'blocked')
-        const start_response = await $.ajax({
-            url: `https://api.iecbeventos.com.br/api/${token}/start-session`,
-            data: {
-                "webhook": "",
-                "waitQrCode": true
+    async function handleQRCode(qrcode, callback) {
 
-            },
-            datatype: "json",
-            type: "POST",
-        })
-
-
-        $("#whats-qr").attr('src', `data:image/png;base64,${start_response.qrcode}`)
+        $("#whats-qr").attr('src', `data:image/png;base64,${qrcode}`)
         $('#loader-qr').css('display', 'none')
         $("#whats-qr").css('display', 'block')
 
@@ -305,6 +295,28 @@
             }
 
         });
+    }
+
+    async function connectWhatsapp(token, callback) {
+        $('#modal-qr').modal()
+        $('#loader-qr').css('display', 'blocked')
+        const start_response = await $.ajax({
+            url: `https://api.iecbeventos.com.br/api/${token}/start-session`,
+            data: {
+                "webhook": "",
+                "waitQrCode": true
+
+            },
+            datatype: "json",
+            type: "POST",
+        })
+
+        if (start_response.qrcode) {
+            await handleQRCode(start_response.qrcode, callback)
+
+        } else {
+            await whatsBot()
+        }
 
     }
 

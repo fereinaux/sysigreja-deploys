@@ -277,7 +277,7 @@
 
     async function handleQRCode(qrcode, callback) {
 
-        $("#whats-qr").attr('src', `data:image/png;base64,${qrcode}`)
+        $("#whats-qr").attr('src', qrcode)
         $('#loader-qr').css('display', 'none')
         $("#whats-qr").css('display', 'block')
 
@@ -311,7 +311,7 @@
             type: "POST",
         })
 
-        if (start_response.qrcode) {
+        if (start_response.qrcode && start_response.status != "CLOSED") {
             await handleQRCode(start_response.qrcode, callback)
 
         } else {

@@ -279,6 +279,8 @@
 
     async function handleQRCode(qrcode, callback) {
 
+        $('#modal-qr').modal()
+        $('#loader-qr').css('display', 'blocked')
         $("#whats-qr").attr('src', qrcode)
         $('#loader-qr').css('display', 'none')
         $("#whats-qr").css('display', 'block')

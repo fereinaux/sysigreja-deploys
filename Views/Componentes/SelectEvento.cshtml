@@ -59,11 +59,6 @@
             $("#busca-centrocusto").html(`<option value="0">Selecione</option>${SelectedEvent.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
 
         }
-
-        if ($("#busca-centrocusto").length > 0 && $("#busca-meiopagamento").length > 0) {
-            Filtrar()
-            }
-        }
     }
 
     function changeEvento_@(Model.OnChange)() {

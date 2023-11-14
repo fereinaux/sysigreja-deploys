@@ -33,6 +33,13 @@ namespace SysIgreja
             );
 
             routes.MapRoute(
+             name: "Background",
+             url: "{nome}/background",
+             defaults: new { controller = "Inscricoes", action = "BackgroundByNome" },
+             constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+         );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Inscricoes", action = "Index", id = UrlParameter.Optional }

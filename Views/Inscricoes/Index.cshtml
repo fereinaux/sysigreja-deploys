@@ -108,11 +108,7 @@
                     transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
                 }
 
-                a:hover .bloco {
-                    border-bottom-left-radius: 0px !important;
-                    border-bottom-right-radius: 0px !important;
-                    transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
-                }
+                a:hover
 
                 a:hover .card-body {
                     -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
@@ -138,6 +134,8 @@
             padding: 10px;
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
+            -webkit-box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+            box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
         }
 
         .destaque-a {
@@ -175,6 +173,9 @@
             border-radius: 12px;
             display: flex;
             position: relative;
+            border-bottom-left-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+            transition: box-shadow 0.3s ease 0s, border-radius 0.3s ease 0s, background-color 0.3s ease 0s, border-radius 0.7s ease 0s;
         }
 
 
@@ -290,11 +291,14 @@
             .bloco-normal {
                 width: 40%;
                 height: 100px !important;
+                border-bottom-left-radius: 12px !important;
+                border-top-right-radius: 0px !important;
             }
 
-
-
-            .a-normal h3 {
+            .card-body {
+                border-top-right-radius: 12px;
+            }
+                .a-normal h3 {
                 font-size: 14px
             }
 

@@ -1273,6 +1273,7 @@
     <Content Include="Views\Equipante\Duplicados.cshtml" />
     <Content Include="Views\Shared\_SpaLayout.cshtml" />
     <Content Include="Views\Componentes\SelectEvento.cshtml" />
+    <Content Include="Views\Inscricoes\POC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

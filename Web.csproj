@@ -1246,7 +1246,6 @@
     <Content Include="Views\Cracha\Index.cshtml" />
     <Content Include="Views\Cracha\Modal.cshtml" />
     <Content Include="Views\Cracha\ModalImpressao.cshtml" />
-    <Content Include="Views\Inscricoes\Detalhes.cshtml" />
     <Content Include="assets\.DS_Store" />
     <Content Include="assets\css\.DS_Store" />
     <Content Include="assets\fonts\.DS_Store" />
@@ -1273,7 +1272,7 @@
     <Content Include="Views\Equipante\Duplicados.cshtml" />
     <Content Include="Views\Shared\_SpaLayout.cshtml" />
     <Content Include="Views\Componentes\SelectEvento.cshtml" />
-    <Content Include="Views\Inscricoes\POC.cshtml" />
+    <Content Include="Views\Inscricoes\Detalhes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

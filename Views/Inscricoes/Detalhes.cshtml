@@ -1,433 +1,308 @@
-﻿@{
-    Layout = null;
+﻿@using System.Collections.Generic;
+@using System.Linq;
+@using Utils.Enums;
+@using Utils.Extensions;
+@{
+    Layout = "~/Views/Shared/_Inscricoes.cshtml";
 }
 
+<div class="event-banner">
+    <div class="bg-wrapper">
+    </div>
+    <img class="bg" src="/@ViewBag.Configuracao.Identificador/background" />
+    <div class="invisible-border"></div>
+</div>
+<div class="event">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CZ37FW7BZ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
 
-        gtag('config', 'G-2CZ37FW7BZ');
-    </script>
-    @if (ViewBag.Configuracao.LogoId != null)
-    {
-
-        <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,@ViewBag.Configuracao.Logo" />
-    }
-    else
-    {
-        <link rel="icon" type="image/png" sizes="16x16" href="~/Images/logo-iecb.png" />
-
-    }
-    <!-- Required meta tags -->
-    <title></title>
-    <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
-    <link href="~/Fonts/font-awesome/css/all.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css/bootstrap.min.css" />
-    <!-- Fonts -->
-    <link rel="stylesheet" type="text/css" href="~/assets/fonts/line-icons.css" />
-    <!-- Slicknav -->
-    <link rel="stylesheet" type="text/css" href="~/assets/css/slicknav.css" />
-    <!-- Off Canvas Menu -->
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css/menu_sideslide.css" />
-    <!-- Color Switcher -->
-    <link rel="stylesheet" type="text/css" href="~/assets/css/vegas.min.css" />
-    <!-- Animate -->
-    <link rel="stylesheet" type="text/css" href="~/assets/css/animate.css" />
-    <!-- Main Style -->
-    <link rel="stylesheet" type="text/css" href="~/assets/css/main.css" />
-    <!-- Responsive Style -->
-    <link rel="stylesheet" type="text/css" href="~/assets/css/responsive.css" />
-    <style>
-        a:hover {
-            text-decoration: none !important;
-            color: inherit !important;
-        }
-
-        @@media (max-width: 768px) {
-            .row-top-mobile {
-                padding-top: 40px;
-            }
-        }
-    </style>
-    @if (ViewBag.Evento.ConfiguracaoId == null)
-    {
-        <style>
-
-            .footer-area {
-                margin-top: auto
-            }
-
-            .min-height-config-null {
-                min-height: 600px
-            }
-        </style>
-    }
-
-</head>
-<body>
-    <!-- Header Area wrapper Starts -->
-    <header id="header-wrap">
-        <div class="menu-wrap">
-            <div class="menu navbar">
-                <div class="menu-list navbar-collapse">
-                    <ul class="onepage-nev navbar-nav">
-                        @if (ViewBag.Evento.ConfiguracaoId != null)
-                        {
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#header-wrap">Início</a>
-                            </li>
-                        }
-                        <li class="nav-item">
-                            <a class="nav-link" href="#services">Informações</a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="info-evento">
+        <div class="title">@(ViewBag.Evento.Numeracao)º @ViewBag.Configuracao.Titulo</div>
+        <div class="perfil-evento">
+            <div class="icon">
+                <i class="far fa-calendar"></i>
             </div>
-            <button class="close-button" id="close-button">
-                <i class="lni-close"></i>
-            </button>
-        </div>
-        <!-- Navbar Start -->
-        <nav class="navbar navbar-expand-lg fixed-top scrolling-navbar menu-bg">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button class="navbar-toggler"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#main-navbar"
-                            aria-controls="main-navbar"
-                            aria-expanded="false"
-                            aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                        <span class="lni-menu"></span>
-                        <span class="lni-menu"></span>
-                        <span class="lni-menu"></span>
-                    </button>
-                </div>
-                <div class="collapse navbar-collapse" id="main-navbar">
-                    <ul class="navbar-nav mr-auto w-100 justify-content-end clearfix">
-                        <li class="nav-item" id="open-button">
-                            <a class="nav-link">
-                                <i class="lni-menu"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Mobile Menu Start -->
-            <ul class="mobile-menu">
-                @if (ViewBag.Evento.ConfiguracaoId != null)
+            <div class="content">
+                @if (!string.IsNullOrEmpty(ViewBag.Evento.DataExtenso))
                 {
-                    <li>
-                        <a href="#header-wrap">Início</a>
-                    </li>
+                    <p>@ViewBag.Evento.DataExtenso</p>
                 }
-                <li>
-                    <a href="#services">Informações</a>
-                </li>
-            </ul>
-            <!-- Mobile Menu End -->
-        </nav>
-        <!-- Navbar End -->
-    </header>
+                else
+                {
 
-    <!-- Intro Section Start -->
-    @if (ViewBag.Evento.ConfiguracaoId != null)
-    {
-        <section class="intro">
-            <div class="container">
-                <div class="row text-center row-top-mobile">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="heading-count">
-                            @if (ViewBag.Evento.Numeracao > 0)
-                            {
-
-                                <h2>O <span>@(ViewBag.Evento.Numeracao)</span>º @(ViewBag.Configuracao.Titulo) está chegando</h2>
-                            }
-                            else
-                            {
-                                <h2>O @(ViewBag.Configuracao.Titulo) está chegando</h2>
-                            }
-                            <p>Prepare-se para viver algo inesquecível...</p>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-
-                        <div class="row countdown justify-content-center">
-                            <div id="clock" class="time-count"></div>
-                        </div>
-
-                        <a href="#services-end" class="target-scroll page-scroll">
-                            <i class="lni-chevron-down"></i>
-                        </a>
-                    </div>
+                    <p>@ViewBag.Evento.DataEvento.ToString("dd") de @ViewBag.Evento.DataEvento.ToString("MMMM") de @ViewBag.Evento.DataEvento.ToString("yyyy")</p>
+                }
+            </div>
+        </div>
+        <div class="perfil-evento">
+            <div class="icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="content">
+                <p>
+                    <a style="text-decoration: underline;" class="link-local" href="@ViewBag.Evento.LinkLocal" target="_blank">@ViewBag.Evento.NomeLocal</a>
+                </p>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(ViewBag.Evento.FaixaEtaria))
+        {
+            <div class="perfil-evento">
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="content">
+                    <p>
+                        @ViewBag.Evento.FaixaEtaria
+                    </p>
                 </div>
             </div>
-        </section>
-    }
-    <!-- Intro Section End -->
+        }
+    </div>
 
-    @{ if (string.IsNullOrEmpty(ViewBag.Evento.Conteudo))
+</div>
+<div class="divider"></div>
+
+@if (!String.IsNullOrEmpty(ViewBag.Evento.Conteudo))
+{
+    <div class="event">
+        <iframe style="border:0;" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px';" srcdoc="<div style='padding-right:20px;padding-bottom:40px' class='note-editor note-frame'><div class='note-editing-area'><div class='note-editable'>@Html.Raw(ViewBag.Evento.Conteudo.Replace("\"", "'"))</div></div></div><style>.note-editor.note-airframe .note-editing-area .note-editable, .note-editor.note-frame .note-editing-area .note-editable { padding-right: 20px; } .note-editor.note-airframe, .note-editor.note-frame { border: 0 !important;} body {margin:0; font-family: ' open sans', 'Helvetica Neue' , Helvetica, Arial, sans-serif !important;} .note-editor {height: auto !important;}.note-editor.fullscreen {z-index: 2050;}.note-editor.note-frame.fullscreen {z-index: 2020;}.note-editor.note-frame .note-editing-area .note-editable {color: #676a6c;padding: 15px;}.note-editor.note-frame {border: none;}.note-editor.panel {margin-bottom: 0;}</style><link href='https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css' rel='stylesheet'>"></iframe>
+    </div>
+}
+
+<div class="event">
+
+    <div class="fixed-footer">
+        @if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe == 4)
         {
 
-            <section id="services" class="section-padding">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8 col-lg-8 col-xs-12 text-center">
-                            <h6 class="subtitle">Informações</h6>
-                            <h2 class="section-title">O que você precisa saber</h2>
-                            <div class="section-info">
-                                Separamos as principais informações para que você tenha a sua
-                                melhor experiência. Leia tudo com atenção.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row justify-content-center min-height-config-null">
-                        @if ((ViewBag.Evento.Valor > 0))
-                        {
-                            <div class="col-lg-4 col-md-4 col-xs-12 fadeInUp"
-                                 data-animation="fadeInUp">
-                                <div class="services-item">
-                                    <div class="icon">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                    </div>
-                                    <h3><a href="#">Investimento</a></h3>
-                                    <p>
-                                        Preço: @string.Format("{0:C}", ViewBag.Evento.Valor)
-                                    </p>
-                                </div>
-                            </div>
-                        }
-                        <div class="col-lg-4 col-md-4 col-xs-12 fadeInUp"
-                             data-animation="fadeInUp"
-                             data-delay="300">
-                            <div class="services-item">
-                                <div class="icon">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                                <h3><a href="#">Data</a></h3>
-                                <p>@ViewBag.Evento.DataEvento.ToString("dd") de @ViewBag.Evento.DataEvento.ToString("MMMM") de @ViewBag.Evento.DataEvento.ToString("yyyy")</p>
-                            </div>
-                        </div>
-                        @if (!string.IsNullOrEmpty(ViewBag.Evento.NomeLocal))
-                        {
-
-                            <div class="col-lg-4 col-md-4 col-xs-12 fadeInUp"
-                                 data-animation="fadeInUp"
-                                 data-delay="300">
-                                <div class="services-item">
-                                    <div class="icon">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                    </div>
-                                    <h3><a href="#">Local</a></h3>
-                                    <a style="text-decoration: underline;" class="link-local" href="@ViewBag.Evento.LinkLocal" target="_blank">@ViewBag.Evento.NomeLocal<i style="margin-left:5px" class="fas fa-external-link-alt"></i></a>
-                                </div>
-                            </div>
-                        }
-                        <div class="col-lg-12 col-md-12 col-xs-12 fadeInUp text-center" data-animation="fadeInUp" data-delay="300">
-
-                            <section id="services-end" class="section-padding">
-                                @if ((int)ViewBag.Evento.Status == 4)
-                                {
-                                    <a href="/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições" class="btn btn-juventude mt-5">Inscreva-se já</a>
-                                }
-                                @if ((int)ViewBag.Evento.StatusEquipe == 4)
-                                {
-                                    <a href="/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe" class="btn btn-juventude mt-5 ml-2">Sirva conosco</a>
-                                }
-                            </section>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
+            <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5">Inscreva-se já</span>
+        }
+        else if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe != 4)
+        {
+            <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'" class="btn btn-juventude mt-5">Inscreva-se já</span>
         }
         else
         {
-            <section id="services" class="section-padding" style="display:flex">
-                    <div class="justify-content-center" style="margin:auto">
-                        @Html.Raw(ViewBag.Evento.Conteudo)
-                    </div>
-            </section>
+            <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'" class="btn btn-juventude mt-5">Inscreva-se já</span>
         }
-    }
+    </div>
+</div>
 
-    <!-- Footer Section Start -->
-    <footer class="footer-area section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="footer-text text-center">
+
+<div class="modal inmodal" id="modal-decisao" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+
+                <div class="decisao" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'">
+                    <i class="fas fa-qrcode"></i>
+                    <div>
                         <p>
-                            Um evento realizado pela
-                            <a href="#">@ViewBag.Login.Titulo</a>
+                            <strong>
+                                Quero me inscrever
+                            </strong>
                         </p>
+                        <small>Você irá participar das atividades regulares do evento</small>
+                    </div>
+                </div>
+                <div class="decisao" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'">
+
+                    <i class="fas fa-broom"></i>
+                    <div>
+                        <p>
+                            <strong>
+                                Quero ser voluntário
+                            </strong>
+                        </p>
+                        <small>Você irá contribuir com a equipe de trabalho do evento</small>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
-    <!-- Footer Section End -->
-    <!-- Go to Top Link -->
-    <a href="#" class="back-to-top">
-        <i class="lni-chevron-up"></i>
-    </a>
-
-
-    <div id="preloader">
-        <div class="loader" id="loader-1"></div>
     </div>
-    <!-- End Preloader -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="~/assets/js/jquery-min.js"></script>
-    <script src="~/assets/js/popper.min.js"></script>
-    <script src="~/assets/js/bootstrap.min.js"></script>
-    <script src="~/assets/js/vegas.min.js"></script>
-    <script src="~/assets/js/jquery.countdown.min.js"></script>
-    <script src="~/assets/js/menu.js"></script>
-    <script src="~/assets/js/classie.js"></script>
-    <script src="~/assets/js/scrolling-nav.js"></script>
-    <script src="~/assets/js/jquery.nav.js"></script>
-    <script src="~/assets/js/jquery.easing.min.js"></script>
-    <script src="~/assets/js/wow.js"></script>
-    <script src="~/assets/js/jquery.slicknav.js"></script>
-    <script src="~/assets/js/form-validator.min.js"></script>
-    <script src="~/assets/js/contact-form-script.min.js"></script>
-    <script src="~/Scripts/app/Util/forms-v2.js"></script>
-    <script>
-        (function ($) {
+</div>
 
-            "use strict";
 
-            $(window).on('load', function () {
 
-                /* Page Loader active
-               ========================================================*/
-                $('#preloader').fadeOut();
+<style>
+    @@media (min-width: 768px) {
+        .invisible-border {
+            background: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            z-index: 0;
+        }
+        .event-banner {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
 
-                // Sticky Nav
-                $(window).on('scroll', function () {
-                    if ($(window).scrollTop() > 200) {
-                        $('.scrolling-navbar').addClass('top-nav-collapse');
-                    } else {
-                        $('.scrolling-navbar').removeClass('top-nav-collapse');
-                    }
-                });
+        .bg-wrapper {
+            background-image: linear-gradient(180deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url('/@ViewBag.Configuracao.Identificador/background');
+            position: absolute;
+            z-index: -1;
+            bottom: -10%;
+            top: -40%;
+            left: -10%;
+            right: -10%;
+            filter: blur(24px);
+            background-size: auto, cover;
+            background-repeat: repeat-y;
+        }
 
-                /* slicknav mobile menu active  */
-                $('.mobile-menu').slicknav({
-                    prependTo: '.navbar-header',
-                    parentTag: 'liner',
-                    allowParentLinks: true,
-                    duplicate: true,
-                    label: '',
-                    closedSymbol: '<i class="icon-arrow-right"></i>',
-                    openedSymbol: '<i class="icon-arrow-down"></i>',
-                });
+        .bg {
+            height: 380px;
+            max-width: 670px;
+            border-radius: 16px;
+            margin-top: -10px;
+            z-index: 1;
+        }
 
-                /* ==========================================================================
-                countdown timer
-                ========================================================================== */
-                jQuery('#clock').countdown('@ViewBag.Evento.DataEvento.ToString("yyyy/MM/dd")', function (event) {
-                    var $this = jQuery(this).html(event.strftime(''
-                        + '<div class="time-entry days"><span>%-D</span> Dias</div> '
-                        + '<div class="time-entry hours"><span>%H</span> Horas</div> '
-                        + '<div class="time-entry minutes"><span>%M</span> Minutos</div> '
-                        + '<div class="time-entry seconds"><span>%S</span> Segundos</div> '));
-                });
+        .info-evento, iframe, .btn-juventude {
+            margin: 0 auto !important;
+            width: 670px !important;
+        }
+    }
 
-                /* WOW Scroll Spy
-                ========================================================*/
-                var wow = new WOW({
-                    //disabled for mobile
-                    mobile: false
-                });
-                wow.init();
+    @@media (max-width: 768px) {
+        .bg {
+            width: 100%;
+        }
 
-                // one page navigation
-                $('.onepage-nev').onePageNav({
-                    currentClass: 'active'
-                });
+        .info-evento {
+            justify-content: flex-start;
+            left: 0;
+            right: 0;
+        }
 
-                /* Back Top Link active
-                ========================================================*/
-                var offset = 200;
-                var duration = 500;
-                $(window).scroll(function () {
-                    if ($(this).scrollTop() > offset) {
-                        $('.back-to-top').fadeIn(400);
-                    } else {
-                        $('.back-to-top').fadeOut(400);
-                    }
-                });
+        iframe {
+            width: 100%;
+        }
+    }
 
-                $('.back-to-top').on('click', function (event) {
-                    event.preventDefault();
-                    $('html, body').animate({
-                        scrollTop: 0
-                    }, 600);
-                    return false;
-                });
+    .event, iframe, .fixed-footer {
+        background: #fff;
+    }
 
-            });
+    .event {
+        display: flex;
+    }
 
-        }(jQuery));
-    </script>
-    <script>
 
-    let corBotao = '@ViewBag.Configuracao.CorBotao'
-        document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
-    $(document).ready(function () {
-                  document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
-            @if (ViewBag.Configuracao.BackgroundId != null)
-            {
-                 <text> document.styleSheets[0].addRule('.intro:before', `background: url(data:image/jpeg;base64,@ViewBag.Configuracao.Background) no-repeat center center fixed !important;`); </text>
+
+    .divider {
+        border-bottom: 1px solid #dde0e4;
+        left:0;
+        right:0;
+    }
+
+    .fixed-footer {
+        border-top: 1px solid #dde0e4;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        border-radius: 0;
+        z-index: 2;
+        padding: 16px;
+        display: flex;
+
+    }
+
+        .fixed-footer span {
+            margin: 0 auto;
+            width: 100%;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+    .info-evento {
+        display: flex;
+        flex-direction: column;
+
+        padding: 10px;
+
+
+        z-index: 1;
+
+    }
+
+        .info-evento .title {
+            font-weight: bold;
+            font-size: 20px;
+            min-height: 30px;
+        }
+
+    .corpo-inscricoes {
+        flex-direction: column;
+        padding-left: 15px;
+    }
+
+    .perfil-evento {
+        display: flex;
+        gap: 5px;
+        height: 40px;
+        justify-content: start;
+        align-items: center;
+    }
+
+        .perfil-evento .icon {
+            width: 25px;
+            font-size: 15px;
+            padding-top: 2px;
+            color: #a5a6a7;
+            display: flex;
+        }
+
+            .perfil-evento .icon i {
+                margin: auto;
             }
 
+        .perfil-evento .content {
+            font-size: 0.875rem;
+        }
+
+            .perfil-evento .content p {
+                margin: 0;
+            }
+
+    .modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .decisao {
+        background: #fff;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 20px;
+        cursor: pointer;
+        box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
+    }
+
+        .decisao i {
+            font-size: 30px;
+        }
+
+        .decisao p {
+            margin: 0;
+        }
+</style>
 
 
-        document.styleSheets[0].addRule('.intro:before', `background-size: cover !important;`);
-        document.styleSheets[0].addRule('.slicknav_btn', `border-color: @ViewBag.Configuracao.CorBotao !important;`);
-        document.styleSheets[0].addRule('.slicknav_menu .slicknav_icon-bar', `background-color: @ViewBag.Configuracao.CorBotao !important;`);
-        $('.navbar-expand-lg .navbar-nav .nav-link i').css('color', '@ViewBag.Configuracao.CorBotao')
-        $('a.back-to-top i').css('background-color', '@ViewBag.Configuracao.CorBotao')
-        $('.footer-area .footer-text p a').css('color', '@ViewBag.Configuracao.CorBotao')
-        $('.close-button').css('color', '@ViewBag.Configuracao.CorBotao')
-        $('.navbar li.active a.nav-link').css('color', '@ViewBag.Configuracao.CorBotao !important')
-        $('.link-local').css('color', '@ViewBag.Configuracao.CorBotao')
-        $('#services .icon i').css('background-color', '@ViewBag.Configuracao.CorBotao')
-        $('#services .icon i').css('border-color', '@ViewBag.Configuracao.CorBotao')
-        $('.btn-juventude').css('background-color', '@ViewBag.Configuracao.CorBotao')
-        $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
+@section scripts {
+    <script>
 
-             $('.btn-juventude').hover(function () {
-            console.log($(this));
-            $(this).css('filter', 'brightness(0.6)')
-            $(this).css('filter', 'brightness(0.6)')
-
-        }, function () {
-            $(this).css('filter', 'brightness(100%)')
-            $(this).css('filter', 'brightness(100%)')
+        $(window).on('load', function () {
+            $('#preloader').fadeOut();
         })
-    })
     </script>
-</body>
-</html>
+
+}

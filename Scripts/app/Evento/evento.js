@@ -118,6 +118,8 @@ function GetEvento(id) {
                 $("#evento-numeracao").val(data.Evento.Numeracao);
                 $("#evento-nomelocal").val(data.Evento.NomeLocal);
                 $("#evento-linklocal").val(data.Evento.LinkLocal);
+                $("#evento-faixaetaria").val(data.Evento.FaixaEtaria);
+                $("#evento-dataextenso").val(data.Evento.DataExtenso);
                 $("#evento-capacidade").val(data.Evento.Capacidade);
                 $(`#evento-conteudo`).summernote({
                     height: 300,
@@ -148,6 +150,8 @@ function GetEvento(id) {
         $('#evento-global').iCheck('uncheck')
         $("#evento-descricao").val("");
         $("#evento-nomelocal").val("");
+        $("#evento-faixaetaria").val("");
+        $("#evento-dataextenso").val("");
         $("#evento-linklocal").val("");
         $("#evento-capacidade").val("");
         $("#evento-data").val("");
@@ -311,6 +315,8 @@ function PostEvento() {
                     LinkLocal: $("#evento-linklocal").val(),
                     Descricao: $("#evento-descricao").val(),
                     UrlExterna: $("#evento-urlexterna").val(),
+                    FaixaEtaria: $("#evento-faixaetaria").val(),
+                    DataExtenso: $("#evento-dataextenso").val(),
                     Conteudo: $('#evento-conteudo').summernote('code'),
                     Capacidade: $("#evento-capacidade").val(),
                     Valor: $("#evento-valor").val(),
@@ -642,8 +648,7 @@ function loadQRCode(id, color1, color2) {
                     qrCode.append(document.getElementById("qrcode"));
                     break;
                 case '2':
-                    logoRelatorio = data.Configuracao.LogoRelatorio
-                    buildColors(`data:image/png;base64,${logoRelatorio}`, loadedColors).then(colors => {
+                    buildColors(`/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`, loadedColors).then(colors => {
                         $('.colors').css("display", "flex")
                         $('.color-handler').css("display", "flex")
                         if (colors.length != loadedColors.length) {
@@ -703,7 +708,7 @@ function loadQRCode(id, color1, color2) {
                                 }, "backgroundOptions": {
                                     "color": "#ffffff",
                                     "gradient": null
-                                }, "image": `data:image/png;base64,${logoRelatorio}`,
+                                }, "image": `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`,
                                 "dotsOptionsHelper": {
                                     "colorType": {
                                         "single": true,

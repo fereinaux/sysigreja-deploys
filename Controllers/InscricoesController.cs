@@ -302,34 +302,7 @@ namespace SysIgreja.Controllers
 
             return View("Detalhes");
         }
-
-
-        public ActionResult POC(int Id)
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
-            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
-            if (evento.ConfiguracaoId.HasValue)
-            {
-                ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
-                ViewBag.Login = configuracaoBusiness.GetLogin();
-            }
-            else
-            {
-                ViewBag.Configuracao = configuracaoBusiness.GetLogin();
-                ViewBag.Login = ViewBag.Configuracao;
-            }
-
-            if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto && evento.Status != StatusEnum.Informativo)
-                return RedirectToAction("InscricoesEncerradas", new { Id = Id });
-
-
-            ViewBag.EventoId = Id;
-            evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : evento.Valor;
-            ViewBag.Evento = evento;
-            ViewBag.Title = "Inscrições";
-
-            return View("POC");
-        }
+      
         public ActionResult Equipe()
         {
             ViewBag.Configuracao = configuracaoBusiness.GetLogin();

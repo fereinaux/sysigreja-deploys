@@ -126,19 +126,26 @@ async function enviarMensagens(mensagemId, ids, tipo) {
     })
 
     async function callback() {
-        Promise.all(data.Pessoas.map(pessoa => ($.ajax({
+        const pResult = await Promise.allSettled(data.Pessoas.map(pessoa => ($.ajax({
             url: `https://api.iecbeventos.com.br/api/${status_response.token}/send-message`,
             datatype: "json",
             type: "POST",
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(
                 {
-                    phone: `${pessoa.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
+                    name: pessoa[`Nome${tipo}`],
+                    phone: `${pessoa[`Fone${tipo}`].replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
                     message: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', pessoa.Nome).replaceAll('${Nome Contato}', pessoa[`Nome${tipo}`]).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${pessoa.MercadoPagoPreferenceId}`)
                 }),
-        })))).then(() => {
+        }))))
+
+        if (pResult.filter(x => x.status == 'rejected' && x.reason.responseJSON.response.error == 'notExists').length > 0) {
+
+            ErrorMessage(`Os números das pessoas a seguir estão incorretos: \n${pResult.filter(x => x.status == 'rejected' && x.reason.responseJSON.response.error == 'notExists').map(x => `${x.reason.responseJSON.response} \n`)}`)
+        } else {
             SuccessMesageOperation()
-        })
+        }
+
     }
 
     if (status_response.status != "CONNECTED") {

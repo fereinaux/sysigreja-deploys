@@ -945,7 +945,7 @@ namespace SysIgreja.Controllers
         {
             var query = equipantesBusiness.GetEquipantes().Where(x => ids.Contains(x.Id));
 
-            var result = query.Select(x => new { x.Fone, x.Nome, x.Equipes.FirstOrDefault(y => y.EventoId == eventoId).MercadoPagoPreferenceId }).ToList();
+            var result = query.Select(x => new { x.Fone, x.Nome, x.NomeContato, x.FoneContato, x.FoneMae, x.NomeMae, x.FoneConvite, x.NomeConvite, x.NomePai, x.FonePai,x.Equipes.FirstOrDefault(y => y.EventoId == eventoId).MercadoPagoPreferenceId }).ToList();
 
             return Json(new { Pessoas = result }, JsonRequestBehavior.AllowGet);
         }

@@ -59,6 +59,8 @@
             $("#busca-centrocusto").html(`<option value="0">Selecione</option>${SelectedEvent.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
 
         }
+
+        }
     }
 
     function changeEvento_@(Model.OnChange)() {

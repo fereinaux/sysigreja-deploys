@@ -271,6 +271,8 @@
             SuccessMessage("Whatsapp conectado com sucesso!")
         } else if (status_response.status == "QRCODE") {
             handleQRCode(status_response.qrcode)
+        } else if (status_response.status == "INITIALIZING") {
+            whatsBot()
         }
 
     }

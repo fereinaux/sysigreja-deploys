@@ -270,7 +270,7 @@
         } else if (status_response.status == "CONNECTED") {
             SuccessMessage("Whatsapp conectado com sucesso!")
         } else if (status_response.status == "QRCODE") {
-            status_response.qrcode
+            handleQRCode(status_response.qrcode)
         }
 
     }

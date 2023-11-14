@@ -287,11 +287,17 @@
         })
 
         if (start_response.status == "CLOSED") {
-            const close_response = await $.ajax({
-                url: `https://api.iecbeventos.com.br/api/${token}/close-session`,           
-                datatype: "json",
-                type: "POST",
-            })
+
+            try {
+                const close_response = await $.ajax({
+                    url: `https://api.iecbeventos.com.br/api/${token}/close-session`,
+                    datatype: "json",
+                    type: "POST",
+                })
+
+            } catch (e) {
+
+            }
 
             start_response = await $.ajax({
                 url: `https://api.iecbeventos.com.br/api/${token}/start-session`,

@@ -38,16 +38,19 @@
                     }
                 </div>
             </div>
-            <div class="perfil-evento">
-                <div class="icon">
-                    <i class="fas fa-map-marker-alt"></i>
+            @if (!string.IsNullOrEmpty(ViewBag.Evento.NomeLocal))
+            {
+                <div class="perfil-evento">
+                    <div class="icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="content">
+                        <p>
+                            <a style="text-decoration: underline;" class="link-local" href="@ViewBag.Evento.LinkLocal" target="_blank">@ViewBag.Evento.NomeLocal</a>
+                        </p>
+                    </div>
                 </div>
-                <div class="content">
-                    <p>
-                        <a style="text-decoration: underline;" class="link-local" href="@ViewBag.Evento.LinkLocal" target="_blank">@ViewBag.Evento.NomeLocal</a>
-                    </p>
-                </div>
-            </div>
+            }
             @if (!string.IsNullOrEmpty(ViewBag.Evento.FaixaEtaria))
             {
                 <div class="perfil-evento">

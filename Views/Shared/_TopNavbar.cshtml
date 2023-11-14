@@ -275,7 +275,7 @@
     async function connectWhatsapp(token, callback) {
         $('#modal-qr').modal()
         $('#loader-qr').css('display', 'blocked')
-        const start_response = await $.ajax({
+        let start_response = await $.ajax({
             url: `https://api.iecbeventos.com.br/api/${token}/start-session`,
             data: {
                 "webhook": "",
@@ -285,6 +285,25 @@
             datatype: "json",
             type: "POST",
         })
+
+        if (start_response.status == "CLOSED") {
+            const close_response = await $.ajax({
+                url: `https://api.iecbeventos.com.br/api/${token}/close-session`,           
+                datatype: "json",
+                type: "POST",
+            })
+
+            start_response = await $.ajax({
+                url: `https://api.iecbeventos.com.br/api/${token}/start-session`,
+                data: {
+                    "webhook": "",
+                    "waitQrCode": true
+
+                },
+                datatype: "json",
+                type: "POST",
+            })
+        }
 
         $("#whats-qr").attr('src', `data:image/png;base64,${start_response.qrcode}`)
         $('#loader-qr').css('display', 'none')

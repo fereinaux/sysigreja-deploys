@@ -272,7 +272,7 @@
         } else if (status_response.status == "QRCODE") {
             handleQRCode(status_response.qrcode)
         } else if (status_response.status == "INITIALIZING") {
-            whatsBot()
+           setTimeout(whatsBot,3000)
         }
 
     }

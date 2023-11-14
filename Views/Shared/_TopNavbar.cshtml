@@ -289,14 +289,18 @@
         if (start_response.status == "CLOSED") {
 
             try {
-                const close_response = await $.ajax({
+                await $.ajax({
                     url: `https://api.iecbeventos.com.br/api/${token}/close-session`,
                     datatype: "json",
                     type: "POST",
                 })
 
             } catch (e) {
-
+                await $.ajax({
+                    url: `https://api.iecbeventos.com.br/api/${token}/logout-session`,
+                    datatype: "json",
+                    type: "POST",
+                })
             }
 
             start_response = await $.ajax({

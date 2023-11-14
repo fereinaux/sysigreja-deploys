@@ -1818,6 +1818,6 @@ function CarregarTabelaHistorico(id) {
 
 async function loadMensagens() {
     let ids = getCheckedIds()
-    await enviarMensagens($("#bulk-mensagem").val(), ids)
+    await enviarMensagens($("#bulk-mensagem").val(), ids,'','Equipante')
 }
 

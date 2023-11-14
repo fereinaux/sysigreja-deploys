@@ -100,7 +100,7 @@ function getDestino(user) {
     }
 }
 
-async function enviarMensagens(mensagemId, ids, tipo) {
+async function enviarMensagens(mensagemId, ids, tipo,controller) {
 
     const status_response = await handleWhatsappConnected()
 
@@ -116,7 +116,7 @@ async function enviarMensagens(mensagemId, ids, tipo) {
     });
 
     const data = await $.ajax({
-        url: "/Equipante/GetTelefones/",
+        url: `/${controller}/GetTelefones/`,
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',

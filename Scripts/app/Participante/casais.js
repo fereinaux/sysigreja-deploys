@@ -2047,6 +2047,6 @@ async function loadMensagens(tipo) {
             break;
     }
 
-    await enviarMensagens(msgId, ids, tipo)
+    await enviarMensagens(msgId, ids, tipo, 'Participante')
 
 }

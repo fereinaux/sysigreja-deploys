@@ -107,7 +107,7 @@ function GetAnexos(id) {
         ],
         ajax: {
             url: '/Arquivo/GetArquivosEquipe',
-            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, ConfiguracaoId: config.Id },
+            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, ConfiguracaoId: SelectedEvent.ConfiguracaoId },
             datatype: "json",
             type: "POST"
         }
@@ -134,7 +134,7 @@ function PostArquivoEquipe() {
     var dataToPost = new FormData($('#frm-upload-arquivo-normal-modal')[0]);
     dataToPost.set('Arquivo', dataToPost.get('arquivo-modal'))
     dataToPost.set('EquipeId', dataToPost.get('Equipe'))
-    dataToPost.set('ConfiguracaoId', config.Id)
+    dataToPost.set('ConfiguracaoId', SelectedEvent.ConfiguracaoId)
     $.ajax(
         {
             processData: false,
@@ -180,9 +180,9 @@ function DeleteArquivoEquipe(id) {
 }
 
 function header(doc, evento, page, equipe) {
-    if (logoRelatorio) {
+    if (SelectedEvent.LogoRelatorioId) {
         var img = new Image();
-        img.src = `data:image/png;base64,${logoRelatorio}`;
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
     doc.setFont("helvetica", "normal");

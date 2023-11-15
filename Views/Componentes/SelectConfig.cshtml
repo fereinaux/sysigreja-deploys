@@ -8,6 +8,7 @@
 
     function handleGlobals() {
         if (SelectedConfig) {
+            localStorage.setItem('configId', SelectedConfig.Id)
             $('title').text($('#title').text())
             $('.title-circulo').text(SelectedConfig.EquipeCirculo)
             $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)

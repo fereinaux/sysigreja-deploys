@@ -8,7 +8,7 @@
 
     function handleGlobals() {
         if (SelectedEvent) {
-
+            localStorage.setItem('eventoId', SelectedEvent.Id)
             $('title').text(`${SelectedEvent.Titulo} | ${$('#title').text()}`)
             $('#pagamentos-valor').data('valor-realista', SelectedEvent.Valor)
             $('#pagamentos-valor').data('valor-equipante', SelectedEvent.ValorTaxa)

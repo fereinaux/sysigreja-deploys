@@ -40,7 +40,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Login()
         {
-            GetEventos(new string[] { "Geral" });
+            IsGeral();
             ViewBag.Title = "Login";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
@@ -49,7 +49,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Equipes()
         {
-            GetEventos(new string[] { "Geral" });
+            IsGeral();
             ViewBag.Title = "Equipes";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
@@ -58,7 +58,6 @@ namespace SysIgreja.Controllers
 
         public ActionResult Hierarquia()
         {
-            base.GetConfiguracoes();
             ViewBag.Title = "Hierarquia das Equipes";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 

@@ -22,12 +22,8 @@
             <div class="ibox-tools pull-right w-300">
                 <div class="row">
                     <div class="col-sm-8">
-                        <select class="form-control" id="etiquetas-configId" onchange="CarregarTabelaEtiquetas()">
-                            @foreach (var config in ViewBag.Configuracoes)
-                            {
-                                <option value="@config.Id">@config.Titulo</option>
-                            }
-                        </select>
+                        @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "etiquetas-configId", OnChange = "CarregarTabelaEtiquetas" })
+
                     </div>
                     <div class="col-sm-4">
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditEtiqueta(0)">Adicionar</button>

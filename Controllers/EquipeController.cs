@@ -1,5 +1,6 @@
 ﻿using Arquitetura.Controller;
 using Arquitetura.ViewModels;
+using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Configuracao;
@@ -9,6 +10,7 @@ using Core.Business.Eventos;
 using Core.Business.Reunioes;
 using Core.Models;
 using Core.Models.Equipe;
+using Core.Models.Quartos;
 using Data.Entities;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
@@ -35,6 +37,7 @@ namespace SysIgreja.Controllers
         private readonly IEventosBusiness eventosBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
         private readonly IAccountBusiness accountBusiness;
+        private readonly IMapper mapper;
 
         public EquipeController(IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
@@ -43,6 +46,7 @@ namespace SysIgreja.Controllers
             this.accountBusiness = accountBusiness;
             this.eventosBusiness = eventosBusiness;
             this.arquivosBusiness = arquivosBusiness;
+            mapper = new MapperRealidade().mapper;
         }
 
         public ActionResult Index()
@@ -165,16 +169,10 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantesByEventoSelect(int EventoId)
         {
-            var result = equipesBusiness.GetEquipantesEvento(EventoId)
-                .OrderBy(x => x.Equipante.Nome)
-                .Select(x => new
-                {
-                    Id = x.Id,
-                    Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
-                    Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
-                });
+            var result = equipesBusiness.GetQueryEquipantesEvento(EventoId).Include(x => x.Equipante);
 
-            var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
+
+            var json = Json(new { data = mapper.Map< IEnumerable<PessoaSelectModel>>(result), }, JsonRequestBehavior.AllowGet);
             json.MaxJsonLength = Int32.MaxValue;
             return json;
         }

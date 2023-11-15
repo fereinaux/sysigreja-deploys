@@ -34,7 +34,7 @@
         ],
         ajax: {
             url: '/Etiqueta/GetEtiquetas',
-            data: { ConfiguracaoId: $('#etiquetas-configId').val() },
+            data: { ConfiguracaoId: SelectedConfig.Id },
             datatype: "json",
             type: "POST"
         }
@@ -101,7 +101,7 @@ function PostEtiqueta() {
             data: JSON.stringify(
                 {
                     Id: $("#etiqueta-id").val(),
-                    ConfiguracaoId: $('#etiquetas-configId').val(),
+                    ConfiguracaoId: SelectedConfig.Id,
                     Nome: $("#etiqueta-nome").val(),
                     Cor: $("#etiqueta-cor").val()
                 }),

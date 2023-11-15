@@ -333,6 +333,7 @@ function PostEvento() {
 }
 
 $(document).ready(function () {
+    verifyPermissionsConfig()
     CarregarTabelaEvento();
 });
 

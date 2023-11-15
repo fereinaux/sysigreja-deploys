@@ -22,12 +22,7 @@
             <div class="ibox-tools pull-right w-300">
                 <div class="row">
                     <div class="col-sm-8">
-                        <select class="form-control" id="mensagem-configId" onchange="CarregarTabelaMensagem()">
-                            @foreach (var config in ViewBag.Configuracoes)
-                            {
-                                <option data-mercadopago="@config.PublicTokenMercadoPago" value="@config.Id">@config.Titulo</option>
-                            }
-                        </select>
+                        @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "mensagem-configId", OnChange = "CarregarTabelaMensagem" })                    
                     </div>
                     <div class="col-sm-4">
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditMensagem(0)">Adicionar</button>

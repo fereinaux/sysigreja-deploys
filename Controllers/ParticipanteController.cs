@@ -353,12 +353,15 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetTotaisCheckin(int EventoId)
         {
+            var queryParticipantes = participantesBusiness.GetParticipantesByEvento(EventoId);
+            var queryEquipantes = equipesBusiness.GetEquipantesByEvento(EventoId);
+
             var result = new
             {
-                Confirmados = participantesBusiness.GetParticipantesByEvento(EventoId).Count(x => x.Status == StatusEnum.Confirmado),
-                Presentes = participantesBusiness.GetParticipantesByEvento(EventoId).Count(x => x.Checkin),
-                ConfirmadosEquipantes = equipesBusiness.GetEquipantesByEvento(EventoId).Count(),
-                PresentesEquipantes = equipesBusiness.GetEquipantesEvento(EventoId).Count(x => x.Checkin),
+                Confirmados = queryParticipantes.Count(x => x.Status == StatusEnum.Confirmado),
+                Presentes = queryParticipantes.Count(x => x.Checkin),
+                ConfirmadosEquipantes = queryEquipantes.Count(),
+                PresentesEquipantes = queryEquipantes.Count(x => x.Checkin),
             };
 
             return Json(new { result }, JsonRequestBehavior.AllowGet);

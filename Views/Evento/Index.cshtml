@@ -87,12 +87,7 @@
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Tipo do Evento</h5>
 
-                            <select class="form-control chosen-select" id="evento-tipo">
-                                @foreach (var config in ViewBag.Configuracoes)
-                                {
-                                    <option value="@config.Id">@config.Titulo</option>
-                                }
-                            </select>
+                            @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "evento-tipo", OnChange = "notExistFunction", Class = "chosen-select" })                      
                         </div>
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Valor</h5>

@@ -21,13 +21,8 @@
             <h4>@ViewBag.Title</h4>
             <div class="ibox-tools pull-righ w-300t">
                 <div class="row">
-                    <div class="col-sm-8">
-                        <select class="form-control" id="hierarquia-configId" onchange="loadPageHierarquia()">
-                            @foreach (var config in ViewBag.Configuracoes)
-                            {
-                                <option value="@config.Id">@config.Titulo</option>
-                            }
-                        </select>
+                    <div class="col-sm-12">
+                        @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "hierarquia-configId", OnChange = "loadPageHierarquia" })                       
                     </div>
                 </div>
             </div>
@@ -137,7 +132,7 @@
                 ajax: {
                     url: '/Configuracao/GetEquipesDatatable',
                     datatype: "json",
-                    data: { id: $('#hierarquia-configId').val() },
+                    data: { id: SelectedConfig.Id },
                     type: "POST"
                 }
             };
@@ -162,7 +157,7 @@
                 datatype: "json",
                 type: "GET",
                 contentType: 'application/json; charset=utf-8',
-                data: { id: $('#hierarquia-configId').val() },
+                data: { id: SelectedConfig.Id },
                 success: (data) => {
                     EquipesHierarquia = data.Equipes
                 }
@@ -286,7 +281,7 @@
                     [0, "asc"]
                 ],
                 ajax: {
-                    data: { id: $('#hierarquia-configId').val(), equipeId: row.Id },
+                    data: { id: SelectedConfig.Id, equipeId: row.Id },
                     url: '/Configuracao/GetEquipesFilhas',
                     datatype: "json",
                     type: "POST"
@@ -319,7 +314,7 @@
                     [0, "asc"]
                 ],
                 ajax: {
-                    data: { id: $('#hierarquia-configId').val(), equipeId: row.Id },
+                    data: { id: SelectedConfig.Id, equipeId: row.Id },
                     url: '/Configuracao/GetEquipesOrigem',
                     datatype: "json",
                     type: "POST"

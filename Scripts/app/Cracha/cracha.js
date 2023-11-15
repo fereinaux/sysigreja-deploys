@@ -37,7 +37,7 @@ ${GetButton('EditCracha', data, 'blue', 'fa-edit', 'Editar')}
         ],
         ajax: {
             url: '/Cracha/GetCrachas',
-            data: { ConfiguracaoId: $('#cracha-configId').val() },
+            data: { ConfiguracaoId: SelectedConfig.Id },
             datatype: "json",
             type: "POST"
         }
@@ -235,7 +235,7 @@ function PostCracha() {
                     Background: $('#background:checked').val(),
                     NomeCompleto: $('#nomecompleto:checked').val(),
                     Conteudo: $('#cracha').html(),
-                    ConfiguracaoId: $('#cracha-configId').val(),
+                    ConfiguracaoId: SelectedConfig.Id,
                     Nome: {
                         Family: $('.nome-font #font-picker').val(),
                         Size: parseFloat($('.nome-font #font-size').val()),

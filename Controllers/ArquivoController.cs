@@ -32,19 +32,10 @@ namespace SysIgreja.Controllers
             this.configuracaoBusiness = configuracaoBusiness;
         }
 
-        public ActionResult Index()
-        {
-            ViewBag.Title = "Arquivos";
-            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetConfiguracoes();
-            return View();
-        }
-
         public ActionResult Boletim()
         {
             ViewBag.Title = "Boletins";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetConfiguracoes();
             return View();
         }
 

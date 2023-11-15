@@ -39,7 +39,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
-            GetEventos(new string[] { "Geral" });
+            IsGeral();
             ViewBag.Title = "Igrejas";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 

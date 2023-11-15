@@ -52,6 +52,7 @@ namespace SysIgreja.Controllers
         public string CorBotao { get; set; }
         public string TipoEvento { get; set; }
         public string TipoCirculo { get; set; }
+        public string TipoQuarto { get; set; }
         public bool Coordenador { get; set; }
         public int Valor { get; set; }
         public int ValorTaxa { get; set; }
@@ -70,6 +71,13 @@ namespace SysIgreja.Controllers
         public string Quarto { get; set; }
         public string Circulo { get; set; }
     }
+
+    public class PessoaSelectModel
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Apelido { get; set; }
+    }
     public class MapperRealidade
     {
         public IMapper mapper;
@@ -77,6 +85,12 @@ namespace SysIgreja.Controllers
         {
             var configuration = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<EquipanteEvento, PessoaSelectModel>()
+                    .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
+                    .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)));
+               cfg.CreateMap<Participante, PessoaSelectModel>()
+                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
+                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)));
                 cfg.CreateMap<Equipante, CrachaModel>()
                     .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""))
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipes.Any() ? x.Equipes.LastOrDefault().Equipe.Nome : null)));

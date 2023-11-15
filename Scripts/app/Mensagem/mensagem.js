@@ -34,7 +34,7 @@
         ],
         ajax: {
             url: '/Mensagem/GetMensagens',
-            data: { ConfiguracaoId: $('#mensagem-configId').val() },
+            data: { ConfiguracaoId: SelectedConfig.Id },
             datatype: "json",
             type: "POST"
         }
@@ -132,7 +132,7 @@ function PostMensagem() {
                     Id: $("#mensagem-id").val(),
                     Titulo: $("#mensagem-titulo").val(),
                     Tipos: tipos,
-                    ConfiguracaoId: $('#mensagem-configId').val(),
+                    ConfiguracaoId: SelectedConfig.Id,
                     Conteudo: $("#mensagem-conteudo").val()
                 }),
             success: function () {

@@ -30,7 +30,7 @@
         ],
         ajax: {
             url: '/CentroCusto/GetCentroCustos',
-            data: { ConfiguracaoId: $('#centro-custo-configId').val() },
+            data: { ConfiguracaoId: SelectedConfig.Id },
             datatype: "json",
             type: "POST"
         }
@@ -98,7 +98,7 @@ function PostCentroCusto() {
                 {
                     Id: $("#centro-custo-id").val(),                                        
                     Descricao: $("#centro-custo-descricao").val(),
-                    ConfiguracaoId: $('#centro-custo-configId').val(),
+                    ConfiguracaoId: SelectedConfig.Id,
                     Tipo: $("#centro-custo-tipo").val()
                 }),
             success: function () {

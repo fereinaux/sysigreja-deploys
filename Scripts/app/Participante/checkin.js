@@ -7,63 +7,67 @@ function changeEventoCheckin() {
     Refresh()
 }
 
+html5QrCode = new Html5Qrcode("reader");
+qrCodeSuccessCallback = (decodedText, decodedResult) => {
+    html5QrCode.stop().then((ignore) => {
+        {
+            arrValue = decodedText.split('|')
+            if (SelectedEvent.Id == arrValue[0]) {
+                if (arrValue[2] == 'EQUIPANTE') {
+                    $("#participantes").val(arrValue[1]).trigger("chosen:updated");
+                    GetParticipante();
+                } else {
+
+                    $("#equipantes").val(arrValue[1]).trigger("chosen:updated");
+                    GetEquipante();
+                }
+            } else {
+                if (arrValue[2] == 'EQUIPANTE') {
+                    $("#eventoid").val(arrValue[0])
+                    GetEquipantes(arrValue[1])
+                } else {
+
+                    $("#eventoid").val(arrValue[0])
+                    GetParticipantes(arrValue[1])
+                }
+            }
+
+        }
+    }).catch((err) => {
+        // Stop failed, handle it.
+    });
+};
+configCam = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+// If you want to prefer back camera
+
+function startCam() {
+
+    html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback).then(() => {
+        $('html, body').animate({
+            scrollTop: $('#reader').offset().top
+        }, 500);
+    });
+
+
+
+}
+
+equipe = false
+
 $(document).ready(() => {
     Refresh();
+    oldId = SelectedEvent.Id
     loadCampos(SelectedEvent.Id);
 
 
-    html5QrCode = new Html5Qrcode("reader");
-    qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        html5QrCode.stop().then((ignore) => {
-            {
-                arrValue = decodedText.split('|')
-                if (SelectedEvent.Id == arrValue[0]) {
-                    if (arrValue[2] == 'EQUIPANTE') {
-                        $("#participantes").val(arrValue[1]).trigger("chosen:updated");
-                        GetParticipante();
-                    } else {
 
-                        $("#equipantes").val(arrValue[1]).trigger("chosen:updated");
-                        GetEquipante();
-                    }
-                } else {
-                    if (arrValue[2] == 'EQUIPANTE') {
-                        $("#eventoid").val(arrValue[0])
-                        GetEquipantes(arrValue[1])
-                    } else {
-
-                        $("#eventoid").val(arrValue[0])
-                        GetParticipantes(arrValue[1])
-                    }
-                }
-
-            }
-        }).catch((err) => {
-            // Stop failed, handle it.
-        });
-    };
-    configCam = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-    // If you want to prefer back camera
-
-    function startCam() {
-
-        html5QrCode.start({ facingMode: "environment" }, configCam, qrCodeSuccessCallback).then(() => {
-            $('html, body').animate({
-                scrollTop: $('#reader').offset().top
-            }, 500);
-        });
-
-
-
-    }
 });
 
 
 
 function GetParticipantes(id) {
     $("#participantes").empty();
-    $('#participantes').append($('<option>Pesquisar</option>'));
     $.ajax({
         url: '/Participante/GetParticipantesSelect',
         data: { EventoId: SelectedEvent.Id },
@@ -88,7 +92,6 @@ function GetParticipantes(id) {
 
 function GetEquipantes(id) {
     $("#equipantes").empty();
-    $('#equipantes').append($('<option>Pesquisar</option>'));
     $.ajax({
         url: '/Equipe/GetEquipantesByEventoSelect',
         data: { EventoId: SelectedEvent.Id },
@@ -261,7 +264,7 @@ function PostParticipante() {
 }
 
 function NewParticipante() {
-    $("#participantes").val("Pesquisar").trigger("chosen:updated");
+    $("#participantes").val("").trigger("chosen:updated");
     GetParticipante();
 }
 
@@ -271,7 +274,7 @@ checkin = false
 function GetParticipante() {
 
     AplicarCssPadrao($('input'));
-    id = $("#participantes").val() == "Pesquisar" ? 0 : $("#participantes").val();
+    id = $("#participantes").val() == "" ? 0 : $("#participantes").val();
     if (id > 0) {
         $.ajax({
             url: "/Participante/GetParticipante/",
@@ -280,8 +283,9 @@ function GetParticipante() {
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
+                $('#equipantes').val('').trigger('change')
                 $('.div-map').css('display', 'none')
-                $("#equipantes").val("Pesquisar").trigger("chosen:updated");
+                $("#equipantes").val("").trigger("chosen:updated");
                 $('#form-participante').removeClass('d-none');
                 $("#equipante-id").val(0);
                 $("#participante-id").val(data.Participante.Id);
@@ -445,7 +449,7 @@ equipanteId = null
 function GetEquipante() {
 
     AplicarCssPadrao($('input'));
-    id = $("#equipantes").val() == "Pesquisar" ? 0 : $("#equipantes").val();
+    id = $("#equipantes").val() == "" ? 0 : $("#equipantes").val();
     if (id > 0) {
         $.ajax({
             url: "/Equipante/GetEquipanteEvento/",
@@ -454,8 +458,9 @@ function GetEquipante() {
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
+                $('#participantes').val('').trigger('change')
                 $('.div-map').css('display', 'none')
-                $("#participantes").val("Pesquisar").trigger("chosen:updated");
+                $("#participantes").val("").trigger("chosen:updated");
                 $('#form-participante').removeClass('d-none');
                 $("#equipante-id").val(data.Equipante.Id);
                 equipanteId = data.Equipante.Id
@@ -957,17 +962,26 @@ $("#arquivo-modal").change(function () {
 });
 
 
+function loadCampos(id,participante) {
+    var execute = false
 
-function loadCampos(id) {
-    $.ajax({
-        url: $("#equipantes").val() == "Pesquisar" ? "/Configuracao/GetCamposByEventoId/" : "/Configuracao/GetCamposEquipeByEventoId/",
-        data: { Id: id },
-        datatype: "json",
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            campos = data.Campos
-            $('.campos-cadastro').html(`
+    if (id != oldId || $(`#${participante}`).val()) {
+        execute = true
+    } else {
+        execute = false
+    }
+    oldId = id
+    if (execute) {
+
+        $.ajax({
+            url: $("#equipantes").val() ? "/Configuracao/GetCamposEquipeByEventoId/" : "/Configuracao/GetCamposByEventoId/",
+            data: { Id: id },
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                campos = data.Campos
+                $('.campos-cadastro').html(`
 ${campos.find(x => x.Campo == 'Nome completo') ? `<div class="col-sm-6 p-w-md m-t-md text-center">
                             <h5>Nome</h5>
 
@@ -1209,88 +1223,89 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
 `)
 
 
-            initInputs()
+                initInputs()
 
-            if ($('#map').length > 0) {
+                if ($('#map').length > 0) {
 
-                map = initMap('map')
-                markerLayer = createMarkerLayer(map)
+                    map = initMap('map')
+                    markerLayer = createMarkerLayer(map)
 
+                }
+
+                $('#has-medicacao').on('ifChecked', function (event) {
+                    $('.medicacao').removeClass('d-none');
+                    $("#participante-medicacao").addClass('required');
+                });
+
+                $('#not-medicacao').on('ifChecked', function (event) {
+                    $('.medicacao').addClass('d-none');
+                    $("#participante-medicacao").removeClass('required');
+                });
+
+                $('#has-convenio').on('ifChecked', function (event) {
+                    $('.convenio').removeClass('d-none');
+                    $("#participante-convenio").addClass('required');
+                });
+
+                $('#not-convenio').on('ifChecked', function (event) {
+                    $('.convenio').addClass('d-none');
+                    $("#participante-convenio").removeClass('required');
+                });
+
+
+                $('#has-alergia').on('ifChecked', function (event) {
+                    $('.alergia').removeClass('d-none');
+                    $("#participante-alergia").addClass('required');
+                });
+
+                $('#not-alergia').on('ifChecked', function (event) {
+                    $('.alergia').addClass('d-none');
+                    $("#participante-alergia").removeClass('required');
+                });
+
+
+                $('#has-restricaoalimentar').on('ifChecked', function (event) {
+                    $('.restricaoalimentar').removeClass('d-none');
+                    $("#participante-restricaoalimentar").addClass('required');
+                });
+
+                $('#not-restricaoalimentar').on('ifChecked', function (event) {
+                    $('.restricaoalimentar').addClass('d-none');
+                    $("#participante-restricaoalimentar").removeClass('required');
+                });
+
+
+                $('#has-parente').on('ifChecked', function (event) {
+                    $('.parente').removeClass('d-none');
+                    $("#participante-parente").addClass('required');
+                });
+
+                $('#not-parente').on('ifChecked', function (event) {
+                    $('.parente').addClass('d-none');
+                    $("#participante-parente").removeClass('required');
+                });
+
+                $('#is-casado').on('ifChecked', function (event) {
+                    $('.casado').removeClass('d-none');
+                    $("#participante-data-casamento").addClass('required');
+                });
+
+                $('#not-casado').on('ifChecked', function (event) {
+                    $('.casado').addClass('d-none');
+                    $("#participante-data-casamento").removeClass('required');
+                });
             }
-
-            $('#has-medicacao').on('ifChecked', function (event) {
-                $('.medicacao').removeClass('d-none');
-                $("#participante-medicacao").addClass('required');
-            });
-
-            $('#not-medicacao').on('ifChecked', function (event) {
-                $('.medicacao').addClass('d-none');
-                $("#participante-medicacao").removeClass('required');
-            });
-
-            $('#has-convenio').on('ifChecked', function (event) {
-                $('.convenio').removeClass('d-none');
-                $("#participante-convenio").addClass('required');
-            });
-
-            $('#not-convenio').on('ifChecked', function (event) {
-                $('.convenio').addClass('d-none');
-                $("#participante-convenio").removeClass('required');
-            });
-
-
-            $('#has-alergia').on('ifChecked', function (event) {
-                $('.alergia').removeClass('d-none');
-                $("#participante-alergia").addClass('required');
-            });
-
-            $('#not-alergia').on('ifChecked', function (event) {
-                $('.alergia').addClass('d-none');
-                $("#participante-alergia").removeClass('required');
-            });
-
-
-            $('#has-restricaoalimentar').on('ifChecked', function (event) {
-                $('.restricaoalimentar').removeClass('d-none');
-                $("#participante-restricaoalimentar").addClass('required');
-            });
-
-            $('#not-restricaoalimentar').on('ifChecked', function (event) {
-                $('.restricaoalimentar').addClass('d-none');
-                $("#participante-restricaoalimentar").removeClass('required');
-            });
-
-
-            $('#has-parente').on('ifChecked', function (event) {
-                $('.parente').removeClass('d-none');
-                $("#participante-parente").addClass('required');
-            });
-
-            $('#not-parente').on('ifChecked', function (event) {
-                $('.parente').addClass('d-none');
-                $("#participante-parente").removeClass('required');
-            });
-
-            $('#is-casado').on('ifChecked', function (event) {
-                $('.casado').removeClass('d-none');
-                $("#participante-data-casamento").addClass('required');
-            });
-
-            $('#not-casado').on('ifChecked', function (event) {
-                $('.casado').addClass('d-none');
-                $("#participante-data-casamento").removeClass('required');
-            });
-        }
-    });
+        });
+    }
 
 }
 
 $("#participantes").change(function () {
-    loadCampos(SelectedEvent.Id)
+    loadCampos(SelectedEvent.Id,'participantes')
 })
 
 $("#equipantes").change(function () {
-    loadCampos(SelectedEvent.Id)
+    loadCampos(SelectedEvent.Id,'equipantes')
 })
 
 function montarMapa() {

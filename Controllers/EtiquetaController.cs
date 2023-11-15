@@ -29,7 +29,6 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Marcadores";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            GetConfiguracoes();
             return View();
         }
 

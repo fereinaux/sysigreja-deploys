@@ -28,7 +28,7 @@
         ],
         ajax: {
             url: '/MeioPagamento/GetMeioPagamentos',
-            data: { configuracaoId: $('#meiopagamento-configId').val()},
+            data: { configuracaoId: SelectedConfig.Id},
             datatype: "json",
             type: "POST"
         }
@@ -95,7 +95,7 @@ function PostMeioPagamento() {
             data: JSON.stringify(
                 {
                     Id: $("#meio-pagamento-id").val(),             
-                    ConfiguracaoId: $('#meiopagamento-configId').val(),
+                    ConfiguracaoId: SelectedConfig.Id,
                     Descricao: $("#meio-pagamento-descricao").val(),
                 }),
             success: function () {

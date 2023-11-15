@@ -41,7 +41,6 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
-            GetConfiguracoes();
             ViewBag.Title = "Eventos";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
@@ -50,7 +49,6 @@ namespace SysIgreja.Controllers
 
         public ActionResult Informativos()
         {
-            GetConfiguracoes();
             ViewBag.Title = "Informativos";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
@@ -69,7 +67,7 @@ namespace SysIgreja.Controllers
 
 
             return Json(new { Tipos = result }, JsonRequestBehavior.AllowGet);
-        }
+        }       
 
         [HttpGet]
         public ActionResult PopulateEventosByUser()
@@ -106,25 +104,26 @@ namespace SysIgreja.Controllers
                     Role = configId.Contains(x.ConfiguracaoId.Value) ? "Admin" : eventoPermissao.FirstOrDefault(y => y.EventoId == x.Id).Role,
                     Id = x.Id,
                     ConfiguracaoId = x.ConfiguracaoId,
+                    Capacidade = x.Capacidade,
+                    DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
+                    Numeracao = x.Numeracao,
                     AccessTokenMercadoPago = x.Configuracao.AccessTokenMercadoPago,
                     BackgroundId = x.Configuracao.BackgroundId,
-                    Capacidade = x.Capacidade,
+                    Status = x.Status.GetDescription(),
+                    StatusEquipe = x.StatusEquipe.GetDescription(),
+                    TipoQuarto = x.Configuracao.TipoQuarto?.GetDescription(),
+                    Valor = x.Valor,
+                    ValorTaxa = x.ValorTaxa,
+                    Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador),
                     CorBotao = x.Configuracao.CorBotao,
-                    DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
                     EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,
                     Identificador = x.Configuracao.Identificador,
                     LogoId = x.Configuracao.LogoId,
                     LogoRelatorioId = x.Configuracao.LogoRelatorioId,
-                    Numeracao = x.Numeracao,
                     PublicTokenMercadoPago = x.Configuracao.PublicTokenMercadoPago,
-                    Status = x.Status.GetDescription(),
-                    StatusEquipe = x.StatusEquipe.GetDescription(),
                     Titulo = x.Configuracao.Titulo,
                     TipoEvento = x.Configuracao.TipoEvento?.GetDescription(),
                     TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
-                    Valor = x.Valor,
-                    ValorTaxa = x.ValorTaxa,
-                    Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador),
                     MeioPagamentos = x.Configuracao.MeioPagamentos.Select(y => new MeioPagamentoModel
                     {
                         Descricao = y.Descricao,
@@ -144,7 +143,25 @@ namespace SysIgreja.Controllers
                     }),
                 }).ToList();
 
-            return Json(new { Eventos = (eventosReturn) }, JsonRequestBehavior.AllowGet);
+            return Json(new { Eventos = (eventosReturn), Configuracoes = eventosReturn.Where(x => configId.Contains(x.ConfiguracaoId.Value)).GroupBy(x => new {
+                Id = x.ConfiguracaoId,
+            }).Select(x => new
+            {
+                Id = x.Key.Id,
+                CorBotao = x.FirstOrDefault().CorBotao,
+                EquipeCirculo = x.FirstOrDefault().EquipeCirculo,
+                Identificador = x.FirstOrDefault().Identificador,
+                LogoId = x.FirstOrDefault().LogoId,
+                LogoRelatorioId = x.FirstOrDefault().LogoRelatorioId,
+                PublicTokenMercadoPago = x.FirstOrDefault().PublicTokenMercadoPago,
+                Titulo = x.FirstOrDefault().Titulo,
+                TipoEvento = x.FirstOrDefault().TipoEvento,
+                TipoCirculo = x.FirstOrDefault().TipoCirculo,
+                MeioPagamentos = x.FirstOrDefault().MeioPagamentos,
+                CentroCustos = x.FirstOrDefault().CentroCustos,
+                Etiquetas = x.FirstOrDefault().Etiquetas
+
+            }).OrderBy(x => x.Id).ToList(), Login = configuracaoBusiness.GetLoginResumido() }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

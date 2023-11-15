@@ -46,8 +46,12 @@
     @Scripts.Render("~/bundles/jquery")
 
     <script>
-        Claims = { Eventos: [] }
+        Claims = {
+            Eventos: [], Configuracooes: [], Login: {}
+        }
         SelectedEvent = {}
+        SelectedConfig = {}
+        Login: { }
         xhrPopulate = undefined
 
         async function getClaims() {
@@ -56,7 +60,7 @@
 
                 return Claims
             }
-            if (Claims.Eventos.length > 0) {
+            if (Claims.Eventos.length > 0 || Claims.Configuracooes.length > 0) {
                 return Claims
             } else {
                 xhrPopulate = $.ajax(
@@ -67,6 +71,8 @@
                 Claims = await xhrPopulate
 
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
+                SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
+                Login = Claims.Login
                 return Claims
             }
         }
@@ -77,6 +83,15 @@
         getClaims().then(() => $.holdReady(false))
 
 
+        function verifyPermissionsConfig() {
+            getClaims().then(claims => {
+                if (claims.Configuracoes.length == 0) {
+                    window.location.href = '/Account/NaoAutorizado'
+                }
+            })
+        }
+
+            
     </script>
     <!-- Add local styles, mostly for plugins css file -->
 
@@ -329,71 +344,6 @@
         }
     </script>
     <script>
-        function loadEvery() { 
-            if (SelectedEvent.Id) {
-                $('title').text(`${SelectedEvent.Titulo} | ${$('#title').text()}`)
-            } else if ($("*[id*='configId']").val()) {
-                $.ajax({
-                    url: "/Configuracao/GetConfiguracaoResumido/",
-                    data: { Id: $("*[id*='configId']").val() },
-                    datatype: "json",
-                    type: "GET",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        config = data.Configuracao
-                        loadConfig(config)
-                    }
-                });
-            } else {
-                $('title').text("SysIgreja")
-                $('link[rel="icon"]').attr('href', logoLogin)
-                $('#home-button-logo img').attr('src', logoLogin)
-                $('#home-button-logo').css('display', 'block')
-
-                $('body').on('DOMNodeInserted', '.swal-title', function () {
-                    $('.swal-modal').css('background', '#233646')
-                    $('.swal-modal').css('color', 'white')
-                    $('.swal-title').css('color', 'white')
-                    $('.swal-content__input').css('background', '#233646')
-                    $('.swal-modal').css('background', '#233646')
-                    $('.swal-modal').css('color', 'white')
-                });
-                $('body').on('DOMNodeInserted', '.swal-content', function () {
-                    $('.swal-content').css('color', 'white')
-
-                });
-
-                $('body').on('DOMNodeInserted', '.swal-text', function () {
-                    $('.swal-text').css('color', 'white')
-
-                });
-
-            }
-
-            $("*[id*='eventoid']").change(function () {
-                if (this.value != 999) {
-                    localStorage.setItem('eventoId', this.value)
-                }
-
-            })
-
-            $("*[id*='configId']").change(function () {
-                $.ajax({
-                    url: "/Configuracao/GetConfiguracaoResumido/",
-                    data: { Id: this.value },
-                    datatype: "json",
-                    type: "GET",
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        config = data.Configuracao
-                        loadConfig(config)
-                    }
-                });
-                localStorage.setItem('configId', this.value)
-            })
-        }
-    </script>
-    <script>
 
         window.addEventListener("offline", (event) => {
             var div = document.createElement("div");
@@ -426,31 +376,9 @@
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
 
-        function loadLogin() {
-
-            $.ajax({
-                url: "/Configuracao/GetLogin/",
-                datatype: "json",
-                type: "GET",
-                contentType: `application/json; charset=utf-8`,
-                success: function (data) {
-                    login = data.Login
-                    logoLogin = `data:image/png;base64,${login.Logo}`
-
-                    if (!SelectedEvent.LogoId) {
-                        $('#home-button-logo img').attr('src', `data:image/png;base64,${login.Logo}`)
-                        $('link[rel="icon"]').attr('href', `data:image/png;base64,${login.Logo}`)
-                    }
-
-
-                }
-            });
-        }
-
+      
         $(document).ready(function () {
             loadAvatar()
-            loadLogin()
-            loadEvery()
             consultarNotificacoes()
             setInterval(consultarNotificacoes, 60000)
 
@@ -496,67 +424,6 @@
 
 
         });
-
-        function loadConfig() {
-            $('title').text(`${SelectedEvent.Titulo} | ${$('#title').text()}`)
-
-            if (SelectedEvent.TipoQuarto == "Endereco") {
-                $('.quarto-endereco').css('display', 'block')
-            } else {
-                $('.quarto-endereco').css('display', 'none')
-            }
-
-            $('.title-circulo').text(SelectedEvent.EquipeCirculo)
-
-
-            if (SelectedEvent.CorBotao) {
-                $('body').on('DOMNodeInserted', '.swal-title', function () {
-                    $('.swal-modal').css('background', SelectedEvent.CorBotao)
-                    $('.swal-modal').css('color', 'white')
-                    $('.swal-title').css('color', 'white')
-
-
-                    $('.swal-modal').css('background', SelectedEvent.CorBotao)
-                    $('.swal-modal').css('color', 'white')
-                });
-                $('body').on('DOMNodeInserted', '.swal-content', function () {
-                    $('.swal-content').css('color', 'white')
-                    $('.swal-content__input').css('background', SelectedEvent.CorBotao)
-
-                });
-
-                $('body').on('DOMNodeInserted', '.swal-text', function () {
-                    $('.swal-text').css('color', 'white')
-
-                });
-
-                $('.btn.btn-flat').css('background', SelectedEvent.CorBotao)
-                $('.btn.btn-flat').css('margin-left', '7px')
-
-            } else {
-                $('body').on('DOMNodeInserted', '.swal-title', function () {
-                    $('.swal-modal').css('background', '#233646')
-                    $('.swal-modal').css('color', 'white')
-                    $('.swal-title').css('color', 'white')
-                    $('.swal-content__input').css('background', '#233646')
-
-                    $('.swal-modal').css('background', '#233646')
-                    $('.swal-modal').css('color', 'white')
-                });
-                $('body').on('DOMNodeInserted', '.swal-content', function () {
-                    $('.swal-content').css('color', 'white')
-
-                });
-
-                $('body').on('DOMNodeInserted', '.swal-text', function () {
-                    $('.swal-text').css('color', 'white')
-
-                });
-            }
-
-            $('#home-button-logo').css('display', 'block')  
-    
-        }
 
 
         let div = document.createElement("div");
@@ -680,7 +547,6 @@
                 data: data,
                 success: function (response, status, xhr) {
                     renderPage(xhr, pushHistory);
-                    loadEvery()
                 },
                 error: function (xhr) {
                     // unauthorized or access denied

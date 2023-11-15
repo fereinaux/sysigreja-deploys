@@ -96,6 +96,7 @@ function AddBoletim() {
 }
 
 $(document).ready(function () {
+    verifyPermissionsConfig()
     CarregarTabelaArquivo();
 });
 

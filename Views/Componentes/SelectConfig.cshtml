@@ -9,16 +9,14 @@
     function handleGlobals() {
         if (SelectedConfig) {
             $('title').text($('#title').text())
-            $('.bg-coord').css('background-color', SelectedConfig.CorBotao)
             $('.title-circulo').text(SelectedConfig.EquipeCirculo)
-
-        
             $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo').css('display', 'block')
             $('#img-logo').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
-           
 
+            $('.bg-coord').css('background-color', SelectedConfig.CorBotao)
+                   
             $('body').on('DOMNodeInserted', '.swal-title', function () {
                 $('.swal-modal').css('background', SelectedConfig.CorBotao)
                 $('.swal-modal').css('color', 'white')

@@ -493,7 +493,7 @@
                                                                 }
                                                             }).summernote('code', config.MsgConclusaoEquipe)
                                                             $(`#config-corhoverbotao${config.Id}`).val(config.CorHoverBotao)
-                                                            $(`#config-corbotao${config.Id}`).val(SelectedEvent.CorBotao)
+                                                            $(`#config-corbotao${config.Id}`).val(config.CorBotao)
                                                             $(`#config-equipecirculo${config.Id}`).val(config.EquipeCirculoId)
                                                             $(`#config-equipecarona${config.Id}`).val(config.EquipeCaronaId)
                                                             $(`#config-tipocirculo${config.Id}`).val(config.TipoCirculoId)
@@ -502,21 +502,21 @@
                                                             $(`#config-corhoverscroll${config.Id}`).val(config.CorHoverScroll)
                                                             if (config.LogoId) {
                                                                 $(`#img-logo${config.Id}`).css(`display`, `block`)
-                                                                $(`#img-logo${config.Id}`).attr("src", `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
+                                                                $(`#img-logo${config.Id}`).attr("src", `/Arquivo/GetArquivo/${config.LogoId}`)
                                                             } else {
                                                                 $(`#img-logo${config.Id}`).css(`display`, `none`)
                                                             }
 
                                                             if (config.BackgroundId) {
                                                                 $(`#img-background${config.Id}`).css(`display`, `block`)
-                                                                $(`#img-background${config.Id}`).attr("src", `/Arquivo/GetArquivo/${SelectedEvent.BackgroundId}`)
+                                                                $(`#img-background${config.Id}`).attr("src", `/Arquivo/GetArquivo/${config.BackgroundId}`)
                                                             } else {
                                                                 $(`#img-background${config.Id}`).css(`display`, `none`)
                                                             }
 
                                                             if (config.LogoRelatorioId) {
                                                                 $(`#img-logorelatorio${config.Id}`).css(`display`, `block`)
-                                                                $(`#img-logorelatorio${config.Id}`).attr("src", `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`)
+                                                                $(`#img-logorelatorio${config.Id}`).attr("src", `/Arquivo/GetArquivo/${config.LogoRelatorioId}`)
                                                             } else {
                                                                 $(`#img-logorelatorio${config.Id}`).css(`display`, `none`)
                                                             }
@@ -623,6 +623,12 @@
 
         $(document).ready(function () {
             verifyPermissionsConfig()
+            $('title').text($('#title').text())
+            $('.title-circulo').text(SelectedConfig.EquipeCirculo)
+            $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)
+            $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
+            $('#home-button-logo').css('display', 'block')
+            $('#img-logo').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
             carregarConfiguracoes()
 
         })

@@ -679,7 +679,7 @@ function Drag() {
 
 
 function ChangeCirculo(participanteId, destinoId) {
-
+    initTableCirculo = false;
     if (selectedMarkers.length > 0) {
         let arrPromises = []
 

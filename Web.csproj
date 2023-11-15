@@ -1232,7 +1232,7 @@
     <Content Include="Scripts\plugins\jsCrop-master\README.md" />
     <Content Include="Views\Inscricoes\InscricaoEspera.cshtml" />
     <Content Include="Views\Etiqueta\Index.cshtml" />
-    <Content Include="Views\Configuracao\Index.cshtml" />
+    <Content Include="Views\Configuracao\Parametros.cshtml" />
     <Content Include="Views\Mensagem\Index.cshtml" />
     <Content Include="Views\Carona\Index.cshtml" />
     <Content Include="Views\Quarto\Voluntarios.cshtml" />

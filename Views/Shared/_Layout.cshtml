@@ -56,20 +56,35 @@
 
         async function getClaims() {
             if (xhrPopulate) {
-                Claims = await xhrPopulate
+                promiseResult = await Promise.all(xhrPopulate)
+                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login }
+                SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
+                SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
+                Login = Claims.Login
 
                 return Claims
             }
             if (Claims.Eventos.length > 0 || Claims.Configuracooes.length > 0) {
                 return Claims
             } else {
-                xhrPopulate = $.ajax(
+                xhrPopulate = [$.ajax(
                     {
                         type: "GET",
                         url: "/Evento/PopulateEventosByUser",
+                    }),
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: "/Evento/PopulateConfigByUser",
+                    }),
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: "/Evento/PopulateLogin",
                     })
-                Claims = await xhrPopulate
-
+                ]
+                promiseResult = await Promise.all(xhrPopulate)
+                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
                 Login = Claims.Login
@@ -91,7 +106,7 @@
             })
         }
 
-            
+
     </script>
     <!-- Add local styles, mostly for plugins css file -->
 
@@ -376,7 +391,7 @@
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
 
-      
+
         $(document).ready(function () {
             loadAvatar()
             consultarNotificacoes()

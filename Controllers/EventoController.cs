@@ -11,6 +11,7 @@ using Core.Models.Eventos;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -67,7 +68,7 @@ namespace SysIgreja.Controllers
 
 
             return Json(new { Tipos = result }, JsonRequestBehavior.AllowGet);
-        }       
+        }
 
         [HttpGet]
         public ActionResult PopulateEventosByUser()
@@ -143,25 +144,45 @@ namespace SysIgreja.Controllers
                     }),
                 }).ToList();
 
-            return Json(new { Eventos = (eventosReturn), Configuracoes = eventosReturn.Where(x => configId.Contains(x.ConfiguracaoId.Value)).GroupBy(x => new {
-                Id = x.ConfiguracaoId,
-            }).Select(x => new
-            {
-                Id = x.Key.Id,
-                CorBotao = x.FirstOrDefault().CorBotao,
-                EquipeCirculo = x.FirstOrDefault().EquipeCirculo,
-                Identificador = x.FirstOrDefault().Identificador,
-                LogoId = x.FirstOrDefault().LogoId,
-                LogoRelatorioId = x.FirstOrDefault().LogoRelatorioId,
-                PublicTokenMercadoPago = x.FirstOrDefault().PublicTokenMercadoPago,
-                Titulo = x.FirstOrDefault().Titulo,
-                TipoEvento = x.FirstOrDefault().TipoEvento,
-                TipoCirculo = x.FirstOrDefault().TipoCirculo,
-                MeioPagamentos = x.FirstOrDefault().MeioPagamentos,
-                CentroCustos = x.FirstOrDefault().CentroCustos,
-                Etiquetas = x.FirstOrDefault().Etiquetas
 
-            }).OrderBy(x => x.Id).ToList(), Login = configuracaoBusiness.GetLoginResumido() }, JsonRequestBehavior.AllowGet);
+
+
+            return Json(new
+            {
+                Eventos = (eventosReturn),              
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public ActionResult PopulateLogin()
+        {    
+            return Json(new
+            {      
+                Login = configuracaoBusiness.GetLoginResumido()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult PopulateConfigByUser()
+        {
+            var user = GetApplicationUser();
+            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões").Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                 .Select(x => x.Select(y => new { ConfigId = y.ConfiguracaoId, Role = y.Role })).ToList();
+            List<int> configId = new List<int>();
+            var eventoPermissao = new List<EventoPermissao>();
+            permissoes.ForEach(permissao =>
+            {
+                configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));                           
+            });
+
+            return Json(new
+            {
+                Configuracoes = mapper.Map<IEnumerable<EventoClaimModel>>(configuracaoBusiness
+                .GetConfiguracoesLight()
+                .Where(x => configId.Contains(x.Id))
+                .OrderBy(x => x.Id)),
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

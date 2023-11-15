@@ -74,6 +74,7 @@
     }
 
     getClaims().then(claims => {
+        console.log(claims);
         roles = '@Model.Roles'.replaceAll(' ', '').split(',')
         if (roles.length == 1 && roles[0] == "Coordenador") {
             eventos = claims.Eventos.filter(evento => evento.Coordenador == true)

@@ -30,7 +30,7 @@ namespace SysIgreja.Controllers
             this.eventoBusiness = eventoBusiness;
         }
 
-        public ActionResult Index()
+        public ActionResult Parametros()
         {
             ViewBag.Title = "Parâmetros";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));

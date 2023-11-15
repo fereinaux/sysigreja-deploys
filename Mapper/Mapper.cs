@@ -85,6 +85,14 @@ namespace SysIgreja.Controllers
         {
             var configuration = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<Configuracao, EventoClaimModel>()
+                   .ForMember(dest => dest.TipoQuarto, opt => opt.MapFrom(x => x.TipoQuarto != null ? x.TipoQuarto.Value.GetDescription() : ""))
+                   .ForMember(dest => dest.EquipeCirculo, opt => opt.MapFrom(x => x.EquipeCirculo.Nome))
+                .ForMember(dest => dest.TipoEvento, opt => opt.MapFrom(x => x.TipoEvento != null ? x.TipoEvento.Value.GetDescription() : ""))
+                .ForMember(dest => dest.TipoCirculo, opt => opt.MapFrom(x => x.TipoCirculo.GetDescription()));
+                cfg.CreateMap<MeioPagamento, MeioPagamentoModel>();
+                cfg.CreateMap<CentroCusto, CentroCustoModel>().ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => x.Tipo.GetDescription())); ;
+                cfg.CreateMap<Etiqueta, EtiquetaModel>();                
                 cfg.CreateMap<EquipanteEvento, PessoaSelectModel>()
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)));

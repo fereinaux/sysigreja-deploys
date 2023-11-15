@@ -168,27 +168,32 @@ function GetResultadosAdmin() {
         type: "GET",
         success: (data) => {
             result = data.result; 
-          
-            $("#equipe-male").text(result.EquipeMeninos);
-            $("#equipe-female").text(result.EquipeMeninas);
+
+            $("#equipe-male").text(result.filter(x => x.Sexo == 1).length);
+            $("#equipe-female").text(result.filter(x => x.Sexo == 2).length);
           
 
             htmlEquipes = '';
             htmlEquipesMobile = '';
             totalEquipe = 0;
-            $(result.Equipes).each((i, element) => {
-                totalEquipe += element.QuantidadeMembros;
+
+            var equipes = $.unique(result.map(x => x.Nome).sort())
+         
+
+            $(equipes).each((i, element) => {
+                var qtd = result.filter(x => x.Nome == element).length
+                totalEquipe += qtd;
                 htmlEquipesMobile += `  <div class="col col-xs-6">
                                 <div class="equipe-mobile black-bg">
                                     <div class="mobile-content">
-                                        <h3>${element.QuantidadeMembros}</h3>
-                                        <p>${element.Equipe}</p>
+                                        <h3>${qtd}</h3>
+                                        <p>${element}</p>
                                     </div>
                                 </div>
                             </div>`
                 htmlEquipes += `<tr>                        
-                        <td>${element.Equipe}</td>                        
-                        <td>${element.QuantidadeMembros}</td>                                                
+                        <td>${element}</td>                        
+                        <td>${qtd}</td>                                                
                     </tr>`;
             });
 

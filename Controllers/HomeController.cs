@@ -193,20 +193,15 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipesEvento(int EventoId)
         {
-            var result = new
-            {
 
-                EquipeMeninos = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Masculino).Count(),
-                EquipeMeninas = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => x.Equipante.Sexo == SexoEnum.Feminino).Count(),
-                Equipes = equipesBusiness.GetEquipesGrouped(EventoId)
-            .Select(x => new ListaEquipesViewModel
+            var query = equipesBusiness.GetQueryEquipantesEvento(EventoId);
+
+
+            var result = query.Select(x => new
             {
-                QuantidadeMembros = x.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.EquipanteEventos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
-                QtdAnexos = x.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count() + x.EquipesFilhas.Select(y => y.Equipe.Arquivos.Where(z => z.EventoId == EventoId).Count()).DefaultIfEmpty(0).Sum(),
-                Equipe = x.Equipe.Nome,
-                Id = x.EquipeId
-            }).ToList(),
-            };
+                x.Equipante.Sexo,
+                x.Equipe.Nome
+            });
 
             return Json(new
             {

@@ -107,6 +107,6 @@ function PostMeioPagamento() {
     } 
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     CarregarTabelaMeioPagamento();
 });

@@ -93,7 +93,6 @@ map.on('popupclose', function (e) {
 })
 
 function CarregarTabelaCirculo() {
-
     var columnsTb = [
         {
             data: "Titulo", name: "Titulo", autoWidth: true, render: function (data, type, row) {
@@ -136,20 +135,14 @@ function CarregarTabelaCirculo() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
-
             if (settings.aoData.length > 0) {
-
-                let column = settings.aoColumns[settings.aaSorting[0][0]].data
-                let dir = settings.aaSorting[0][1]
+                let column = settings.aoColumns[settings.aaSorting.length > 0 ? settings.aaSorting[0][0] : 0].data
+                let dir = settings.aaSorting > 0 ? settings.aaSorting[0][1] : 'asc'
                 let search = settings.oPreviousSearch.sSearch
 
             }
 
-            if (initTableCirculo) {
-                GetCirculosComParticipantes('id', 'asc', '');
-            }
-
-            initTableCirculo = true
+  
         },
         ajax: {
             url: '/Circulo/GetCirculos',
@@ -158,10 +151,16 @@ function CarregarTabelaCirculo() {
             type: "POST"
         }
     };
-    $("#table-circulo").DataTable(tableCirculoConfig);
+    var api = $("#table-circulo").DataTable(tableCirculoConfig);
+    settings = api.settings()[0]
+
+    GetCirculosComParticipantes((
+        settings.aoColumns[settings.aaSorting.length > 0 ? settings.aaSorting[0][0] : 0].data),
+        (settings.aaSorting > 0 ? settings.aaSorting[0][1] : 'asc'),
+        settings.oPreviousSearch.sSearch ?? '');
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
 
     $("#Participante").on("keyup", function () {
         var value = $(this).val().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
@@ -529,8 +528,7 @@ function GetParticipantesSemCirculo() {
 var setView = false
 
 function GetCirculosComParticipantes(column, dir, search) {
-    $("#circulos").empty();
-
+    $("#circulos").empty();    
     $.ajax({
         url: '/Circulo/GetCirculos',
         datatype: "json",
@@ -696,7 +694,7 @@ function ChangeCirculo(participanteId, destinoId) {
   <div style="background-color:${SelectedEvent.CorBotao}" class="rect4"></div>
   <div style="background-color:${SelectedEvent.CorBotao}" class="rect5"></div>
 </div>`,
-                baseZ: 1500,
+                baseZ: 3500,
                 overlayCSS: {
                     opacity: 0.7,
                     cursor: 'wait'
@@ -915,7 +913,7 @@ function GetDirigentes() {
 }
 
 function loadCirculo() {
-
+    
     $('title').text(`${SelectedEvent.Titulo} | ${SelectedEvent.EquipeCirculo}`)
     $('.title-circulo').text(SelectedEvent.EquipeCirculo)
     if (SelectedEvent.TipoCirculo == 'Endereco') {

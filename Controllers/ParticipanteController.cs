@@ -354,7 +354,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetTotaisCheckin(int EventoId)
         {
             var queryParticipantes = participantesBusiness.GetParticipantesByEvento(EventoId);
-            var queryEquipantes = equipesBusiness.GetEquipantesByEvento(EventoId);
+            var queryEquipantes = equipesBusiness.GetQueryEquipantesEvento(EventoId);
 
             var result = new
             {

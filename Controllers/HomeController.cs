@@ -1,5 +1,6 @@
 ﻿using Arquitetura.Controller;
 using Arquitetura.ViewModels;
+using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Configuracao;
@@ -9,6 +10,7 @@ using Core.Business.Lancamento;
 using Core.Business.Participantes;
 using Core.Business.Reunioes;
 using Core.Models;
+using Core.Models.Equipantes;
 using Data.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -41,6 +43,7 @@ namespace SysIgreja.Controllers
         private readonly IEventosBusiness eventosBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
         private readonly IAccountBusiness accountBusiness;
+        private readonly IMapper mapper;
 
         public HomeController(IEquipesBusiness equipesBusiness, IImageService imageService, IParticipantesBusiness participantesBusiness, IArquivosBusiness arquivosBusiness, ILancamentoBusiness lancamentoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
@@ -52,6 +55,7 @@ namespace SysIgreja.Controllers
             this.accountBusiness = accountBusiness;
             this.reunioesBusiness = reunioesBusiness;
             this.arquivosBusiness = arquivosBusiness;
+            mapper = new MapperRealidade().mapper;
         }
 
         [Authorize]
@@ -279,13 +283,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> CoordenadorGet(int eventoId)
+        public ActionResult CoordenadorGet(int eventoId)
         {
 
             var user = GetApplicationUser();
             var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
             var equipeFilhas = GetEquipesFilhas(equipanteEvento.EquipeId.Value, eventoId);
-            var membrosEquipe = await equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas).Include(x => x.Evento).Include(x => x.Evento.Reunioes).Include(x => x.Presencas).Include(x => x.Equipante.Lancamentos).ToListAsync();
+
+            var membrosEquipe = equipesBusiness.GetMembrosEquipe(eventoId, equipeFilhas).Include(x => x.Evento).Include(x => x.Evento.Reunioes).Include(x => x.Presencas).Include(x => x.Equipante.Lancamentos);
             var result = new
             {
                 Equipe = equipanteEvento.Equipe.Nome,
@@ -296,18 +301,7 @@ namespace SysIgreja.Controllers
                 .ToList()
                 .OrderBy(x => TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays < 0 ? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays * -1 : TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays)
                 .Select(x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }),
-                Membros = membrosEquipe.Select(x => new EquipanteViewModel
-                {
-                    Id = x.Equipante.Id,
-                    EquipanteEventoId = x.Id,
-                    Sexo = x.Equipante.Sexo.GetDescription(),
-                    Fone = x.Equipante.Fone,
-                    Idade = UtilServices.GetAge(x.Equipante.DataNascimento),
-                    Nome = x.Equipante.Nome,
-                    Equipe = x.Equipe.Nome,
-                    Faltas = x.Evento.Reunioes.Where(y => y.DataReuniao < TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))).ToList().Count - x.Presencas.Count,
-                    Oferta = x.Equipante.Lancamentos.Any(y => y.EventoId == eventoId),
-                }).OrderBy(x => x.Equipe).ThenBy(x => x.Nome)
+                Membros = mapper.Map<IEnumerable<EquipanteListModel>>(membrosEquipe.OrderBy(x => x.Equipe.Nome).ThenBy(x => x.Equipante.Nome))
             };
 
 

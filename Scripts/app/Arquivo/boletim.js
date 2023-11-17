@@ -95,10 +95,12 @@ function AddBoletim() {
     $("#modal-boletim").modal();
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {    
     verifyPermissionsConfig()
+    defaultLogin()
     CarregarTabelaArquivo();
 });
+
 
 
 

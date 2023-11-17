@@ -75,16 +75,7 @@ function CarregarTabelaQuarto() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
-            if (settings.aoData.length > 0) {
-
-                let column = settings.aoColumns[settings.aaSorting[0][0]].data
-                let dir = settings.aaSorting[0][1]
-                let search = settings.oPreviousSearch.sSearch
-
-                GetQuartosComParticipantes(column, dir, search);
-            } else {
-                GetQuartosComParticipantes('id','asc','')
-            }
+           
 
         },
         ajax: {
@@ -95,10 +86,17 @@ function CarregarTabelaQuarto() {
         }
     };
     table = $("#table-quarto").DataTable(tableQuartoConfig);
+
+    settings = table.settings()[0]
+
+    GetQuartosComParticipantes((
+        settings.aoColumns[settings.aaSorting.length > 0 ? settings.aaSorting[0][0] : 0].data),
+        (settings.aaSorting > 0 ? settings.aaSorting[0][1] : 'asc'),
+        settings.oPreviousSearch.sSearch ?? '');
 }
 
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     $('#col-chave').text(window.location.href.includes('Quarto/Voluntarios') ? 'Equipantes' : 'Participantes')
 
     $("#Participante").on("keyup", function () {

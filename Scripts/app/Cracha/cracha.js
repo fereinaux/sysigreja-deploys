@@ -424,7 +424,7 @@ function renderCracha() {
 }
 
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     CarregarTabelaCracha()
     $('.nome-font #font-picker')
         .fontpicker({ parentElement: '#form-cracha' }).on('change', function () {

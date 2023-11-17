@@ -18,7 +18,7 @@
     <div class="ibox" style="margin:0">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:250px">
+            <div class="ibox-tools pull-right">
                 @if (User.IsInRole("Geral"))
                 {
                     <button class="btn btn-primary" onclick="addConfig()">Adicionar</button>
@@ -623,7 +623,7 @@
             $('title').text($('#title').text())
             $('.title-circulo').text(SelectedConfig.EquipeCirculo)
 
-        $(document).ready(function () {
+        $(document).off('ready-ajax').on('ready-ajax', () => {
             verifyPermissionsConfig()
             $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)

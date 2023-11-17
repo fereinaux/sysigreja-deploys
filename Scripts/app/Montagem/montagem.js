@@ -6,11 +6,25 @@ newEventoId = undefined
 
 isConvite = SelectedEvent.Role == "Convites"
 HideMenu();
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     $('.not-convite').css('display', isConvite ? 'none' : 'block')
     loadMontagem()
     loadCampos(999)
 })
+$('.search-data').attr('disabled', true)
+$('.search-data').on('keyup change clear', _.debounce(function () {
+    if ($('#table-montagem').DataTable().column($(this).data('column')).search() !== this.value) {
+        $('#table-montagem').DataTable().column($(this).data('column')).search(this.value).draw()
+    }
+
+}, 500))
+
+function loadSearch() {
+    $('.search-data').each((i, elm) => {
+        $(elm).val($('#table-montagem').DataTable().state().columns[$(elm).data('column')].search.search)
+        $(elm).attr('disabled', false)
+    })
+}
 
 
 function loadMontagem() {
@@ -93,6 +107,12 @@ function CarregarTabelaEquipante(callbackFunction) {
         colReorder: true,
         serverSide: true,
         scrollX: true,
+        createdRow: function (row, data, dataIndex) {
+            if (data.HasFoto) {
+                $(row).addClass('foto')
+                $(row).data('id', data.Id)
+            }
+        },
         scrollXollapse: true,
         orderCellsTop: true,
         fixedHeader: true,
@@ -108,7 +128,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         buttons: getButtonsConfig(`Montagem`),
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis noSearch noExport',
+                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis noSearch noExport', title: '<div class="checkbox i-checks-green"><label> <input type="checkbox" id="select-all" data-id="all"> <i></i></label></div>',
                 "render": function (data, type, row) {
                     return `${GetCheckBox(data, false)}`;
                 }
@@ -129,13 +149,13 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Nome", name: "Nome", autoWidth: true
+                data: "Nome", title: "Nome", name: "Nome", autoWidth: true
             },
             {
-                data: "Apelido", name: "Apelido", autoWidth: true, class: "noSearch"            
+                data: "Apelido", title: "Apelido", name: "Apelido", autoWidth: true, class: "noSearch"            
             },
             {
-                data: "Etiquetas", orderable: false, name: "Etiquetas", className: 'noSearch', render: function (data, type, row) {
+                data: "Etiquetas", title: "Etiquetas", orderable: false, name: "Etiquetas", className: 'noSearch', render: function (data, type, row) {
                     if (type === 'export') {
                         return `<div>
 
@@ -155,24 +175,24 @@ function CarregarTabelaEquipante(callbackFunction) {
     </div>`
                 }
             },
-            { data: "Fone", name: "Fone", class: "noSearch" },
-            { data: "Email", name: "Email", class: "noSearch" },
+            { data: "Fone", title: "Fone", name: "Fone", class: "noSearch" },
+            { data: "Email", title: "Email", name: "Email", class: "noSearch" },
 
-            { data: "Idade", name: "Idade", class: "noSearch" },
+            { data: "Idade", title: "Idade", name: "Idade", class: "noSearch" },
             {
-                data: "Equipe", name: "Equipe", autoWidth: true
+                data: "Equipe", title: "Equipe", name: "Equipe", autoWidth: true
             },
-            { data: "Bairro", name: "Bairro", class: "noSearch" },
-            { data: "Cidade", name: "Cidade", class: "noSearch" },
+            { data: "Bairro", title: "Bairro", name: "Bairro", class: "noSearch" },
+            { data: "Cidade", title: "Cidade", name: "Cidade", class: "noSearch" },
 
 
             {
-                data: "StatusMontagem", orderable: false, name: "StatusMontagem", class: "noSearch", render: (data, type, row) =>
+                data: "StatusMontagem", title: "Status", orderable: false, name: "StatusMontagem", class: "noSearch", render: (data, type, row) =>
                     GetLabel('ToggleStatusMontagem', JSON.stringify(row), data == 'Ativo' ? 'green' : 'blue', data)
 
             },
             {
-                data: "Presenca", name: "Presenca", orderable: false, className: 'noSearch', render: function (data, type, row) {
+                data: "Presenca", title: "Presença", name: "Presenca", orderable: false, className: 'noSearch', render: function (data, type, row) {
                     if (type === 'export') {
                         return `<div>
 
@@ -192,7 +212,7 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
 
             {
-                data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch noExport',
+                data: "Id", title: "Ações", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch noExport',
                 "render": function (data, type, row) {
                     var color = !(Coordenador == row.Tipo) ? 'info' : 'yellow';
                     return `
@@ -231,39 +251,18 @@ function CarregarTabelaEquipante(callbackFunction) {
                 $('.hide-tipoevento').removeClass('d-none')
             } else {
                 $('.hide-tipoevento').addClass('d-none')
-            }
+            }          
 
-            changeEventoMontagem = false
-            var idx = 0
-            var api = this.api()
-            api
-                .columns()
-                .every(function (colIdx) {
-                    var column = this;
-                    if (!$(column.header()).hasClass('noSearch')) {
-                        var input = $($($($(column.header()).parents('thead').find('tr')[1]).find('th')[idx]).find('input'))
-                            .on('change keyup clear', _.debounce(function () {
-                                if (column.search() !== this.value) {
-                                    column.search(this.value).draw();
-                                }
-                            }, 500))
-
-                        if (oldEventoId != newEventoId) {
-                            input.val(api.state().columns[colIdx].search.search)
-                            changeEventoMontagem = true
-                        }
-
-
-                    }
-                    if (column.visible()) {
-                        idx++
-                    }
-
-                });
-            if (changeEventoMontagem) {
-                oldEventoId = newEventoId
-            }
+            tippy(`.foto`, {
+                content: '',
+                allowHTML: true,
+                followCursor: true,
+                onTrigger: (instance, event) => {
+                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByEquipanteId/${$(event.target).data('id')}" />`)
+                },
+            });
             newEventoId = SelectedEvent.Id
+            loadSearch()
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',

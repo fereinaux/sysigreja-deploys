@@ -100,11 +100,36 @@ function getDestino(user) {
     }
 }
 
+async function createGroup(name, participants) {
+    const status_response = await handleWhatsappConnected()
+
+    const result = await $.ajax({
+        url: `https://api.iecbeventos.com.br/api/${status_response.token}/send-message`,
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                name, participants
+            }),
+    })
+
+    await $.ajax({
+        url: `//`,
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                grupoId: result.response.groupInfo.id
+
+            }),
+    })
+}
+
 async function enviarMensagens(mensagemId, ids, tipo,controller) {
 
     const status_response = await handleWhatsappConnected()
-
-
 
     const dataMsg = await $.ajax({
         url: "/Mensagem/GetMensagem/",
@@ -150,7 +175,6 @@ async function enviarMensagens(mensagemId, ids, tipo,controller) {
     }
 
     if (status_response.status != "CONNECTED") {
-        console.log('teste');
         await connectWhatsapp(status_response.token, callback)
     } else {
         await callback()

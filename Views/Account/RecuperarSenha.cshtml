@@ -193,7 +193,7 @@
         }
     }
 
-    $(document).ready(() => {
+    $(document).on('ready', () => {
 
         $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
 
@@ -231,7 +231,6 @@
         $('.btn-juventude').css('border-color', '@ViewBag.Configuracao.CorBotao')
 
              $('.btn-juventude').hover(function () {
-            console.log($(this));
             $(this).css('filter', 'brightness(0.6)')
             $(this).css('filter', 'brightness(0.6)')
 

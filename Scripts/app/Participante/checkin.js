@@ -55,7 +55,7 @@ function startCam() {
 
 equipe = false
 
-$(document).ready(() => {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     Refresh();
     oldId = SelectedEvent.Id
     loadCampos(SelectedEvent.Id);
@@ -863,6 +863,7 @@ function Refresh() {
     GetTotaisCheckin();
     GetParticipantes();
     GetEquipantes()
+    GetCrachas()
 }
 
 

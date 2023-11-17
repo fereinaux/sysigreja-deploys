@@ -35,77 +35,62 @@
             <div class="row">
                 <div class="col-xs-12 col-lg-2">
                     <h5>Evento</h5>
-                    @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-filtro", OnChange = "loadEquipes", Roles = "Financeiro,Administrativo,Admin,Padrinho" })     
+                    @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-filtro", OnChange = "loadEquipes", Roles = "Financeiro,Administrativo,Admin,Padrinho" })
                 </div>
                 <div class="col-xs-12 col-lg-2 hide-tipoevento">
                     <h5>Status</h5>
                     <select class="form-control" id="equipante-status" multiple onchange="CarregarTabelaEquipante()">
-                        <option value="pendente">Pendente</option>
-                        <option value="pago">Pago</option>
+                        <option value="pendente"></option>
+                        <option value="pago"></option>
                     </select>
                 </div>
                 <div class="col-xs-12 col-lg-2 hide-tipoevento">
                     <h5>Equipe</h5>
                     <select class="form-control" id="equipe-select" multiple onchange="CarregarTabelaEquipante()">
-                        <option value=999>Selecione</option>
+                        <option value=999></option>
                     </select>
                 </div>
                 <div class="col-xs-12 col-lg-2 hide-tipoevento">
                     <h5>Tem Marcador</h5>
-                    <select class="form-control" id="equipante-marcadores" multiple onchange="CarregarTabelaEquipante()">
-                    </select>
+                    <select class="form-control" id="equipante-marcadores" multiple onchange="CarregarTabelaEquipante()"></select>
                 </div>
                 <div class="col-xs-12 col-lg-2 hide-tipoevento">
                     <h5>Não tem Marcador</h5>
-                    <select class="form-control" id="equipante-nao-marcadores" multiple onchange="CarregarTabelaEquipante()">
-                    </select>
+                    <select class="form-control" id="equipante-nao-marcadores" multiple onchange="CarregarTabelaEquipante()"></select>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-12 col-lg-2 hide-tipoevento">
+                    <h5>Nome</h5>
+                    <input class="form-control search-data" id="equipante-nome" data-column="4" />
+
+                </div>
+                <div class="col-xs-12 col-lg-2 hide-tipoevento">
+                    <h5>Equipe</h5>
+                    <input class="form-control search-data" id="equipante-equipe" data-column="6" />
+
+                </div>
+                <div class="col-xs-12 col-lg-2 hide-tipoevento">
+                    <h5>Congregação</h5>
+                    <input class="form-control search-data" id="equipante-congregacao" data-column="8" />
+
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div style=" width: 20%;" class="ibox-tools pull-right">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <button class="btn btn-default hide-tipoevento" id="btn_Imprimir" onclick="openModalCracha()">Credencial</button>
-                        <button class="btn btn-default" style="display:none" id="btn_bulk" onclick="openBulkActions()">Editar</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Adicionar</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                <button class="btn btn-default hide-tipoevento" id="btn_Imprimir" onclick="openModalCracha()">Credencial</button>
+                <button class="btn btn-default" style="display:none" id="btn_bulk" onclick="openBulkActions()">Editar</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Adicionar</button>
             </div>
         </div>
         <div class="ibox-content">
             <table id="table-equipantes" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
                 <thead>
-
-                    <tr>
-                        <th><div class="checkbox i-checks-green"><label> <input type="checkbox" id="select-all" data-id="all"> <i></i></label></div></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Nome</th>
-                        <th>Idade</th>
-                        <th class="hide-tipoevento">Equipe</th>
-                        <th class="hide-tipoevento">Presenças</th>
-                        <th>Congregação</th>
-                        <th class="hide-tipoevento">Status</th>
-                        <th>Ações</th>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th><input class="form-control" type="text" placeholder="Pesquisar " /></th>
-                        <th></th>
-                        <th><input class="form-control" type="text" placeholder="Pesquisar " /></th>
-                        <th></th>
-                        <th><input class="form-control" type="text" placeholder="Pesquisar " /></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
                 </thead>
                 <tbody></tbody>
             </table>
@@ -165,7 +150,7 @@
                 <div class="moldura-modal p-h-xs">
 
                     <div class="row p-md">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid", OnChange = "loadArquivoCasais", Roles = "Financeiro,Administrativo,Admin,Padrinho" })                      
+                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid", OnChange = "loadArquivoCasais", Roles = "Financeiro,Administrativo,Admin,Padrinho" })
                         <form enctype="multipart/form-data" id="frm-upload-arquivo-modal" method="post" novalidate="novalidate">
                             <input type="hidden" name="EquipanteIdModal" id="EquipanteIdModal" />
                             <input type="hidden" name="EventoIdModal" id="EventoIdModal" />
@@ -248,7 +233,7 @@
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Forma de Pagamento</h5>
 
-                            <select class="form-control" id="pagamentos-meiopagamento" >
+                            <select class="form-control" id="pagamentos-meiopagamento">
                             </select>
 
                         </div>
@@ -346,7 +331,7 @@
                         <div class="col-sm-12 p-w-md text-center evento-bulk" style="display:none">
                             <h5>Evento</h5>
 
-                            @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-bulk", OnChange = "loadEquipesBulk", Roles = "Financeiro,Administrativo,Admin,Padrinho" })                           
+                            @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-bulk", OnChange = "loadEquipesBulk", Roles = "Financeiro,Administrativo,Admin,Padrinho" })
                         </div>
 
                         <div class="col-sm-12 p-w-md text-center quarto-m not-evento-bulk">

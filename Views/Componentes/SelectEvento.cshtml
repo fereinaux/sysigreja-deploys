@@ -4,8 +4,6 @@
 </select>
 
 <script>
-    $.holdReady(true);
-
     function handleGlobals() {
         if (SelectedEvent) {
             localStorage.setItem('eventoId', SelectedEvent.Id)
@@ -74,7 +72,6 @@
     }
 
     getClaims().then(claims => {
-        console.log(claims);
         roles = '@Model.Roles'.replaceAll(' ', '').split(',')
         if (roles.length == 1 && roles[0] == "Coordenador") {
             eventos = claims.Eventos.filter(evento => evento.Coordenador == true)
@@ -87,12 +84,14 @@
                 $(`#@(Model.Id)`).append($(`<option ${localStorage.getItem('eventoId') == evento.Id ? 'selected' : ''} data-casal="${evento.TipoEvento == 'Casais'}" value="${evento.Id}" data-role="${evento.Role}">${evento.Titulo} ${evento.Numeracao}</option>`));
             });
 
-            handleGlobals()
-            $.holdReady(false);
-
             if (eventos.length == 1 || !eventos.map(evento => evento.Id).includes(SelectedEvent.Id)) {
                 SelectedEvent = eventos[0]
                 localStorage.setItem('eventoId', SelectedEvent.Id)
+            }
+            handleGlobals()
+
+            if (($('.select-evento')[0].id == '@(Model.Id)') && AajaxLoading) {
+                $(document).trigger('ready-ajax');
             }
         } else {
             window.location.href = '/Account/NaoAutorizado'

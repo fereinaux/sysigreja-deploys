@@ -1,8 +1,22 @@
 ﻿realista = undefined;
 table = undefined
-
 oldEventoId = undefined
 newEventoId = undefined
+
+
+$('.search-data').on('keyup change clear', _.debounce(function () {
+    if ($('#table-equipantes').DataTable().column($(this).data('column')).search() !== this.value) {
+        $('#table-equipantes').DataTable().column($(this).data('column')).search(this.value).draw()
+    }
+
+}, 500))
+
+function loadSearch() {
+    $('.search-data').each((i, elm) => {
+        $(elm).val($('#table-equipantes').DataTable().state().columns[$(elm).data('column')].search.search)
+        $(elm).attr('disabled',false)
+    })
+}
 
 
 function checkEvento() {
@@ -38,18 +52,22 @@ function loadEquipes() {
     casal = false
     handleEquipantes(casal)
     loadCampos(SelectedEvent.Id)
-    $("#table-equipantes").DataTable().destroy()
     checkEvento()
 
     getEquipes()
     CarregarTabelaEquipante()
-
+    GetCrachas()
 
 }
 
-function CarregarTabelaEquipante(callbackFunction) {
-    $('#btn_bulk').css('display', 'none')
+$('.search-data').attr('disabled', true)
 
+function CarregarTabelaEquipante(callbackFunction) {
+
+    $('#btn_bulk').css('display', 'none')
+    if ($.fn.DataTable.isDataTable('#table-equipantes')) {
+        $("#table-equipantes").DataTable().destroy()
+    }
     const tableEquipanteConfig = {
         language: languageConfig,
         searchDelay: 1000,
@@ -78,7 +96,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         buttons: getButtonsConfig(`Participantes ${$("#equipante-eventoid-filtro option:selected").text()}`),
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis noSearch',
+                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis noSearch', title: '<div class="checkbox i-checks-green"><label> <input type="checkbox" id="select-all" data-id="all"> <i></i></label></div>',
                 "render": function (data, type, row) {
                     return `${GetCheckBox(data, false)}`;
                 }
@@ -104,7 +122,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
+                data: "Nome", name: "Nome", title: "Nome", autoWidth: true, render: function (data, type, row) {
 
                     if (type === 'export') {
                         return data
@@ -120,16 +138,18 @@ function CarregarTabelaEquipante(callbackFunction) {
                     </div>`
                 }
             },
-            { data: "Idade", name: "Idade", class: "noSearch" },
+            { data: "Idade", name: "Idade", title: "Idade", class: "noSearch" },
             {
-                data: "Equipe", className: `hide-tipoevento noVis`, name: "Equipe", autoWidth: true, visible: SelectedEvent.Id != 999
+                data: "Equipe", className: `hide-tipoevento noVis`, name: "Equipe", title: "Equipe", autoWidth: true, visible: SelectedEvent.Id != 999
             },
             {
-                data: "Faltas", className: `hide-tipoevento noSearch noVis`, name: "Faltas", visible: SelectedEvent.Id != 999
+                data: "Faltas", title: "Presenças", className: `hide-tipoevento noSearch noVis`, name: "Faltas", visible: SelectedEvent.Id != 999
             },
-            { data: "Congregacao", name: "Congregacao", autoWidth: true, visible: false },
             {
-                data: "Etiquetas", name: "Etiquetas", visible: false, className: 'noVis noSearch export', render: function (data, type, row) {
+                data: "Congregacao", name: "Congregacao", title: "Congregação", autoWidth: true, visible: false
+            },
+            {
+                data: "Etiquetas", title: "Etiquetas", name: "Etiquetas", visible: false, className: 'noVis noSearch export', render: function (data, type, row) {
                     if (type === 'export') {
                         return `<div>
 
@@ -150,7 +170,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "HasOferta", className: `hide-tipoevento noSearch noVis`, name: "HasOferta", autoWidth: true, visible: SelectedEvent.Id != 999, render: function (data, type, row) {
+                data: "HasOferta", title: "Status", className: `hide-tipoevento noSearch noVis`, name: "HasOferta", autoWidth: true, visible: SelectedEvent.Id != 999, render: function (data, type, row) {
                     if (row.Status == "Em espera") {
                         return `<span style="font-size:13px" class="text-center label label-default}">Em espera</span>`;
                     }
@@ -158,7 +178,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Id", name: "Id", orderable: false, width: "20%", className: 'noVis noSearch noExport',
+                data: "Id", name: "Id", title: "Ações", orderable: false, width: "20%", className: 'noVis noSearch noExport',
                 "render": function (data, type, row) {
                     return `   
 
@@ -212,38 +232,8 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({ Id: row.Id }), 
                     instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByEquipanteId/${$(event.target).data('id')}" />`)
                 },
             });
-
-            changeEvento = false
-            var idx = 0
-            var api = this.api()
-            api
-                .columns()
-                .every(function (colIdx) {
-                    var column = this;
-                    if (!$(column.header()).hasClass('noSearch')) {
-                        var input = $($($($(column.header()).parents('thead').find('tr')[1]).find('th')[idx]).find('input'))
-                            .on('change keyup clear', _.debounce(function () {
-                                if (column.search() !== this.value) {
-                                    column.search(this.value).draw();
-                                }
-                            }, 500))
-
-                        if (oldEventoId != newEventoId) {
-                            input.val(api.state().columns[colIdx].search.search)
-                            changeEvento = true
-                        }
-
-
-                    }
-                    if (column.visible()) {
-                        idx++
-                    }
-
-                });
-            if (changeEvento) {
-                oldEventoId = newEventoId
-            }
             newEventoId = SelectedEvent.Id
+            loadSearch()
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
@@ -1164,9 +1154,8 @@ function PostPagamento() {
     }
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     loadEquipes()
-    loadCampos(SelectedEvent.Id);
 
 });
 

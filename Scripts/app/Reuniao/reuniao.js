@@ -143,7 +143,7 @@ function PostReuniao() {
     }
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     CarregarTabelaReuniao();
    
 });

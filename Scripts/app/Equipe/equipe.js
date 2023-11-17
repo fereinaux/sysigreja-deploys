@@ -296,8 +296,9 @@ function CarregarTabelaMembrosEquipe(equipeId, titulo) {
     $("#table-membros-equipe").DataTable(tableMembrosEquipeConfig);
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     CarregarTabelaEquipe();
+    CarregarTabelaArquivo();
     $('#equipe-equipantes').select2({
         ajax: {
             delay: 750,

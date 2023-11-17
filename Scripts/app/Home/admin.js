@@ -1,4 +1,4 @@
-﻿$(document).ready(() => {
+﻿$(document).off('ready-ajax').on('ready-ajax', () => {
     HideMenu();
     GetResultadosAdmin();
     //GetResultadosGeral();

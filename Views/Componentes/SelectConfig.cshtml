@@ -1,11 +1,9 @@
 ﻿@model SysIgreja.ViewModels.SelectViewModel
 
-<select class="form-control @(Model.Class) select-evento" id="@(Model.Id)" onchange="changeConfig_@(Model.OnChange)()">
+<select class="form-control @(Model.Class) select-config" id="@(Model.Id)" onchange="changeConfig_@(Model.OnChange)()">
 </select>
 
 <script>
-    $.holdReady(true);    
-
     function handleGlobals() {
         if (SelectedConfig) {
             localStorage.setItem('configId', SelectedConfig.Id)
@@ -17,7 +15,7 @@
             $('#img-logo').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
 
             $('.bg-coord').css('background-color', SelectedConfig.CorBotao)
-                   
+
             $('body').on('DOMNodeInserted', '.swal-title', function () {
                 $('.swal-modal').css('background', SelectedConfig.CorBotao)
                 $('.swal-modal').css('color', 'white')
@@ -39,7 +37,7 @@
             });
 
             $('.btn.btn-flat').css('background', SelectedConfig.CorBotao)
-            $('.btn.btn-flat').css('margin-left', '7px')            
+            $('.btn.btn-flat').css('margin-left', '7px')
         }
     }
 
@@ -66,13 +64,17 @@
                 $(`#@(Model.Id)`).append($(`<option ${localStorage.getItem('configId') == config.Id ? 'selected' : ''} data-casal="${config.TipoEvento == 'Casais'}" value="${config.Id}"">${config.Titulo}</option>`));
             });
 
-            handleGlobals()
-            $.holdReady(false);
 
             if (claims.Configuracoes.length == 1 || !claims.Configuracoes.map(config => config.Id).includes(SelectedConfig.Id)) {
                 SelectedConfig = claims.Configuracoes[0]
                 localStorage.setItem('configId', SelectedConfig.Id)
             }
+
+            handleGlobals()
+            if (($('.select-config')[0].id == '@(Model.Id)') && AajaxLoading) {
+                $(document).trigger('ready-ajax');
+            }
+
         } else {
             window.location.href = '/Account/NaoAutorizado'
         }

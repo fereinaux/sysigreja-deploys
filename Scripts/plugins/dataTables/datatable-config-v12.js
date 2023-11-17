@@ -119,7 +119,7 @@ function getButtonsConfig(fileName) {
 
                 doc.defaultStyle.icon = { font: 'emoji' }
 
-               
+
             }
         },
         {
@@ -132,9 +132,18 @@ function getButtonsConfig(fileName) {
 
 
 function stateSaveCallback(settings, data) {
-    localStorage.setItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val(), JSON.stringify(data))
+    localStorage.setItem('DataTables_' + settings.sInstance, JSON.stringify(data))
 }
 
 function stateLoadCallback(settings, callback) {
-    callback(JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance + $("*[id*='eventoid']").val())))
+    callback(JSON.parse(localStorage.getItem('DataTables_' + settings.sInstance)))
+
+    $("div.dataTables_filter input").unbind();
+    $("div.dataTables_filter input").on('keyup change clear', _.debounce(function () {
+        input_filter_value = this.value;
+        if ($(this).parent().parent().parent().find('table').DataTable().search() !== input_filter_value) {
+            $(this).parent().parent().parent().find('table').DataTable().search(input_filter_value).draw()
+        }
+
+    }, 750))
 }

@@ -20,13 +20,9 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div style=" width: 20%;" class="ibox-tools pull-right">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <button class="btn btn-default" onclick="PostEquipante()">Salvar Original</button>
-                        <button class="btn btn-default" onclick="RemoverDuplicado()">Remover Duplicado</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                <button class="btn btn-default" onclick="PostEquipante()">Salvar Original</button>
+                <button class="btn btn-default" onclick="RemoverDuplicado()">Remover Duplicado</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -78,7 +74,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>WhatsApp</h5>
 
-                            <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp"  />
+                            <input type="text" class="form-control fone" id="equipante-fone" data-field="WhatsApp" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -186,7 +182,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone da Mãe</h5>
 
-                            <input type="text" class="form-control fone" id="equipante-fonemae" data-field="Fone da Mãe"  />
+                            <input type="text" class="form-control fone" id="equipante-fonemae" data-field="Fone da Mãe" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -197,7 +193,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone do Pai</h5>
 
-                            <input type="text" class="form-control fone" id="equipante-fonepai" data-field="Fone do Pai"  />
+                            <input type="text" class="form-control fone" id="equipante-fonepai" data-field="Fone do Pai" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -208,7 +204,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone do Contato</h5>
 
-                            <input type="text" class="form-control fone" id="equipante-fonecontato" data-field="Fone do Contato"  />
+                            <input type="text" class="form-control fone" id="equipante-fonecontato" data-field="Fone do Contato" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -219,7 +215,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone de quem convidou</h5>
 
-                            <input type="text" class="form-control fone" id="equipante-foneconvite" data-field="Fone do Convite"  />
+                            <input type="text" class="form-control fone" id="equipante-foneconvite" data-field="Fone do Convite" />
                         </div>
 
 
@@ -339,7 +335,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>WhatsApp</h5>
 
-                            <input type="text" class="form-control fone" id="duplicado-equipante-fone" data-field="WhatsApp"  />
+                            <input type="text" class="form-control fone" id="duplicado-equipante-fone" data-field="WhatsApp" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -447,7 +443,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone da Mãe</h5>
 
-                            <input type="text" class="form-control fone" id="duplicado-equipante-fonemae" data-field="Fone da Mãe"  />
+                            <input type="text" class="form-control fone" id="duplicado-equipante-fonemae" data-field="Fone da Mãe" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -458,7 +454,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone do Pai</h5>
 
-                            <input type="text" class="form-control fone" id="duplicado-equipante-fonepai" data-field="Fone do Pai"  />
+                            <input type="text" class="form-control fone" id="duplicado-equipante-fonepai" data-field="Fone do Pai" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -469,7 +465,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone do Contato</h5>
 
-                            <input type="text" class="form-control fone" id="duplicado-equipante-fonecontato" data-field="Fone do Contato"  />
+                            <input type="text" class="form-control fone" id="duplicado-equipante-fonecontato" data-field="Fone do Contato" />
                         </div>
 
                         <div class="p-w-md m-t-md text-center">
@@ -480,7 +476,7 @@
                         <div class="p-w-md m-t-md text-center">
                             <h5>Fone de quem convidou</h5>
 
-                            <input type="text" class="form-control fone" id="duplicado-equipante-foneconvite" data-field="Fone do Convite"  />
+                            <input type="text" class="form-control fone" id="duplicado-equipante-foneconvite" data-field="Fone do Convite" />
                         </div>
 
 
@@ -736,11 +732,11 @@
                         $("#form-duplicado #equipante-data-casamento").val(moment(data.Equipante.DataCasamento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                         $(`#form-duplicado #equipante-email`).val(data.Equipante.Email);
 
-                        setNumber('duplicado-equipante-fone',data.Equipante.Fone)
-                        setNumber('duplicado-equipante-fonepai',data.Equipante.FonePai)
-                        setNumber('duplicado-equipante-fonemae',data.Equipante.FoneMae)
-                        setNumber('duplicado-equipante-foneconvite',data.Equipante.FoneConvite)
-                        setNumber('duplicado-equipante-fonecontato',data.Equipante.FoneContato)
+                        setNumber('duplicado-equipante-fone', data.Equipante.Fone)
+                        setNumber('duplicado-equipante-fonepai', data.Equipante.FonePai)
+                        setNumber('duplicado-equipante-fonemae', data.Equipante.FoneMae)
+                        setNumber('duplicado-equipante-foneconvite', data.Equipante.FoneConvite)
+                        setNumber('duplicado-equipante-fonecontato', data.Equipante.FoneContato)
 
                         $(`#form-duplicado #equipante-camisa`).val(data.Equipante.Camisa);
                         $(`#form-duplicado #equipante-nome-pai`).val(data.Equipante.NomePai);
@@ -808,8 +804,8 @@
         }
 
 
-        $(document).ready(function () {
-
+        $(document).off('ready-ajax').on('ready-ajax', () => {
+            defaultLogin()
             $('#form-duplicado input').prop('disabled', true).iCheck('update')
             $('#form-duplicado select').prop('disabled', true)
 

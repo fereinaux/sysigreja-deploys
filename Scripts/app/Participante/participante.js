@@ -6,6 +6,7 @@ function CarregarTabelaParticipante(callbackFunction) {
     $("#table-participantes").DataTable().destroy()
     casal = false
     handleParticipantes(casal)
+    GetCrachas()
     $('#btn_bulk').css('display', 'none')
     if (SelectedEvent.Id != eventoId) {
         $.ajax({
@@ -123,7 +124,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 
     const tableParticipanteConfig = {
         language: languageConfig,
-        searchDelay: 750,
+        searchDelay: 300,
         lengthMenu: [10, 30, 50, 100, 200],
         colReorder: true,
         serverSide: true,
@@ -830,8 +831,7 @@ function CarregarTabelaPagamentos(id) {
     $("#table-pagamentos").DataTable(tablePagamentosConfig);
 }
 
-$(document).ready(function () {
-  
+$(document).off('ready-ajax').on('ready-ajax', () => {
     HideMenu()
     CarregarTabelaParticipante();
     const searchParams = new URLSearchParams(window.location.search)

@@ -14,13 +14,6 @@
         </ol>
     </div>
 </div>
-<div style="padding-top:10px;padding-bottom:0" class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox" style="margin:0">
-        <div class="ibox-title" style="display: flex;justify-content: space-between;">
-            <h4>@ViewBag.Title</h4>
-        </div>
-    </div>
-</div>
 
 <div class="wrapper wrapper-content animated fadeInRight wrapper-config">
 
@@ -166,7 +159,7 @@
                     $(`#config-titulo`).val(config.Titulo)
                     $(`#config-identificador`).val(config.Identificador)
                     $(`#config-corhoverbotao`).val(config.CorHoverBotao)
-                    $(`#config-corbotao`).val(config.CorBotao)
+                    $(`#config-corbotao`).val(SelectedEvent.CorBotao)
                     $(`#config-corloginbox`).val(config.CorLoginBox)
 
                     if (config.LogoId) {
@@ -196,7 +189,8 @@
 
         }
 
-        $(document).ready(function () {
+        $(document).off('ready-ajax').on('ready-ajax', () => {
+            defaultLogin()
             carregarConfiguracoes()
 
         })

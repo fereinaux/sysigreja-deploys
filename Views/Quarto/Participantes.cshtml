@@ -22,18 +22,12 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:550px">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-4">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "quarto-eventoid", OnChange = "CarregarTabelaQuarto", Roles = "Financeiro,Administrativo,Admin" })                        
-                    </div>
-                    <div class="col-xs-12 col-lg-8">
-                        <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosQuarto()">Esvaziar</button>
-                        <button class="btn btn-primary" id="btn_Distribuir" onclick="DistribuirQuartos()">Distribuir</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditQuarto(0)">Adicionar</button>
-                        <button class="btn btn-default" id="btn_PrintAll" onclick="PrintAll()">Imprimir Tudo</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "quarto-eventoid", OnChange = "CarregarTabelaQuarto", Roles = "Financeiro,Administrativo,Admin" })
+                <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosQuarto()">Esvaziar</button>
+                <button class="btn btn-primary" id="btn_Distribuir" onclick="DistribuirQuartos()">Distribuir</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditQuarto(0)">Adicionar</button>
+                <button class="btn btn-default" id="btn_PrintAll" onclick="PrintAll()">Imprimir Tudo</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -126,7 +120,6 @@
 
 @section Styles {
     <style>
-
     </style>
 }
 

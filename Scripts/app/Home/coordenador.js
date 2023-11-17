@@ -1,8 +1,7 @@
-﻿$(document).ready(() => {
-
+﻿$(document).off('ready-ajax').on('ready-ajax', () => {
     CarregarTela()
     loadCampos()
-});
+})
 
 
 function ExportarExcel() {
@@ -90,14 +89,14 @@ function CarregarTela() {
             $('.qtd-membros').text(data.result.QtdMembros)
             membros = data.result.Membros;
             $('.membros').html(`${data.result.Membros.map(membro => `
-<tr>
+<tr class="${membro.HasFoto ? 'foto' : ''}" data-id="${membro.Id}">
     <td data-label="Sexo"><span style="font-size:24px;" class="p-l-xs"> <i class="fa  ${membro.Sexo == "Masculino" ? "fa-male" : "fa-female"} " aria-hidden="true"></i></span></td>
     <td data-label="Nome">${membro.Nome}</td>
     <td data-label="Idade">${membro.Idade}</td>
     ${data.result.EquipePai ? `    <td data-label="Equipe">${membro.Equipe}</td>` : ""}
     
     <td data-label="Oferta"> <span style="font-size:24px;"> <i class="fa ${membro.Oferta ? "fa-check" : "fa-times"} " aria-hidden="true"></i></span></td>
-    <td data-label="Faltas">${membro.Faltas}</td>
+    <td data-label="Faltas">${membro.Presenca.filter(x => x == false).length}</td>
     <td data-label="Contato" class="membro-fone">${membro.Fone}</td>
 </tr>
 `)}`)
@@ -109,6 +108,14 @@ function CarregarTela() {
 <option value="${reuniao.Id}">${reuniao.DataReuniao}</option>
 `)}`)
 
+            tippy(`.foto`, {
+                content: '',
+                allowHTML: true,
+                followCursor: true,
+                onTrigger: (instance, event) => {
+                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByEquipanteId/${$(event.target).data('id')}" />`)
+                },
+            });
             CarregarTabelaArquivos(data.result.EquipeEnum)
             CarregarTabelaPresenca()
         }

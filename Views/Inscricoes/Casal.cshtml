@@ -498,7 +498,7 @@
   <div style="background-color:${corBotao}" class="rect4"></div>
   <div style="background-color:${corBotao}" class="rect5"></div>
 </div>`,
-                       baseZ: 1500,
+                       baseZ: 3500,
                        overlayCSS: {
                            opacity: 0.7,
                            cursor: 'wait'
@@ -616,7 +616,7 @@
 
         }
 
-        $(document).ready(() => {
+        $(document).on('ready', () => {
             $('.i-checks-green').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green'

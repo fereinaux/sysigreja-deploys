@@ -72,7 +72,7 @@ function DeleteArquivo(id) {
 function PostArquivo() {
     var dataToPost = new FormData($('#frm-upload-arquivos')[0]);
     dataToPost.set('IsComunEquipe', $("#table-arquivos-comuns").length > 0)
-    dataToPost.set('ConfiguracaoId', config.Id)
+    dataToPost.set('ConfiguracaoId', SelectedEvent.ConfiguracaoId)
     $.ajax(
         {
             processData: false,
@@ -90,9 +90,6 @@ $("#arquivo").change(function () {
     PostArquivo();
 });
 
-$(document).ready(function () {
-    CarregarTabelaArquivo();
-});
 
 
 

@@ -19,15 +19,9 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right w-300">
-                <div class="row">
-                    <div class="col-sm-8">
-                        @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "mensagem-configId", OnChange = "CarregarTabelaMensagem" })                    
-                    </div>
-                    <div class="col-sm-4">
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditMensagem(0)">Adicionar</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "mensagem-configId", OnChange = "CarregarTabelaMensagem" })
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditMensagem(0)">Adicionar</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -72,7 +66,7 @@
 
                             <ul class="list-opcoes-msg">
                                 <li><span onclick="AddText('${Nome Participante}')" class="badge m-r-xs badge-primary">Nome Participante</span></li>
-                                <li><span onclick="AddText('${Nome Contato}')" class="badge m-r-xs badge-info">Nome Contato</span></li>                                
+                                <li><span onclick="AddText('${Nome Contato}')" class="badge m-r-xs badge-info">Nome Contato</span></li>
                                 <li id="mercado-pago-link"><span onclick="AddText('${Link do MercadoPago}')" class="badge m-r-xs badge-info">Link do MercadoPago</span></li>
                             </ul>
                             <textarea style="height: 200px" class="form-control required" id="mensagem-conteudo" data-field="Conteúdo"></textarea>

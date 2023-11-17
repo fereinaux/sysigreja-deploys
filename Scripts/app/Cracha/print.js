@@ -132,11 +132,3 @@
             }
         });
     }
-
-    $(document).ready(function () {
-        GetCrachas()
-        $("*[id*='eventoid']").change(function () {
-            GetCrachas()
-
-        })
-    });

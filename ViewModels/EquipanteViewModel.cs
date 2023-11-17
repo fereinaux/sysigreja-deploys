@@ -12,7 +12,7 @@
         public string Equipe { get; set; }
         public string Sexo { get; set; }
         public bool Oferta { get; set; }
-        public string Foto { get; set; }
+        public int? Foto { get; set; }
         public int? Faltas { get; set; }
     }
 }

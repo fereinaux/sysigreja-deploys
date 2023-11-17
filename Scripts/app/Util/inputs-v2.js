@@ -661,3 +661,17 @@ function initInputs() {
         }
     });
 }
+
+function getInputSearch(title) {
+    return !isMobile ? `<div style="display:flex;flex-direction:column">
+<span style="padding: 10px 0;">${title}</span>
+<input onmousedown="handleInputSearchMouseDown(event)" onclick="handleInputSearchClick(event)" class="form-control inputSearchDatatable" placeholder="Pesquisar">
+</div>` : title
+}
+function handleInputSearchMouseDown(event) {
+    event.stopPropagation()
+}
+
+function handleInputSearchClick(event) {
+    event.stopPropagation()
+}

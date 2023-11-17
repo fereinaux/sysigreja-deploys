@@ -174,7 +174,7 @@ function PostLancamento() {
     }
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     Filtrar();
 });
 

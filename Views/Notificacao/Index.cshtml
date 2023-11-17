@@ -75,7 +75,7 @@
             $("#table-notificacao").DataTable(tableNotificacaoConfig);
         }
 
-        $(document).ready(function () {
+        $(document).off('ready-ajax').on('ready-ajax', () => {
             CarregarTabelaNotificacao();
         });
 

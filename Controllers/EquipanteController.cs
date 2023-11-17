@@ -304,19 +304,19 @@ namespace SysIgreja.Controllers
                 x.Mulher,
             });
 
-            List<Data.Entities.Equipante> resultCasais = new List<Data.Entities.Equipante>();
+            List<Data.Entities.EquipanteEvento> resultCasais = new List<Data.Entities.EquipanteEvento>();
 
             queryNova.ToList().ForEach(casal =>
             {
                 if (casal.Homem != null)
                 {
                     casal.Homem.Equipante.Dupla = casal.Homem.Equipante.Apelido + " de " + casal.Mulher.Equipante.Apelido;
-                    resultCasais.Add(casal.Homem.Equipante);
+                    resultCasais.Add(casal.Homem);
                 }
                 if (casal.Mulher != null)
                 {
                     casal.Mulher.Equipante.Dupla = casal.Mulher.Equipante.Apelido + " de " + casal.Homem.Equipante.Apelido;
-                    resultCasais.Add(casal.Mulher.Equipante);
+                    resultCasais.Add(casal.Mulher);
                 }
             });
 

@@ -332,7 +332,7 @@ function PostEvento() {
     }
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     verifyPermissionsConfig()
     CarregarTabelaEvento();
 });

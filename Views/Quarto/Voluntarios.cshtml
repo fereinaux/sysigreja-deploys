@@ -22,23 +22,12 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:550px">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-4">
-                        <select class="form-control" id="quarto-eventoid" onchange="CarregarTabelaQuarto()">
-                            @foreach (var evento in ViewBag.Eventos)
-                            {
-                                <option data-casal="@evento.IsCasal" value="@evento.Id" data-role="@evento.Role">@evento.TipoEvento @evento.Numeracao.ToString()</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-xs-12 col-lg-8">
-                        <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosQuarto()">Esvaziar</button>
-                        <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirQuartos()">Distribuir</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditQuarto(0)">Adicionar</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "quarto-eventoid", OnChange = "CarregarTabelaQuarto", Roles = "Financeiro,Administrativo,Admin" })
+                <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosQuarto()">Esvaziar</button>
+                <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirQuartos()">Distribuir</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditQuarto(0)">Adicionar</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -208,7 +197,6 @@
 
 @section Styles {
     <style>
-
     </style>
 }
 

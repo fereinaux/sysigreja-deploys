@@ -392,7 +392,8 @@
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
 
 
-        $(document).ready(function () {
+        $(document).ready(() => {
+            $(document).trigger('ready-ajax');
             loadAvatar()
             consultarNotificacoes()
             setInterval(consultarNotificacoes, 60000)
@@ -554,6 +555,24 @@
         };
 
         function spaLoad(action, type, data, pushHistory) {
+            $.blockUI({
+                css: {
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                },
+                message: `<div class="spinner">
+      <div style="background-color:#fff" class="rect1"></div>
+      <div style="background-color:#fff" class="rect2"></div>
+      <div style="background-color:#fff" class="rect3"></div>
+      <div style="background-color:#fff" class="rect4"></div>
+      <div style="background-color:#fff" class="rect5"></div>
+</div>`,
+                baseZ: 3500,
+                overlayCSS: {
+                    opacity: 0.7,
+                    cursor: 'wait'
+                }
+            });
             abortAjax();
             $.ajax({
                 url: action,
@@ -580,7 +599,10 @@
             })
         }
 
+        AajaxLoading = false
+
         function renderPage(xhr, pushHistory) {
+            AajaxLoading = true
             var naoAutorizado = xhr.getResponseHeader('NaoAutorizado');
             if (naoAutorizado) {
                 window.location.href = '/Account/NaoAutorizado'
@@ -603,6 +625,7 @@
                 }
                 $('#title').html(xhr.getResponseHeader('Title'))
                 $('#side-menu').find('a').parent().removeClass('active');
+                $('#side-menu .nav-second-level').removeClass('in');
                 $('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().addClass('active');
 
                 if ($('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().parent().parent().is('li')) {
@@ -621,12 +644,10 @@
                 $('#spa-content').html(xhr.responseText);
                 // init new page
                 initControls($('#spa-content'));
-                // set page title
-                var titleDiv = $('#title-div', '#spa-content');
-                document.title = titleDiv.text();
-                // update username in navbar
-                var usernameDiv = $('#username-div', '#spa-content');
-                $('#username').text(usernameDiv.text());
+                $.unblockUI();
+                if ($('.select-config').length == 0 && $('.select-evento').length == 0) {
+                    $(document).trigger('ready-ajax');
+                }
             }
         }
 
@@ -667,6 +688,15 @@
 
     </script>
     <script>
+
+        function defaultLogin() {
+            $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)
+            $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
+            $('#home-button-logo').css('display', 'block')
+            $('#img-logo').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
+            $('title').text($('#title').text())
+            $('.title-circulo').text("Círculo")
+        }
 
         function handleParticipantes(opt) {
             action = "/Participante"

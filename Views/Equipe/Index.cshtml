@@ -20,15 +20,9 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:250px">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-6">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipe-eventoid", OnChange = "loadEquipe", Roles = "Financeiro,Administrativo,Admin" })                        
-                    </div>
-                    <div class="col-xs-12 col-lg-6">
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipe-eventoid", OnChange = "loadEquipe", Roles = "Financeiro,Administrativo,Admin" })
+                <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
             </div>
         </div>
         <div class="ibox-content">

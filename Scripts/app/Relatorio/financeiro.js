@@ -305,11 +305,6 @@ function SetHeight(height, doc) {
 
 div2 = document.createElement("div");
 
-$(document).ready(function () {
-    getCentroCustoRel()
-});
-
-
 function selectAll() {
     selected = !selected
     $('.rel-centro-custos').attr('checked', selected)

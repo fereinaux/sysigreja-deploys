@@ -163,8 +163,9 @@ function PostUsuario() {
     }
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     GetTipos()
+    defaultLogin()
     CarregarTabelaUsuario();
 
     $(".password-click").mousedown(function () {

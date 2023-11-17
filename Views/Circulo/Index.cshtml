@@ -22,18 +22,12 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4 class="title-circulo">@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:550px">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-4">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "eventoid", OnChange = "loadCirculo",Roles = "Financeiro,Administrativo,Admin"  })
-                    </div>
-                    <div class="col-xs-12 col-lg-8">
-                        <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosCirculo()">Esvaziar</button>
-                        <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirCirculos()">Distribuir</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditCirculo(0)">Adicionar</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "eventoid", OnChange = "loadCirculo", Roles = "Financeiro,Administrativo,Admin" })
+                <button class="btn btn-danger" id="btn_Adicionar" onclick="EsvaziarTodosCirculo()">Esvaziar</button>
+                <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirCirculos()">Distribuir</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditCirculo(0)">Adicionar</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -51,7 +45,7 @@
         <div class="ibox" id="ibox-mapa-circulo" style="margin-top:25px;">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
                 <h4>Mapa</h4>
-                <div class="ibox-tools pull-right" style="width:50%">
+                <div class="ibox-tools pull-right">
                     <select placeholder="Filtrar Bairros" class="form-control" id="bairros" multiple onchange="filtrarBairro()">
                     </select>
                     <input placeholder="Filtro por Nome" class="form-control" id="filtro-nome" onkeyup="filtrarNome()" />

@@ -23,17 +23,11 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4 class="title-padrinho">@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:550px">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-5">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "padrinho-eventoid", OnChange = "PadrinhoRefresh", Roles = "Administrativo,Financeiro,Padrinho,Admin"  })
-                    </div>
-                    <div class="col-xs-12 col-lg-7">
-                        <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirPadrinhos()">Distribuir</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditPadrinho(0)">Adicionar</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "padrinho-eventoid", OnChange = "PadrinhoRefresh", Roles = "Administrativo,Financeiro,Padrinho,Admin" })
+                <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirPadrinhos()">Distribuir</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditPadrinho(0)">Adicionar</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -48,7 +42,7 @@
                 <tbody></tbody>
             </table>
         </div>
-       
+
         <div class="ibox">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
                 <h4>Gerenciar Padrinhos</h4>
@@ -95,7 +89,7 @@
                                 <h5>Padrinho</h5>
                                 <select class="form-control chosen-select" id="padrinho-equipante"></select>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
 

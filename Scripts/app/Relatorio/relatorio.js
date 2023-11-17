@@ -24,9 +24,10 @@
     $("#table-relatorios").DataTable(tableRelatorioConfig);
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     CarregarTabelaRelatorio();
     MontarBotoes();
+    getCentroCustoRel()
 });
 
 function MontarBotoes() {

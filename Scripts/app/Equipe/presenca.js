@@ -58,7 +58,7 @@ function CarregarTabelaPresenca() {
                                         {
                                             margin: [5, 5, 25, 15],
                                             alignment: 'left',
-                                            image: `data:image/png;base64, ${config.LogoRelatorio}`,
+                                            image: `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`,
                                             width: 70
                                         },
                                         { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
@@ -105,9 +105,9 @@ function CarregarTabelaPresenca() {
     }
 }
 
-function loadScreen() {
-    getReunioes();
-    getPresencas();
+async function loadScreen() {
+    await Promise.all([getReunioes(), getPresencas()])
+    CarregarTabelaPresenca()
 }
 
 function handlePresenca(obj) {
@@ -123,7 +123,7 @@ function handlePresenca(obj) {
 
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     loadScreen()
 });
 
@@ -183,10 +183,10 @@ function Justificar(obj) {
     });
 }
 
-function getReunioes() {
+async function getReunioes() {
     $("#presenca-reuniaoid").empty();
 
-    $.ajax({
+    await $.ajax({
         url: "/Equipe/GetReunioes/",
         data: { EventoId: SelectedEvent.Id },
         datatype: "json",
@@ -197,15 +197,14 @@ function getReunioes() {
                 $('#presenca-reuniaoid').append($(`<option value="${reuniao.Id}">${moment(reuniao.DataReuniao).format('DD/MM/YYYY')} - ${reuniao.Titulo}</option>`));
             });
             $("#presenca-reuniaoid").val($("#presenca-reuniaoid option:first").val()).trigger("chosen:updated");
-            CarregarTabelaPresenca();
         }
     });
 }
 
-function getPresencas() {
+async function getPresencas() {
     $("#presenca-equipeid").empty();
 
-    $.ajax({
+    await $.ajax({
         url: '/Equipe/GetEquipes',
         datatype: "json",
         data: { EventoId: SelectedEvent.Id },
@@ -216,7 +215,6 @@ function getPresencas() {
                 $('#presenca-equipeid').append($(`<option value="${equipe.Id}">${equipe.Equipe}</option>`));
             });
             $("#presenca-equipeid").val($("#presenca-equipeid option:first").val()).trigger("chosen:updated");
-            CarregarTabelaPresenca();
         }
     });
 }

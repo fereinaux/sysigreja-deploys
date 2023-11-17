@@ -21,15 +21,9 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right w-300">
-                <div class="row">
-                    <div class="col-sm-8">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "reuniao-eventoid-consulta", OnChange = "CarregarTabelaReuniao", Roles = "Financeiro,Administrativo,Admin" })                       
-                    </div>
-                    <div class="col-sm-4">
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditReuniao(0)">Adicionar</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "reuniao-eventoid-consulta", OnChange = "CarregarTabelaReuniao", Roles = "Financeiro,Administrativo,Admin" })
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditReuniao(0)">Adicionar</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -102,14 +96,13 @@
 
 
 @section Styles {
-    
+
     <style>
-     
     </style>
 }
 
 @section Scripts {
-    
+
     <script src="~/Scripts/app/Reuniao/reuniao.js"></script>
 
     <script>

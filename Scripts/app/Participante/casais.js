@@ -8,7 +8,7 @@ function CarregarTabelaParticipante(callbackFunction) {
     casal = true
     handleParticipantes(casal)
     loadCampos(SelectedEvent.Id)
-
+    GetCrachas()
     $('#btn_bulk').css('display', 'none')
     if (SelectedEvent.Id != eventoId) {
         $.ajax({
@@ -802,7 +802,7 @@ function CarregarTabelaPagamentos(id) {
     $("#table-pagamentos").DataTable(tablePagamentosConfig);
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
     HideMenu()
     CarregarTabelaParticipante();
     loadCampos(SelectedEvent.Id);

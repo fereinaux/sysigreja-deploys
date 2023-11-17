@@ -75,7 +75,7 @@ function CarregarTabelaCarona() {
     $("#table-carona").DataTable(tableCaronaConfig);
 }
 
-$(document).ready(function () {
+$(document).off('ready-ajax').on('ready-ajax', () => {
 
     $("#Participante").on("keyup", function () {
         var value = $(this).val().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
@@ -110,15 +110,15 @@ function PrintCarona(row) {
 }
 
 function FillDoc(doc, result) {
-    if (logoRelatorio) {
+    if (SelectedEvent.LogoRelatorioId) {
         var img = new Image();
-        img.src = `data:image/png;base64,${logoRelatorio}`;
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
 
     doc.setFont('helvetica', "normal")
     doc.setFontSize(12);
-    doc.text(77, 15, $("#carona-eventoid option:selected").text());
+    doc.text(77, 15, `${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`);
 
 
 

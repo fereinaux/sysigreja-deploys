@@ -10444,3 +10444,23 @@ div.dt-button-collection {
 div.iti {
     display: block;
 }
+
+th {
+    vertical-align: middle !important;
+}
+
+.ibox-tools.pull-right {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+@media (max-width: 1000px) {
+    .ibox-tools.pull-right {      
+        flex-direction: column;
+    }
+
+    .ibox-title {
+        flex-direction: column;
+    }
+}

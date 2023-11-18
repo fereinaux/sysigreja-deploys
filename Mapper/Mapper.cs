@@ -10,6 +10,7 @@ using Core.Models.Participantes;
 using Core.Models.Quartos;
 using CsQuery.ExtensionMethods;
 using CsQuery.ExtensionMethods.Internal;
+using Data.Context;
 using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
@@ -173,6 +174,14 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                     .ForMember(dest => dest.HasFoto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto)))
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()));
+                cfg.CreateMap<ApplicationUser, EquipanteUser>()
+                    .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.Equipante.DataNascimento.HasValue ? x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
+                  .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
+                  .ForMember(dest => dest.Email, opt => opt.MapFrom(x => x.Equipante.Email))
+                  .ForMember(dest => dest.Fone, opt => opt.MapFrom(x => x.Equipante.Fone))
+                  .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)))
+                  .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.Equipante.DataNascimento)))
+                  .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Equipante.Sexo.GetDescription()));
                 cfg.CreateMap<ParticipanteConsulta, EquipanteListModel>()
                     .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.DataNascimento.HasValue ? x.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
                   .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))

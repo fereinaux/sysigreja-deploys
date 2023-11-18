@@ -47,7 +47,7 @@
 
     <script>
         Claims = {
-            Eventos: [], Configuracooes: [], Login: {}
+            Eventos: [], Configuracooes: [], Login: {}, Usuario: {}
         }
         SelectedEvent = {}
         SelectedConfig = {}
@@ -57,11 +57,11 @@
         async function getClaims() {
             if (xhrPopulate) {
                 promiseResult = await Promise.all(xhrPopulate)
-                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login }
+                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario: promiseResult[3].Usuario }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
                 Login = Claims.Login
-
+                Usuario = Claims.Usuario
                 return Claims
             }
             if (Claims.Eventos.length > 0 || Claims.Configuracooes.length > 0) {
@@ -81,13 +81,22 @@
                     {
                         type: "GET",
                         url: "/Evento/PopulateLogin",
+                    }),
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: "/Account/GetUsuarioLogado",
                     })
                 ]
+
                 promiseResult = await Promise.all(xhrPopulate)
-                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login }
+                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario:  promiseResult[3].Usuario  }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
                 Login = Claims.Login
+                Usuario = Claims.Usuario
+
+
                 return Claims
             }
         }
@@ -394,7 +403,9 @@
 
         $(document).ready(() => {
             $(document).trigger('ready-ajax');
-            loadAvatar()
+            if (Usuario.FotoId) {
+                $('.img-avatar').attr('src', `/Arquivo/GetArquivo/${Usuario.FotoId}`)
+            }
             consultarNotificacoes()
             setInterval(consultarNotificacoes, 60000)
 
@@ -485,23 +496,6 @@
             PostAvarUser();
         });
 
-        function loadAvatar() {
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/Account/GetAvatar",
-                    success: function (data) {
-                        if (data) {
-                            $('.img-avatar').attr('src', `data:image/png;base64,${data}`)
-                        }
-                    },
-                    error: function () {
-                        $('.img-avatar').attr('src', "../Images/profile.jpg")
-
-                    }
-                });
-        }
-
         function PostAvarUser() {
 
             var dataToPost = new FormData($('#frm-upload-avatar')[0]);
@@ -522,9 +516,10 @@
                                 contentType: `application/json; charset=utf-8`,
                                 url: `/Account/setAvatar`,
                                 data: `{  arquivoId: ${data} }`,
-                                success: function () {
+                                success: function (data) {
+                                    console.log(data);
                                     SuccessMesageOperation()
-                                    loadAvatar()
+                                  
                                 }
                             });
                     }
@@ -561,11 +556,11 @@
                     border: 'none'
                 },
                 message: `<div class="spinner">
-      <div style="background-color:#fff" class="rect1"></div>
-      <div style="background-color:#fff" class="rect2"></div>
-      <div style="background-color:#fff" class="rect3"></div>
-      <div style="background-color:#fff" class="rect4"></div>
-      <div style="background-color:#fff" class="rect5"></div>
+          <div style="background-color:#fff" class="rect1"></div>
+          <div style="background-color:#fff" class="rect2"></div>
+          <div style="background-color:#fff" class="rect3"></div>
+          <div style="background-color:#fff" class="rect4"></div>
+          <div style="background-color:#fff" class="rect5"></div>
 </div>`,
                 baseZ: 3500,
                 overlayCSS: {

@@ -77,7 +77,7 @@ var membros = []
 
 async function CriarGrupo() {
     await createGroup(`${$('.equipe').text()} ${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`,
-        membros.map(x => x.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')),
+        membros.filter(x => x.Fone != Usuario.Fone).map(x => x.Fone.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')),
         SelectedEvent.Id,
         EquipeId
     )

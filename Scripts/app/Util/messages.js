@@ -100,11 +100,11 @@ function getDestino(user) {
     }
 }
 
-async function createGroup(name, participants) {
+async function createGroup(name, participants, eventoId, equipeId) {
     const status_response = await handleWhatsappConnected()
 
     const result = await $.ajax({
-        url: `https://api.iecbeventos.com.br/api/${status_response.token}/send-message`,
+        url: `https://api.iecbeventos.com.br/api/${status_response.token}/create-group`,
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',
@@ -115,19 +115,39 @@ async function createGroup(name, participants) {
     })
 
     await $.ajax({
-        url: `//`,
+        url: `Equipe/SaveGrupo/`,
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                grupoId: result.response.groupInfo.id
-
+                grupoId: result.response.groupInfo.id,
+                eventoId,
+                equipeId
             }),
     })
+
+    SuccessMesageOperation()
 }
 
-async function enviarMensagens(mensagemId, ids, tipo,controller) {
+async function addGroup(groupId, phone) {
+    const status_response = await handleWhatsappConnected()
+
+    await $.ajax({
+        url: `https://api.iecbeventos.com.br/api/${status_response.token}/add-participant-group`,
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                groupId, phone
+            }),
+    })
+
+    SuccessMesageOperation()
+}
+
+async function enviarMensagens(mensagemId, ids, tipo, controller) {
 
     const status_response = await handleWhatsappConnected()
 
@@ -167,7 +187,7 @@ async function enviarMensagens(mensagemId, ids, tipo,controller) {
         if (pResult.filter(x => x.status == 'rejected' && x.reason.responseJSON.response.error == 'notExists').length > 0) {
 
             ErrorMessage(`Os números das pessoas a seguir estão incorretos: \n${pResult.filter(x => x.status == 'rejected' && x.reason.responseJSON.response.error == 'notExists').map(x => `- ${x.reason.responseJSON.response.nome
-                } \n`).join().replaceAll(',','')}`)
+                } \n`).join().replaceAll(',', '')}`)
         } else {
             SuccessMesageOperation()
         }

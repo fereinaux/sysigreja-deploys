@@ -297,6 +297,7 @@ namespace SysIgreja.Controllers
                 EquipePai = equipeFilhas.Count > 1,
                 EquipeEnum = equipanteEvento.EquipeId,
                 QtdMembros = membrosEquipe.Count(),
+                Grupo = equipesBusiness.GetGrupo(eventoId, equipanteEvento.EquipeId.Value).GrupoWhatsapp,
                 Reunioes = reunioesBusiness.GetReunioes(eventoId)
                 .ToList()
                 .OrderBy(x => TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays < 0 ? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays * -1 : TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays)

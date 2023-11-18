@@ -1,32 +1,12 @@
-﻿@{
-    ViewBag.Numero = new Random().Next();
-}
-<!DOCTYPE html>
-<style>
-    .avatar-membro {
-        width: 20px;
-        height: 30px;
-        border-radius: 3px;
-    }
-</style>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coordenador</title>
-    <link href="~/Content/bootstrap.css" rel="stylesheet">
-    <link href="~/Fonts/font-awesome/css/all.css" rel="stylesheet">
-    <link href="~/Content/animate.css" rel="stylesheet">
-    <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
-    <link href="~/Content/style.css" rel="stylesheet">
-    <link href="~/Content/evento.css" rel="stylesheet">
+﻿
+
+@section styles {
+
+<link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="~/Content/coordenador.css" rel="stylesheet">
-
-</head>
-
+    }
 
 
-<body>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-md-6 col-xs-12">
@@ -43,7 +23,7 @@
                     <div>
                         <div class="row">
                             <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
-                                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Class = "text-center bg-coord text-white", Id = "eventoid", OnChange = "CarregarTela", Roles = "Coordenador" })                               
+                                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Class = "text-center bg-coord text-white", Id = "eventoid", OnChange = "CarregarTela", Roles = "Coordenador" })
                             </div>
                         </div>
                     </div>
@@ -58,6 +38,7 @@
                     <div>
                         <span>Membros na Equipe: <span class="qtd-membros"></span></span>
                         <button disabled id="btn-excel" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="ExportarExcel()"><i class="fa fa-file-excel"></i> Excel</button>
+                        <button disabled id="btn-grupo" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="CriarGrupo()"><i class="fab fa-whatsapp"></i> Grupo Whatsapp</button>
                     </div>
                 </div>
                 <div class="widget-text-box">
@@ -71,6 +52,7 @@
                                 <th scope="col">Oferta</th>
                                 <th scope="col">Faltas</th>
                                 <th scope="col">Contato</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody class="membros">
@@ -132,10 +114,35 @@
             </div>
         </div>
     </div>
-</body>
-</html>
-@section Scripts {
-    <script src="~/Scripts/app/Home/coordenador.js?@ViewBag.Numero"></script>
-}
+
+    <div class="modal inmodal" id="modal-fotos" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog" style="z-index: 99999">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-body">
+                    <div class="moldura-modal p-h-xs">
+
+                        <div class="row p-md">
+                            <div class="col-lg-12" id="fotocontent">
+
+                                <div id="main-cropper"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary pull-right m-l-sm" onclick="ConfirmFoto()">Confirmar</button>
+                        <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="~/Scripts/app/Home/coordenador.js?@ViewBag.Numero"></script>
+    }
 
 

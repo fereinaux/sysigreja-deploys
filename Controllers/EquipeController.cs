@@ -340,6 +340,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
+        public ActionResult SaveGrupo(string grupoId, int eventoId, int equipeId)
+        {
+            equipesBusiness.SaveGrupo(grupoId,eventoId, equipeId);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
         public ActionResult DeleteEquipe(int Id)
         {
             equipesBusiness.DeleteEquipe(Id);

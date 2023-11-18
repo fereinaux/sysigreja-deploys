@@ -57,6 +57,7 @@ namespace Web
             container.RegisterType<IGenericRepository<ReuniaoEvento>, GenericRepository<ReuniaoEvento>>();
             container.RegisterType<IGenericRepository<Equipante>, GenericRepository<Equipante>>();
             container.RegisterType<IGenericRepository<EquipanteEvento>, GenericRepository<EquipanteEvento>>();
+            container.RegisterType<IGenericRepository<EquipeEvento>, GenericRepository<EquipeEvento>>();
             container.RegisterType<IGenericRepository<CategoriaEvento>, GenericRepository<CategoriaEvento>>();
             container.RegisterType<IGenericRepository<PresencaReuniao>, GenericRepository<PresencaReuniao>>();
             container.RegisterType<IGenericRepository<Equipe>, GenericRepository<Equipe>>();

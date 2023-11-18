@@ -581,7 +581,7 @@ function toggleFoto(id) {
                     datatype: "json",
                     type: "POST",
                     contentType: 'application/json; charset=utf-8',
-                    url: "Arquivo/DeleteFotoParticipante",
+                    url: "/Arquivo/DeleteFotoParticipante",
                     data: JSON.stringify(
                         {
                             Id: id

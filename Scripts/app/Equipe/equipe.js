@@ -141,7 +141,7 @@ function PostArquivoEquipe() {
             contentType: false,
             type: "POST",
             data: dataToPost,
-            url: "Arquivo/PostArquivo",
+            url: "/Arquivo/PostArquivo",
             success: function () {
                 $('#arquivo-modal').val("")
                 GetAnexos();

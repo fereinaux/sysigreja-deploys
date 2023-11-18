@@ -115,7 +115,7 @@ async function createGroup(name, participants, eventoId, equipeId) {
     })
 
     await $.ajax({
-        url: `Equipe/SaveGrupo/`,
+        url: `/Equipe/SaveGrupo/`,
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',

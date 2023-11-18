@@ -121,7 +121,7 @@ async function createGroup(name, participants, eventoId, equipeId) {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(
             {
-                grupoId: result.response.groupInfo.id,
+                grupoId: result.response.groupInfo[0].id,
                 eventoId,
                 equipeId
             }),

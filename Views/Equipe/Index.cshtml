@@ -1,8 +1,4 @@
-﻿@{
-    ViewBag.Numero = new Random().Next();
-}
-
-<div class="row wrapper border-bottom white-bg page-heading">
+﻿<div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@ViewBag.Title</h2>
         <ol class="breadcrumb">
@@ -145,8 +141,8 @@
 @section Scripts {
 
     <script src="~/Scripts/app/Util/pdf.js"></script>
-    <script src="~/Scripts/app/Relatorio/relatorio.js?@ViewBag.Numero"></script>
-    <script src="~/Scripts/app/Equipe/equipe.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Relatorio/relatorio.js"></script>
+    <script src="~/Scripts/app/Equipe/equipe.js"></script>
     <script src="~/Scripts/app/Arquivo/arquivo.js"></script>
 
     <script>

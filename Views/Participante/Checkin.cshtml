@@ -1,12 +1,4 @@
-﻿@{
-    ViewBag.Numero = new Random().Next();
-}
-@using System.Collections.Generic;
-@using System.Linq;
-@using Utils.Enums;
-@using Utils.Extensions;
-
-<div class="wrapper wrapper-content">
+﻿<div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-6">
             <div class="m-b-md moldura-modal " style=";position:relative">
@@ -276,7 +268,7 @@
 
 @section Scripts {
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <script src="~/Scripts/app/Participante/checkin.js?@ViewBag.Numero"></script>
-    <script src="~/Scripts/app/Cracha/print.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Participante/checkin.js"></script>
+    <script src="~/Scripts/app/Cracha/print.js"></script>
 
 }

@@ -621,6 +621,7 @@
                 $('#title').html(xhr.getResponseHeader('Title'))
                 $('#side-menu').find('a').parent().removeClass('active');
                 $('#side-menu .nav-second-level').removeClass('in');
+                $('.fixedHeader-floating').remove()
                 $('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().addClass('active');
 
                 if ($('#side-menu').find(`a[href="${location}"], #${location.replaceAll('/', '')}`).parent().parent().parent().is('li')) {

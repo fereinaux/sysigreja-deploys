@@ -1,12 +1,4 @@
-﻿@{
-    ViewBag.Numero = new Random().Next();
-}
-@using System.Collections.Generic;
-@using System.Linq;
-@using Utils.Enums;
-@using Utils.Extensions;
-
-<div class="row wrapper border-bottom white-bg page-heading">
+﻿<div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@ViewBag.Title</h2>
         <ol class="breadcrumb">
@@ -492,8 +484,8 @@
 
 @section Scripts {
 
-    <script src="~/Scripts/app/Participante/casais.js?@ViewBag.Numero"></script>
-    <script src="~/Scripts/app/Cracha/print.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Participante/casais.js"></script>
+    <script src="~/Scripts/app/Cracha/print.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 

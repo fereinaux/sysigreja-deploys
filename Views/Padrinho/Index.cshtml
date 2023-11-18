@@ -1,11 +1,4 @@
-﻿@using Utils.Constants;
-@using Utils.Enums;
-@{
-    ViewBag.Numero = new Random().Next();
-}
-
-
-<div class="row wrapper border-bottom white-bg page-heading">
+﻿<div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2 class="title-padrinho">@ViewBag.Title</h2>
         <ol class="breadcrumb">
@@ -155,6 +148,6 @@
 
 @section Scripts {
 
-    <script src="~/Scripts/app/Padrinho/padrinho.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Padrinho/padrinho.js"></script>
 
 }

@@ -1,10 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-@using Utils.Constants;
-@{
-    ViewBag.Numero = new Random().Next();
-}
-
-<div class="row wrapper border-bottom white-bg page-heading">
+﻿<div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@ViewBag.Title</h2>
         <ol class="breadcrumb">
@@ -58,7 +52,7 @@
 
 @section Scripts {
 
-    <script src="~/Scripts/app/Equipe/presenca.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Equipe/presenca.js"></script>
 
     <script>
 

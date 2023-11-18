@@ -1,148 +1,144 @@
-﻿
+﻿<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <div class="widget-head-color-box bg-coord text-white p-lg text-center">
+                <div class="m-b-md">
+                    <div class="d-flex m-b-lg">
+
+                        <img id="img-logo" style="width:200px" class="m-auto" />
+                    </div>
+                    <h2 class="font-bold no-margins">
+                        <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Evento
+                    </h2>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
+                            @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Class = "text-center bg-coord text-white", Id = "eventoid", OnChange = "CarregarTela", Roles = "Coordenador" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-head-color-box bg-coord text-white p-lg text-center">
+                <div class="m-b-md">
+                    <h2 class="font-bold no-margins">
+                        @ViewBag.Equipante.Nome
+                    </h2>
+                    <small class="equipe"></small>
+                </div>
+                <div>
+                    <span>Membros na Equipe: <span class="qtd-membros"></span></span>
+                    <button disabled id="btn-excel" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="ExportarExcel()"><i class="fa fa-file-excel"></i> Excel</button>
+                    <button disabled id="btn-grupo" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="CriarGrupo()"><i class="fab fa-whatsapp"></i> Grupo Whatsapp</button>
+                </div>
+            </div>
+            <div class="widget-text-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Sexo</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Idade</th>
+                            <th scope="col" id="col-equipe">Equipe</th>
+                            <th scope="col">Oferta</th>
+                            <th scope="col">Faltas</th>
+                            <th scope="col">Contato</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="membros">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xs-12 col-arquivos">
+            <div class="widget-head-color-box bg-coord text-white p-lg text-center">
+                <div class="m-b-md">
+                    <h2 class="font-bold no-margins">
+                        Arquivos
+                    </h2>
+                    <small class="qtd-arquivos"></small>
+                </div>
+            </div>
+            <div class="widget-text-box">
+                <table id="table-arquivos" data-equipe="">
+                    <thead>
+                        <tr>
+                            <th scope="col">Arquivo</th>
+                            <th scope="col"></th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="tbarquivos">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="widget-head-color-box bg-coord text-white p-lg text-center">
+                <div class="m-b-md">
+                    <h2 class="font-bold no-margins">
+                        <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Reuniões
+                    </h2>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
+                            <select class="form-control text-center bg-coord text-white" id="reuniaoid" onchange="CarregarTabelaPresenca()">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-text-box">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:80%">Nome</th>
+                            <th style="width:20%">Compareceu?</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbpresenca"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="modal-fotos" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="z-index: 99999">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs">
+
+                    <div class="row p-md">
+                        <div class="col-lg-12" id="fotocontent">
+
+                            <div id="main-cropper"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary pull-right m-l-sm" onclick="ConfirmFoto()">Confirmar</button>
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section styles {
-
-<link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="~/Content/coordenador.css" rel="stylesheet">
-    }
+}
 
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-md-6 col-xs-12">
-                <div class="widget-head-color-box bg-coord text-white p-lg text-center">
-                    <div class="m-b-md">
-                        <div class="d-flex m-b-lg">
-
-                            <img id="img-logo" style="width:200px" class="m-auto" />
-                        </div>
-                        <h2 class="font-bold no-margins">
-                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Evento
-                        </h2>
-                    </div>
-                    <div>
-                        <div class="row">
-                            <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
-                                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Class = "text-center bg-coord text-white", Id = "eventoid", OnChange = "CarregarTela", Roles = "Coordenador" })
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="widget-head-color-box bg-coord text-white p-lg text-center">
-                    <div class="m-b-md">
-                        <h2 class="font-bold no-margins">
-                            @ViewBag.Equipante.Nome
-                        </h2>
-                        <small class="equipe"></small>
-                    </div>
-                    <div>
-                        <span>Membros na Equipe: <span class="qtd-membros"></span></span>
-                        <button disabled id="btn-excel" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="ExportarExcel()"><i class="fa fa-file-excel"></i> Excel</button>
-                        <button disabled id="btn-grupo" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="CriarGrupo()"><i class="fab fa-whatsapp"></i> Grupo Whatsapp</button>
-                    </div>
-                </div>
-                <div class="widget-text-box">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th scope="col">Sexo</th>
-                                <th scope="col">Nome</th>
-                                <th scope="col">Idade</th>
-                                <th scope="col" id="col-equipe">Equipe</th>
-                                <th scope="col">Oferta</th>
-                                <th scope="col">Faltas</th>
-                                <th scope="col">Contato</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody class="membros">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-xs-12 col-arquivos">
-                <div class="widget-head-color-box bg-coord text-white p-lg text-center">
-                    <div class="m-b-md">
-                        <h2 class="font-bold no-margins">
-                            Arquivos
-                        </h2>
-                        <small class="qtd-arquivos"></small>
-                    </div>
-                </div>
-                <div class="widget-text-box">
-                    <table id="table-arquivos" data-equipe="">
-                        <thead>
-                            <tr>
-                                <th scope="col">Arquivo</th>
-                                <th scope="col"></th>
-
-                            </tr>
-                        </thead>
-                        <tbody class="tbarquivos">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-md-6 col-xs-12">
-                <div class="widget-head-color-box bg-coord text-white p-lg text-center">
-                    <div class="m-b-md">
-                        <h2 class="font-bold no-margins">
-                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Reuniões
-                        </h2>
-                    </div>
-                    <div>
-                        <div class="row">
-                            <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
-                                <select class="form-control text-center bg-coord text-white" id="reuniaoid" onchange="CarregarTabelaPresenca()">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="widget-text-box">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th style="width:80%">Nome</th>
-                                <th style="width:20%">Compareceu?</th>
-                            </tr>
-                        </thead>
-                        <tbody class="tbpresenca"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal inmodal" id="modal-fotos" role="dialog" aria-hidden="true" >
-        <div class="modal-dialog" style="z-index: 99999">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-body">
-                    <div class="moldura-modal p-h-xs">
-
-                        <div class="row p-md">
-                            <div class="col-lg-12" id="fotocontent">
-
-                                <div id="main-cropper"></div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary pull-right m-l-sm" onclick="ConfirmFoto()">Confirmar</button>
-                        <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @section Scripts {
-        <script src="~/Scripts/app/Home/coordenador.js?@ViewBag.Numero"></script>
-    }
+@section Scripts {
+    <script src="~/Scripts/app/Home/coordenador.js"></script>
+}
 
 

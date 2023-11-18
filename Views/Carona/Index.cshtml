@@ -23,17 +23,11 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4 class="title-carona">@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right" style="width:550px">
-                <div class="row">
-                    <div class="col-xs-12 col-lg-5">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "carona-eventoid", OnChange = "CaronaRefresh", Roles = "Financeiro,Administrativo,Admin" })                       
-                    </div>
-                    <div class="col-xs-12 col-lg-7">
-                        <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirCaronas()">Distribuir</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="EditCarona(0)">Adicionar</button>
-                        <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
-                    </div>
-                </div>
+            <div class="ibox-tools pull-right">
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "carona-eventoid", OnChange = "CaronaRefresh", Roles = "Financeiro,Administrativo,Admin" })
+                <button class="btn btn-primary" id="btn_Adicionar" onclick="DistribuirCaronas()">Distribuir</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditCarona(0)">Adicionar</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="PrintAll()">Imprimir Tudo</button>
             </div>
         </div>
         <div class="ibox-content">
@@ -53,12 +47,12 @@
         <div class="ibox" id="ibox-mapa" style="margin-top:25px;">
             <div class="ibox-title" style="display: flex;justify-content: space-between;">
                 <h4>Mapa</h4>
-                <div class="ibox-tools pull-right" style="width:200px">
-                    <select onchange="getChangeCarona()" class="form-control chosen-select" id="carona-motoristas">
+                <div class="ibox-tools pull-right">
+                    <select onchange="getChangeCarona()" class="form-control" id="carona-motoristas">
                         <option value="0">Selecione </option>
                     </select>
                 </div>
-             
+
             </div>
             <div class="ibox-content" style="height:650px">
 
@@ -143,6 +137,6 @@
 
 @section Scripts {
 
-    <script src="~/Scripts/app/Carona/carona.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Carona/carona.js"></script>
 
 }

@@ -1,9 +1,4 @@
-﻿@using Utils.Extensions;
-@{
-    ViewBag.Numero = new Random().Next();
-}
-
-<div class="row wrapper border-bottom white-bg page-heading">
+﻿<div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@ViewBag.Title</h2>
         <ol class="breadcrumb">
@@ -58,9 +53,9 @@
 
 @section Scripts {
 
-    <script src="~/Scripts/app/Relatorio/relatorio.js?@ViewBag.Numero"></script>
-    <script src="~/Scripts/app/Relatorio/aniversariantes.js?@ViewBag.Numero"></script>
-    <script src="~/Scripts/app/Relatorio/restricoes.js?@ViewBag.Numero"></script>
+    <script src="~/Scripts/app/Relatorio/relatorio.js"></script>
+    <script src="~/Scripts/app/Relatorio/aniversariantes.js"></script>
+    <script src="~/Scripts/app/Relatorio/restricoes.js"></script>
     <script src="~/Scripts/app/Relatorio/parentes.js"></script>
     <script src="~/Scripts/app/Relatorio/financeiro.js"></script>
 

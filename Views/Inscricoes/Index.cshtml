@@ -851,7 +851,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
 
     });
 
-    $(document).on('ready', () => {
+    $(document).ready(() => {
               document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
         carregarEventos()
     })

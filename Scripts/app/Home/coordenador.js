@@ -81,6 +81,8 @@ async function CriarGrupo() {
         SelectedEvent.Id,
         EquipeId
     )
+
+    CarregarTela()
 }
 
 async function AddGrupo(phone) {

@@ -8,6 +8,11 @@
                             <a id="home-button-logo" style="margin:auto;display:none" href="@Url.Action("Index", "Home")"><img style="padding:1rem;max-height:150px;max-width:100%" /></a>
                         </div>
                     </div>
+                    <div class="logo-element">
+                        <a href="@Url.Action("Index", "Home")">
+                            <i class="fa fa-home"></i>
+                        </a>
+                    </div>
                 </div>
             </li>
             <li class="@Html.IsSelected(action: "Checkin", controller: "Participante")"><a href="@Url.Action("Checkin", "Participante")"><i class="fa fa-suitcase"></i><span class="nav-label">Check-in</span></a></li>

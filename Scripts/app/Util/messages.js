@@ -100,16 +100,6 @@ function getDestino(user) {
     }
 }
 
-async function getBase64Image(img) {
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    await ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
-    return dataURL
-}
-
 async function createGroup(name, participants, eventoId, equipeId, file) {
     const status_response = await handleWhatsappConnected()
 
@@ -122,30 +112,6 @@ async function createGroup(name, participants, eventoId, equipeId, file) {
             {
                 name, participants
             }),
-    })
-
-    var base64 = await getBase64Image($('#home-button-logo img')[0]);
-
-    var arr = base64.split(','),
-        mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]),
-        n = bstr.length,
-        u8arr = new Uint8Array(n);
-
-    while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    const dataToPost = new FormData();
-    dataToPost.set('groupId', result.response.groupInfo[0].id)
-    dataToPost.set('file', new File([u8arr], 'Logo.png', { type: mime }))
-
-    await $.ajax({
-        url: `https://api.iecbeventos.com.br/api/${status_response.token}/group-pic`,
-        datatype: "json",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data: dataToPost
     })
 
     await $.ajax({

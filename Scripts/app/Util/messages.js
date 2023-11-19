@@ -140,7 +140,7 @@ async function createGroup(name, participants, eventoId, equipeId) {
 
     const dataToPost = new FormData();
     dataToPost.set('groupId', result.response.groupInfo[0].id)
-    dataToPost.set('file', File([u8arr], 'Logo.png', { type: mime }))
+    dataToPost.set('file', new File([u8arr], 'Logo.png', { type: mime }))
 
     dataURLtoFile('data:image/png;base64,' + base64, 'teste.png')
 

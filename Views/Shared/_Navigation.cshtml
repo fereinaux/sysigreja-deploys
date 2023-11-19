@@ -10,11 +10,7 @@
                     </div>
                 </div>
             </li>
-            <li class="logo-element">
-                <a href="@Url.Action("Index", "Home")">
-                    <i class="fa fa-home"></i>
-                </a>
-            </li>
+            <li class="slicknav_menu @Html.IsSelected(action: "Index", controller: "Home")"><a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i><span class="nav-label">Home</span></a></li>
             <li class="@Html.IsSelected(action: "Checkin", controller: "Participante")"><a href="@Url.Action("Checkin", "Participante")"><i class="fa fa-suitcase"></i><span class="nav-label">Check-in</span></a></li>
             <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Circulo","Participante","Quarto","Padrinho","Carona"}, actions: new List<string> { "Index","Participantes","Casais" })">
                 <a><i class="fa fa-users"></i> <span class="nav-label">Participantes</span> <span class="fa arrow"></span></a>

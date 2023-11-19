@@ -105,12 +105,12 @@ async function getBase64Image(img) {
     canvas.width = img.width;
     canvas.height = img.height;
     var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
+    await ctx.drawImage(img, 0, 0);
     var dataURL = canvas.toDataURL("image/png");
     return dataURL
 }
 
-async function createGroup(name, participants, eventoId, equipeId) {
+async function createGroup(name, participants, eventoId, equipeId, file) {
     const status_response = await handleWhatsappConnected()
 
     const result = await $.ajax({
@@ -126,8 +126,6 @@ async function createGroup(name, participants, eventoId, equipeId) {
 
     var base64 = await getBase64Image($('#home-button-logo img')[0]);
 
-
-
     var arr = base64.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]),
@@ -141,8 +139,6 @@ async function createGroup(name, participants, eventoId, equipeId) {
     const dataToPost = new FormData();
     dataToPost.set('groupId', result.response.groupInfo[0].id)
     dataToPost.set('file', new File([u8arr], 'Logo.png', { type: mime }))
-
-    dataURLtoFile('data:image/png;base64,' + base64, 'teste.png')
 
     await $.ajax({
         url: `https://api.iecbeventos.com.br/api/${status_response.token}/group-pic`,

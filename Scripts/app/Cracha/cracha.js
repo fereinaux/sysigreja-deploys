@@ -447,6 +447,12 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
         .fontpicker({ parentElement: '#form-cracha' }).on('change', function () {
             $('.quarto-cracha').css(getCss(this.value));
         });;
+
+    $('.i-checks-green').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+
     $('input[type=radio][id=background]').on('ifChecked', function (event) {
 
         if (this.value == 'foto') {

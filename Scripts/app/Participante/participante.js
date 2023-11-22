@@ -1,6 +1,4 @@
-﻿realista = {}
-selected = false
-eventoId = 0
+﻿
 function CarregarTabelaParticipante(callbackFunction) {
     loadCampos(SelectedEvent.Id)
     $("#table-participantes").DataTable().destroy()
@@ -9,6 +7,7 @@ function CarregarTabelaParticipante(callbackFunction) {
     GetCrachas()
     $('#btn_bulk').css('display', 'none')
     if (SelectedEvent.Id != eventoId) {
+        var filtros = getFiltros()
         $.ajax({
             url: '/Participante/GetPadrinhos',
             data: { eventoId: SelectedEvent.Id },
@@ -19,6 +18,7 @@ function CarregarTabelaParticipante(callbackFunction) {
                 $("#participante-padrinhoid").html(`
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
+                $("#participante-padrinhoid").val(filtros.PadrinhoId)
                 $("#participante-padrinhoid").select2()
             }
         });
@@ -33,6 +33,7 @@ ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                 $("#participante-circuloid").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
 `)
+                $("#participante-circuloid").val(filtros.CirculoId)
                 $("#participante-circuloid").select2()
             }
         });
@@ -47,6 +48,8 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
                 $("#participante-quartoid").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
+
+                $("#participante-quartoid").val(filtros.QuartoId)
                 $("#participante-quartoid").select2()
             }
         });
@@ -61,6 +64,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 $("#participante-motoristaid").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Motorista}</option>`)}
 `)
+                $("#participante-motoristaid").val(filtros.CaronaId)
                 $("#participante-motoristaid").select2()
             }
         });
@@ -78,8 +82,11 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                 $("#participante-nao-marcadores").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
+                $('#participante-marcadores').val(filtros.Etiquetas);
+                $('#participante-nao-marcadores').val(filtros.NaoEtiquetas);
                 $('#participante-marcadores').select2();
                 $('#participante-nao-marcadores').select2();
+                $('#participante-status').val(filtros.Status);
                 $('#participante-status').select2();
 
             }
@@ -118,6 +125,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 
             }
         })
+    } else {
+        setFiltros()
     }
 
 
@@ -149,7 +158,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         },
         columns: [
             {
-                data: "Id", name: "Id", title:'<div class="checkbox i-checks-green"><label> <input type="checkbox" id="select-all" data-id="all"> <i></i></label></div>', orderable: false, width: "2%", className: 'noVis',
+                data: "Id", name: "Id", title: '<div class="checkbox i-checks-green"><label> <input type="checkbox" id="select-all" data-id="all"> <i></i></label></div>', orderable: false, width: "2%", className: 'noVis',
                 "render": function (data, type, row) {
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, false) : '';
                 }
@@ -171,7 +180,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }
             },
             {
-                data: "Nome", name: "Nome", title:"Nome", width: "25%", render: function (data, type, row) {
+                data: "Nome", name: "Nome", title: "Nome", width: "25%", render: function (data, type, row) {
                     var reg = /^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/i
                     var titulo = row.Circulo?.trim()
                     var isCor = reg.test(titulo)
@@ -235,7 +244,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             { data: "Motorista", title: "Motorista", name: "Motorista", autoWidth: true, visible: false },
             { data: "DataCadastro", visible: false, title: "Data Inscrição", name: "DataCadastro", autoWidth: true },
             {
-                data: "Id", name: "Id", orderable: false, width: "25%", className: 'noVis',
+                data: "Id", name: "Id", title: "Ações", orderable: false, width: "25%", className: 'noVis',
                 "render": function (data, type, row) {
                     return row.Status != Cancelado && row.Status != Espera ?
 
@@ -832,6 +841,9 @@ function CarregarTabelaPagamentos(id) {
 }
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
+    realista = {}
+    selected = false
+    eventoId = 0
     HideMenu()
     CarregarTabelaParticipante();
     const searchParams = new URLSearchParams(window.location.search)
@@ -1754,8 +1766,8 @@ async function loadCrachaImprimir(Foto) {
     return result.data
 }
 
-function getFiltros(Foto) {
-    return {
+function setFiltros() {
+    localStorage.setItem(`filtros-participante${SelectedEvent.Id}`, JSON.stringify({
         EventoId: SelectedEvent.Id,
         CirculoId: $("#participante-circuloid").val(),
         PadrinhoId: $("#participante-padrinhoid").val(),
@@ -1765,7 +1777,16 @@ function getFiltros(Foto) {
         QuartoId: $("#participante-quartoid").val(),
         CaronaId: $("#participante-motoristaid").val(),
         Foto: Foto
-    }
+    }))
+}
+
+function getFiltros(Foto) {
+    var filtros = JSON.parse(localStorage.getItem(`filtros-participante${SelectedEvent.Id}`))
+    if (!filtros) {
+        setFiltros()
+        return JSON.parse(localStorage.getItem(`filtros-participante${SelectedEvent.Id}`))
+    } else return filtros
+
 }
 
 function checkBulkActions() {
@@ -2080,7 +2101,7 @@ async function loadMensagens(tipo) {
             msgId = $("#bulk-mensagem").val()
             tipo = ""
             break;
-    }   
+    }
 
     await enviarMensagens(msgId, ids, tipo, 'Participante')
 

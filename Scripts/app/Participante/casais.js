@@ -1,9 +1,4 @@
-﻿realista = {}
-selected = false
-eventoId = 0
-table = undefined
-map = undefined
-markerLayer = undefined
+﻿
 function CarregarTabelaParticipante(callbackFunction) {
     casal = true
     handleParticipantes(casal)
@@ -11,6 +6,7 @@ function CarregarTabelaParticipante(callbackFunction) {
     GetCrachas()
     $('#btn_bulk').css('display', 'none')
     if (SelectedEvent.Id != eventoId) {
+        var filtros = getFiltros()
         $.ajax({
             url: '/Participante/GetPadrinhos',
             data: { eventoId: SelectedEvent.Id },
@@ -21,6 +17,7 @@ function CarregarTabelaParticipante(callbackFunction) {
                 $("#participante-padrinhoid").html(`
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
+                $("#participante-padrinhoid").val(filtros.PadrinhoId)
                 $("#participante-padrinhoid").select2()
             }
         });
@@ -35,7 +32,24 @@ ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                 $("#participante-circuloid").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
 `)
+                $("#participante-circuloid").val(filtros.CirculoId)
                 $("#participante-circuloid").select2()
+            }
+        });
+
+        $.ajax({
+            url: '/Quarto/GetQuartos',
+            data: { eventoId: SelectedEvent.Id },
+            datatype: "json",
+            type: "POST",
+            success: (result) => {
+                eventoId = SelectedEvent.Id
+                $("#participante-quartoid").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+`)
+
+                $("#participante-quartoid").val(filtros.QuartoId)
+                $("#participante-quartoid").select2()
             }
         });
 
@@ -52,8 +66,11 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                 $("#participante-nao-marcadores").html(`
 ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
+                $('#participante-marcadores').val(filtros.Etiquetas);
+                $('#participante-nao-marcadores').val(filtros.NaoEtiquetas);
                 $('#participante-marcadores').select2();
                 $('#participante-nao-marcadores').select2();
+                $('#participante-status').val(filtros.Status);
                 $('#participante-status').select2();
 
             }
@@ -92,7 +109,10 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 
             }
         })
+    } else {
+        setFiltros()
     }
+
 
 
 
@@ -803,6 +823,12 @@ function CarregarTabelaPagamentos(id) {
 }
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
+    realista = {}
+    selected = false
+    eventoId = 0
+    table = undefined
+    map = undefined
+    markerLayer = undefined
     HideMenu()
     CarregarTabelaParticipante();
     loadCampos(SelectedEvent.Id);
@@ -1721,16 +1747,27 @@ async function loadCrachaImprimir(Foto) {
     return result.data
 }
 
-function getFiltros(Foto) {
-    return {
+function setFiltros() {
+    localStorage.setItem(`filtros-casais${SelectedEvent.Id}`, JSON.stringify({
         EventoId: SelectedEvent.Id,
         CirculoId: $("#participante-circuloid").val(),
         PadrinhoId: $("#participante-padrinhoid").val(),
         Status: $("#participante-status").val(),
         Etiquetas: $("#participante-marcadores").val(),
         NaoEtiquetas: $("#participante-nao-marcadores").val(),
+        QuartoId: $("#participante-quartoid").val(),
         Foto: Foto
-    }
+    }))
+}
+
+
+function getFiltros(Foto) {
+    var filtros = JSON.parse(localStorage.getItem(`filtros-casais${SelectedEvent.Id}`))
+    if (!filtros) {
+        setFiltros()
+        return JSON.parse(localStorage.getItem(`filtros-casais${SelectedEvent.Id}`))
+    } else return filtros
+
 }
 
 function checkBulkActions() {

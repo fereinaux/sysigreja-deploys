@@ -66,7 +66,6 @@ map.on(L.Draw.Event.CREATED, function (e) {
         }
     });
     setTimeout(() => {
-        console.log(selectedMarkersCirculo);
         selectedMarkersCirculo[0].openPopup()
 
 
@@ -87,7 +86,6 @@ map.on('popupopen', function (e) {
 map.on('popupclose', function (e) {
 
     selectedMarkersCirculo = []
-    console.log(selectedMarkersCirculo);
     Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
     $("#bairros").val([]).trigger('change');
     $('#filtro-nome').val('')

@@ -988,7 +988,8 @@ namespace SysIgreja.Controllers
                  .Where(x => x.EquipanteEvento.EventoId == eventoId).Select(x => new
                  {
                      Id = x.Id,
-                     Nome = x.EquipanteEvento.Equipante.Nome
+                     Nome = x.EquipanteEvento.Equipante.Nome,
+                     EquipanteId = x.EquipanteEvento.EquipanteId
                  })
             }, JsonRequestBehavior.AllowGet);
 

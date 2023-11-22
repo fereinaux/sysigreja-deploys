@@ -5,7 +5,7 @@ initTableCirculo = false
 setInterval(function () {
     map.invalidateSize();
 }, 100);
-selectedMarkers = []
+selectedMarkersCirculo = []
 circuloId = null
 swalCirculos = {
     title: `Impressão de ${SelectedEvent.EquipeCirculo}`,
@@ -56,6 +56,7 @@ selectedMarkersCirculo = []
 
 map.on(L.Draw.Event.CREATED, function (e) {
     selectedMarkersCirculo = []
+
     markerLayer.eachLayer(function (marker) {
         if (!e.layer.contains(marker.getLatLng())) {
             marker.setOpacity(0.25);
@@ -65,7 +66,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
         }
     });
     setTimeout(() => {
-
+        console.log(selectedMarkersCirculo);
         selectedMarkersCirculo[0].openPopup()
 
 
@@ -86,6 +87,7 @@ map.on('popupopen', function (e) {
 map.on('popupclose', function (e) {
 
     selectedMarkersCirculo = []
+    console.log(selectedMarkersCirculo);
     Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
     $("#bairros").val([]).trigger('change');
     $('#filtro-nome').val('')
@@ -596,7 +598,7 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                             if (addPin) {
 
                                 addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo', circulo)
-                                    .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div class="hide-multiple"><span >${circulo.Endereco} - ${circulo.Bairro}</span>
+                                    .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">
                                    ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                                 </ul>
@@ -678,10 +680,10 @@ function Drag() {
 
 function ChangeCirculo(participanteId, destinoId) {
     initTableCirculo = false;
-    if (selectedMarkers.length > 0) {
+    if (selectedMarkersCirculo.length > 0) {
         let arrPromises = []
 
-        selectedMarkers.forEach(marker => {
+        selectedMarkersCirculo.forEach(marker => {
             $.blockUI({
                 css: {
                     backgroundColor: 'transparent',
@@ -717,7 +719,7 @@ function ChangeCirculo(participanteId, destinoId) {
         Promise.all(arrPromises).then((r) => {
             CarregarTabelaCirculo();
             map.closePopup()
-            selectedMarkers = []
+            selectedMarkersCirculo = []
             $.unblockUI();
         })
 
@@ -736,7 +738,7 @@ function ChangeCirculo(participanteId, destinoId) {
             success: function () {
                 CarregarTabelaCirculo();
                 map.closePopup()
-                selectedMarkers = []
+                selectedMarkersCirculo = []
             }
         });
     }

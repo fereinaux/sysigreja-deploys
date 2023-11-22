@@ -125,6 +125,13 @@ namespace SysIgreja.Controllers
                     Titulo = x.Configuracao.Titulo,
                     TipoEvento = x.Configuracao.TipoEvento?.GetDescription(),
                     TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
+                    Mensagens = x.Configuracao.Mensagens.Select(y => new Core.Models.Mensagem.PostMessageModel
+                    {
+                        Id = y.Id,
+                        Conteudo = y.Conteudo,
+                        Titulo = y.Titulo,
+                        Tipos = y.Tipos.Split(',')
+                    }),
                     MeioPagamentos = x.Configuracao.MeioPagamentos.Select(y => new MeioPagamentoModel
                     {
                         Descricao = y.Descricao,
@@ -149,16 +156,16 @@ namespace SysIgreja.Controllers
 
             return Json(new
             {
-                Eventos = (eventosReturn),              
+                Eventos = (eventosReturn),
             }, JsonRequestBehavior.AllowGet);
         }
 
 
         [HttpGet]
         public ActionResult PopulateLogin()
-        {    
+        {
             return Json(new
-            {      
+            {
                 Login = configuracaoBusiness.GetLoginResumido()
             }, JsonRequestBehavior.AllowGet);
         }
@@ -173,7 +180,7 @@ namespace SysIgreja.Controllers
             var eventoPermissao = new List<EventoPermissao>();
             permissoes.ForEach(permissao =>
             {
-                configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));                           
+                configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));
             });
 
             return Json(new

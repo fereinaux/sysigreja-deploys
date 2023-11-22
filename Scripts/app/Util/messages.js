@@ -100,7 +100,7 @@ function getDestino(user) {
     }
 }
 
-async function createGroup(name, participants, eventoId, equipeId, file) {
+async function createGroup(name, participants, eventoId, equipeId) {
     const status_response = await handleWhatsappConnected()
 
     const result = await $.ajax({

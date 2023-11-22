@@ -52,7 +52,7 @@
                         <h4>Evento</h4>
                     </div>
                     <div class="col-sm-9">
-                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "eventoid", OnChange = "changeEventoCheckin", Roles = "Financeiro,Administrativo,Admin,Padrinho" })                       
+                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "eventoid", OnChange = "changeEventoCheckin", Roles = "Financeiro,Administrativo,Admin,Padrinho" })
                     </div>
                 </div>
 
@@ -267,7 +267,7 @@
 }
 
 @section Scripts {
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
     <script src="~/Scripts/app/Participante/checkin.js"></script>
     <script src="~/Scripts/app/Cracha/print.js"></script>
 

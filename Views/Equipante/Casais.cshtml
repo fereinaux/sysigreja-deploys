@@ -31,13 +31,16 @@
             <div class="row">
                 <div class="col-xs-12 col-lg-2">
                     <h5>Evento</h5>
-                    @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-filtro", OnChange = "loadEquipes", Roles = "Financeiro,Administrativo,Admin,Padrinho" })
+                    <div style="display:flex">
+
+                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-filtro", OnChange = "loadEquipes", Roles = "Financeiro,Administrativo,Admin,Padrinho" })
+                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-2 hide-tipoevento">
                     <h5>Status</h5>
                     <select class="form-control" id="equipante-status" multiple onchange="CarregarTabelaEquipante()">
-                        <option value="pendente"></option>
-                        <option value="pago"></option>
+                        <option value="pendente">Pendente</option>
+                        <option value="pago">Pago</option>
                     </select>
                 </div>
                 <div class="col-xs-12 col-lg-2 hide-tipoevento">

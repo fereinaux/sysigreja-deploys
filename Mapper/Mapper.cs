@@ -6,6 +6,7 @@ using Core.Models.Cracha;
 using Core.Models.Equipantes;
 using Core.Models.Etiquetas;
 using Core.Models.Eventos;
+using Core.Models.Mensagem;
 using Core.Models.Participantes;
 using Core.Models.Quartos;
 using CsQuery.ExtensionMethods;
@@ -60,6 +61,9 @@ namespace SysIgreja.Controllers
         public IEnumerable<MeioPagamentoModel> MeioPagamentos { get; set; }
         public IEnumerable<EtiquetaModel> Etiquetas { get; set; }
         public IEnumerable<CentroCustoModel> CentroCustos { get; set; }
+        public IEnumerable<PostMessageModel> Mensagens { get; set; }
+
+        
     }
 
     public class CrachaCasalModel
@@ -92,7 +96,8 @@ namespace SysIgreja.Controllers
                 .ForMember(dest => dest.TipoEvento, opt => opt.MapFrom(x => x.TipoEvento != null ? x.TipoEvento.Value.GetDescription() : ""))
                 .ForMember(dest => dest.TipoCirculo, opt => opt.MapFrom(x => x.TipoCirculo.GetDescription()));
                 cfg.CreateMap<MeioPagamento, MeioPagamentoModel>();
-                cfg.CreateMap<CentroCusto, CentroCustoModel>().ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => x.Tipo.GetDescription())); ;
+                cfg.CreateMap<CentroCusto, CentroCustoModel>().ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => x.Tipo.GetDescription()));
+                cfg.CreateMap<Mensagem, PostMessageModel>();
                 cfg.CreateMap<Etiqueta, EtiquetaModel>();                
                 cfg.CreateMap<EquipanteEvento, PessoaSelectModel>()
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))

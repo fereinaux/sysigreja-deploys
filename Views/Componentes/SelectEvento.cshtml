@@ -1,7 +1,11 @@
 ﻿@model SysIgreja.ViewModels.SelectViewModel
 
-<select class="form-control @(Model.Class) select-evento" id="@(Model.Id)" onchange="changeEvento_@(Model.OnChange)()">
+<select class="@(Model.Class) select-evento form-control" id="@(Model.Id)" onchange="changeEvento_@(Model.OnChange)()">
 </select>
+
+
+<style>
+</style>
 
 <script>
     function handleGlobals() {
@@ -88,6 +92,8 @@
                 SelectedEvent = eventos[0]
                 localStorage.setItem('eventoId', SelectedEvent.Id)
             }
+            $("#@(Model.Id)").select2()
+
             handleGlobals()
 
             if (($('.select-evento')[0].id == '@(Model.Id)') && AajaxLoading) {

@@ -39,6 +39,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" integrity="sha512-kq3FES+RuuGoBW3a9R2ELYKRywUEQv0wvPTItv3DSGqjpbNtGWVdvT8qwdKkqvPzT93jp8tSF4+oN4IeTEIlQA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/av01d/fontpicker-jquery-plugin@1.5/dist/jquery.fontpicker.min.css" integrity="sha256-urFh3EMgi9s3j3w+TsAP1TfUQiE0yUZmmLX7JRyvjqE=" crossorigin="anonymous">
@@ -90,7 +91,7 @@
                 ]
 
                 promiseResult = await Promise.all(xhrPopulate)
-                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario:  promiseResult[3].Usuario  }
+                Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario: promiseResult[3].Usuario }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
                 Login = Claims.Login
@@ -519,7 +520,7 @@
                                 success: function (data) {
                                     console.log(data);
                                     SuccessMesageOperation()
-                                  
+
                                 }
                             });
                     }
@@ -556,11 +557,11 @@
                     border: 'none'
                 },
                 message: `<div class="spinner">
-          <div style="background-color:#fff" class="rect1"></div>
-          <div style="background-color:#fff" class="rect2"></div>
-          <div style="background-color:#fff" class="rect3"></div>
-          <div style="background-color:#fff" class="rect4"></div>
-          <div style="background-color:#fff" class="rect5"></div>
+              <div style="background-color:#fff" class="rect1"></div>
+              <div style="background-color:#fff" class="rect2"></div>
+              <div style="background-color:#fff" class="rect3"></div>
+              <div style="background-color:#fff" class="rect4"></div>
+              <div style="background-color:#fff" class="rect5"></div>
 </div>`,
                 baseZ: 3500,
                 overlayCSS: {
@@ -683,8 +684,11 @@
 
 
     </script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
 
+        
+        $.fn.select2.defaults.set("theme", "bootstrap");
         function defaultLogin() {
             $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)

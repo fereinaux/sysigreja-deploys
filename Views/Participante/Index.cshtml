@@ -25,52 +25,69 @@
         <div class="ibox-content">
             <div class="row">
                 <div class="col-xs-12 col-lg-3">
-                    <h5>Evento</h5>           
-                    @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "participante-eventoid", OnChange = "CarregarTabelaParticipante", Roles = "Financeiro, Administrativo, Padrinho,Admin" })
+                    <h5>Evento</h5>
+                    <div style="display:flex">
+
+                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "participante-eventoid", OnChange = "CarregarTabelaParticipante", Roles = "Financeiro, Administrativo, Padrinho,Admin" })
+                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5>Status</h5>
-                    <select class="form-control" id="participante-status" multiple onchange="CarregarTabelaParticipante()">
+                    <div style="display:flex">
+                        <select class="form-control" id="participante-status" multiple onchange="CarregarTabelaParticipante()">
 
-                        <option value=8>Inscrito</option>
-                        <option value=9>Confirmado</option>
-                        <option value=12>Presente</option>
-                        <option value=10>Em espera</option>
-                        <option value=6>Cancelado</option>
+                            <option value=8>Inscrito</option>
+                            <option value=9>Confirmado</option>
+                            <option value=12>Presente</option>
+                            <option value=10>Em espera</option>
+                            <option value=6>Cancelado</option>
 
-                    </select>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5>Padrinho</h5>
-                    <select class="form-control" id="participante-padrinhoid" multiple onchange="CarregarTabelaParticipante()">
-                    </select>
+                    <div style="display:flex">
+                        <select class="form-control" id="participante-padrinhoid" multiple onchange="CarregarTabelaParticipante()">
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5 class="title-circulo">Círculo</h5>
-                    <select class="form-control" id="participante-circuloid" multiple onchange="CarregarTabelaParticipante()">
-                    </select>
+                    <div style="display:flex">
+                        <select class="form-control" id="participante-circuloid" multiple onchange="CarregarTabelaParticipante()">
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12 col-lg-3">
                     <h5>Quarto</h5>
-                    <select class="form-control" id="participante-quartoid" multiple onchange="CarregarTabelaParticipante()">
-                    </select>
+                    <div style="display:flex">
+                        <select class="form-control" id="participante-quartoid" multiple onchange="CarregarTabelaParticipante()">
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5>Carona</h5>
-                    <select class="form-control" id="participante-motoristaid" multiple onchange="CarregarTabelaParticipante()">
-                    </select>
+                    <div style="display:flex">
+                        <select class="form-control" id="participante-motoristaid" multiple onchange="CarregarTabelaParticipante()">
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5>Tem Marcador</h5>
-                    <select class="form-control" id="participante-marcadores" multiple onchange="CarregarTabelaParticipante()">
-                    </select>
+                    <div style="display:flex">
+                        <select class="form-control" id="participante-marcadores" multiple onchange="CarregarTabelaParticipante()">
+                        </select>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-3">
                     <h5>Não tem Marcador</h5>
-                    <select class="form-control" id="participante-nao-marcadores" multiple onchange="CarregarTabelaParticipante()">
-                    </select>
+                    <div style="display:flex">
+                        <select class="form-control" id="participante-nao-marcadores" multiple onchange="CarregarTabelaParticipante()">
+                        </select>
+                    </div>
                 </div>
 
             </div>
@@ -93,7 +110,7 @@
         <div class="ibox-content">
             <table id="table-participante" class="table table-striped table-bordered table-hover" cellspacing="0" style="width: 100%">
                 <thead>
-         
+
                 </thead>
                 <tbody></tbody>
             </table>
@@ -281,7 +298,7 @@
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Forma de Pagamento</h5>
 
-                            <select class="form-control" id="pagamentos-meiopagamento" >
+                            <select class="form-control" id="pagamentos-meiopagamento">
                             </select>
 
                         </div>

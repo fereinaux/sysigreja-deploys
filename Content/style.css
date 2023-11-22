@@ -10456,7 +10456,7 @@ th {
 }
 
 @media (max-width: 1000px) {
-    .ibox-tools.pull-right {      
+    .ibox-tools.pull-right {
         flex-direction: column;
     }
 
@@ -10468,4 +10468,9 @@ th {
 .select2-container {
     width: 100% !important;
     min-width: 200px;
+}
+
+.select2-selection__choice__remove {
+    border: 0;
+    background: transparent;
 }

@@ -142,7 +142,7 @@ function CarregarTabelaCirculo() {
 
             }
 
-
+  
         },
         ajax: {
             url: '/Circulo/GetCirculos',
@@ -528,7 +528,7 @@ function GetParticipantesSemCirculo() {
 var setView = false
 
 function GetCirculosComParticipantes(column, dir, search) {
-    $("#circulos").empty();
+    $("#circulos").empty();    
     $.ajax({
         url: '/Circulo/GetCirculos',
         datatype: "json",
@@ -579,7 +579,9 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                                     addPin = false
                                     var div = document.createElement("div");
 
-                                    $(layer._popup?._content).append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
+                                    $(div).html(layer._popup?._content)
+
+                                    $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">
                                    ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                                 </ul>
@@ -911,7 +913,7 @@ function GetDirigentes() {
 }
 
 function loadCirculo() {
-
+    
     $('title').text(`${SelectedEvent.Titulo} | ${SelectedEvent.EquipeCirculo}`)
     $('.title-circulo').text(SelectedEvent.EquipeCirculo)
     if (SelectedEvent.TipoCirculo == 'Endereco') {

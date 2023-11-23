@@ -579,12 +579,8 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                                     addPin = false
                                     var div = document.createElement("div");
 
-                                    div.innerHTML = layer._popup?._content
-                                    console.log(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
-                                <ul class="change-circulo-ul">
-                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                                </ul>
-                                </div></div>`);
+                                    div.outerHTML = layer._popup?._content
+
                                     $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">
                                    ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
@@ -598,11 +594,7 @@ ${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
                                 }
                             })
                             if (addPin) {
-                                console.log(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
-                                <ul class="change-circulo-ul">
-                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                                </ul>
-                                </div></div></div>`);
+
                                 addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo', circulo)
                                     .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
                                 <ul class="change-circulo-ul">

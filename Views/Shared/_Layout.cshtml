@@ -554,21 +554,7 @@
         };
 
         function spaLoad(action, type, data, pushHistory) {
-            $.blockUI({
-                css: {
-                    backgroundColor: 'transparent',
-                    border: 'none'
-                },
-                message: `<div class="sk-spinner sk-spinner-chasing-dots">
-                                <div style='background-color:#fff' class="sk-dot1"></div>
-                                <div style='background-color:#fff' class="sk-dot2"></div>
-                            </div>`,
-                baseZ: 3500,
-                overlayCSS: {
-                    opacity: 0.7,
-                    cursor: 'wait'
-                }
-            });
+            $.blockUI(blockOptions);
             abortAjax();
             $.ajax({
                 url: action,

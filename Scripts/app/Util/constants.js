@@ -44,13 +44,29 @@ function GetCorById(id) {
             return "Vermelho";
         case 1:
             return "Laranja";
-         case 2:
+        case 2:
             return "Roxo";
-         case 3:
+        case 3:
             return "Azul";
-         case 4:
+        case 4:
             return "Rosa";
-         case 5:
-            return "Amarelo";     
+        case 5:
+            return "Amarelo";
+    }
+}
+
+const blockOptions = {
+    css: {
+        backgroundColor: 'transparent',
+        border: 'none'
+    },
+    message: `<div class="sk-spinner sk-spinner-chasing-dots">
+                                <div style='background-color:#fff' class="sk-dot1"></div>
+                                <div style='background-color:#fff' class="sk-dot2"></div>
+                            </div>`,
+    baseZ: 3500,
+    overlayCSS: {
+        opacity: 0.7,
+        cursor: 'wait'
     }
 }

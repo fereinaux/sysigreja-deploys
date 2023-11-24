@@ -128,9 +128,6 @@ function GetResultadosAdmin() {
     } else {
         $('#resumo-financeiro-bloco').css('display', 'block')
     }
-
-    $('#resumo-financeiro-bloco div.col-xs-12').block(blockOptions)
-
     $.ajax({
         url: '/Home/GetResumoFinanceiroEvento',
         datatype: "json",

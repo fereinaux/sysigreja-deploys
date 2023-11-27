@@ -69,7 +69,12 @@
                 SelectedConfig = claims.Configuracoes[0]
                 localStorage.setItem('configId', SelectedConfig.Id)
             }
-            $("#@(Model.Id)").select2()
+
+            $("#@(Model.Id)").select2(
+            {
+                dropdownParent: $("#@(Model.DropdownParent)")
+            })
+
             handleGlobals()
             if (($('.select-config')[0].id == '@(Model.Id)') && AajaxLoading) {
                 $(document).trigger('ready-ajax');

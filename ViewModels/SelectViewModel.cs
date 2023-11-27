@@ -6,6 +6,7 @@
         public string OnChange { get; set; }
         public string Roles { get; set; }
         public string Class { get; set; }
+        public string DropdownParent { get; set; }
     }
 
 

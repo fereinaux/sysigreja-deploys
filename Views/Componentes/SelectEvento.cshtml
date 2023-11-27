@@ -92,7 +92,10 @@
                 SelectedEvent = eventos[0]
                 localStorage.setItem('eventoId', SelectedEvent.Id)
             }
-            $("#@(Model.Id)").select2()
+            $("#@(Model.Id)").select2(
+                {
+                    dropdownParent: $("#@(Model.DropdownParent)")
+                })
 
             handleGlobals()
 

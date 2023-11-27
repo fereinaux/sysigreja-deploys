@@ -139,7 +139,7 @@ function GetEvento(id) {
                 $('#evento-global').iCheck((data.Evento.Global ? 'check' : 'uncheck'))
                 $("#evento-taxa").val(data.Evento.ValorTaxa);
                 $("#evento-data").val(moment(data.Evento.DataEvento).format('DD/MM/YYYY'));
-                $("#evento-tipo").val(data.Evento.ConfiguracaoId).trigger("chosen:updated");
+                $("#evento-tipo").val(data.Evento.ConfiguracaoId).trigger("change");
             }
         });
     }

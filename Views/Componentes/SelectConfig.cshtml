@@ -72,7 +72,7 @@
 
             $("#@(Model.Id)").select2(
             {
-                dropdownParent: $("#@(Model.DropdownParent)")
+              dropdownParent: "@(Model.DropdownParent)" ? $("#@(Model.DropdownParent)") : null
             })
 
             handleGlobals()

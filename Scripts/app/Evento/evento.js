@@ -649,11 +649,12 @@ function loadQRCode(id, color1, color2) {
                     qrCode.append(document.getElementById("qrcode"));
                     break;
                 case '2':
-                    buildColors(`/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`, loadedColors).then(colors => {
+                    buildColors(`/Arquivo/GetArquivo/${data.Configuracao.LogoRelatorioId}`, loadedColors).then(colors => {
                         $('.colors').css("display", "flex")
                         $('.color-handler').css("display", "flex")
                         if (colors.length != loadedColors.length) {
                             loadedColors = colors
+                            $('.colors').empty()
                             loadedColors.forEach(color => $('.colors').append(`<div onclick="selecionaCor(this)" style="cursor:pointer;margin:4px;height:40px;width:40px;background-color:${color}"></div>`))
                             $('.colors').append(`<div  style="cursor:pointer;margin:4px;height:40px;width:40px;border: 3px solid #b9abab;background:#222"><label class="label-input-color"><input class="input-color" type="color"></label></div>`)
                             $(document).on('change', 'input[type=color]', function () {
@@ -709,7 +710,7 @@ function loadQRCode(id, color1, color2) {
                                 }, "backgroundOptions": {
                                     "color": "#ffffff",
                                     "gradient": null
-                                }, "image": `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`,
+                                }, "image": `/Arquivo/GetArquivo/${data.Configuracao.LogoRelatorioId}`,
                                 "dotsOptionsHelper": {
                                     "colorType": {
                                         "single": true,

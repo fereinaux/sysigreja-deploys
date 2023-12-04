@@ -302,7 +302,7 @@ namespace SysIgreja.Controllers
 
             return View("Detalhes");
         }
-      
+
         public ActionResult Equipe()
         {
             ViewBag.Configuracao = configuracaoBusiness.GetLogin();
@@ -401,7 +401,7 @@ namespace SysIgreja.Controllers
                     var eventoAtual = eventosBusiness.GetEventoById(EventoId.Value);
                     var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
                     Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
-                    var ev = equipesBusiness.GetQueryEquipantesEvento(eventoAtual.Id).FirstOrDefault(x => x.EquipanteId == equipante.Id);
+                    var ev = equipesBusiness.GetQueryEquipantesEvento(eventoAtual.Id).Include(x => x.Presencas).Include(y => y.Presencas.Select(x => x.Reuniao)).FirstOrDefault(x => x.EquipanteId == equipante.Id);
                     var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? eventoAtual.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")) : eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"));
                     ViewBag.Configuracao = config;
                     ViewBag.MsgConclusao = config.MsgConclusaoEquipe
@@ -414,7 +414,10 @@ namespace SysIgreja.Controllers
                            .Replace("${DescricaoEvento}", eventoAtual.Descricao)
                  .Replace("${ValorEvento}", eventoAtual.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
                  .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
-
+                    if (!ev.Presencas.Any(x => x.Reuniao.DataReuniao.Date == DateTime.Today.Date))
+                    {
+                        ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(x => x.DataReuniao.Date == DateTime.Today.Date);
+                    }
                     ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
 
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
@@ -429,6 +432,7 @@ namespace SysIgreja.Controllers
                     ViewBag.MercadoPagoId = ev.MercadoPagoId;
                     ViewBag.MercadoPagoPreferenceId = ev.MercadoPagoPreferenceId;
                     ViewBag.Title = "Inscrição Concluída";
+                    ViewBag.EquipanteEvento = ev;
                     return View();
                 default:
                     Participante participante = participantesBusiness.GetParticipanteById(Id);

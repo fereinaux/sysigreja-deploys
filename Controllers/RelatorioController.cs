@@ -27,7 +27,7 @@ namespace SysIgreja.Controllers
         public ActionResult Painel()
         {
             IsGeral();
-            ViewBag.Title = "Painel";
+            ViewBag.Title = "Painel de Eventos";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();

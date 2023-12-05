@@ -239,7 +239,7 @@ namespace SysIgreja.Controllers
                 .Select(x => new
                 {
                     Titulo = x.Select(y => y.Configuracao.Titulo).FirstOrDefault(),
-                    Eventos = x.Count(),
+                    Eventos = x.Select(y => y.Id).Distinct().Count(),
                     Participantes = x.Sum(y => y.Participantes.Count(z => z.Status == StatusEnum.Confirmado || z.Status == StatusEnum.Checkin)),
                     Voluntarios = x.Sum(y => y.Equipantes.Count),
                     Total = x.Sum(y => y.Lancamentos.Where(z => z.Tipo == TiposLancamentoEnum.Receber).Select(z => z.Valor).DefaultIfEmpty(0).Sum()),

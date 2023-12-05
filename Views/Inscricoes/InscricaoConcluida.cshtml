@@ -46,6 +46,14 @@
 
         }
 
+
+
+    </script>
+
+    @if (ViewBag.Reuniao != null)
+    {
+        <script>
+
         function SelfPresenca() {
             $.ajax({
                 url: "/Equipe/TogglePresenca/",
@@ -63,5 +71,6 @@
                 }
             });
         }
-    </script>
+        </script>
+    }
 }

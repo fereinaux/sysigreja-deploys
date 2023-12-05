@@ -100,7 +100,7 @@
 
 
     <script>
-        $('#title').html('Painel de Eventos')
+        $('title').text($('#title').text())
 
         $(document).off('ready-ajax').on('ready-ajax', () => {
 
@@ -132,7 +132,7 @@
                 <h4>${evento.Titulo}</h4>
                 <div class="event-info">
                     <i class="fa fa-calendar"></i>
-                    <span>1</span>
+                    <span>${evento.Eventos}</span>
                     <small>Evento(s)</small>
                 </div>
                 <div class="event-info">

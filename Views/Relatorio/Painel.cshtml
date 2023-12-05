@@ -42,6 +42,7 @@
             <h4>@ViewBag.Title</h4>
 
         </div>
+        <div class="igreja"></div>
         <div class="ibox-content event-holder">
            
          
@@ -122,8 +123,32 @@
                     },
                     url: "/Evento/GetPainelEventos",
                     success: function (data) {
-                        console.log(data);
+                        $('.igreja').html(`<div class="event">
+                <img src="/Arquivo/GetArquivo/${Login.LogoId}" />
+                <h4>${Login.Titulo}</h4>
+                <div class="event-info">
+                    <i class="fa fa-calendar"></i>
+                    <span>${data.Eventos.reduce(function (acc, obj) { return acc + obj.Eventos; }, 0) }</span>
+                    <small>Evento(s)</small>
+                </div>
+                <div class="event-info">
+                    <i class="fa fa-suitcase"></i>
+                    <span>${evento.Eventos.reduce(function (acc, obj) { return acc + obj.Participantes; }, 0) }</span>
+                    <small>Participantes</small>
+                </div>
+                <div class="event-info">
+                    <i class="fas fa-broom"></i>
+                    <span>${evento.Eventos.reduce(function (acc, obj) { return acc + obj.Voluntarios; }, 0) }</span>
+                    <small>Voluntários</small>
+                </div>
+                <div class="event-info">
+                    <i class="far fa-money-bill-alt"></i>
+                    <span>${evento.Eventos.reduce(function (acc, obj) { return acc + obj.Total; }, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}</span>
+                    <small>Receita</small>
+                </div>
+            </div>`
 
+                        )
                         $('.event-holder').html('')
 
                         data.Eventos.forEach(evento => {

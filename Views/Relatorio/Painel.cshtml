@@ -133,17 +133,17 @@
                 </div>
                 <div class="event-info">
                     <i class="fa fa-suitcase"></i>
-                    <span>${evento.Eventos.reduce(function (acc, obj) { return acc + obj.Participantes; }, 0) }</span>
+                    <span>${data.Eventos.reduce(function (acc, obj) { return acc + obj.Participantes; }, 0) }</span>
                     <small>Participantes</small>
                 </div>
                 <div class="event-info">
                     <i class="fas fa-broom"></i>
-                    <span>${evento.Eventos.reduce(function (acc, obj) { return acc + obj.Voluntarios; }, 0) }</span>
+                    <span>${data.Eventos.reduce(function (acc, obj) { return acc + obj.Voluntarios; }, 0) }</span>
                     <small>Voluntários</small>
                 </div>
                 <div class="event-info">
                     <i class="far fa-money-bill-alt"></i>
-                    <span>${evento.Eventos.reduce(function (acc, obj) { return acc + obj.Total; }, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}</span>
+                    <span>${data.Eventos.reduce(function (acc, obj) { return acc + obj.Total; }, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })}</span>
                     <small>Receita</small>
                 </div>
             </div>`

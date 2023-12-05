@@ -128,7 +128,7 @@
 
                         data.Eventos.forEach(evento => {
                             $('.event-holder').append(` <div class="event">
-                <img src="/Arquivo/GetArquivo/${evento.LogoId}" />
+                <img src="/Arquivo/GetArquivo/${evento.LogoId || Login.LogoId}" />
                 <h4>${evento.Titulo}</h4>
                 <div class="event-info">
                     <i class="fa fa-calendar"></i>

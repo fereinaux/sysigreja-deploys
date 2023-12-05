@@ -10,6 +10,7 @@ using Core.Models.Configuracao;
 using Core.Models.Eventos;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
@@ -223,6 +224,31 @@ namespace SysIgreja.Controllers
                 });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public ActionResult GetPainelEventos(DateTime dtIni, DateTime dtFim)
+        {
+            var query = eventosBusiness.GetEventos().Include(x => x.Lancamentos).Include(x => x.Participantes).Include(x => x.Equipantes);
+
+            query = query.Where(x => x.DataEvento <= dtFim && x.DataEvento >= dtIni);
+
+            var result = query
+                .GroupBy(x => x.ConfiguracaoId)
+                .Select(x => new
+                {
+                    Titulo = x.Select(y => y.Configuracao.Titulo).FirstOrDefault(),
+                    Eventos = x.Count(),
+                    Participantes = x.Sum(y => y.Participantes.Count(z => z.Status == StatusEnum.Confirmado || z.Status == StatusEnum.Checkin)),
+                    Voluntarios = x.Sum(y => y.Equipantes.Count),
+                    Total = x.Sum(y => y.Lancamentos.Where(z => z.Tipo == TiposLancamentoEnum.Receber).Select(z => z.Valor).DefaultIfEmpty(0).Sum()),
+                    LogoId = x.Select(y => y.Configuracao.LogoRelatorioId).FirstOrDefault()
+
+                })
+                .ToList();
+
+            return Json(new { Eventos = result }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

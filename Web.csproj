@@ -1274,6 +1274,7 @@
     <Content Include="Views\Componentes\SelectEvento.cshtml" />
     <Content Include="Views\Inscricoes\Detalhes.cshtml" />
     <Content Include="Views\Componentes\SelectConfig.cshtml" />
+    <Content Include="Views\Relatorio\Painel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

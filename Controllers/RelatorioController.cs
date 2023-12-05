@@ -24,5 +24,17 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        public ActionResult Painel()
+        {
+            IsGeral();
+            ViewBag.Title = "Painel";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
+
+            return View();
+        }
+
+
+
+
     }
 }

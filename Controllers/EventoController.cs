@@ -234,7 +234,7 @@ namespace SysIgreja.Controllers
 
             query = query.Where(x => x.DataEvento <= dtFim && x.DataEvento >= dtIni);
 
-            var result = query
+            var result = query.Where(x => !string.IsNullOrEmpty(x.Configuracao.Titulo))
                 .GroupBy(x => x.ConfiguracaoId)
                 .Select(x => new
                 {

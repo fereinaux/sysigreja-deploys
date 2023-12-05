@@ -240,7 +240,7 @@ namespace SysIgreja.Controllers
                 {
                     Titulo = x.Select(y => y.Configuracao.Titulo).FirstOrDefault(),
                     Eventos = x.Select(y => y.Id).Distinct().Count(),
-                    Participantes = x.Sum(y => y.Participantes.Count(z => z.Status == StatusEnum.Confirmado || z.Status == StatusEnum.Checkin)),
+                    Participantes = x.Sum(y => y.Participantes.Count(z => z.Status == StatusEnum.Confirmado || z.Status == StatusEnum.Checkin || z.Status == StatusEnum.Inscrito)),
                     Voluntarios = x.Sum(y => y.Equipantes.Count),
                     Total = x.Sum(y => y.Lancamentos.Where(z => z.Tipo == TiposLancamentoEnum.Receber).Select(z => z.Valor).DefaultIfEmpty(0).Sum()),
                     LogoId = x.Select(y => y.Configuracao.LogoRelatorioId != null ? y.Configuracao.LogoRelatorioId : y.Configuracao.LogoId).FirstOrDefault()

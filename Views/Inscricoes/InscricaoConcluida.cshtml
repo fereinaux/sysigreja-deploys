@@ -62,7 +62,7 @@
                 data: JSON.stringify(
                     {
                         EquipanteEventoId: @ViewBag.EquipanteEvento.Id ,
-                        ReuniaoId: "@ViewBag.Reuniao?.Id" || null
+                        ReuniaoId: @ViewBag.Reuniao?.Id
                     }),
                 success: function () {
                     $('#btn-presenca').css('display', 'none')

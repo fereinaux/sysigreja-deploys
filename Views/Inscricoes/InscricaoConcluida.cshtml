@@ -49,7 +49,8 @@
 
 
     </script>
-
+  @if (ViewBag.Reuniao != null)
+            {
 
         <script>
 
@@ -62,7 +63,7 @@
                 data: JSON.stringify(
                     {
                         EquipanteEventoId: @ViewBag.EquipanteEvento.Id ,
-                        ReuniaoId: @ViewBag.Reuniao?.Id
+                        ReuniaoId: @ViewBag.Reuniao.Id
                     }),
                 success: function () {
                     $('#btn-presenca').css('display', 'none')
@@ -71,5 +72,5 @@
             });
         }
         </script>
-    
+            }
 }

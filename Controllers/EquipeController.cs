@@ -126,7 +126,7 @@ namespace SysIgreja.Controllers
         public ActionResult GetPresenca(int EventoId, int EquipeId)
         {
             var evento = eventosBusiness.GetEventos().Where(x => x.Id == EventoId).Include(x => x.Reunioes).Include(x => x.Reunioes.Select(y => y.Presenca)).FirstOrDefault();
-            var colunas = evento.Reunioes.Where(x => x.Status != StatusEnum.Deletado).OrderBy(x => x.DataReuniao).Select(x => new { Data = x.DataReuniao.ToString("dd/MM"), Id = x.Id }).ToList();
+            var colunas = evento.Reunioes.Where(x => x.Tipo == Utils.Enums.TipoPessoaEnum.Equipante && x.Status != StatusEnum.Deletado).OrderBy(x => x.DataReuniao).Select(x => new { Data = x.DataReuniao.ToString("dd/MM"), Id = x.Id }).ToList();
 
             var result = new List<PresencaViewModel>();
 
@@ -138,7 +138,7 @@ namespace SysIgreja.Controllers
                     {
                         Id = x.Id,
                         Nome = x.Equipante.Nome,
-                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => new PresencaModel { Presenca = x.Presencas.Any(z => z.ReuniaoId == y.Id), Justificada = x.Presencas.Any(z => z.ReuniaoId == y.Id && z.Justificada.HasValue && z.Justificada.Value == true) }).ToList()
+                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado && y.Tipo == TipoPessoaEnum.Equipante).Select(y => new PresencaModel { Presenca = x.Presencas.Any(z => z.ReuniaoId == y.Id), Justificada = x.Presencas.Any(z => z.ReuniaoId == y.Id && z.Justificada.HasValue && z.Justificada.Value == true) }).ToList()
                     }).ToList();
             }
             else
@@ -149,7 +149,7 @@ namespace SysIgreja.Controllers
                     {
                         Id = x.Id,
                         Nome = x.Equipante.Nome,
-                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado).Select(y => new PresencaModel { Presenca = x.Presencas.Any(z => z.ReuniaoId == y.Id), Justificada = x.Presencas.Any(z => z.ReuniaoId == y.Id && z.Justificada.HasValue && z.Justificada.Value == true) }).ToList()
+                        Reunioes = x.Evento.Reunioes.OrderBy(y => y.DataReuniao).Where(y => y.Status != StatusEnum.Deletado && y.Tipo == TipoPessoaEnum.Equipante).Select(y => new PresencaModel { Presenca = x.Presencas.Any(z => z.ReuniaoId == y.Id), Justificada = x.Presencas.Any(z => z.ReuniaoId == y.Id && z.Justificada.HasValue && z.Justificada.Value == true) }).ToList()
                     }).ToList();
             }
 

@@ -305,12 +305,15 @@
             $.ajaxSetup({ cache: false });
 
             initControls('body');
+
         });
 
         function initControls(context) {
             $('footer', context).css('color', 'red');
             initShortcuts(context);
             initForms(context);
+            $('.title-user-equipante').text(Usuario.Nome)
+
         }
 
         function initShortcuts(context) {
@@ -594,6 +597,7 @@
             resetGlobalVariables();
 
             if (pushHistory == null || pushHistory == true) {
+
                 // location will be null by custom asp.net error page
                 var location = xhr.getResponseHeader('Location');
                 history.pushState('', '', location);
@@ -627,6 +631,7 @@
                 // init new page
                 initControls($('#spa-content'));
                 initInputs()
+                
                 $.unblockUI();
                 if ($('.select-config').length == 0 && $('.select-evento').length == 0) {
                     $(document).trigger('ready-ajax');

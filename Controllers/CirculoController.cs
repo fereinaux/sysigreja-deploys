@@ -27,12 +27,14 @@ namespace SysIgreja.Controllers
         private readonly ICirculosBusiness circulosBusiness;
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IEventosBusiness eventosBusiness;
+        private readonly IAccountBusiness accountBusiness;
 
         public CirculoController(ICirculosBusiness circulosBusiness, IEquipesBusiness equipesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.circulosBusiness = circulosBusiness;
             this.equipesBusiness = equipesBusiness;
             this.eventosBusiness = eventosBusiness;
+            this.accountBusiness = accountBusiness;
         }
 
         public ActionResult Index()
@@ -195,8 +197,33 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult AddDirigente(int EquipanteId, int CirculoId)
         {
-            circulosBusiness.AddDirigente(EquipanteId, CirculoId);
+            var user = circulosBusiness.AddDirigente(EquipanteId, CirculoId);
+
+            var evento = circulosBusiness.GetCirculoById(CirculoId).Evento;
+
+
+            if (user != null && user.UserName != null)
+            {
+                return Json(new
+                {
+                    User = accountBusiness.GetUsuarios().Where(x => x.Id == user.Id).ToList().Select(x => new
+                    {
+                        Id = x.Id,
+                        Senha = x.Senha,
+                        hasChangedPassword = x.HasChangedPassword,
+                        EquipanteId = x.EquipanteId,
+                        UserName = x.UserName,
+                        Fone = x.Equipante.Fone,
+                        Nome = x.Equipante.Nome,
+                        Evento = new { Titulo = evento.Configuracao.Titulo, Numeracao = evento.Numeracao },
+                        Perfil = "Dirigente"
+
+                    }
+                ).FirstOrDefault()
+                }, JsonRequestBehavior.AllowGet);
+            }
             return new HttpStatusCodeResult(200);
+
         }
 
         [HttpPost]
@@ -220,6 +247,22 @@ namespace SysIgreja.Controllers
         public ActionResult DeleteDirigente(int Id)
         {
             circulosBusiness.DeleteDirigente(Id);
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult SaveGrupo(string grupoId, int circuloId)
+        {
+            circulosBusiness.SaveGrupo(grupoId, circuloId);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+        [HttpPost]
+        public ActionResult TogglePresenca(int ParticipanteId, int ReuniaoId)
+        {
+            circulosBusiness.TogglePresenca(ParticipanteId, ReuniaoId);
+
             return new HttpStatusCodeResult(200);
         }
     }

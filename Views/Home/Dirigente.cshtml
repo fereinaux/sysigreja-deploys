@@ -14,20 +14,21 @@
                 <div>
                     <div class="row">
                         <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
-                            @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Class = "text-center bg-coord text-white", Id = "eventoid", OnChange = "CarregarTela", Roles = "Coordenador" })
+                            @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Class = "text-center bg-coord text-white", Id = "eventoid", OnChange = "CarregarTela", Roles = "Dirigente" })
                         </div>
                     </div>
                 </div>
             </div>
             <div class="widget-head-color-box bg-coord text-white p-lg text-center">
                 <div class="m-b-md">
-                    <h2 class="font-bold no-margins title-user-equipante">                        
+                    <h2 class="font-bold no-margins title-user-equipante">
                     </h2>
                     <small class="equipe"></small>
                 </div>
                 <div>
                     <span>Membros na Equipe: <span class="qtd-membros"></span></span>
                     <button disabled id="btn-excel" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="ExportarExcel()"><i class="fa fa-file-excel"></i> Excel</button>
+                    <button id="btn-print" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="PrintCirculo()"><i class="fa fa-print"></i> Imprimir</button>
                     <button disabled id="btn-grupo" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="CriarGrupo()"><i class="fab fa-whatsapp"></i> Grupo Whatsapp</button>
                 </div>
             </div>
@@ -38,9 +39,7 @@
                             <th scope="col">Sexo</th>
                             <th scope="col">Nome</th>
                             <th scope="col">Idade</th>
-                            <th scope="col" id="col-equipe">Equipe</th>
-                            <th scope="col">Oferta</th>
-                            <th scope="col">Faltas</th>
+                            <th scope="col">Presenças</th>
                             <th scope="col">Contato</th>
                             <th scope="col"></th>
                         </tr>
@@ -51,46 +50,30 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xs-12 col-arquivos">
-            <div class="widget-head-color-box bg-coord text-white p-lg text-center">
-                <div class="m-b-md">
-                    <h2 class="font-bold no-margins">
-                        Arquivos
-                    </h2>
-                    <small class="qtd-arquivos"></small>
-                </div>
-            </div>
-            <div class="widget-text-box">
-                <table class="coord" id="table-arquivos" data-equipe="">
-                    <thead>
-                        <tr>
-                            <th scope="col">Arquivo</th>
-                            <th scope="col"></th>
 
-                        </tr>
-                    </thead>
-                    <tbody class="tbarquivos">
-                    </tbody>
-                </table>
-            </div>
-        </div>
         <div class="col-md-6 col-xs-12">
             <div class="widget-head-color-box bg-coord text-white p-lg text-center">
                 <div class="m-b-md">
                     <h2 class="font-bold no-margins">
                         <i class="fa fa-calendar-check-o" aria-hidden="true"></i> Reuniões
                     </h2>
+                    <button id="btn-reuniao" class="btn btn-outline" style=" margin: 10px auto auto auto;border: 1px solid; display: block" onclick="EditReuniao(0)"><i class="fa fa-calendar"></i> Adicionar Reunião</button>
                 </div>
                 <div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3">
+                        <div class="col-lg-4 col-lg-offset-4 col-xs-6 col-xs-offset-3 hide-zero-reunioes" style="display:none">
+                            <div style="display: flex">
+
                             <select class="form-control text-center bg-coord text-white" id="reuniaoid" onchange="CarregarTabelaPresenca()">
                             </select>
+                            <button id="btn-reuniao" class="btn btn-outline" style=" margin: 0;border: 1px solid; display: block" onclick="EditReuniao($('#reuniaoid').val())"><i class="fas fa-edit"></i></button>
+                            <button id="btn-reuniao" class="btn btn-outline" style=" margin: 0;border: 1px solid; display: block" onclick="DeleteReuniao($('#reuniaoid').val())"><i class="fa fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="widget-text-box">
+            <div class="widget-text-box hide-zero-reunioes" style="display:none">
                 <table class="table coord">
                     <thead>
                         <tr>
@@ -100,6 +83,31 @@
                     </thead>
                     <tbody class="tbpresenca"></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal" id="modal-reunioes" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                <div class="moldura-modal p-h-xs" id="form-reuniao">
+                    <div class="row p-h-xs">
+                        <input type="hidden" id="reuniao-id" />
+                        <div class="col-sm-6 p-w-md text-center">
+                            <h5>Data</h5>
+
+                            <input type="text" class="form-control full-date required" id="reuniao-data" data-field="Data da Reunião" />
+                        </div>                        
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-white pull-right" onclick="PostReuniao()">Salvar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -137,7 +145,7 @@
 }
 
 @section Scripts {
-    <script src="~/Scripts/app/Home/coordenador.js"></script>
+    <script src="~/Scripts/app/Home/dirigente.js"></script>
 }
 
 

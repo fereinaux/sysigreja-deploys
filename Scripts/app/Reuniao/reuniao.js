@@ -131,6 +131,7 @@ function PostReuniao() {
                     Id: $("#reuniao-id").val(),
                     EventoId: SelectedEvent.Id,
                     Titulo: $("#reuniao-titulo").val(),
+                    Tipo: 0,
                     //Pauta: pauta.summernote('code'),
                     DataReuniao: moment($("#reuniao-data").val(), 'DD/MM/YYYY HH:mm', 'pt-br').toJSON()
                 }),

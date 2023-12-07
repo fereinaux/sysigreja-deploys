@@ -56,6 +56,7 @@ namespace SysIgreja.Controllers
         public string TipoCirculo { get; set; }
         public string TipoQuarto { get; set; }
         public bool Coordenador { get; set; }
+        public bool Dirigente { get; set; }
         public int Valor { get; set; }
         public int ValorTaxa { get; set; }
         public IEnumerable<MeioPagamentoModel> MeioPagamentos { get; set; }
@@ -63,7 +64,7 @@ namespace SysIgreja.Controllers
         public IEnumerable<CentroCustoModel> CentroCustos { get; set; }
         public IEnumerable<PostMessageModel> Mensagens { get; set; }
 
-        
+
     }
 
     public class CrachaCasalModel
@@ -98,13 +99,13 @@ namespace SysIgreja.Controllers
                 cfg.CreateMap<MeioPagamento, MeioPagamentoModel>();
                 cfg.CreateMap<CentroCusto, CentroCustoModel>().ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => x.Tipo.GetDescription()));
                 cfg.CreateMap<Mensagem, PostMessageModel>();
-                cfg.CreateMap<Etiqueta, EtiquetaModel>();                
+                cfg.CreateMap<Etiqueta, EtiquetaModel>();
                 cfg.CreateMap<EquipanteEvento, PessoaSelectModel>()
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)));
-               cfg.CreateMap<Participante, PessoaSelectModel>()
-                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
-                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)));
+                cfg.CreateMap<Participante, PessoaSelectModel>()
+                      .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
+                      .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)));
                 cfg.CreateMap<Equipante, CrachaModel>()
                     .ForMember(dest => dest.Foto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo) : ""))
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipes.Any() ? x.Equipes.LastOrDefault().Equipe.Nome : null)));
@@ -179,6 +180,18 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                     .ForMember(dest => dest.HasFoto, opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto)))
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()));
+                cfg.CreateMap<CirculoParticipante, EquipanteListModel>()
+                   .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.Participante.DataNascimento.HasValue ? x.Participante.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
+                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Participante.Nome)))
+                 .ForMember(dest => dest.Fone, opt => opt.MapFrom(x => x.Participante.Fone))
+                 .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.ParticipanteId))
+                 .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Participante.Apelido)))
+                 .ForMember(dest => dest.Etiquetas, opt => opt.MapFrom(x => x.Participante.ParticipantesEtiquetas.Select(y => y.Etiqueta)))
+                 .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.Participante.DataNascimento)))
+                 .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Participante.Sexo.GetDescription()))
+                 .ForMember(dest => dest.HasFoto, opt => opt.MapFrom(x => x.Participante.Arquivos.Any(y => y.IsFoto)))
+                 .ForMember(dest => dest.Faltas, opt => opt.MapFrom(x => x.Participante.Presencas.Count(y => y.Reuniao.Status != Utils.Enums.StatusEnum.Deletado)))
+                 .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Participante.Arquivos.Count()));
                 cfg.CreateMap<ApplicationUser, EquipanteUser>()
                     .ForMember(dest => dest.DataNascimento, opt => opt.MapFrom(x => x.Equipante.DataNascimento.HasValue ? x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy") : ""))
                   .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
@@ -232,7 +245,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Parente, opt => opt.MapFrom(x => x.Equipante.Parente))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))
                     .ForMember(dest => dest.Checkin, opt => opt.MapFrom(x => x.Checkin))
-                                 .ForMember(dest => dest.Presenca, opt => opt.MapFrom(x => x.Evento.Reunioes.Where(y => y.DataReuniao.Date < System.DateTime.Today && y.Status != Utils.Enums.StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id))))
+                                 .ForMember(dest => dest.Presenca, opt => opt.MapFrom(x => x.Evento.Reunioes.Where(y => y.Tipo == Utils.Enums.TipoPessoaEnum.Equipante && y.DataReuniao.Date < System.DateTime.Today && y.Status != Utils.Enums.StatusEnum.Deletado).Select(y => x.Presencas.Any(z => z.ReuniaoId == y.Id))))
                        .ForMember(dest => dest.StatusMontagem, opt => opt.MapFrom(x => x.StatusMontagem.GetDescription()));
                 cfg.CreateMap<EquipanteEvento, PostEquipanteModel>()
                     .ForMember(dest => dest.Id, opt => opt.MapFrom(x => x.Equipante.Id))

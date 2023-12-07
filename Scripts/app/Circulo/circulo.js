@@ -142,7 +142,7 @@ function CarregarTabelaCirculo() {
 
             }
 
-  
+
         },
         ajax: {
             url: '/Circulo/GetCirculos',
@@ -528,7 +528,7 @@ function GetParticipantesSemCirculo() {
 var setView = false
 
 function GetCirculosComParticipantes(column, dir, search) {
-    $("#circulos").empty();    
+    $("#circulos").empty();
     $.ajax({
         url: '/Circulo/GetCirculos',
         datatype: "json",
@@ -793,23 +793,53 @@ function PrintAll() {
 
 
 function AddDirigente() {
+
     if ($("#circulo-dirigentes").val() != "Pesquisar") {
-        $.ajax({
-            url: "/Circulo/AddDirigente/",
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                {
-                    EquipanteId: $("#circulo-dirigentes").val(),
-                    CirculoId: circuloId,
-                }),
-            success: function () {
-                SuccessMesageOperation();
-                $("#circulo-dirigentes").val("Pesquisar").trigger("chosen:updated");
-                CarregarTabelaDirigentes(circuloId)
+        CustomSwal({
+            title: "Você tem certeza?",
+            icon: "logo",
+            text: `Um usuário com acesso "Dirigente" para ${$("#circulo-dirigentes option:selected").text()} será criado`,
+            className: "button-center",
+            buttons: {
+                cancelar: {
+                    text: "Cancelar",
+                    value: false,
+                    className: "w-150 btn-cancelar"
+                },
+                confirmar: {
+                    text: "Confirmar",
+                    value: true,
+                    className: "w-150 btn-confirmar"
+                },
+
             }
-        });
+        }).then(result => {
+            var windowReference = window.open('_blank');
+
+            $.ajax({
+                url: "/Circulo/AddDirigente/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        EquipanteId: $("#circulo-dirigentes").val(),
+                        CirculoId: circuloId,
+                    }),
+                success: function (data) {
+                    SuccessMesageOperation();
+                    $("#circulo-dirigentes").val("Pesquisar").trigger("chosen:updated");
+                    CarregarTabelaDirigentes(circuloId)
+                    if (data) {
+
+                        windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
+                    }
+                },
+                error: function (error) {
+                    ErrorMessage(error.statusText);
+                }
+            });
+        })
     }
 }
 
@@ -913,7 +943,7 @@ function GetDirigentes() {
 }
 
 function loadCirculo() {
-    
+
     $('title').text(`${SelectedEvent.Titulo} | ${SelectedEvent.EquipeCirculo}`)
     $('.title-circulo').text(SelectedEvent.EquipeCirculo)
     if (SelectedEvent.TipoCirculo == 'Endereco') {

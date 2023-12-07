@@ -3,6 +3,7 @@ using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
+using Core.Business.Circulos;
 using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Models;
@@ -30,12 +31,14 @@ namespace SysIgreja.Controllers
     {
         private readonly IEventosBusiness eventosBusiness;
         private readonly IConfiguracaoBusiness configuracaoBusiness;
+        private readonly ICirculosBusiness circulosBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
         private readonly IMapper mapper;
 
-        public EventoController(IEventosBusiness eventosBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EventoController(IEventosBusiness eventosBusiness, ICirculosBusiness circulosBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.eventosBusiness = eventosBusiness;
+            this.circulosBusiness = circulosBusiness;
             this.arquivosBusiness = arquivosBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
             mapper = new MapperRealidade().mapper;
@@ -98,59 +101,64 @@ namespace SysIgreja.Controllers
 
             });
 
-            List<EventoClaimModel> eventosReturn = eventosBusiness
+            var listEventosReturn = eventosBusiness
                 .GetEventos()
                 .OrderByDescending(x => x.DataEvento)
-                .Where(x => eventosId.Contains(x.Id) || x.ConfiguracaoId.HasValue && configId.Contains(x.ConfiguracaoId.Value)).ToList().Select(x => new EventoClaimModel
+                .Where(x => eventosId.Contains(x.Id) || x.ConfiguracaoId.HasValue && configId.Contains(x.ConfiguracaoId.Value)).ToList();
+
+            var circulos = circulosBusiness.GetCirculos().ToList();
+
+            List<EventoClaimModel> eventosReturn = listEventosReturn.Select(x => new EventoClaimModel
+            {
+                Role = configId.Contains(x.ConfiguracaoId.Value) ? "Admin" : eventoPermissao.FirstOrDefault(y => y.EventoId == x.Id).Role,
+                Id = x.Id,
+                ConfiguracaoId = x.ConfiguracaoId,
+                Capacidade = x.Capacidade,
+                DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
+                Numeracao = x.Numeracao,
+                AccessTokenMercadoPago = x.Configuracao.AccessTokenMercadoPago,
+                BackgroundId = x.Configuracao.BackgroundId,
+                Status = x.Status.GetDescription(),
+                StatusEquipe = x.StatusEquipe.GetDescription(),
+                TipoQuarto = x.Configuracao.TipoQuarto?.GetDescription(),
+                Valor = x.Valor,
+                ValorTaxa = x.ValorTaxa,
+                Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador),
+                Dirigente = user.Equipante.Equipes.Any(y => y.EventoId == x.Id) && circulos.Any(y => y.Dirigentes.Any(z => z.EquipanteId == user.Equipante.Equipes.FirstOrDefault(a => a.EventoId == x.Id).Id)),
+                CorBotao = x.Configuracao.CorBotao,
+                EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,
+                Identificador = x.Configuracao.Identificador,
+                LogoId = x.Configuracao.LogoId,
+                LogoRelatorioId = x.Configuracao.LogoRelatorioId,
+                PublicTokenMercadoPago = x.Configuracao.PublicTokenMercadoPago,
+                Titulo = x.Configuracao.Titulo,
+                TipoEvento = x.Configuracao.TipoEvento?.GetDescription(),
+                TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
+                Mensagens = x.Configuracao.Mensagens.Select(y => new Core.Models.Mensagem.PostMessageModel
                 {
-                    Role = configId.Contains(x.ConfiguracaoId.Value) ? "Admin" : eventoPermissao.FirstOrDefault(y => y.EventoId == x.Id).Role,
-                    Id = x.Id,
-                    ConfiguracaoId = x.ConfiguracaoId,
-                    Capacidade = x.Capacidade,
-                    DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
-                    Numeracao = x.Numeracao,
-                    AccessTokenMercadoPago = x.Configuracao.AccessTokenMercadoPago,
-                    BackgroundId = x.Configuracao.BackgroundId,
-                    Status = x.Status.GetDescription(),
-                    StatusEquipe = x.StatusEquipe.GetDescription(),
-                    TipoQuarto = x.Configuracao.TipoQuarto?.GetDescription(),
-                    Valor = x.Valor,
-                    ValorTaxa = x.ValorTaxa,
-                    Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador),
-                    CorBotao = x.Configuracao.CorBotao,
-                    EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,
-                    Identificador = x.Configuracao.Identificador,
-                    LogoId = x.Configuracao.LogoId,
-                    LogoRelatorioId = x.Configuracao.LogoRelatorioId,
-                    PublicTokenMercadoPago = x.Configuracao.PublicTokenMercadoPago,
-                    Titulo = x.Configuracao.Titulo,
-                    TipoEvento = x.Configuracao.TipoEvento?.GetDescription(),
-                    TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
-                    Mensagens = x.Configuracao.Mensagens.Select(y => new Core.Models.Mensagem.PostMessageModel
-                    {
-                        Id = y.Id,
-                        Conteudo = y.Conteudo,
-                        Titulo = y.Titulo,
-                        Tipos = y.Tipos.Split(',')
-                    }),
-                    MeioPagamentos = x.Configuracao.MeioPagamentos.Select(y => new MeioPagamentoModel
-                    {
-                        Descricao = y.Descricao,
-                        Id = y.Id
-                    }),
-                    CentroCustos = x.Configuracao.CentroCustos.Select(y => new CentroCustoModel
-                    {
-                        Descricao = y.Descricao,
-                        Tipo = y.Tipo.GetDescription(),
-                        Id = y.Id
-                    }),
-                    Etiquetas = x.Configuracao.Etiquetas.Select(y => new EtiquetaModel
-                    {
-                        Cor = y.Cor,
-                        Id = y.Id,
-                        Nome = y.Nome
-                    }),
-                }).ToList();
+                    Id = y.Id,
+                    Conteudo = y.Conteudo,
+                    Titulo = y.Titulo,
+                    Tipos = y.Tipos.Split(',')
+                }),
+                MeioPagamentos = x.Configuracao.MeioPagamentos.Select(y => new MeioPagamentoModel
+                {
+                    Descricao = y.Descricao,
+                    Id = y.Id
+                }),
+                CentroCustos = x.Configuracao.CentroCustos.Select(y => new CentroCustoModel
+                {
+                    Descricao = y.Descricao,
+                    Tipo = y.Tipo.GetDescription(),
+                    Id = y.Id
+                }),
+                Etiquetas = x.Configuracao.Etiquetas.Select(y => new EtiquetaModel
+                {
+                    Cor = y.Cor,
+                    Id = y.Id,
+                    Nome = y.Nome
+                }),
+            }).ToList();
 
 
 

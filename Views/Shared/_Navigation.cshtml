@@ -12,12 +12,13 @@
             </li>
             <li class="slicknav_menu @Html.IsSelected(action: "Index", controller: "Home")"><a href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i><span class="nav-label">Home</span></a></li>
             <li class="@Html.IsSelected(action: "Checkin", controller: "Participante")"><a href="@Url.Action("Checkin", "Participante")"><i class="fa fa-suitcase"></i><span class="nav-label">Check-in</span></a></li>
-            <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Circulo","Participante","Quarto","Padrinho","Carona"}, actions: new List<string> { "Index","Participantes","Casais" })">
+            <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Circulo","Participante","Quarto","Padrinho","Carona", "Home"}, actions: new List<string> { "Index","Participantes","Casais","Dirigente" })">
                 <a><i class="fa fa-users"></i> <span class="nav-label">Participantes</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Circulo","Participante","Quarto","Padrinho","Carona"}, actions: new List<string> { "Index","Participantes","Casais" }, cssClass: "in")">
+                <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Circulo","Participante","Quarto","Padrinho","Carona","Home"}, actions: new List<string> { "Index","Participantes","Casais", "Dirigente" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller:"Participante") @Html.IsSelected(action: "Casais", controller:"Participante")"><a id="participante-menu" onclick="handleParticipantes()">Cadastro</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Padrinho")"><a href="@Url.Action("Index", "Padrinho")">Padrinhos</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Circulo")"><a href="@Url.Action("Index", "Circulo")" class="title-circulo">Círculos</a></li>
+                    <li class="@Html.IsSelected(action: "Dirigente", controller:"Home")"><a href="@Url.Action("Dirigente", "Home")">Dirigente</a></li>
                     <li class="@Html.IsSelected(action: "Participantes", controller:"Quarto")"><a href="@Url.Action("Participantes", "Quarto")">Quartos</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Carona")"><a href="@Url.Action("Index", "Carona")">Caronas</a></li>
 

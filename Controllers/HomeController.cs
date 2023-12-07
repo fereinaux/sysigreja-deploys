@@ -3,6 +3,7 @@ using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
+using Core.Business.Circulos;
 using Core.Business.Configuracao;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
@@ -11,6 +12,7 @@ using Core.Business.Participantes;
 using Core.Business.Reunioes;
 using Core.Models;
 using Core.Models.Equipantes;
+using Core.Models.Participantes;
 using Data.Entities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -38,6 +40,7 @@ namespace SysIgreja.Controllers
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IParticipantesBusiness participantesBusiness;
         private readonly ILancamentoBusiness lancamentoBusiness;
+        private readonly ICirculosBusiness circulosBusiness;
         private readonly IImageService imageService;
         private readonly IReunioesBusiness reunioesBusiness;
         private readonly IEventosBusiness eventosBusiness;
@@ -45,9 +48,10 @@ namespace SysIgreja.Controllers
         private readonly IAccountBusiness accountBusiness;
         private readonly IMapper mapper;
 
-        public HomeController(IEquipesBusiness equipesBusiness, IImageService imageService, IParticipantesBusiness participantesBusiness, IArquivosBusiness arquivosBusiness, ILancamentoBusiness lancamentoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public HomeController(IEquipesBusiness equipesBusiness, IImageService imageService, ICirculosBusiness circulosBusiness, IParticipantesBusiness participantesBusiness, IArquivosBusiness arquivosBusiness, ILancamentoBusiness lancamentoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.lancamentoBusiness = lancamentoBusiness;
+            this.circulosBusiness = circulosBusiness;
             this.imageService = imageService;
             this.participantesBusiness = participantesBusiness;
             this.equipesBusiness = equipesBusiness;
@@ -312,40 +316,74 @@ namespace SysIgreja.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult DirigenteGet(int eventoId)
+        {
+
+            var user = GetApplicationUser();
+            var equipanteEvento = equipesBusiness.GetEquipanteEventoByUser(eventoId, user.Id);
+
+            var evento = eventosBusiness.GetEventoById(eventoId);
+
+            var circulo = circulosBusiness.GetCirculos()
+                .Include(x => x.Participantes.Select(y => y.Participante.Presencas))
+                .Include(x => x.Participantes.Select(y => y.Participante.Presencas.Select(z => z.Reuniao)))
+                .FirstOrDefault(x => x.Dirigentes.Any(y => y.EquipanteId == equipanteEvento.Id));
+            var participantes = circulo.Participantes.OrderBy(x => x.Participante.Nome);
+            var membros = mapper.Map<IEnumerable<EquipanteListModel>>(participantes);
+
+
+            var result = new
+            {
+                Circulo = circulo.Titulo,
+                CirculoId = circulo.Id,
+                QtdMembros = circulo.Participantes.Count(),
+                Grupo = circulo.GrupoWhatsapp,
+                Reunioes = reunioesBusiness.GetReunioesParticipantes(circulo.Id)
+                .ToList()
+                .OrderBy(x => TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays < 0 ? TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays * -1 : TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).Subtract(x.DataReuniao).TotalDays)
+                .Select(x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }),
+                Membros = membros
+            };
+
+
+            var jsonRes = Json(new { result }, JsonRequestBehavior.AllowGet);
+            jsonRes.MaxJsonLength = Int32.MaxValue;
+            return jsonRes;
+        }
+
+
         public ActionResult Coordenador()
         {
             ViewBag.Title = "Coordenador";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-            var user = GetApplicationUser();
-            var equipanteEvento = equipesBusiness.GetCoordByUser(user.Id).OrderByDescending(x => x.Id);
-            if (equipanteEvento.Count() > 0)
-            {
 
-                ViewBag.Eventos = equipanteEvento.Select(x => x.Evento).Select(x => new EventoViewModel
-                {
-                    Id = x.Id,
-                    DataEvento = x.DataEvento,
-                    Descricao = x.Descricao,
-                    Conteudo = x.Conteudo,
-                    Numeracao = x.Numeracao,
-                    IsPendente = x.IsPendente,
-                    IsCasal = x.Configuracao.TipoEvento == Utils.Enums.TipoEventoEnum.Casais,
-                    TipoEvento = x.Configuracao?.Titulo,
-                    Status = x.Status.GetDescription()
-                }); ;
-                ViewBag.Equipante = equipanteEvento.Select(x => x.Equipante).FirstOrDefault();
-                return View();
-            }
-            else
-            {
-                return NaoAutorizado();
-            }
+            return View();
+
+        }
+
+
+        public ActionResult Dirigente()
+        {
+            ViewBag.Title = "Dirigente";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
+
+            return View();
+
         }
 
         [HttpGet]
         public ActionResult GetPresenca(int ReuniaoId)
         {
             var presenca = equipesBusiness.GetPresenca(ReuniaoId).Select(x => x.EquipanteEventoId).ToList();
+
+            return Json(new { presenca }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetPresencaParticipantes(int ReuniaoId)
+        {
+            var presenca = equipesBusiness.GetPresenca(ReuniaoId).Select(x => x.ParticipanteId).ToList();
 
             return Json(new { presenca }, JsonRequestBehavior.AllowGet);
         }
@@ -379,9 +417,17 @@ namespace SysIgreja.Controllers
             {
                 return RedirectToAction("Montagem", "Equipante");
             }
-            else
+            else if (permissoes.Any(x => new string[] { "Coordenador" }.Contains(x.Role) || x.Eventos.Any(y => new string[] { "Coordenador" }.Contains(y.Role))))
             {
                 return RedirectToAction("Coordenador", "Home");
+            }
+            else if (permissoes.Any(x => new string[] { "Dirigente" }.Contains(x.Role) || x.Eventos.Any(y => new string[] { "Dirigente" }.Contains(y.Role))))
+            {
+                return RedirectToAction("Dirigente", "Home");
+            }
+            else
+            {
+                return new HttpStatusCodeResult(200);
             }
 
         }

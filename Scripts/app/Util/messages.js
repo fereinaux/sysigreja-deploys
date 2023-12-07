@@ -100,7 +100,7 @@ function getDestino(user) {
     }
 }
 
-async function createGroup(name, participants, eventoId, equipeId) {
+async function createGroupEquipe(name, participants, eventoId, equipeId) {
     const status_response = await handleWhatsappConnected()
 
     const result = await $.ajax({
@@ -124,6 +124,35 @@ async function createGroup(name, participants, eventoId, equipeId) {
                 grupoId: result.response.groupInfo[0].id,
                 eventoId,
                 equipeId
+            }),
+    })
+
+    SuccessMesageOperation()
+}
+
+async function createGroupCirculo(name, participants, circuloId) {
+    const status_response = await handleWhatsappConnected()
+
+    const result = await $.ajax({
+        url: `https://api.iecbeventos.com.br/api/${status_response.token}/create-group`,
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                name, participants
+            }),
+    })
+
+    await $.ajax({
+        url: `/Circulo/SaveGrupo/`,
+        datatype: "json",
+        type: "POST",
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+            {
+                grupoId: result.response.groupInfo[0].id,
+                circuloId                
             }),
     })
 

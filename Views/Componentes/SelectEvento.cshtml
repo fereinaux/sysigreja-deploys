@@ -79,6 +79,8 @@
         roles = '@Model.Roles'.replaceAll(' ', '').split(',')
         if (roles.length == 1 && roles[0] == "Coordenador") {
             eventos = claims.Eventos.filter(evento => evento.Coordenador == true)
+        } else if (roles.length == 1 && roles[0] == "Dirigente") {
+            eventos = claims.Eventos.filter(evento => evento.Dirigente == true)
         } else {
             eventos = claims.Eventos.filter(evento => roles.includes(evento.Role))
         }

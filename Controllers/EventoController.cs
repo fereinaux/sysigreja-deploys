@@ -106,7 +106,11 @@ namespace SysIgreja.Controllers
                 .OrderByDescending(x => x.DataEvento)
                 .Where(x => eventosId.Contains(x.Id) || x.ConfiguracaoId.HasValue && configId.Contains(x.ConfiguracaoId.Value)).ToList();
 
-            var circulos = circulosBusiness.GetCirculos().ToList();
+            var circulos = circulosBusiness.GetCirculos().Select(x => new
+            {
+                Dirigentes = x.Dirigentes.Select(y => y.EquipanteId),
+                EventoId = x.EventoId
+            }).ToList();
 
             List<EventoClaimModel> eventosReturn = listEventosReturn.Select(x => new EventoClaimModel
             {
@@ -124,7 +128,7 @@ namespace SysIgreja.Controllers
                 Valor = x.Valor,
                 ValorTaxa = x.ValorTaxa,
                 Coordenador = x.Equipantes.Any(y => y.EquipanteId == user.EquipanteId && y.EventoId == x.Id && y.Tipo == TiposEquipeEnum.Coordenador),
-                Dirigente = user.Equipante.Equipes.Any(y => y.EventoId == x.Id) && circulos.Any(y => y.Dirigentes.Any(z => z.EquipanteId == user.Equipante.Equipes.FirstOrDefault(a => a.EventoId == x.Id).Id)),
+                Dirigente = user.Equipante.Equipes.Any(y => y.EventoId == x.Id) && circulos.Any(y => y.Dirigentes.Any(z => z == user.Equipante.Equipes.FirstOrDefault(a => a.EventoId == x.Id).Id)),
                 CorBotao = x.Configuracao.CorBotao,
                 EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,
                 Identificador = x.Configuracao.Identificador,

@@ -241,6 +241,7 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.HasConvenio, opt => opt.MapFrom(x => x.Equipante.HasConvenio))
                     .ForMember(dest => dest.Convenio, opt => opt.MapFrom(x => x.Equipante.Convenio))
                     .ForMember(dest => dest.Hospitais, opt => opt.MapFrom(x => x.Equipante.Hospitais))
+                      .ForMember(dest => dest.Quarto, opt => opt.MapFrom(x => x.Equipante.Quartos.Any(y => y.Quarto.EventoId == x.EventoId) ? x.Equipante.Quartos.Where(y => y.Quarto.EventoId == x.EventoId).Select(y => y.Quarto).First().Titulo : ""))
                     .ForMember(dest => dest.HasParente, opt => opt.MapFrom(x => x.Equipante.HasParente))
                     .ForMember(dest => dest.Parente, opt => opt.MapFrom(x => x.Equipante.Parente))
                     .ForMember(dest => dest.Congregacao, opt => opt.MapFrom(x => x.Equipante.Congregacao))

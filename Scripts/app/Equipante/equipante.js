@@ -22,6 +22,7 @@ function loadSearch() {
 function checkEvento() {
     newEventoId = SelectedEvent.Id
     if (SelectedEvent.Id != 999) {
+        var filtros = getFiltros()
         $('.hide-tipoevento').removeClass('d-none')
 
         $.ajax({
@@ -41,6 +42,24 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
                 $('#equipante-status').select2();
             }
         });
+
+
+
+        $.ajax({
+            url: '/Quarto/GetQuartos',
+            data: { eventoId: SelectedEvent.Id, tipo: 0 },
+            datatype: "json",
+            type: "POST",
+            success: (result) => {
+                eventoId = SelectedEvent.Id
+                $("#equipante-quartoid").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+`)
+
+                $("#equipante-quartoid").val(filtros.QuartoId)
+                $("#equipante-quartoid").select2()
+            }
+        })
     } else {
         $('.hide-tipoevento').addClass('d-none')
     }
@@ -147,6 +166,9 @@ function CarregarTabelaEquipante(callbackFunction) {
             },
             {
                 data: "Congregacao", name: "Congregacao", title: "Congregação", autoWidth: true, visible: false
+            },
+            {
+                data: "Quarto", name: "Quarto", title: "Quarto", autoWidth: true, visible: false
             },
             {
                 data: "Etiquetas", title: "Etiquetas", name: "Etiquetas", visible: false, className: 'noVis noSearch export', render: function (data, type, row) {
@@ -1209,6 +1231,7 @@ function getFiltros(Foto) {
         Etiquetas: $("#equipante-marcadores").val(),
         NaoEtiquetas: $("#equipante-nao-marcadores").val(),
         Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null,
+        QuartoId: $("#equipante-quartoid").val(),
         Foto: Foto
     }
 }

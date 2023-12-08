@@ -631,6 +631,12 @@ namespace SysIgreja.Controllers
                     filteredResultsCount = result.Count();
                 }
 
+                if (model.QuartoId != null)
+                {
+                    result = result.Where(x => (x.Equipante.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))));
+                    filteredResultsCount = result.Count();
+                }
+
 
                 if (model.Equipe != null)
                 {
@@ -813,6 +819,19 @@ namespace SysIgreja.Controllers
                         else
                         {
                             result = result.OrderByDescending(x => x.Equipante.Cidade);
+                        }
+
+                    }
+                    else if (model.columns[model.order[0].column].name == "Quarto")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => x.Equipante.Quartos.Any(y => y.Quarto.EventoId == x.EventoId) ? x.Equipante.Quartos.FirstOrDefault(y => y.Quarto.EventoId == x.EventoId).Quarto.Titulo : "");
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => x.Equipante.Quartos.Any(y => y.Quarto.EventoId == x.EventoId) ? x.Equipante.Quartos.FirstOrDefault(y => y.Quarto.EventoId == x.EventoId).Quarto.Titulo : "");
                         }
 
                     }

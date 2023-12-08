@@ -1,8 +1,10 @@
-﻿using Core.Business.Account;
+﻿using AutoMapper;
+using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
 using Core.Business.Eventos;
 using Core.Models;
+using Core.Models.Equipantes;
 using Data.Context;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -34,6 +36,7 @@ namespace SysIgreja.Controllers
         private readonly IEventosBusiness eventosBusiness;
         private readonly IEquipantesBusiness equipantesBusiness;
         private readonly IConfiguracaoBusiness configuracaoBusiness;
+        private readonly IMapper mapper;
 
         public AccountController(IAccountBusiness accountBusiness, IEquipantesBusiness equipantesBusiness, IImageService imageService, IEmailSender emailSender, IEventosBusiness eventosBusiness, IConfiguracaoBusiness configuracaoBusiness)
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
@@ -44,6 +47,7 @@ namespace SysIgreja.Controllers
             this.eventosBusiness = eventosBusiness;
             this.emailSender = emailSender;
             this.imageService = imageService;
+            mapper = new MapperRealidade().mapper;
         }
 
         public AccountController(UserManager<ApplicationUser> userManager)
@@ -177,6 +181,18 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(404);
         }
 
+        [HttpGet]
+        public ActionResult GetUsuarioLogado()
+        {
+            var userId = User.Identity.GetUserId();
+            var result = accountBusiness.GetUsuarios().FirstOrDefault(x => x.Id == userId);
+            var user = mapper.Map<EquipanteUser>(result);
+            user.IsGeral = User.IsInRole("Geral");
+
+
+            return Json(new { Usuario = user }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult ChangePass(string senha)
         {
@@ -218,7 +234,7 @@ namespace SysIgreja.Controllers
             var evento = eventosBusiness.GetEventoById(EventoId);
             var config = configuracaoBusiness.GetConfiguracaoByEventoId(EventoId);
 
-                var equipante = equipantesBusiness.GetEquipanteById(EquipanteId);
+            var equipante = equipantesBusiness.GetEquipanteById(EquipanteId);
             List<Permissoes> permissoes = new List<Permissoes>();
             if (user == null)
             {
@@ -378,7 +394,7 @@ namespace SysIgreja.Controllers
             List<Permissoes> permissoesNaoAdm = new List<Permissoes>();
             if (user != null)
             {
-                permissoes = (user.Claims.Any(y => y.ClaimType == "Permissões") ? JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue) : permissoes) ;
+                permissoes = (user.Claims.Any(y => y.ClaimType == "Permissões") ? JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue) : permissoes);
                 permissoesNaoAdm = permissoes.Where(x => x.Role != "Admin" && !x.Eventos.Any(y => y.Role == "Admin")).ToList();
                 permissoes = permissoes.Where(x => x.Role == "Admin" || x.Eventos.Any(y => y.Role == "Admin")).ToList();
                 var claims = UserManager.GetClaims(user.Id);

@@ -1,5 +1,6 @@
 ﻿using Arquitetura.Controller;
 using Arquitetura.ViewModels;
+using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.CentroCusto;
@@ -12,6 +13,7 @@ using Core.Business.Participantes;
 using Core.Models.Lancamento;
 using SysIgreja.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
@@ -20,6 +22,7 @@ using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
+using System.Linq.Dynamic;
 
 namespace SysIgreja.Controllers
 {
@@ -33,6 +36,7 @@ namespace SysIgreja.Controllers
         private readonly ICentroCustoBusiness centroCustoBusiness;
         private readonly IMeioPagamentoBusiness meioPagamentoBusiness;
         private readonly IDatatableService datatableService;
+        private readonly IMapper mapper;
 
         public LancamentoController(ILancamentoBusiness lancamentoBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, ICentroCustoBusiness centroCustoBusiness, IParticipantesBusiness participantesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
@@ -43,6 +47,7 @@ namespace SysIgreja.Controllers
             this.lancamentoBusiness = lancamentoBusiness;
             this.meioPagamentoBusiness = meioPagamentoBusiness;
             this.datatableService = datatableService;
+            mapper = new MapperRealidade().mapper;
         }
 
         public ActionResult Index()
@@ -66,6 +71,134 @@ namespace SysIgreja.Controllers
                 .Select(x => MapLancamentoViewModel(x));
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public ActionResult GetPagamentosDatatable(FiltrosLancamentoModel model)
+        {
+
+            var extract = Request.QueryString["extract"];
+
+            var query = lancamentoBusiness.GetLancamentos();
+
+            query = query.Where(x => x.Tipo == model.Tipo);
+            var totalResultsCount = query.Count();
+
+            if (model.EventoId.HasValue)
+            {
+                query = query.Where(x => x.EventoId == model.EventoId);
+            }
+
+            if (model.MeioPagamentoId.HasValue)
+            {
+                query = query.Where(x => x.MeioPagamentoId == model.MeioPagamentoId);
+            }
+
+            if (model.CentroCustoId.HasValue)
+            {
+                query = query.Where(x => x.CentroCustoId == model.CentroCustoId);
+            }
+
+            if (model.ConfiguracaoId.HasValue)
+            {
+                query = query.Where(x => model.ConfiguracaoId.Value == x.Evento.ConfiguracaoId.Value);
+            }
+
+            if (model.DataIni.HasValue)
+            {
+                query = query.Where(x => x.DataCadastro > model.DataIni.Value);
+            }
+
+            if (model.DataFim.HasValue)
+            {
+                query = query.Where(x => x.DataCadastro < model.DataFim.Value);
+            }
+
+            if (model.search != null && model.search.value != null)
+            {
+                query = query.Where(x => (x.Descricao.Contains(model.search.value)));
+            }
+
+            var filteredResultsCount = query.Count();
+
+            if (extract == "excel")
+            {
+                Guid g = Guid.NewGuid();
+                var data = mapper.Map<IEnumerable<LancamentosExcelViewModel>>(query);
+
+                Session[g.ToString()] = datatableService.GenerateExcel(data.ToList());
+
+                return Content(g.ToString());
+            }
+
+            if (model.columns[model.order[0].column].name == "Evento")
+            {
+
+                if (model.order[0].dir == "asc")
+                {
+
+                    query = query.OrderBy(x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}");
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}");
+                }
+            }
+            else if (model.columns[model.order[0].column].name == "CentroCusto")
+            {
+
+                if (model.order[0].dir == "asc")
+                {
+
+                    query = query.OrderBy(x => x.CentroCusto.Descricao);
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.CentroCusto.Descricao);
+                }
+            }
+            else if (model.columns[model.order[0].column].name == "FormaPagamento")
+            {
+
+                if (model.order[0].dir == "asc")
+                {
+
+                    query = query.OrderBy(x => x.MeioPagamento.Descricao);
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.MeioPagamento.Descricao);
+                }
+            }
+            else if (model.columns[model.order[0].column].name == "DataLancamento")
+            {
+
+                if (model.order[0].dir == "asc")
+                {
+
+                    query = query.OrderBy(x => x.DataCadastro);
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.DataCadastro);
+                }
+            }
+            else
+            {
+                query = query.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+            }
+
+            query = query.Skip(model.Start)
+                .Take(model.Length);
+
+
+            return Json(new
+            {
+                data = mapper.Map<IEnumerable<LancamentosDatatableViewModel>>(query),
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -135,9 +268,8 @@ namespace SysIgreja.Controllers
 
             if (model.ConfiguracaoId.HasValue)
             {
-                query = query.Where(x => x.Evento.ConfiguracaoId == model.ConfiguracaoId);
+                query = query.Where(x => model.ConfiguracaoId == x.Evento.ConfiguracaoId.Value);
             }
-
 
             if (model.DataIni.HasValue && model.DataFim.HasValue)
             {

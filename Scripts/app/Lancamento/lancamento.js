@@ -1,11 +1,39 @@
-﻿function CarregarTabelaLancamento(url, id, tipo) {
+﻿function CarregarTabelaLancamento(id, tipo) {
+
+    var columns = [
+
+        { title: "Descricao", data: "Descricao", name: "Descricao", autoWidth: true },
+        { title: "Origem", data: "Origem", name: "Origem", autoWidth: true },
+        { title: "Centro de Custo", data: "CentroCusto", name: "CentroCusto", autoWidth: true },
+        { title: "Forma de Pagamento", data: "FormaPagamento", name: "FormaPagamento", autoWidth: true },
+        { title: "Valor", data: "Valor", name: "Valor", autoWidth: true },
+        { title: "Data do Lançamento", data: "DataLancamento", name: "DataLancamento", autoWidth: true },
+        {
+            title: "Ações",
+            data: "Id", name: "Id", orderable: false, width: "10%",
+            "render": function (data, type, row) {
+                return `${GetAnexosButton('AnexosLancamento', JSON.stringify(row), row.QtdAnexos)}
+                            ${GetButton('EditLancamento', JSON.stringify({ Id: data, Tipo: tipo }), 'blue', 'fa-edit', 'Editar')}   
+                            ${row.Observacao != null ? GetButton('PrintRecibo', data, 'yellow', 'fa-print', 'Imprimir Recibo') : ""}
+                            ${GetButton('DeleteLancamento', data, 'red', 'fa-trash', 'Excluir')}`;
+            }
+        }
+    ]
+
+    if (Usuario.IsGeral) {
+        columns = [{ title: "Evento", data: "Evento", name: "Evento", autoWidth: true }, ...columns]
+    }
+
     var ajaxOptions = {
-        url: url,
+        url: '/Lancamento/GetPagamentosDatatable',
         data:
         {
-            EventoId: SelectedEvent.Id,
+            ConfiguracaoId: Usuario.IsGeral ? SelectedConfig.Id : null,
+            EventoId: !Usuario.IsGeral ? SelectedEvent.Id : null,
             MeioPagamentoId: $('#busca-meiopagamento').val() == 0 ? null : $('#busca-meiopagamento').val(),
-            CentroCustoId: $('#busca-centrocusto').val() == 0 ? null : $('#busca-centrocusto').val()
+            Tipo: tipo == "Receber" ? 1 : 2,
+            DataIni: moment($("#data-inicial").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
+            DataFim: moment($("#data-final").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
         },
         datatype: "json",
         type: "POST"
@@ -13,9 +41,9 @@
 
     var tableLancamentoConfig = {
         language: languageConfig,
-        lengthMenu: [200, 500, 1000],
+        lengthMenu: [10, 50, 100, 200, 1000],
         colReorder: false,
-        serverSide: false,
+        serverSide: true,
         deferloading: 0,
         orderCellsTop: true,
         fixedHeader: true,
@@ -25,47 +53,31 @@
         destroy: true,
         dom: domConfig,
         buttons: getButtonsConfig('A Receber'),
-        columns: [
-            { data: "Descricao", name: "Descricao", autoWidth: true },
-            { data: "Origem", name: "Origem", autoWidth: true },
-            { data: "CentroCusto", name: "CentroCusto", autoWidth: true },
-            { data: "FormaPagamento", name: "FormaPagamento", autoWidth: true },
-            { data: "Valor", name: "Valor", autoWidth: true },
-            { data: "DataLancamento", name: "DataLancamento", autoWidth: true },
-            {
-                data: "Id", name: "Id", orderable: false, width: "10%",
-                "render": function (data, type, row) {
-                    return `${GetAnexosButton('AnexosLancamento', JSON.stringify(row), row.QtdAnexos)}
-                            ${GetButton('EditLancamento', JSON.stringify({ Id: data, Tipo: tipo }), 'blue', 'fa-edit', 'Editar')}   
-                            ${row.Observacao != null ? GetButton('PrintRecibo', data, 'yellow', 'fa-print', 'Imprimir Recibo') : ""}
-                            ${GetButton('DeleteLancamento', data, 'red', 'fa-trash', 'Excluir')}`;
-                }
-            }
-        ],
+        columns,
         order: [
             [1, "asc"]
         ],
         ajax: ajaxOptions,
         drawCallback: function (row, data, start, end, display) {
-            var api = this.api(), data;
-            var intVal = function (i) {
-                return typeof i === 'string' ?
-                    Number(i.replace('R$', '').replace('.', '').replace(',', '.')) * 1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
+            //var api = this.api(), data;
+            //var intVal = function (i) {
+            //    return typeof i === 'string' ?
+            //        Number(i.replace('R$', '').replace('.', '').replace(',', '.')) * 1 :
+            //        typeof i === 'number' ?
+            //            i : 0;
+            //};
 
-            total = api
-                .column(4, { selected: true, search: 'applied' })
-                .data()
-                .reduce(function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0);
+            //total = api
+            //    .column(4, { selected: true, search: 'applied' })
+            //    .data()
+            //    .reduce(function (a, b) {
+            //        return intVal(a) + intVal(b);
+            //    }, 0);
 
 
-            $(api.column(4).footer()).html(
-                total.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })
-            );
+            //$(api.column(4).footer()).html(
+            //    total.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })
+            //);
         }
     };
 
@@ -109,7 +121,7 @@ function GetLancamento(id) {
 function EditLancamento(params) {
     $("#lancamento-tipo").val(params.Tipo == "Receber" ? 1 : 2);
     GetLancamento(params.Id);
-   
+
 }
 
 function handleSelect() {
@@ -174,13 +186,18 @@ function PostLancamento() {
     }
 }
 
+$('.adm').css('display', 'none')
+$(".configId").css('display', 'none')
+
 $(document).off('ready-ajax').on('ready-ajax', () => {
+    $('.adm').css('display', Usuario.IsGeral ? 'block' : 'none')   
+    $('.notAdm').css('display', !Usuario.IsGeral ? 'block' : 'none')   
     Filtrar();
 });
 
 function Filtrar() {
-    CarregarTabelaLancamento('/Lancamento/GetLancamentoReceber', "#table-lancamentos-receber", 'Receber');
-    CarregarTabelaLancamento('/Lancamento/GetLancamentoPagar', "#table-lancamentos-pagar", 'Pagar');
+    CarregarTabelaLancamento("#table-lancamentos-receber", 'Receber');
+    CarregarTabelaLancamento("#table-lancamentos-pagar", 'Pagar');
 }
 
 var lancamento = {}
@@ -195,7 +212,7 @@ function AnexosLancamento(row) {
 function GetAnexos(id) {
     const tableArquivoConfig = {
         language: languageConfig,
-        lengthMenu: [200, 500, 1000],
+        lengthMenu: [10, 50, 100, 200, 1000],
         colReorder: false,
         serverSide: false,
         deferloading: 0,

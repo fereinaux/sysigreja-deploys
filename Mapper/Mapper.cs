@@ -106,8 +106,37 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.TipoEvento, opt => opt.MapFrom(x => x.Configuracao.Titulo))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()))
                     .ForMember(dest => dest.StatusEquipe, opt => opt.MapFrom(x => x.StatusEquipe.GetDescription()))
-                    .ForMember(dest => dest.Valor, opt => opt.MapFrom(x => x.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))))
-                    .ForMember(dest => dest.ValorTaxa, opt => opt.MapFrom(x => x.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))));
+                    .ForMember(dest => dest.Valor, opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.Valor)))
+                    .ForMember(dest => dest.ValorTaxa, opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.ValorTaxa)));
+                cfg.CreateMap<Lancamento, LancamentosViewModel>()
+               .ForMember(dest => dest.CentroCusto, opt => opt.MapFrom(x => x.CentroCusto.Descricao))
+               .ForMember(dest => dest.Evento, opt => opt.MapFrom(x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"))
+               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Descricao)))
+               .ForMember(dest => dest.Origem, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Origem)))
+               .ForMember(dest => dest.DataLancamento, opt => opt.MapFrom(x => x.DataCadastro.Value.ToString("dd/MM/yyyy")))
+               .ForMember(dest => dest.FormaPagamento, opt => opt.MapFrom(x => x.MeioPagamento.Descricao))
+               .ForMember(dest => dest.Valor, opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.Valor)))
+               .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count));
+
+                cfg.CreateMap<Lancamento, LancamentosDatatableViewModel>()
+   .ForMember(dest => dest.CentroCusto, opt => opt.MapFrom(x => x.CentroCusto.Descricao))
+   .ForMember(dest => dest.Evento, opt => opt.MapFrom(x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"))
+   .ForMember(dest => dest.Descricao, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Descricao)))
+   .ForMember(dest => dest.Origem, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Origem)))
+   .ForMember(dest => dest.DataLancamento, opt => opt.MapFrom(x => x.DataCadastro.Value.ToString("dd/MM/yyyy")))
+   .ForMember(dest => dest.FormaPagamento, opt => opt.MapFrom(x => x.MeioPagamento.Descricao))
+   .ForMember(dest => dest.Valor, opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.Valor)))
+   .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count));
+
+                cfg.CreateMap<Lancamento, LancamentosExcelViewModel>()
+.ForMember(dest => dest.CentroCusto, opt => opt.MapFrom(x => x.CentroCusto.Descricao))
+.ForMember(dest => dest.Evento, opt => opt.MapFrom(x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"))
+.ForMember(dest => dest.Descricao, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Descricao)))
+.ForMember(dest => dest.Origem, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Origem)))
+.ForMember(dest => dest.DataLancamento, opt => opt.MapFrom(x => x.DataCadastro.Value.ToString("dd/MM/yyyy")))
+.ForMember(dest => dest.FormaPagamento, opt => opt.MapFrom(x => x.MeioPagamento.Descricao))
+.ForMember(dest => dest.Valor, opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.Valor)))
+.ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count));
 
                 cfg.CreateMap<Evento, EventoDatatableExcelViewModel>()
                    .ForMember(dest => dest.TipoEvento, opt => opt.MapFrom(x => x.Configuracao.Titulo))

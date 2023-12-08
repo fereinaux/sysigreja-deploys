@@ -1,4 +1,5 @@
 ﻿
+using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Models.Carona;
 using Core.Models.Configuracao;
@@ -16,6 +17,7 @@ using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Utils.Extensions;
 using Utils.Services;
@@ -100,6 +102,19 @@ namespace SysIgreja.Controllers
                 cfg.CreateMap<CentroCusto, CentroCustoModel>().ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => x.Tipo.GetDescription()));
                 cfg.CreateMap<Mensagem, PostMessageModel>();
                 cfg.CreateMap<Etiqueta, EtiquetaModel>();
+                cfg.CreateMap<Evento, EventoViewModel>()
+                    .ForMember(dest => dest.TipoEvento, opt => opt.MapFrom(x => x.Configuracao.Titulo))
+                    .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()))
+                    .ForMember(dest => dest.StatusEquipe, opt => opt.MapFrom(x => x.StatusEquipe.GetDescription()))
+                    .ForMember(dest => dest.Valor, opt => opt.MapFrom(x => x.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))))
+                    .ForMember(dest => dest.ValorTaxa, opt => opt.MapFrom(x => x.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))));
+
+                cfg.CreateMap<Evento, EventoDatatableExcelViewModel>()
+                   .ForMember(dest => dest.TipoEvento, opt => opt.MapFrom(x => x.Configuracao.Titulo))
+                   .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()))
+                   .ForMember(dest => dest.StatusEquipe, opt => opt.MapFrom(x => x.StatusEquipe.GetDescription()))
+                   .ForMember(dest => dest.Valor, opt => opt.MapFrom(x => x.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))))
+                   .ForMember(dest => dest.ValorTaxa, opt => opt.MapFrom(x => x.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))));
                 cfg.CreateMap<EquipanteEvento, PessoaSelectModel>()
                     .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome)))
                     .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido)));

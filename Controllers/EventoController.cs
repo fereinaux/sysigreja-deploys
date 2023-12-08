@@ -8,6 +8,8 @@ using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Models;
 using Core.Models.Configuracao;
+using Core.Models.DataTable;
+using Core.Models.Equipantes;
 using Core.Models.Eventos;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
@@ -22,6 +24,8 @@ using System.Web.Security;
 using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
+using Utils.Services;
+using System.Linq.Dynamic;
 
 namespace SysIgreja.Controllers
 {
@@ -33,12 +37,14 @@ namespace SysIgreja.Controllers
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly ICirculosBusiness circulosBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
+        private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
 
-        public EventoController(IEventosBusiness eventosBusiness, ICirculosBusiness circulosBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EventoController(IEventosBusiness eventosBusiness, IDatatableService datatableService, ICirculosBusiness circulosBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.eventosBusiness = eventosBusiness;
             this.circulosBusiness = circulosBusiness;
+            this.datatableService = datatableService;
             this.arquivosBusiness = arquivosBusiness;
             this.configuracaoBusiness = configuracaoBusiness;
             mapper = new MapperRealidade().mapper;
@@ -236,6 +242,93 @@ namespace SysIgreja.Controllers
                 });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public class EventosFilterModel
+        {
+            public List<int> ConfiguracaoId { get; set; }
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public List<Column> columns { get; set; }
+            public Search search { get; set; }
+            public List<Order> order { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult GetEventosDatatable(EventosFilterModel model)
+        {
+
+            var extract = Request.QueryString["extract"];
+
+            var user = GetApplicationUser();
+            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões").Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                .Select(x => x.Select(y => new { ConfigId = y.ConfiguracaoId, Eventos = y.Eventos, Role = y.Role })).ToList();
+            List<int> configId = new List<int>();
+            permissoes.ForEach(permissao =>
+            {
+                configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));
+            });
+
+
+            var query = eventosBusiness.GetEventos()
+                .Where(x => configId.Contains(x.ConfiguracaoId.Value) && x.ConfiguracaoId.HasValue);
+
+            var totalResultsCount = query.Count();
+
+            if (model.ConfiguracaoId != null)
+            {
+                query = query.Where(x => model.ConfiguracaoId.Contains(x.ConfiguracaoId.Value));
+            }
+
+            if (model.search != null && model.search.value != null)
+            {
+                query = query.Where(x => (x.Configuracao.Titulo.Contains(model.search.value)));
+            }
+
+            var filteredResultsCount = query.Count();
+
+
+            if (extract == "excel")
+            {
+                Guid g = Guid.NewGuid();
+                var data = mapper.Map<IEnumerable<EventoDatatableExcelViewModel>>(query);
+
+                Session[g.ToString()] = datatableService.GenerateExcel(data.ToList());
+
+                return Content(g.ToString());
+            }
+
+
+            if (model.columns[model.order[0].column].name == "TipoEvento")
+            {
+
+                if (model.order[0].dir == "asc")
+                {
+
+                    query = query.OrderBy(x => x.Configuracao.Titulo);
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.Configuracao.Titulo);
+                }
+            }
+            else
+            {
+                query = query.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+            }
+
+            query = query.Skip(model.Start)
+                .Take(model.Length);
+
+
+
+            return Json(new
+            {
+                data = mapper.Map<IEnumerable<EventoViewModel>>(query),
+                recordsTotal = totalResultsCount,
+                recordsFiltered = filteredResultsCount,
+            }, JsonRequestBehavior.AllowGet);
         }
 
 

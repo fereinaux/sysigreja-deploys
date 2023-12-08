@@ -1,11 +1,12 @@
 ﻿
 eventoId = undefined
 function CarregarTabelaEvento() {
+    setFiltros()
     const tableEventoConfig = {
         language: languageConfig,
-        lengthMenu: [200, 500, 1000],
+        lengthMenu: [10, 50, 100],
         colReorder: false,
-        serverSide: false,
+        serverSide: true,
         deferloading: 0,
         orderCellsTop: true,
         fixedHeader: true,
@@ -13,7 +14,7 @@ function CarregarTabelaEvento() {
         orderMulti: false,
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
-        dom: domConfig,
+        dom: '<"html5buttons"B>lTgitp', 
         buttons: getButtonsConfig('Eventos'),
         columns: [
             {
@@ -76,14 +77,13 @@ ${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe, row.StatusEquipe)}`;
                 }
             },
             {
-                data: "Id", name: "Id", orderable: false, width: "30%",
+                data: "Id", name: "Id", orderable: false, width: "30%", className: 'noVis noExport',
                 "render": function (data, type, row) {
 
                     return `
 ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
                             ${GetButton('exibirQrCode', data, '', 'fas fa-qrcode', 'QR Code')}
                             ${GetButton('Lotes', data, 'green', 'far fa-calendar-check', 'Editar')}
-                            ${GetAnexosButton('AnexosEvento', data, row.QtdAnexos)}
                             ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}
                             ${GetButton('CloneEvento', data, 'green', 'fa-clone', 'Clonar Evento')}
                             ${GetButton('DeleteEvento', data, 'red', 'fa-trash', 'Excluir')}`;
@@ -94,13 +94,45 @@ ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
             [2, "desc"]
         ],
         ajax: {
-            url: '/Evento/GetEventos',
+            url: '/Evento/GetEventosDatatable',
             datatype: "json",
+            data: getFiltros(),
             type: "POST"
         }
     };
 
+    tableEventoConfig.buttons.forEach(function (o) {
+        if (o.extend === "excel") {
+            o.action = function (e, dt, button, config) {
+                $.post(
+                    tableEventoConfig.ajax.url + "?extract=excel",
+                    function (o) {
+                        window.location = `/Evento/DownloadTempFile?fileName=Eventos.xlsx&g=` + o;
+                    }
+                );
+            }
+        }
+    })
+
     $("#table-eventos").DataTable(tableEventoConfig);
+
+
+}
+
+function getFiltros(Foto) {
+    var filtros = JSON.parse(localStorage.getItem(`filtros-evento`))
+    if (!filtros) {
+        setFiltros()
+        return JSON.parse(localStorage.getItem(`filtros-evento`))
+    } else return filtros
+
+}
+
+
+function setFiltros() {
+    localStorage.setItem(`filtros-evento`, JSON.stringify({
+        ConfiguracaoId: $("#evento-configuracaoId").val()
+    }))
 }
 
 function GetEvento(id) {
@@ -182,7 +214,7 @@ function GetLotesEvento(id) {
     eventoId = id;
     const tableLotesConfig = {
         language: languageConfig,
-        lengthMenu: [200, 500, 1000],
+        lengthMenu: [10, 50, 100],
         colReorder: false,
         serverSide: false,
         deferloading: 0,
@@ -333,6 +365,12 @@ function PostEvento() {
 }
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
+    var filtros = getFiltros()
+    $("#evento-configuracaoId").html(`
+${Claims.Configuracoes.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
+`)
+    $("#evento-configuracaoId").val(filtros.ConfiguracaoId)
+    $("#evento-configuracaoId").select2()
     verifyPermissionsConfig()
     CarregarTabelaEvento();
 });

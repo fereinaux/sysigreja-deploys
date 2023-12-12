@@ -6,6 +6,7 @@ using Core.Business.Eventos;
 using Core.Models;
 using Core.Models.Equipantes;
 using Data.Context;
+using Data.Entities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
@@ -59,7 +60,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Title = "Administradores";
+            ViewBag.Title = "Organizadores";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             var user = accountBusiness.GetUsuarioById(User.Identity.GetUserId());
             if (!user.Claims.Any(x => x.ClaimType == ClaimTypes.Role && (x.ClaimValue == "Master" || x.ClaimValue == "Geral")))

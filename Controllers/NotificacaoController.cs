@@ -5,6 +5,7 @@ using Core.Business.Eventos;
 using Core.Business.Notificacao;
 using Core.Models;
 using Data.Context;
+using Data.Entities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;

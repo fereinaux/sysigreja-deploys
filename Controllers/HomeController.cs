@@ -398,6 +398,11 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
+            if (User.IsInRole("Geral"))
+            {
+                return RedirectToAction("Admin", "Home");
+            }
+
             var user = GetApplicationUser();
             var permissoes = JsonConvert.DeserializeObject<List<Permissoes>>(user.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue);
 

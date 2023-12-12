@@ -1,0 +1,60 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>@ViewBag.Title</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>Administradores</h4>
+
+        </div>
+        <div class="ibox-content">
+
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <h5>Tela de Reuniões</h5>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/zGjCu7sClAU?si=GEXSqVd_ukCycRQG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <h5>Ata de Presença</h5>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/9Xa496LFyPw?si=rgy7v_jKnpAzec-4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="ibox">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>Organizadores</h4>
+
+        </div>
+        <div class="ibox-content">
+
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <h5>Tela de Eventos</h5>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/x6jAq92Smco?si=A4V6tZ94FrXZg0su" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $('title').text($('#title').text())
+    </script>
+}

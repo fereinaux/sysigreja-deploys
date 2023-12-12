@@ -321,7 +321,7 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({ Id: row.Id }), 
 </div>
 </div>`;
                 CustomSwal({
-                    title: "Excel de Equipantes",
+                    title: "Excel de Voluntários",
                     icon: "logo",
                     text: "Escolha os campos que deseja exportar",
                     content: div,
@@ -344,7 +344,7 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({ Id: row.Id }), 
                             tableEquipanteConfig.ajax.url + "?extract=excel",
                             data,
                             function (o) {
-                                window.location = `/Equipante/DownloadTempFile?fileName=Equipantes ${$("#equipante-eventoid-filtro option:selected").text()}.xlsx&g=` + o;
+                                window.location = `/Equipante/DownloadTempFile?fileName=Voluntários ${$("#equipante-eventoid-filtro option:selected").text()}.xlsx&g=` + o;
                             }
                         );
                     };

@@ -5,6 +5,7 @@ using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models;
 using Core.Models.Configuracao;
+using Data.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -808,6 +808,7 @@
     <Compile Include="Controllers\LancamentoController.cs" />
     <Compile Include="Controllers\ParticipanteController.cs" />
     <Compile Include="Controllers\CirculoController.cs" />
+    <Compile Include="Controllers\AjudaController.cs" />
     <Compile Include="Controllers\RelatorioController.cs" />
     <Compile Include="Controllers\ReuniaoController.cs" />
     <Compile Include="Controllers\MeioPagamentoController.cs" />
@@ -1277,6 +1278,7 @@
     <Content Include="Views\Componentes\SelectConfig.cshtml" />
     <Content Include="Views\Relatorio\Painel.cshtml" />
     <Content Include="Views\Home\Dirigente.cshtml" />
+    <Content Include="Views\Ajuda\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

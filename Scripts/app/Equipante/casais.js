@@ -271,7 +271,7 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify(row), 'cinza', 'f
 </div>
 </div>`;
                 CustomSwal({
-                    title: "Excel de Equipantes",
+                    title: "Excel de Voluntários",
                     icon: "logo",
                     text: "Escolha os campos que deseja exportar",
                     content: div,

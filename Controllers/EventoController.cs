@@ -26,6 +26,7 @@ using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
 using System.Linq.Dynamic;
+using Data.Entities;
 
 namespace SysIgreja.Controllers
 {
@@ -110,7 +111,7 @@ namespace SysIgreja.Controllers
             var listEventosReturn = eventosBusiness
                 .GetEventos()
                 .OrderByDescending(x => x.DataEvento)
-                .Where(x => eventosId.Contains(x.Id) || x.ConfiguracaoId.HasValue && configId.Contains(x.ConfiguracaoId.Value)).ToList();
+                .Where(x => eventosId.Contains(x.Id) || x.ConfiguracaoId.HasValue && configId.Contains(x.ConfiguracaoId.Value) && x.Status != StatusEnum.Deletado).ToList();
 
             var circulos = circulosBusiness.GetCirculos().Select(x => new
             {

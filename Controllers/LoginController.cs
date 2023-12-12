@@ -48,7 +48,6 @@ namespace SysIgreja.Controllers
             else
             {
                 ViewBag.Configuracao = configuracaoBusiness.GetLogin();
-                accountBusiness.Seed();
                 ViewBag.ReturnUrl = returnUrl;
                 return View();
             }

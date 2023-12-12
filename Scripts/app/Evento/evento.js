@@ -83,7 +83,6 @@ ${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe, row.StatusEquipe)}`;
                     return `
 ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
                             ${GetButton('exibirQrCode', data, '', 'fas fa-qrcode', 'QR Code')}
-                            ${GetButton('Lotes', data, 'green', 'far fa-calendar-check', 'Editar')}
                             ${GetButton('EditEvento', data, 'blue', 'fa-edit', 'Editar')}
                             ${GetButton('CloneEvento', data, 'green', 'fa-clone', 'Clonar Evento')}
                             ${GetButton('DeleteEvento', data, 'red', 'fa-trash', 'Excluir')}`;

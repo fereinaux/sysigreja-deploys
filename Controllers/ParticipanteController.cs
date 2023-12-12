@@ -79,7 +79,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Title = "Participantes";
+            ViewBag.Title = "Listagem de Participantes";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();

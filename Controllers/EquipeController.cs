@@ -7,6 +7,7 @@ using Core.Business.Configuracao;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
+using Core.Business.Igrejas;
 using Core.Business.Reunioes;
 using Core.Models;
 using Core.Models.Equipe;
@@ -172,7 +173,7 @@ namespace SysIgreja.Controllers
             var result = equipesBusiness.GetQueryEquipantesEvento(EventoId).Include(x => x.Equipante);
 
 
-            var json = Json(new { data = mapper.Map< IEnumerable<PessoaSelectModel>>(result), }, JsonRequestBehavior.AllowGet);
+            var json = Json(new { data = mapper.Map<IEnumerable<PessoaSelectModel>>(result), }, JsonRequestBehavior.AllowGet);
             json.MaxJsonLength = Int32.MaxValue;
             return json;
         }
@@ -334,15 +335,16 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostEquipe(PostEquipeModel model)
         {
-            equipesBusiness.PostEquipe(model);
-
-            return new HttpStatusCodeResult(200);
+            return Json(new
+            {
+                Equipe = equipesBusiness.PostEquipe(model),
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult SaveGrupo(string grupoId, int eventoId, int equipeId)
         {
-            equipesBusiness.SaveGrupo(grupoId,eventoId, equipeId);
+            equipesBusiness.SaveGrupo(grupoId, eventoId, equipeId);
 
             return new HttpStatusCodeResult(200);
         }

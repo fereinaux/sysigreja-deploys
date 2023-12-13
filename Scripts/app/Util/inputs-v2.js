@@ -3,6 +3,8 @@
 $(document).ready(function () {
 
     initInputs()
+  
+
 
 });
 
@@ -525,14 +527,14 @@ function campoRelation(campo) {
 var fones = []
 
 function getReference(id) {
-   return fones.find(fone => fone.id == id)?.reference || null
+    return fones.find(fone => fone.id == id)?.reference || null
 }
 
 function getNumber(id) {
     return getReference(id)?.getNumber() || ''
 }
 
-function setNumber(id, number) {    
+function setNumber(id, number) {
     return getReference(id)?.setNumber(number || '')
 }
 

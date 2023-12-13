@@ -201,18 +201,18 @@
 
                                             data.data.forEach(config => {
                                                 html += `<div class="ibox">
-                                                                                                                        <div class="ibox-title" style="display: flex;justify-content: space-between;">
-                                                                                                                            <h4>${config.Titulo}</h4>
-                                                                                                                            <div class="ibox-tools">
-                                                                                                                                <a data-id=${config.Id} class="collapse-link">
-                                                                                                                                    <i class="fa fa-chevron-up"></i>
-                                                                                                                                </a>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                        <div class="ibox-content" id="ibox-${config.Id}">
+                                                                                                                                                <div class="ibox-title" style="display: flex;justify-content: space-between;">
+                                                                                                                                                    <h4>${config.Titulo}</h4>
+                                                                                                                                                    <div class="ibox-tools">
+                                                                                                                                                        <a data-id=${config.Id} class="collapse-link">
+                                                                                                                                                            <i class="fa fa-chevron-up"></i>
+                                                                                                                                                        </a>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                                <div class="ibox-content" id="ibox-${config.Id}">
 
-                                                                                                                        </div>
-                                                                                                                    </div>`
+                                                                                                                                                </div>
+                                                                                                                                            </div>`
 
 
                                             })
@@ -233,215 +233,267 @@
                                                         success: function (data) {
                                                             var config = data.Configuracao
                                                             html = `<div class="row p-h-xs" id="form-config${config.Id}">
-                                                                                                                                <div class="col-sm-12 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Título do Evento</h5>
+                                                                                                                                                        <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Título do Evento</h5>
 
-                                                                                                                                    <input type="text" class="form-control required" id="config-titulo${config.Id}" data-field="Título" />
-                                                                                                                                </div>
+                                                                                                                                                            <input type="text" class="form-control required" id="config-titulo${config.Id}" data-field="Título" />
+                                                                                                                                                        </div>
 
-                                                                                                                                 <div class="col-sm-12 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Identificador do Evento</h5>
+                                                                                                                                                         <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Identificador do Evento</h5>
 
-                                                                                                                                    <input type="text" class="form-control required" id="config-identificador${config.Id}" data-field="Identificador" />
-                                                                                                                                </div>
+                                                                                                                                                            <input type="text" class="form-control required" id="config-identificador${config.Id}" data-field="Identificador" />
+                                                                                                                                                        </div>
 
-                                                                                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Cor do Evento</h5>
+                                                                                                                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Cor do Evento</h5>
 
-                                                                                                                                    <input type="color" style="padding:0" class="form-control" id="config-corbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Botão">
-                                                                                                                                </div>
+                                                                                                                                                            <input type="color" style="padding:0" class="form-control" id="config-corbotao${config.Id}" name="color" pattern="^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" value="#bada55" data-field="Cor Botão">
+                                                                                                                                                        </div>
 
-                                                                                                                                <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Campos de inscrição dos Participantes</h5>
+                                                                                                                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Campos de inscrição dos Participantes</h5>
 
-                                                                                                                                    <select class="form-control config-campos required" id="config-campos${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos de inscrição dos Participantes">
-                                                                                                                                    </select>
-                                                                                                                                </div>
+                                                                                                                                                            <select class="form-control config-campos required" id="config-campos${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos de inscrição dos Participantes">
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
 
-                                                                 <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Campos de inscrição dos Equipantes</h5>
+                                                                                         <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Campos de inscrição dos Equipantes</h5>
 
-                                                                                                                                    <select class="form-control config-campos required" id="config-camposequipe${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos de inscrição dos Voluntários">
-                                                                                                                                    </select>
-                                                                                                                                </div>
+                                                                                                                                                            <select class="form-control config-campos required" id="config-camposequipe${config.Id}" multiple="multiple" style="width: 100%" data-field="Campos de inscrição dos Voluntários">
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
 
-                                                                                  <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Equipes de trabalho</h5>
+                                                                                                          <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Equipes de trabalho</h5>
 
-                                                                                                                                    <select class="form-control config-equipes required" id="config-equipes${config.Id}" multiple="multiple" style="width: 100%" data-field="Equipes de trabalho">
-                                                                                                                                    </select>
-                                                                                                                                </div>
+                                                                                                                                                            <select class="form-control config-equipes required" id="config-equipes${config.Id}" multiple="multiple" style="width: 100%" data-field="Equipes de trabalho">
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
 
-                                                      <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Equipes do formulário de inscrição</h5>
-
-                                                                                                                                    <select class="form-control config-equipes" id="config-equipes-inscricao${config.Id}" multiple="multiple" style="width: 100%" data-field="Equipes do formulário de inscrição">
-                                                                                                                                    </select>
-                                                                                                                                </div>
-
-
-                                                           <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Congregações participantes</h5>
-
-                                                                                                                                    <select class="form-control config-igrejas required" id="config-igreja${config.Id}" multiple="multiple" style="width: 100%" data-field="Congregações Participantes">
-                                                                                                                                    </select>
-                                                                                                                                </div>
-
-                                                                                                                                               <div class="col-sm-6 p-w-md m-t-md text-center">
-                        <div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
-                                                                      <label style="display:block"> <input id="config-vincular${config.Id}" type="checkbox" ${config.VincularMontagem ? 'checked' : ''}> Vincular Montagem a Inscrição de Voluntário? <i></i></label>
-                                                                                 </div>
-                                                                                   </div>
-
-                                                                               <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                            <h5>Equipe de Grupos</h5>
-
-                                                                                                                                    <select class="form-control config-equipes" id="config-equipecirculo${config.Id}" style="width: 100%" data-field="Equipe Grupos">
-                                                                                                                                    </select>
-                                                                                 </div>
-
-
-                                                                                           <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                           <h5>Equipe de Caronas</h5>
-
-                                                                                                                                    <select class="form-control config-equipes" id="config-equipecarona${config.Id}" style="width: 100%" data-field="Equipe Carona">
-                                                                                                                                    </select>
-                                                                                 </div>
-
-
-
-
-
-                                                                       <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                            <h5>Divisão dos Grupos</h5>
-
-                                                                                                                                    <select class="form-control" id="config-tipocirculo${config.Id}" style="width: 100%" data-field="Divisão Grupos">
-                                                                    <option value="0">Endereço</option>
-                                                                    <option value="1">Aleatório</option>
-                                                                    <option value="2">Idade</option>
-                                                                                                                                    </select>
-                                                                                 </div>
-                                <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                            <h5>Tipo dos Quartos</h5>
-
-                                                                                                                                    <select class="form-control" id="config-tipoquarto${config.Id}" style="width: 100%" data-field="Tipo dos Quartos">
-                                                                    <option value="0">Normal</option>
-                                                                    <option value="1">Endereço</option>
-                                                                                                                                    </select>
-                                                                                 </div>
-                                <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                            <h5>Tipo do Evento</h5>
-
-                                                                                                                                    <select class="form-control" id="config-tipoevento${config.Id}" style="width: 100%" data-field="Tipo do Evento">
-                                                                    <option value="0">Individual</option>
-                                                                    <option value="1">Casais</option>
-                                                                                                                                    </select>
-                                                                                 </div>
                                                                               <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                            <h5>Centro de Custo para Inscrições</h5>
-                                                                                                                                      <select class="form-control centro-custos${config.Id}" id="config-centrocustoinscricao${config.Id}" style="width: 100%" data-field="Centro de Custo para Inscrições">
-                                                                                                                                    </select>
-                                                                                 </div>
-                                                                              <div class="col-sm-6 p-w-md m-t-md text-center">
-                                                                            <h5>Centro de Custo para Taxa de Voluntário</h5>
-                                                                               <select class="form-control centro-custos${config.Id}" id="config-centrocustoequipe${config.Id}" style="width: 100%" data-field="Centro de Custo para Taxa de Voluntário">
-                                                                                                                                    </select>
-                                                                                                                                </div>
+                                                                                                                                                            <h5>Equipes do formulário de inscrição</h5>
 
-                                                                                                                                <div class="col-sm-12  p-w-md m-t-md">
-                                                                                                                                    <div style="width: 100%;
+                                                                                                                                                            <select class="form-control config-equipes" id="config-equipes-inscricao${config.Id}" multiple="multiple" style="width: 100%" data-field="Equipes do formulário de inscrição">
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
 
-                                                                background: #cacacbe0;
-                                                                border-radius: 12px;
-                                                                padding: 10px;">
-                                                                <div class="row">
-                                                                                                                                        <div class="col-sm-12 col-md-4 text-center">
-                                                                                                                                            <h5>Logo</h5>
-                                                                                                                                            <img id="img-logo${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
-                                                                                                                                            <form enctype="multipart/form-data" id="frm-logo${config.Id}" method="post" novalidate="novalidate">
-                                                                                                                                                <label for="logo${config.Id}" class="inputFile">
-                                                                                                                                                    <span id="add-logo${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                                                                                                                                                    <input accept="image/*" onchange='Logo(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logo${config.Id}" name="logo${config.Id}" type="file" value="">
-                                                                                                                                                </label>
-                                                                                                                                            </form>
-                                                                                                                                        </div>
 
-                                                                                                                                        <div class="col-sm-12 col-md-4 text-center">
-                                                                                                                                            <h5>Logo Relatórios</h5>
-                                                                                                                                            <img id="img-logorelatorio${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
-                                                                                                                                            <form enctype="multipart/form-data" id="frm-logorelatorio${config.Id}" method="post" novalidate="novalidate">
-                                                                                                                                                <label for="logorelatorio${config.Id}" class="inputFile">
-                                                                                                                                                    <span id="add-logorelatorio${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                                                                                                                                                    <input accept="image/*" onchange='LogoRelatorio(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logorelatorio${config.Id}" name="logorelatorio${config.Id}" type="file" value="">
-                                                                                                                                                </label>
-                                                                                                                                            </form>
-                                                                                                                                        </div>
+                                                                                   <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Congregações participantes</h5>
 
-                                                                                                                                        <div class="col-sm-12 col-md-4 text-center">
-                                                                                                                                            <h5>Background</h5>
-                                                                                                                                            <img id="img-background${config.Id}" style="width:50%;margin:auto" src="" class="m-auto" />
-                                                                                                                                            <form enctype="multipart/form-data" id="frm-background${config.Id}" method="post" novalidate="novalidate">
-                                                                                                                                                <label for="background${config.Id}" class="inputFile">
-                                                                                                                                                    <span id="add-background${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
-                                                                                                                                                    <input accept="image/*" onchange='Background(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="background${config.Id}" name="background${config.Id}" type="file" value="">
-                                                                                                                                                </label>
-                                                                                                                                            </form>
-                                                                                                                                        </div>
-                                                                                                                                       </div>
-                                                                </div>
-                                                                                                                                     </div>
-                                                                                                                                       <div class="col-sm-12 col-md-6  p-w-md m-t-md m-b-md text-center">
-                                                                                                                                    <h5>Public Key Mercado Pago</h5>
+                                                                                                                                                            <select class="form-control config-igrejas required" id="config-igreja${config.Id}" multiple="multiple" style="width: 100%" data-field="Congregações Participantes">
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
 
-                                                                                                                                    <input type="text" class="form-control " id="config-public${config.Id}" data-field="Public Key Mercado Pago" />
-                                                                                                                                </div>
+                                                                                                                                                                       <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                <div class="checkbox i-checks-green"  style="margin-left:20px;text-align:left">
+                                                                                              <label style="display:block"> <input id="config-vincular${config.Id}" type="checkbox" ${config.VincularMontagem ? 'checked' : ''}> Vincular Montagem a Inscrição de Voluntário? <i></i></label>
+                                                                                                         </div>
+                                                                                                           </div>
 
-                                                                                                                                            <div class="col-sm-12 col-md-6  p-w-md m-t-md text-center">
-                                                                                                                                    <h5>Access Token Mercado Pago</h5>
+                                                                                                       <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                    <h5>Equipe de Grupos</h5>
 
-                                                                                                                                    <input type="text" class="form-control " id="config-access${config.Id}" data-field="Access Token Mercado Pago" />
-                                                                                                                                </div>
+                                                                                                                                                            <select class="form-control config-equipes" id="config-equipecirculo${config.Id}" style="width: 100%" data-field="Equipe Grupos">
+                                                                                                                                                            </select>
+                                                                                                         </div>
 
-                                                                            <div class="col-sm-12 p-w-md m-t-md text-center">
+
+                                                                                                                   <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                   <h5>Equipe de Caronas</h5>
+
+                                                                                                                                                            <select class="form-control config-equipes" id="config-equipecarona${config.Id}" style="width: 100%" data-field="Equipe Carona">
+                                                                                                                                                            </select>
+                                                                                                         </div>
 
 
 
 
 
-                                                                                            <h5>Mensagem Conclusão</h5>
+                                                                                               <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                    <h5>Divisão dos Grupos</h5>
 
-                                                                                            <textarea class="config-msg" id="config-msg${config.Id}" name="editordata"></textarea>
+                                                                                                                                                            <select class="form-control" id="config-tipocirculo${config.Id}" style="width: 100%" data-field="Divisão Grupos">
+                                                                                            <option value="0">Endereço</option>
+                                                                                            <option value="1">Aleatório</option>
+                                                                                            <option value="2">Idade</option>
+                                                                                                                                                            </select>
+                                                                                                         </div>
+                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                    <h5>Tipo dos Quartos</h5>
+
+                                                                                                                                                            <select class="form-control" id="config-tipoquarto${config.Id}" style="width: 100%" data-field="Tipo dos Quartos">
+                                                                                            <option value="0">Normal</option>
+                                                                                            <option value="1">Endereço</option>
+                                                                                                                                                            </select>
+                                                                                                         </div>
+                                                        <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                    <h5>Tipo do Evento</h5>
+
+                                                                                                                                                            <select class="form-control" id="config-tipoevento${config.Id}" style="width: 100%" data-field="Tipo do Evento">
+                                                                                            <option value="0">Individual</option>
+                                                                                            <option value="1">Casais</option>
+                                                                                                                                                            </select>
+                                                                                                         </div>
+                                                                                                      <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                    <h5>Centro de Custo para Inscrições</h5>
+                                                                                                                                                              <select class="form-control centro-custos${config.Id}" id="config-centrocustoinscricao${config.Id}" style="width: 100%" data-field="Centro de Custo para Inscrições">
+                                                                                                                                                            </select>
+                                                                                                         </div>
+                                                                                                      <div class="col-sm-6 p-w-md m-t-md text-center">
+                                                                                                    <h5>Centro de Custo para Taxa de Voluntário</h5>
+                                                                                                       <select class="form-control centro-custos${config.Id}" id="config-centrocustoequipe${config.Id}" style="width: 100%" data-field="Centro de Custo para Taxa de Voluntário">
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="col-sm-12  p-w-md m-t-md">
+                                                                                                                                                            <div style="width: 100%;
+
+                                                                                        background: #cacacbe0;
+                                                                                        border-radius: 12px;
+                                                                                        padding: 10px;">
+                                                                                        <div class="row">
+                                                                                                                                                                <div class="col-sm-12 col-md-4 text-center">
+                                                                                                                                                                    <h5>Logo</h5>
+                                                                                                                                                                    <img id="img-logo${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
+                                                                                                                                                                    <form enctype="multipart/form-data" id="frm-logo${config.Id}" method="post" novalidate="novalidate">
+                                                                                                                                                                        <label for="logo${config.Id}" class="inputFile">
+                                                                                                                                                                            <span id="add-logo${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                                                                                                                            <input accept="image/*" onchange='Logo(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logo${config.Id}" name="logo${config.Id}" type="file" value="">
+                                                                                                                                                                        </label>
+                                                                                                                                                                    </form>
+                                                                                                                                                                </div>
+
+                                                                                                                                                                <div class="col-sm-12 col-md-4 text-center">
+                                                                                                                                                                    <h5>Logo Relatórios</h5>
+                                                                                                                                                                    <img id="img-logorelatorio${config.Id}" style="width:20%;margin:auto" src="" class="m-auto" />
+                                                                                                                                                                    <form enctype="multipart/form-data" id="frm-logorelatorio${config.Id}" method="post" novalidate="novalidate">
+                                                                                                                                                                        <label for="logorelatorio${config.Id}" class="inputFile">
+                                                                                                                                                                            <span id="add-logorelatorio${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                                                                                                                            <input accept="image/*" onchange='LogoRelatorio(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="logorelatorio${config.Id}" name="logorelatorio${config.Id}" type="file" value="">
+                                                                                                                                                                        </label>
+                                                                                                                                                                    </form>
+                                                                                                                                                                </div>
+
+                                                                                                                                                                <div class="col-sm-12 col-md-4 text-center">
+                                                                                                                                                                    <h5>Background</h5>
+                                                                                                                                                                    <img id="img-background${config.Id}" style="width:50%;margin:auto" src="" class="m-auto" />
+                                                                                                                                                                    <form enctype="multipart/form-data" id="frm-background${config.Id}" method="post" novalidate="novalidate">
+                                                                                                                                                                        <label for="background${config.Id}" class="inputFile">
+                                                                                                                                                                            <span id="add-background${config.Id}" class="btn btn-default inputFile m-md" style="width: 100%;" aria-hidden="true"><i class="fas fa-upload m-xs"></i> Escolher Arquivo</span>
+                                                                                                                                                                            <input accept="image/*" onchange='Background(${config.Id},${config.Id})' style="display: none;" class="custom-file-input inputFile" id="background${config.Id}" name="background${config.Id}" type="file" value="">
+                                                                                                                                                                        </label>
+                                                                                                                                                                    </form>
+                                                                                                                                                                </div>
+                                                                                                                                                               </div>
                                                                                         </div>
-                                                                                        <div class="col-sm-12 p-w-md m-t-md text-center">
-                                                                                            <h5>Mensagem Conclusão para a Equipe</h5>
+                                                                                                                                                             </div>
+                                                                                                                                                               <div class="col-sm-12 col-md-6  p-w-md m-t-md m-b-md text-center">
+                                                                                                                                                            <h5>Public Key Mercado Pago</h5>
 
-                                                                                            <textarea class="config-msgequipe" id="config-msgequipe${config.Id}" name="editordata"></textarea>
-                                                                                        </div>
-                                                                                                                                <div class="col-sm-12 p-w-md m-t-md text-center">
-                                                                                                                                    <button type="button" class="btn btn-primary" onclick="PostConfig(${config.Id},${config.Id})">Salvar</button>
-                                                                                                                                </div>
-                                                                                                                            </div>`
+                                                                                                                                                            <input type="text" class="form-control " id="config-public${config.Id}" data-field="Public Key Mercado Pago" />
+                                                                                                                                                        </div>
+
+                                                                                                                                                                    <div class="col-sm-12 col-md-6  p-w-md m-t-md text-center">
+                                                                                                                                                            <h5>Access Token Mercado Pago</h5>
+
+                                                                                                                                                            <input type="text" class="form-control " id="config-access${config.Id}" data-field="Access Token Mercado Pago" />
+                                                                                                                                                        </div>
+
+                                                                                                    <div class="col-sm-12 p-w-md m-t-md text-center">
+
+
+
+
+
+                                                                                                                    <h5>Mensagem Conclusão</h5>
+
+                                                                                                                    <textarea class="config-msg" id="config-msg${config.Id}" name="editordata"></textarea>
+                                                                                                                </div>
+                                                                                                                <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                                                                    <h5>Mensagem Conclusão para a Equipe</h5>
+
+                                                                                                                    <textarea class="config-msgequipe" id="config-msgequipe${config.Id}" name="editordata"></textarea>
+                                                                                                                </div>
+                                                                                                                                                        <div class="col-sm-12 p-w-md m-t-md text-center">
+                                                                                                                                                            <button type="button" class="btn btn-primary" onclick="PostConfig(${config.Id},${config.Id})">Salvar</button>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>`
 
                                                             $(`#ibox-${config.Id}`).html(html)
 
 
                                                             $(".config-campos").html(`
-                                                                                                                ${[...camposConfig].map(p => `<option value=${p.Id}>${p.Description}</option>`)}
-                                                                                                                `)
+                                                                                                                                        ${[...camposConfig].map(p => `<option value=${p.Id}>${p.Description}</option>`)}
+                                                                                                                                        `)
 
 
                                                             $(".config-equipes").html(`
-                                                                                                                ${[...equipes].map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
-                                                                                                                `)
+                                                                                                                                        ${[...equipes].map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+                                                                                                                                        `)
 
 
                                                             $(".config-igrejas").html(`
-                                                                                                                ${[...igrejas].map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
-                                                                                                                `)
+                                                                                                                                        ${[...igrejas].map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+                                                                                                                                        `)
 
                                                             $(`.centro-custos${config.Id}`).html(`${config.CentroCustos.filter(x => x.Tipo == "Receita").map(p => `<option value=${p.Id}>${p.Descricao}</option>`)}`)
-                                                            $(`#config-centrocustoinscricao${config.Id}`).val(config.CentroCustoInscricaoId)
-                                                            $(`#config-centrocustoequipe${config.Id}`).val(config.CentroCustoTaxaId)
+                                                            $(`#config-centrocustoinscricao${config.Id}`).val(config.CentroCustoInscricaoId).select2(createTagOptions).on('select2:select', function (e) {
+                                                                if (e.params.data.newTag) {
+                                                                    $.ajax({
+                                                                        url: "/CentroCusto/PostCentroCusto/",
+                                                                        datatype: "json",
+                                                                        type: "POST",
+                                                                        contentType: 'application/json; charset=utf-8',
+                                                                        data: JSON.stringify(
+                                                                            {
+                                                                                Id: null,
+                                                                                Descricao: e.params.data.id,
+                                                                                Tipo: 1,
+                                                                                ConfiguracaoId: config.Id
+                                                                            }),
+                                                                        success: function (data) {
+                                                                            // Append it to the select
+
+
+                                                                            var otherOption = new Option(data.CentroCusto.Descricao, data.CentroCusto.Id, false, false);
+                                                                            // Append it to the select
+                                                                            $(`#config-centrocustoequipe${config.Id}`).append(otherOption).trigger('change');
+                                                                            $(`#config-centrocustoinscricao${config.Id}`).find("option[value='" + e.params.data.id + "']").attr('value', data.CentroCusto.Id).trigger('change');
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                            });                                
+                                                            $(`#config-centrocustoequipe${config.Id}`).val(config.CentroCustoTaxaId).select2(createTagOptions).select2(createTagOptions).on('select2:select', function (e) {
+                                                                if (e.params.data.newTag) {
+                                                                    $.ajax({
+                                                                        url: "/CentroCusto/PostCentroCusto/",
+                                                                        datatype: "json",
+                                                                        type: "POST",
+                                                                        contentType: 'application/json; charset=utf-8',
+                                                                        data: JSON.stringify(
+                                                                            {
+                                                                                Id: null,
+                                                                                Descricao: e.params.data.id,
+                                                                                Tipo: 1,
+                                                                                ConfiguracaoId: config.Id
+                                                                            }),
+                                                                        success: function (data) {
+                                                                            // Append it to the select
+
+
+                                                                            var otherOption = new Option(data.CentroCusto.Descricao, data.CentroCusto.Id, false, false);
+                                                                            // Append it to the select
+                                                                            $(`#config-centrocustoinscricao${config.Id}`).append(otherOption).trigger('change');
+                                                                            $(`#config-centrocustoequipe${config.Id}`).find("option[value='" + e.params.data.id + "']").attr('value', data.CentroCusto.Id).trigger('change');
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                            })
                                                             $(`#config-titulo${config.Id}`).val(config.Titulo)
                                                             $(`#config-identificador${config.Id}`).val(config.Identificador)
                                                             $(`#config-public${config.Id}`).val(config.PublicTokenMercadoPago)
@@ -491,11 +543,20 @@
                                                             }).summernote('code', config.MsgConclusaoEquipe)
                                                             $(`#config-corhoverbotao${config.Id}`).val(config.CorHoverBotao)
                                                             $(`#config-corbotao${config.Id}`).val(config.CorBotao)
-                                                            $(`#config-equipecirculo${config.Id}`).val(config.EquipeCirculoId)
-                                                            $(`#config-equipecarona${config.Id}`).val(config.EquipeCaronaId)
-                                                            $(`#config-tipocirculo${config.Id}`).val(config.TipoCirculoId)
-                                                            $(`#config-tipoquarto${config.Id}`).val(config.TipoQuartoId)
-                                                            $(`#config-tipoevento${config.Id}`).val(config.TipoEventoId)
+                                                            $(`#config-equipecirculo${config.Id}`).val(config.EquipeCirculoId).select2(createTagOptions).on('select2:select', function (e) {
+                                                                if (e.params.data.newTag) {
+                                                                    postEquipe(e.params.data.id)
+                                                                }
+                                                            });
+                                                            $(`#config-equipecarona${config.Id}`).val(config.EquipeCaronaId).select2(createTagOptions
+                                                            ).on('select2:select', function (e) {
+                                                                if (e.params.data.newTag) {
+                                                                    postEquipe(e.params.data.id)
+                                                                }
+                                                            });
+                                                            $(`#config-tipocirculo${config.Id}`).val(config.TipoCirculoId).select2()
+                                                            $(`#config-tipoquarto${config.Id}`).val(config.TipoQuartoId).select2()
+                                                            $(`#config-tipoevento${config.Id}`).val(config.TipoEventoId).select2()
                                                             $(`#config-corhoverscroll${config.Id}`).val(config.CorHoverScroll)
                                                             if (config.LogoId) {
                                                                 $(`#img-logo${config.Id}`).css(`display`, `block`)
@@ -576,10 +637,18 @@
                                                                 success: function (data) {
                                                                     equipesLocal = data.Equipes
                                                                     $(`#config-equipes${config.Id}`).val(equipesLocal.map(equipe => equipe.EquipeId));
-                                                                    $(`#config-equipes${config.Id}`).select2();
-                                                                    console.log(equipesLocal);
+                                                                    $(`#config-equipes${config.Id}`).select2(createTagOptions).on('select2:select', function (e) {
+                                                                        if (e.params.data.newTag) {
+                                                                            postEquipe(e.params.data.id)
+                                                                        }
+                                                                    });
+
                                                                     $(`#config-equipes-inscricao${config.Id}`).val(equipesLocal.filter(x => x.ShowInscricao).map(equipe => equipe.EquipeId));
-                                                                    $(`#config-equipes-inscricao${config.Id}`).select2();
+                                                                    $(`#config-equipes-inscricao${config.Id}`).select2(createTagOptions).on('select2:select', function (e) {
+                                                                        if (e.params.data.newTag) {
+                                                                            postEquipe(e.params.data.id)
+                                                                        }
+                                                                    });
                                                                 }
                                                             });
 
@@ -595,7 +664,30 @@
                                                                 success: function (data) {
                                                                     igrejasLocal = data.Igrejas
                                                                     $(`#config-igreja${config.Id}`).val(igrejasLocal.map(igreja => igreja.IgrejaId));
-                                                                    $(`#config-igreja${config.Id}`).select2();
+                                                                    $(`#config-igreja${config.Id}`).select2(createTagOptions).on('select2:select', function (e) {
+                                                                        if (e.params.data.newTag) {
+                                                                            $.ajax({
+                                                                                url: "/Igreja/PostIgreja/",
+                                                                                datatype: "json",
+                                                                                type: "POST",
+                                                                                contentType: 'application/json; charset=utf-8',
+                                                                                data: JSON.stringify(
+                                                                                    {
+                                                                                        Id: null,
+                                                                                        Nome: e.params.data.id,
+                                                                                    }),
+                                                                                success: function (data) {
+                                                                                    // Append it to the select
+                                                                                    
+
+                                                                                    var otherOption = new Option(data.Igreja.Nome, data.Igreja.Id, false, false);
+                                                                                    // Append it to the select
+                                                                                    $(`#config-igreja${config.Id}`).find("option[value='" + e.params.data.id + "']").attr('value', data.Igreja.Id).trigger('change');
+                                                                                }
+                                                                            });
+                                                                        }
+
+                                                                    });                                                                   
                                                                 }
                                                             });
 
@@ -617,8 +709,8 @@
         }
 
 
-            $('title').text($('#title').text())
-            $('.title-circulo').text(SelectedConfig.EquipeCirculo)
+        $('title').text($('#title').text())
+        $('.title-circulo').text(SelectedConfig.EquipeCirculo)
 
         $(document).off('ready-ajax').on('ready-ajax', () => {
             verifyPermissionsConfig()
@@ -650,7 +742,7 @@
                                 contentType: `application/json; charset=utf-8`,
                                 url: `/Configuracao/Post${tipo}`,
                                 data: `{ Id: ${idConfig}, sourceId: ${data}
-                                                                                                                                            }`,
+                                                                                                                                                                    }`,
                                 success: function () {
                                     carregarConfiguracoes()
                                 }
@@ -669,6 +761,54 @@
 
         function LogoRelatorio(id, idConfig) {
             postArquivo(`logorelatorio`, id, idConfig)
+        }
+
+        function postEquipe(Equipe) {
+            $.ajax({
+                url: "/Equipe/PostEquipe/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: null,
+                        Nome: Equipe,
+                    }),
+                success: function (data) {
+                    var otherOption = new Option(data.Equipe.Nome, data.Equipe.Id, false, false);
+                    // Append it to the select
+                    $(`.config-equipes`).append(otherOption).trigger('change');
+                    $('.config-equipes').find("option[value='" + Equipe + "']").attr('value', data.Equipe.Id).trigger('change');
+                }
+            });
+        }
+
+        const createTagOptions = {
+            tags: true,            
+            templateResult: function formatState(state) {
+
+                if (state.newTag) {
+                    return `<span><i class="m-r-xs fa-1x fas fa-plus-square"></i>${state.text}</span>`
+                }
+
+                return `<span>${state.text}</span>`
+            },
+            escapeMarkup: function (m) {
+                return m;
+            },
+            createTag: function (params) {
+                var term = $.trim(params.term);
+
+                if (term === '') {
+                    return null;
+                }
+
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true // add additional parameters
+                }
+            }
         }
     </script>
 }

@@ -76,9 +76,10 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostIgreja(PostIgrejaModel model)
         {
-            igrejasBusiness.PostIgreja(model);
-
-            return new HttpStatusCodeResult(200);
+            return Json(new
+            {
+                Igreja = igrejasBusiness.PostIgreja(model)
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

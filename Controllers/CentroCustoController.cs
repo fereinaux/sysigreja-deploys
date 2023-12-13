@@ -2,6 +2,7 @@
 using Core.Business.Account;
 using Core.Business.CentroCusto;
 using Core.Business.Configuracao;
+using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.CentroCusto;
 using SysIgreja.ViewModels;
@@ -79,9 +80,10 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostCentroCusto(PostCentroCustoModel model)
         {
-            centroCustoBusiness.PostCentroCusto(model);
-
-            return new HttpStatusCodeResult(200);
+            return Json(new
+            {
+                CentroCusto = centroCustoBusiness.PostCentroCusto(model)
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

@@ -161,6 +161,21 @@ function ValidateRequired(form, formResult) {
     AplicarCssPadrao($(`${form} .required`));
     $(`${form} input.required`).each(function () {
         var input = $(this);
+        if (input.attr('type') == "checkbox" && !$(`#${input.attr('id')}:checked`).val()) {
+            formResult.IsValid = false;
+            AplicarCssErro(input);
+            formResult.ErrorsInput += AddErro(input.data("field"));
+        } else {
+            if (!input.val()) {
+                formResult.IsValid = false;
+                AplicarCssErro(input);
+                formResult.ErrorsInput += AddErro(input.data("field"));
+            }
+        }
+    });
+
+    $(`${form} textarea.required`).each(function () {
+        var input = $(this);
         if (!input.val()) {
             formResult.IsValid = false;
             AplicarCssErro(input);
@@ -218,11 +233,11 @@ function ValidateFone(form, formResult) {
     $(`${form} input.fone`).each(function () {
         var input = $(this);
         AplicarCssPadrao(input);
-        
+
         if (!getReference(input[0].id).isValidNumber()) {
             formResult.IsValid = false;
             AplicarCssErro(input);
-        formResult.ErrorsFormatacao += AddErro(`${input.data("field")}: ${input.attr('placeholder') }`);
+            formResult.ErrorsFormatacao += AddErro(`${input.data("field")}: ${input.attr('placeholder')}`);
         }
     });
 

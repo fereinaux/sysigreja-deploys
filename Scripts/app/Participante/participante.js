@@ -1043,7 +1043,36 @@ function Opcoes(id) {
             }
 
             $('#participante-etiquetas').val(data.Participante.EtiquetasList.map(etiqueta => etiqueta.Id))
-            $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
+            $('.participante-etiquetas').select2({ ...createTagOptions, dropdownParent: $("#form-opcoes") }).off('select2:select').on('select2:select', function (e) {
+                if (e.params.data.newTag) {
+                    $.ajax({
+                        url: "/Etiqueta/PostEtiqueta/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                Id: null,
+                                Nome: e.params.data.id,
+                                Cor: generateColor(),
+                                ConfiguracaoId: SelectedEvent.ConfiguracaoId
+                            }),
+                        success: function (data) {
+                            // Append it to the select
+
+
+                            var otherOption = new Option(data.Etiqueta.Nome, data.Etiqueta.Id, false, false);
+                            // Append it to the select
+                            $(`#participante-marcadores,#participante-nao-marcadores`).append(otherOption).trigger('change');
+
+                            $(`#participante-etiquetas`).find("option[value='" + e.params.data.id + "']").remove()
+                            $(`#participante-etiquetas`).append(new Option(data.Etiqueta.Nome, data.Etiqueta.Id, true, true)).trigger('change');
+                            e.params.data.newTag = false
+                        }
+                    });
+                }
+
+            });
 
             arrayData = table.data().toArray()
             let index = arrayData.findIndex(r => r.Id == id)

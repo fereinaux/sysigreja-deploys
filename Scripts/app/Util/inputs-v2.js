@@ -677,3 +677,35 @@ function handleInputSearchMouseDown(event) {
 function handleInputSearchClick(event) {
     event.stopPropagation()
 }
+
+const createTagOptions = {
+    tags: true,
+    templateResult: function formatState(state) {
+
+        if (state.newTag) {
+            return `<span><i class="m-r-xs fa-1x fas fa-plus-square"></i>${state.text}</span>`
+        }
+
+        return `<span>${state.text}</span>`
+    },
+    escapeMarkup: function (m) {
+        return m;
+    },
+    createTag: function (params) {
+        var term = $.trim(params.term);
+
+        if (term === '') {
+            return null;
+        }
+
+        return {
+            id: term,
+            text: term,
+            newTag: true // add additional parameters
+        }
+    }
+}
+
+function generateColor() {
+    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}

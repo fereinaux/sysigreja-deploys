@@ -721,7 +721,6 @@ function Pagamentos(row) {
 }
 
 function GetEquipante(id) {
-    $('.equipante-etiquetas').select2({ dropdownParent: $("#form-equipante") });
     if (id > 0) {
         $.ajax({
             url: "/Equipante/GetEquipante/",

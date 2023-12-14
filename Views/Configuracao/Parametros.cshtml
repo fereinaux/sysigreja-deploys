@@ -782,33 +782,6 @@
                 }
             });
         }
-
-        const createTagOptions = {
-            tags: true,            
-            templateResult: function formatState(state) {
-
-                if (state.newTag) {
-                    return `<span><i class="m-r-xs fa-1x fas fa-plus-square"></i>${state.text}</span>`
-                }
-
-                return `<span>${state.text}</span>`
-            },
-            escapeMarkup: function (m) {
-                return m;
-            },
-            createTag: function (params) {
-                var term = $.trim(params.term);
-
-                if (term === '') {
-                    return null;
-                }
-
-                return {
-                    id: term,
-                    text: term,
-                    newTag: true // add additional parameters
-                }
-            }
-        }
+        
     </script>
 }

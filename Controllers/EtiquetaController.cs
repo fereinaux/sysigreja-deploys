@@ -1,6 +1,7 @@
 ﻿using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
+using Core.Business.Equipes;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models.Etiquetas;
@@ -50,7 +51,7 @@ namespace SysIgreja.Controllers
 
         [HttpPost]
         public ActionResult GetEtiquetasByEventoId(int eventoId)
-        {            
+        {
             var result = etiquetasBusiness
                 .GetEtiquetas(eventosBusiness.GetEventoById(eventoId).ConfiguracaoId.Value)
                 .ToList()
@@ -76,9 +77,10 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostEtiqueta(PostEtiquetaModel model)
         {
-            etiquetasBusiness.PostEtiqueta(model);
-
-            return new HttpStatusCodeResult(200);
+            return Json(new
+            {
+                Etiqueta = etiquetasBusiness.PostEtiqueta(model),
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -90,9 +92,9 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddEtiqueta(int destinoId,int etiquetaId, TipoPessoaEnum tipo, int? eventoId)
+        public ActionResult AddEtiqueta(int destinoId, int etiquetaId, TipoPessoaEnum tipo, int? eventoId)
         {
-            etiquetasBusiness.AddEtiqueta(destinoId,etiquetaId,tipo,eventoId);
+            etiquetasBusiness.AddEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 
             return new HttpStatusCodeResult(200);
         }
@@ -100,7 +102,7 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult RemoveEtiqueta(int destinoId, int etiquetaId, TipoPessoaEnum tipo, int? eventoId)
         {
-            etiquetasBusiness.RemoveEtiqueta(destinoId, etiquetaId,tipo, eventoId);
+            etiquetasBusiness.RemoveEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 
             return new HttpStatusCodeResult(200);
         }

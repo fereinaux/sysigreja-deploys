@@ -253,8 +253,25 @@ function PostParticipante() {
                         Etiquetas: $('.participante-etiquetas').val()
                     }),
                 success: function () {
-                    SuccessMesageOperation();
-                    GetEquipantes($("#equipantes").val())
+
+                    $.ajax({
+                        url: "/Equipante/PostEtiquetas/",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(
+                            {
+                                Id: equipanteId,
+                                eventoId: SelectedEvent.Id,
+                                Etiquetas: $('.participante-etiquetas').val(),
+                                Obs: $('#participante-obs').val(),
+                            }),
+                        success: function () {
+                            SuccessMesageOperation();
+                            GetEquipantes($("#equipantes").val())
+                        }
+                    });
+
 
                 }
             });
@@ -288,6 +305,7 @@ function GetParticipante() {
                 $("#equipantes").val("").trigger("chosen:updated");
                 $('#form-participante').removeClass('d-none');
                 $("#equipante-id").val(0);
+                $('#participante-obs').css('display', 'block')
                 $("#participante-id").val(data.Participante.Id);
                 $("#participante-checkin").val(data.Participante.Checkin);
                 $(`#participante-camisa`).val(data.Participante.Camisa);
@@ -361,7 +379,36 @@ function GetParticipante() {
                 $('.contatotext').text(realista.NomeContato)
                 $('#marcadores').html(realista.EtiquetasList.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
                 $('#participante-etiquetas').val(data.Participante.EtiquetasList.map(etiqueta => etiqueta.Id))
-                $('.participante-etiquetas').select2()
+                $('.participante-etiquetas').select2(createTagOptions).off('select2:select').on('select2:select', function (e) {
+                    if (e.params.data.newTag) {
+                        $.ajax({
+                            url: "/Etiqueta/PostEtiqueta/",
+                            datatype: "json",
+                            type: "POST",
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(
+                                {
+                                    Id: null,
+                                    Nome: e.params.data.id,
+                                    Cor: generateColor(),
+                                    ConfiguracaoId: SelectedEvent.ConfiguracaoId
+                                }),
+                            success: function (data) {
+                                // Append it to the select
+
+
+                                var otherOption = new Option(data.Etiqueta.Nome, data.Etiqueta.Id, false, false);
+                                // Append it to the select
+                                $(`#participante-marcadores,#participante-nao-marcadores`).append(otherOption).trigger('change');
+
+                                $(`#participante-etiquetas`).find("option[value='" + e.params.data.id + "']").remove()
+                                $(`#participante-etiquetas`).append(new Option(data.Etiqueta.Nome, data.Etiqueta.Id, true, true)).trigger('change');
+                                e.params.data.newTag = false
+                            }
+                        });
+                    }
+
+                });
                 $('.pagamento').show()
                 $('#participante-obs').val(realista.Observacao)
                 if (data.Participante.Foto) {
@@ -473,7 +520,7 @@ function GetEquipante() {
                 $(`#participante-email`).val(data.Equipante.Email);
                 $(`#participante-camisa`).val(data.Equipante.Camisa);
                 $(`#participante-nome-pai`).val(data.Equipante.NomePai);
-
+                $('#participante-obs').css('display','none')
                 setNumber('participante-fone', data.Equipante.Fone)
                 setNumber('participante-fone-mae', data.Equipante.FoneMae)
                 setNumber('participante-fone-pai', data.Equipante.FonePai)
@@ -519,7 +566,36 @@ function GetEquipante() {
                 $('#marcadores').html(data.Equipante.EtiquetasList.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, ''))
                 $(`#participante-congregacao`).val(data.Equipante.Congregacao);
                 $('#participante-etiquetas').val(data.Equipante.EtiquetasList.map(etiqueta => etiqueta.Id))
-                $('.participante-etiquetas').select2()
+                $('.participante-etiquetas').select2(createTagOptions).off('select2:select').on('select2:select', function (e) {
+                    if (e.params.data.newTag) {
+                        $.ajax({
+                            url: "/Etiqueta/PostEtiqueta/",
+                            datatype: "json",
+                            type: "POST",
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(
+                                {
+                                    Id: null,
+                                    Nome: e.params.data.id,
+                                    Cor: generateColor(),
+                                    ConfiguracaoId: SelectedEvent.ConfiguracaoId
+                                }),
+                            success: function (data) {
+                                // Append it to the select
+
+
+                                var otherOption = new Option(data.Etiqueta.Nome, data.Etiqueta.Id, false, false);
+                                // Append it to the select
+                                $(`#participante-marcadores,#participante-nao-marcadores`).append(otherOption).trigger('change');
+
+                                $(`#participante-etiquetas`).find("option[value='" + e.params.data.id + "']").remove()
+                                $(`#participante-etiquetas`).append(new Option(data.Etiqueta.Nome, data.Etiqueta.Id, true, true)).trigger('change');
+                                e.params.data.newTag = false
+                            }
+                        });
+                    }
+
+                });
                 if (data.Equipante.Foto) {
 
                     $('#foto').attr("src", 'data:image/jpeg;base64,' + data.Equipante.Foto)
@@ -963,7 +1039,7 @@ $("#arquivo-modal").change(function () {
 });
 
 
-function loadCampos(id,participante) {
+function loadCampos(id, participante) {
     var execute = false
 
     if (id != oldId || $(`#${participante}`).val()) {
@@ -1302,11 +1378,11 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? ` <div class="col-sm-6 
 }
 
 $("#participantes").change(function () {
-    loadCampos(SelectedEvent.Id,'participantes')
+    loadCampos(SelectedEvent.Id, 'participantes')
 })
 
 $("#equipantes").change(function () {
-    loadCampos(SelectedEvent.Id,'equipantes')
+    loadCampos(SelectedEvent.Id, 'equipantes')
 })
 
 function montarMapa() {

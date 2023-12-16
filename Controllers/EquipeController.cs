@@ -65,6 +65,8 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult TogglePresenca(int EquipanteEventoId, int ReuniaoId)
         {

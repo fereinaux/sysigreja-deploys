@@ -658,6 +658,8 @@ namespace SysIgreja.Controllers
                     else if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Ativo))
                     {
                         return Json(new { 
+                            Participante = equipante.Nome,
+                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", 
                             Url = Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }) }, JsonRequestBehavior.AllowGet);
                     }
                     else if (equipante != null)

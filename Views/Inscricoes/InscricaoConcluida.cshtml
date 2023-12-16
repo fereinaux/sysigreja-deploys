@@ -27,7 +27,7 @@
 
             @if (ViewBag.Reuniao != null)
             {
-                <button type="button" class="btn btn-juventude pnl-cadastro" id="btn-presenca" onclick="SelfPresenca()">Marcar Presença</button>
+                <button type="button" class="btn btn-juventude pnl-cadastro" id="btn-presenca" onclick="SelfPresenca(@ViewBag.Reuniao.Id,@ViewBag.EquipanteEvento.Id)">Marcar Presença</button>
                 <h2>@ViewBag.Reuniao.Id</h2>
                 <h2>@ViewBag.EquipanteEvento.Id</h2>
             }
@@ -60,7 +60,7 @@
         {
             <script>
 
-        function SelfPresenca() {
+        function SelfPresenca(reuniao,equipantEvennto) {
             $.ajax({
                 url: "/Equipe/TogglePresenca/",
                 datatype: "json",
@@ -68,8 +68,8 @@
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        EquipanteEventoId: @ViewBag.EquipanteEvento.Id ,
-                        ReuniaoId: @ViewBag.Reuniao.Id
+                        EquipanteEventoId: equipantEvennto ,
+                        ReuniaoId: reuniao
                     }),
                 success: function () {
                     $('#btn-presenca').css('display', 'none')

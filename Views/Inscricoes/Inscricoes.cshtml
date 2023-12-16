@@ -76,7 +76,7 @@
                         {
                             <div class="form-group">
                                 <label for="participante-fone" class="">Tamanho da camisa</label>
-                                <select class="form-control required"  id="participante-camisa" data-field="Tamanho da camisa">
+                                <select class="form-control required" id="participante-camisa" data-field="Tamanho da camisa">
                                     <option></option>
                                     <option value="8">8</option>
                                     <option value="10">10</option>
@@ -849,57 +849,61 @@
         function PostInscricao() {
             $('.btn-juventude').prop('disabled', true)
             if (ValidateForm(`#form-inscricao`)) {
-                $.ajax({
-                    url: "/Inscricoes/VerificaCadastro",
-                    datatype: "json",
-                    type: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({
-                        Email: '@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone`).val() : $(`#participante-email`).val(),
-                        Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
-                        eventoId: @ViewBag.EventoId
-                   }),
-                    success: function (data) {
-                        evento = data.Evento
-                        if (data.Participante && typeof (data.Participante) == "string") {
 
-                            var div = document.createElement("div");
+                if ('(@ViewBag.Tipo)'.includes('Equipe')) {
+                    executePostInscricao()
+                } else {
+                    $.ajax({
+                        url: "/Inscricoes/VerificaCadastro",
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify({
+                            Email: '@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone`).val() : $(`#participante-email`).val(),
+                            Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
+                            eventoId: @ViewBag.EventoId
+                       }),
+                        success: function (data) {
+                            evento = data.Evento
+                            if (data.Participante && typeof (data.Participante) == "string") {
 
-                            div.innerHTML = `<div><span>Já existe uma inscrição para o ${'(@ViewBag.Tipo)'.includes('Equipe') ? `telefone <strong>${$(`#participante-fone`).val()}</strong>` : `email <strong>${$(`#participante-email`).val()}</strong>`} no nome de <strong>${data.Participante}</strong> para o <strong>${data.Evento}</strong>. Prosseguir irá substituir a inscrição existente. Deseja continuar?</span> </div>`
-                            CustomSwal({
-                                title: "Inscrição Duplicada",
-                                icon: `logo`,
-                                content: div,
-                                className: "button-center",
-                                dangerMode: true,
-                                buttons: {
-                                    cancelar: {
-                                        text: "Cancelar",
-                                        value: false,
-                                        className: "w-150 btn-cancelar"
-                                    },
-                                    confirmar: {
-                                        text: "Seguinte",
-                                        value: true,
-                                        className: "w-150 btn-confirmar"
-                                    },
+                                var div = document.createElement("div");
 
-                                }
-                            }).then(result => {
-                                if (result) {
-                                    executePostInscricao()
-                                } else {
-                                    $("body").scrollTop(0);
-                                    $('.btn-juventude').prop('disabled', false)
-                                }
-                            })
-                        } else {
-                            executePostInscricao()
+                                div.innerHTML = `<div><span>Já existe uma inscrição para o ${'(@ViewBag.Tipo)'.includes('Equipe') ? `telefone <strong>${$(`#participante-fone`).val()}</strong>` : `email <strong>${$(`#participante-email`).val()}</strong>`} no nome de <strong>${data.Participante}</strong> para o <strong>${data.Evento}</strong>. Prosseguir irá substituir a inscrição existente. Deseja continuar?</span> </div>`
+                                CustomSwal({
+                                    title: "Inscrição Duplicada",
+                                    icon: `logo`,
+                                    content: div,
+                                    className: "button-center",
+                                    dangerMode: true,
+                                    buttons: {
+                                        cancelar: {
+                                            text: "Cancelar",
+                                            value: false,
+                                            className: "w-150 btn-cancelar"
+                                        },
+                                        confirmar: {
+                                            text: "Seguinte",
+                                            value: true,
+                                            className: "w-150 btn-confirmar"
+                                        },
+
+                                    }
+                                }).then(result => {
+                                    if (result) {
+                                        executePostInscricao()
+                                    } else {
+                                        $("body").scrollTop(0);
+                                        $('.btn-juventude').prop('disabled', false)
+                                    }
+                                })
+                            } else {
+                                executePostInscricao()
+                            }
+
                         }
-
-                    }
-                })
-
+                    })
+                }
             } else {
                 $('.btn-juventude').prop("disabled", false);
             }

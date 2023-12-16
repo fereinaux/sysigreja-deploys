@@ -34,7 +34,10 @@
 </div>
 
 @section Scripts {
-    <script>
+
+    @if (ViewBag.Configuracao.PublicTokenMercadoPago != null)
+    {
+        <script>
         const mp = new MercadoPago("@ViewBag.Configuracao.PublicTokenMercadoPago");
 
         window.onload = function () {
@@ -48,11 +51,12 @@
 
 
 
-    </script>
-  @if (ViewBag.Reuniao != null)
-            {
+        </script>
+    }
 
-        <script>
+        @if (ViewBag.Reuniao != null)
+        {
+            <script>
 
         function SelfPresenca() {
             $.ajax({
@@ -71,6 +75,6 @@
                 }
             });
         }
-        </script>
-            }
-}
+            </script>
+        }
+    }

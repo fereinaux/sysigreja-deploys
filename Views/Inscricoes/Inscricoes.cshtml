@@ -701,8 +701,9 @@
                                 window.location.href = window.location.origin;
                             })
                        } else {
-
-                           if (data.Participante && typeof (data.Participante) != "string") {
+                           if (data.Url) {
+                               window.location.href = data.Url;
+                           } else if (data.Participante && typeof (data.Participante) != "string") {
                                if ('(@ViewBag.Tipo)'.includes('Equipe')) {
                                    $('#EquipanteId').val(data.Participante.Id)
                                }
@@ -734,9 +735,7 @@
                                }
                                $.unblockUI();
                            }
-                           else if (data.Url) {
-                               window.location.href = data.Url;
-                           }
+
                            if ($('#participante-cep').val()) {
                                verificaCep($('#participante-cep')[0])
                            }

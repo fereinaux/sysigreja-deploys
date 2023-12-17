@@ -75,24 +75,27 @@
     <div class="event">
 
         <div class="fixed-footer">
-            @if (ViewBag.Reuniao != null && ViewBag.Reuniao.Id != null)
-            {
-                <span onclick="window.location.href = '/Inscricoes/Presenca/@ViewBag.EventoId'" class="btn btn-outline mt-5 btn-default"><i class="fas fa-calendar-check"></i> Marcar Presença</span>
-            }
-            @if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe == 4)
-            {
 
-                <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5">Inscreva-se já</span>
-            }
-            else if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe != 4)
-            {
-                <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'" class="btn btn-juventude mt-5">Inscreva-se já</span>
-            }
-            else
-            {
-                <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'" class="btn btn-juventude mt-5">Inscreva-se já</span>
-            }
+            <div class="info-evento">
+                @if (ViewBag.Reuniao != null && ViewBag.Reuniao.Id != null)
+                {
+                    <span onclick="window.location.href = '/Inscricoes/Presenca/@ViewBag.EventoId'" class="btn btn-outline mt-5 btn-default"><i class="fas fa-calendar-check"></i> Marcar Presença</span>
+                }
+                @if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe == 4)
+                {
 
+                    <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                }
+                else if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe != 4)
+                {
+                    <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                }
+                else
+                {
+                    <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                }
+
+            </div>
         </div>
     </div>
 
@@ -224,19 +227,29 @@ else if (!String.IsNullOrEmpty(ViewBag.Evento.Conteudo))
         margin: 0;
         border-radius: 0;
         z-index: 2;
-        padding: 16px;
-        display: flex;
-        gap: 5px;
+      
 
     }
 
+        .fixed-footer .info-evento {
+            gap: 5px;
+            flex-direction: row;
+        }
+
         .fixed-footer span {
-            margin: 0 auto;
-            flex: 1;
-            font-size: 14px;
+            flex: 1 1 0;
+            width: 0;
+            font-size: 1rem !important;
             letter-spacing: 0.5px;
             font-weight: 600;
+            padding: 8px 2px;
         }
+
+    .btn-juventude {
+        font-size: 1rem!important;
+        flex: 1 1 0;
+        width: 0;
+    }
     .info-evento {
         display: flex;
         flex-direction: column;

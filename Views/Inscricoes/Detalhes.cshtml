@@ -75,7 +75,7 @@
     <div class="event">
 
         <div class="fixed-footer">
-            @if (ViewBag.Reuniao != null)
+            @if (ViewBag.Reuniao != null && ViewBag.Reuniao.Id != null)
             {
                 <span onclick="window.location.href = '/Inscricoes/Presenca/@ViewBag.EventoId'" class="btn btn-outline mt-5 btn-default"><i class="fas fa-calendar-check"></i> Marcar Presença</span>
             }

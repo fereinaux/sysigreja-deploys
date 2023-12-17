@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Owin;
 using Owin;
-using WebEssentials.AspNetCore.Pwa;
 
 [assembly: OwinStartupAttribute(typeof(SysIgreja.Startup))]
 namespace SysIgreja
@@ -16,12 +15,7 @@ namespace SysIgreja
         public void ConfigureServices(IServiceCollection services)
         {
             // Your other services
-            services.AddMvc();
-            services.AddProgressiveWebApp(new PwaOptions
-            {
-                RegisterServiceWorker = false,
-                RegisterWebmanifest = false
-            });
+          
         }
     }
 }

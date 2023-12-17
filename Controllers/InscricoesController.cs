@@ -240,7 +240,7 @@ namespace SysIgreja.Controllers
             return View("Index");
         }
 
-        public ActionResult Inscricoes(int Id, string Tipo)
+        public ActionResult Inscricoes(int Id, string Tipo, string email = "")
         {
             ViewBag.Title = Tipo;
 
@@ -253,6 +253,7 @@ namespace SysIgreja.Controllers
             ViewBag.Configuracao = config;
             ViewBag.Login = configuracaoBusiness.GetLogin();
             ViewBag.Igrejas = configuracaoBusiness.GetIgrejas(evento.ConfiguracaoId.Value);
+            ViewBag.Email = email;
             switch (Tipo)
             {
                 case "Inscrições Equipe":
@@ -275,6 +276,26 @@ namespace SysIgreja.Controllers
             }
         }
 
+        public ActionResult Presenca(int Id)
+        {
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
+            var reuniao = evento.Reunioes.FirstOrDefault(x => x.DataReuniao.Date == DateTime.Today.Date);
+
+            if (reuniao == null)
+            {
+                return RedirectToAction("Detalhes", new { Id = Id });
+            }
+
+            ViewBag.Reuniao = reuniao;
+            ViewBag.Title = "Marcar Presença";
+
+            ViewBag.EventoId = Id;
+            var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+            ViewBag.Configuracao = config;
+            ViewBag.Login = configuracaoBusiness.GetLogin();
+            return View("Presenca");
+        }
+
 
         public ActionResult Detalhes(int Id)
         {
@@ -294,7 +315,7 @@ namespace SysIgreja.Controllers
             if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto && evento.Status != StatusEnum.Informativo)
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
 
-
+            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(x => x.DataReuniao.Date == DateTime.Today.Date);
             ViewBag.EventoId = Id;
             evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : evento.Valor;
             ViewBag.Evento = evento;
@@ -651,23 +672,29 @@ namespace SysIgreja.Controllers
                     if (evento.Configuracao.VincularMontagem.HasValue && evento.Configuracao.VincularMontagem.Value == true &&
                         ((equipante == null) || (!equipante.Equipes.Any(x => x.EventoId == eventoId))))
                     {
-                        return Json(new { 
-                            MontagemNegado = true, 
-                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
+                        return Json(new
+                        {
+                            MontagemNegado = true,
+                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}"
+                        }, JsonRequestBehavior.AllowGet);
                     }
                     else if (equipante != null && equipante.Equipes != null && equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Ativo))
                     {
-                        return Json(new { 
+                        return Json(new
+                        {
                             Participante = equipante.Nome,
-                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", 
-                            Url = Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" }) }, JsonRequestBehavior.AllowGet);
+                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}",
+                            Url = Url.Action("InscricaoConcluida", new { Id = equipante.Id, EventoId = eventoId, Tipo = "Inscrições Equipe" })
+                        }, JsonRequestBehavior.AllowGet);
                     }
                     else if (equipante != null)
                     {
-                        return Json(new { 
-                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}", 
-                            Montagem = equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Montagem), 
-                            Participante = mapper.Map<EquipanteListModel>(equipante) }, JsonRequestBehavior.AllowGet);
+                        return Json(new
+                        {
+                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}",
+                            Montagem = equipante.Equipes.Any(x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Montagem),
+                            Participante = mapper.Map<EquipanteListModel>(equipante)
+                        }, JsonRequestBehavior.AllowGet);
                     }
                     return Json(new { Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}" }, JsonRequestBehavior.AllowGet);
 

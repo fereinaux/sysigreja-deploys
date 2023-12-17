@@ -25,10 +25,6 @@
                 <div id="wallet_container"></div>
             }
 
-            @if (ViewBag.Reuniao != null)
-            {
-                <button type="button" class="btn btn-juventude pnl-cadastro" id="btn-presenca" onclick="SelfPresenca(@ViewBag.Reuniao.Id,@ViewBag.EquipanteEvento.Id)">Marcar Presença</button>
-            }
         </div>
     </div>
 </div>
@@ -54,27 +50,5 @@
         </script>
     }
 
-        @if (ViewBag.Reuniao != null)
-        {
-            <script>
 
-        function SelfPresenca(reuniao,equipantEvennto) {
-            $.ajax({
-                url: "/Equipe/TogglePresenca/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(
-                    {
-                        EquipanteEventoId: equipantEvennto ,
-                        ReuniaoId: reuniao
-                    }),
-                success: function () {
-                    $('#btn-presenca').css('display', 'none')
-                    SuccessMesageOperation();
-                }
-            });
-        }
-            </script>
-        }
     }

@@ -66,13 +66,20 @@ namespace SysIgreja.Controllers
         }
 
 
-        [AllowAnonymous]
         [HttpPost]
         public ActionResult TogglePresenca(int EquipanteEventoId, int ReuniaoId)
         {
             equipesBusiness.TogglePresenca(EquipanteEventoId, ReuniaoId);
 
             return new HttpStatusCodeResult(200);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult TogglePresencaByEmail(string email, int ReuniaoId)
+        {
+
+            return Json(new { Result = equipesBusiness.TogglePresencaByEmail(email, ReuniaoId) }, JsonRequestBehavior.AllowGet);
         }
 
 

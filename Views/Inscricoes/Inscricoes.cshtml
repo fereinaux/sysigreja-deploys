@@ -446,6 +446,7 @@
 @section scripts {
     <script>
         var equipeCarona =  @ViewBag.Configuracao.EquipeCaronaId
+
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
         $(window).on('load', function () {
             $(`input`).val("");
@@ -464,8 +465,8 @@
 
             var nome = localStorage.getItem('nome_cadastro')
             var email = localStorage.getItem('email_cadastro')
-
-            if (nome && email) {
+            $('#participante-email').val('@ViewBag.Email')
+            if (nome && email && !$('#participante-email').val()) {
 
                 var div = document.createElement("div");
                 div.innerHTML = `
@@ -842,6 +843,10 @@
                 $('.casado').addClass('d-none');
                 $("#participante-data-casamento").removeClass('required');
             });
+
+            if ($('#participante-email').val()) {
+                VerificaCadastro()
+            }
         });
 
         var evento = null

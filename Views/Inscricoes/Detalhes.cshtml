@@ -75,6 +75,10 @@
     <div class="event">
 
         <div class="fixed-footer">
+            @if (ViewBag.Reuniao != null)
+            {
+                <span onclick="window.location.href = '/Inscricoes/Presenca/@ViewBag.EventoId'" class="btn btn-outline mt-5 btn-default"><i class="fas fa-calendar-check"></i> Marcar Presença</span>
+            }
             @if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe == 4)
             {
 
@@ -88,6 +92,7 @@
             {
                 <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'" class="btn btn-juventude mt-5">Inscreva-se já</span>
             }
+
         </div>
     </div>
 
@@ -221,12 +226,13 @@ else if (!String.IsNullOrEmpty(ViewBag.Evento.Conteudo))
         z-index: 2;
         padding: 16px;
         display: flex;
+        gap: 5px;
 
     }
 
         .fixed-footer span {
             margin: 0 auto;
-            width: 100%;
+            flex: 1;
             font-size: 14px;
             letter-spacing: 0.5px;
             font-weight: 600;

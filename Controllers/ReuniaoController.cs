@@ -55,13 +55,15 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetReuniao(int Id)
         {
-            var result = reuniaosBusiness.GetReuniaoById(Id);
-            result.Presenca = null;
-            result.Evento = null;
-            result.UsuarioCadastroId = null;
-            result.UsuarioCadastro = null;
-            result.UsuarioDelecao = null;
-            result.UsuarioEdicao = null;
+            var result = reuniaosBusiness.GetQueryReunioes().Where(x => x.Id == Id)
+                .Select(x => new ReuniaoViewModel
+                {
+                    Id = x.Id,
+                    DataReuniao = x.DataReuniao,
+                    Presenca = x.Presenca.Count(),
+                    Pauta = x.Pauta,
+                    Titulo = x.Titulo
+                }).FirstOrDefault();
 
             return Json(new { Reuniao = result }, JsonRequestBehavior.AllowGet);
         }

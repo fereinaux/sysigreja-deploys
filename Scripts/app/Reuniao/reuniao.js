@@ -55,7 +55,7 @@ function GetReuniao(id) {
             success: function (data) {
                 $("#reuniao-id").val(data.Reuniao.Id);
                 $("#reuniao-titulo").val(data.Reuniao.Titulo),
-                $("#reuniao-data").val(moment(data.Reuniao.DataReuniao).format('DD/MM/YYYY'));
+                    $("#reuniao-data").val(moment(data.Reuniao.DataReuniao).format('DD/MM/YYYY  HH:mm'));
             }
         });
     }

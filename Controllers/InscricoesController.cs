@@ -279,7 +279,7 @@ namespace SysIgreja.Controllers
         public ActionResult Presenca(int Id)
         {
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
-            var reuniao = evento.Reunioes.FirstOrDefault(x => TimeZoneInfo.ConvertTime(x.DataReuniao.Date, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")) == (TimeZoneInfo.ConvertTime(System.DateTime.Today, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))));
+            var reuniao = evento.Reunioes.FirstOrDefault(x => x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado);
 
             if (reuniao == null)
             {
@@ -315,7 +315,7 @@ namespace SysIgreja.Controllers
             if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto && evento.Status != StatusEnum.Informativo)
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
 
-            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(x => TimeZoneInfo.ConvertTime(x.DataReuniao.Date, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")) == (TimeZoneInfo.ConvertTime(System.DateTime.Today, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))));
+            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(x => x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado);
             ViewBag.EventoId = Id;
             evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : evento.Valor;
             ViewBag.Evento = evento;
@@ -435,9 +435,9 @@ namespace SysIgreja.Controllers
                            .Replace("${DescricaoEvento}", eventoAtual.Descricao)
                  .Replace("${ValorEvento}", eventoAtual.ValorTaxa.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")))
                  .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
-                    if (!ev.Presencas.Any(x => TimeZoneInfo.ConvertTime(x.Reuniao.DataReuniao.Date, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")) == (TimeZoneInfo.ConvertTime(System.DateTime.Today, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")))))
+                    if (!ev.Presencas.Any(x => x.Reuniao.DataReuniao.Date == DateTime.Today.Date && x.Reuniao.Status != StatusEnum.Deletado))
                     {
-                        ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(x => TimeZoneInfo.ConvertTime(x.DataReuniao.Date, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")) == (TimeZoneInfo.ConvertTime(System.DateTime.Today, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time"))));
+                        ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(x => x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado);
                     }
                     ViewBag.QRCode = $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
 

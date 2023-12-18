@@ -91,6 +91,7 @@ namespace SysIgreja.Controllers
             public string Titulo { get; set; }
             public string Logo { get; set; }
             public string Background { get; set; }
+            public int? BackgroundId { get; set; }
             public string Status { get; set; }
             public string StatusEquipe { get; set; }
             public string Identificador { get; set; }
@@ -181,6 +182,42 @@ namespace SysIgreja.Controllers
 
             return File(stream.ToArray(), "image/png");
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult GetEventosEndpoint()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
+            var eventos = eventosBusiness.GetEventos().Where(x =>
+            (
+              (
+                (
+                  (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve) ||
+                  (x.StatusEquipe == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.EmBreve)
+                ) ||
+                (
+              x.DataEvento > DateTime.Today && x.Status == StatusEnum.Informativo)
+              ) 
+            )).ToList().Select(x => new GetEventosInscricaoViewModel
+            {
+                Id = x.Id,
+                Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
+                Valor = x.Valor,
+                Numeracao = x.Numeracao,
+                DataEvento = x.DataEvento,
+                DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
+                Descricao = x.Descricao,
+                Titulo = x.Configuracao.Titulo,
+                Status = x.Status.GetDescription(),
+                StatusEquipe = x.StatusEquipe.GetDescription(),
+                BackgroundId = x.Configuracao.BackgroundId,
+            }).OrderBy(x => x.DataEvento).ToList();
+
+            var json = Json(new { Eventos = eventos }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
+        }
+
 
         [HttpGet]
         [AllowAnonymous]

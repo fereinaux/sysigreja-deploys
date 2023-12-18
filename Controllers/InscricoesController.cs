@@ -125,6 +125,7 @@ namespace SysIgreja.Controllers
             }
         }
 
+        [AllowAnonymous]
         public ActionResult LogoByNome(string nome)
         {
             var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Logo).Where(x => x.Configuracao.Identificador.ToLower() == nome.ToLower()).OrderByDescending(x => x.DataEvento).FirstOrDefault();
@@ -142,6 +143,7 @@ namespace SysIgreja.Controllers
 
         }
 
+        [AllowAnonymous]
         public ActionResult BackgroundByNome(string nome)
         {
             var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Background).Where(x => x.Configuracao.Identificador.ToLower() == nome.ToLower()).OrderByDescending(x => x.DataEvento).FirstOrDefault();

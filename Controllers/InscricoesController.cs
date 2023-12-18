@@ -206,6 +206,7 @@ namespace SysIgreja.Controllers
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 Valor = x.Valor,
                 Numeracao = x.Numeracao,
+                Identificador = x.Configuracao.Identificador,
                 DataEvento = x.DataEvento,
                 DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
                 Descricao = x.Descricao,

@@ -167,7 +167,7 @@ namespace SysIgreja.Controllers
         {
             var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Logo).Where(x => x.Id == id).OrderByDescending(x => x.DataEvento).FirstOrDefault();
 
-            var arquivo = evento?.Configuracao?.Logo;
+            var arquivo = evento?.Configuracao?.Logo ?? configuracaoBusiness.GetLoginQuery().Include(x => x.Logo).FirstOrDefault().Logo;
 
             if (arquivo != null)
             {

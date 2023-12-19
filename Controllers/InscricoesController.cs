@@ -217,7 +217,9 @@ namespace SysIgreja.Controllers
                 x.Configuracao.CorBotao,
                 x.Conteudo,
                 x.Configuracao.LogoId,
-                x.DataExtenso
+                x.DataExtenso,
+                x.LinkLocal,
+                x.NomeLocal
 
             }).OrderBy(x => x.DataEvento).ToList();
 

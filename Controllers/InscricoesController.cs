@@ -221,6 +221,18 @@ namespace SysIgreja.Controllers
             return json;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult GetLoginInfo()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
+          
+
+            var json = Json(new { Login = configuracaoBusiness.GetLoginResumido()}, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
+        }
+
 
         [HttpGet]
         [AllowAnonymous]

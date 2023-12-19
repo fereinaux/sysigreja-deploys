@@ -183,9 +183,9 @@ namespace SysIgreja.Controllers
         [AllowAnonymous]
         public ActionResult BackgroundById(int id)
         {
-            var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Background).Where(x => x.Id == id).OrderByDescending(x => x.DataEvento).FirstOrDefault();
+            var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Background).Include(x => x.Arte).Where(x => x.Id == id).OrderByDescending(x => x.DataEvento).FirstOrDefault();
 
-            var arquivo = evento?.Configuracao?.Background;
+            var arquivo = evento?.Configuracao?.Background ?? evento.Arte;
 
             if (arquivo != null)
             {
@@ -249,7 +249,7 @@ namespace SysIgreja.Controllers
                 Titulo = x.Configuracao?.Titulo ?? x.Descricao,
                 Status = x.Status.GetDescription(),
                 StatusEquipe = x.StatusEquipe.GetDescription(),
-                x.Configuracao?.BackgroundId,
+                BackgroundId = x.Configuracao?.BackgroundId ?? x.ArteId,
                 x.Configuracao?.CorBotao,
                 x.Conteudo,
                 x.Configuracao?.LogoId,

@@ -162,6 +162,42 @@ namespace SysIgreja.Controllers
 
         }
 
+        [AllowAnonymous]
+        public ActionResult LogoById(int id)
+        {
+            var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Logo).Where(x => x.Id == id).OrderByDescending(x => x.DataEvento).FirstOrDefault();
+
+            var arquivo = evento?.Configuracao?.Logo;
+
+            if (arquivo != null)
+            {
+                return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+        [AllowAnonymous]
+        public ActionResult BackgroundById(int id)
+        {
+            var evento = eventosBusiness.GetEventos().Include(x => x.Configuracao.Background).Where(x => x.Id == id).OrderByDescending(x => x.DataEvento).FirstOrDefault();
+
+            var arquivo = evento?.Configuracao?.Background;
+
+            if (arquivo != null)
+            {
+                return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public ActionResult qrcode(int eventoid, int? participanteid, int? equipanteid)

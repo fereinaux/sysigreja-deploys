@@ -41,6 +41,7 @@ using MercadoPago.Client.Preference;
 using MercadoPago.Resource.Preference;
 using Microsoft.Extensions.Logging;
 using System.Web;
+using System.Diagnostics;
 
 namespace SysIgreja.Controllers
 {
@@ -200,20 +201,23 @@ namespace SysIgreja.Controllers
                 (
               x.DataEvento > DateTime.Today && x.Status == StatusEnum.Informativo)
               ) 
-            )).ToList().Select(x => new GetEventosInscricaoViewModel
+            )).ToList().Select(x => new
             {
-                Id = x.Id,
+                x.Id,
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
-                Valor = x.Valor,
-                Numeracao = x.Numeracao,
-                Identificador = x.Configuracao.Identificador,
-                DataEvento = x.DataEvento,
+                x.Valor,
+                x.Numeracao,
+                x.Configuracao.Identificador,
+                x.DataEvento,
                 DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
-                Descricao = x.Descricao,
-                Titulo = x.Configuracao.Titulo,
+                x.Configuracao.Titulo,
                 Status = x.Status.GetDescription(),
                 StatusEquipe = x.StatusEquipe.GetDescription(),
-                BackgroundId = x.Configuracao.BackgroundId,
+                x.Configuracao.BackgroundId,
+                x.Configuracao.CorBotao,
+                x.Conteudo,
+                x.Configuracao.LogoId
+
             }).OrderBy(x => x.DataEvento).ToList();
 
             var json = Json(new { Eventos = eventos }, JsonRequestBehavior.AllowGet);
@@ -346,6 +350,40 @@ namespace SysIgreja.Controllers
             ViewBag.Configuracao = config;
             ViewBag.Login = configuracaoBusiness.GetLogin();
             return View("Presenca");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+
+        public ActionResult GetDetalhes(int Id)
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
+            var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
+            if (evento.ConfiguracaoId.HasValue)
+            {
+                ViewBag.Configuracao = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
+                ViewBag.Login = configuracaoBusiness.GetLogin();
+            }
+            else
+            {
+                ViewBag.Configuracao = configuracaoBusiness.GetLogin();
+                ViewBag.Login = ViewBag.Configuracao;
+            }
+
+            if (evento.StatusEquipe != StatusEnum.Aberto && evento.Status != StatusEnum.Aberto && evento.Status != StatusEnum.Informativo)
+                return RedirectToAction("InscricoesEncerradas", new { Id = Id });
+
+            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(x => x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado);
+            ViewBag.EventoId = Id;
+            evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today) ? evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today).OrderBy(y => y.DataLote).FirstOrDefault().Valor : evento.Valor;
+            ViewBag.Evento = evento;
+            ViewBag.Title = "Inscrições";
+
+            var json = Json(new { Detalhes = new {
+
+            } }, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
         }
 
 

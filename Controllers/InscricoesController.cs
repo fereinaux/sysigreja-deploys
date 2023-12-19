@@ -243,7 +243,7 @@ namespace SysIgreja.Controllers
                 Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
                 x.Valor,
                 x.Numeracao,
-                x.Configuracao?.Identificador,
+                Identificador = x.Configuracao?.Identificador ?? x.Descricao.ToLower().Trim().Replace(" ","-"),
                 x.DataEvento,
                 DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
                 Titulo = x.Configuracao?.Titulo ?? x.Descricao,

@@ -639,7 +639,7 @@
                 let destaque = undefined
                 if (!isEquipe && eventos.length > 0) {
                     destaque = eventos[0]
-                    eventos = eventos.filter(evento => !destaque || (evento.Id != destaque.Id && evento.Identificador != destaque.Identificador && evento.UrlDestino != destaque.UrlDestino))
+                    eventos = eventos.filter(evento => !destaque || (evento.Id != destaque.Id && evento.Identificador != destaque.Identificador || evento.UrlDestino != destaque.UrlDestino))
                     html += `       <div class="col-xs-12">
                     <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
                 </div>

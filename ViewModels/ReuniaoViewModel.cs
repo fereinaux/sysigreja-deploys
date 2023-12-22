@@ -19,7 +19,4 @@ namespace SysIgreja.ViewModels
         public string Presenca { get; set; }
         public decimal PresencaOrder { get; set; }
     }
-
-
-
 }

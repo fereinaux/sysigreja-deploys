@@ -1,4 +1,7 @@
-﻿using Arquitetura.Controller;
+﻿using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.CentroCusto;
 using Core.Business.Configuracao;
@@ -6,23 +9,25 @@ using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.CentroCusto;
 using SysIgreja.ViewModels;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 using static Utils.Extensions.EnumExtensions;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class CentroCustoController : SysIgrejaControllerBase
     {
         private readonly ICentroCustoBusiness centroCustoBusiness;
         private readonly IEventosBusiness eventosBusiness;
 
-        public CentroCustoController(ICentroCustoBusiness centroCustoBusiness, IEventosBusiness eventosBusiness, IConfiguracaoBusiness configuracaoBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public CentroCustoController(
+            ICentroCustoBusiness centroCustoBusiness,
+            IEventosBusiness eventosBusiness,
+            IConfiguracaoBusiness configuracaoBusiness,
+            IAccountBusiness accountBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.centroCustoBusiness = centroCustoBusiness;
             this.eventosBusiness = eventosBusiness;
@@ -43,12 +48,15 @@ namespace SysIgreja.Controllers
             var result = centroCustoBusiness
                 .GetCentroCustos(configuracaoId)
                 .ToList()
-                .Select(x => new CentroCustoViewModel
-                {
-                    Descricao = x.Descricao,
-                    Id = x.Id,
-                    Tipo = x.Tipo.GetDescription()
-                });
+                .Select(
+                    x =>
+                        new CentroCustoViewModel
+                        {
+                            Descricao = x.Descricao,
+                            Id = x.Id,
+                            Tipo = x.Tipo.GetDescription()
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -59,12 +67,15 @@ namespace SysIgreja.Controllers
             var result = centroCustoBusiness
                 .GetCentroCustos(eventosBusiness.GetEventoById(eventoid).ConfiguracaoId.Value)
                 .ToList()
-                .Select(x => new CentroCustoViewModel
-                {
-                    Descricao = x.Descricao,
-                    Id = x.Id,
-                    Tipo = x.Tipo.GetDescription()
-                });
+                .Select(
+                    x =>
+                        new CentroCustoViewModel
+                        {
+                            Descricao = x.Descricao,
+                            Id = x.Id,
+                            Tipo = x.Tipo.GetDescription()
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -80,10 +91,10 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult PostCentroCusto(PostCentroCustoModel model)
         {
-            return Json(new
-            {
-                CentroCusto = centroCustoBusiness.PostCentroCusto(model)
-            }, JsonRequestBehavior.AllowGet);
+            return Json(
+                new { CentroCusto = centroCustoBusiness.PostCentroCusto(model) },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpPost]

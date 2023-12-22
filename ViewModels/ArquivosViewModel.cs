@@ -6,6 +6,4 @@
         public string Nome { get; set; }
         public string Extensao { get; set; }
     }
-
-
 }

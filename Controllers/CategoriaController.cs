@@ -1,26 +1,31 @@
-﻿using Arquitetura.Controller;
+﻿using System;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Categorias;
 using Core.Business.Configuracao;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models.Etiquetas;
-using System;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class CategoriaController : SysIgrejaControllerBase
     {
         private readonly ICategoriaBusiness categoriaBusiness;
 
-        public CategoriaController(IEventosBusiness eventosBusiness, ICategoriaBusiness categoriaBusiness, IConfiguracaoBusiness configuracaoBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public CategoriaController(
+            IEventosBusiness eventosBusiness,
+            ICategoriaBusiness categoriaBusiness,
+            IConfiguracaoBusiness configuracaoBusiness,
+            IAccountBusiness accountBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.categoriaBusiness = categoriaBusiness;
         }
@@ -38,16 +43,18 @@ namespace SysIgreja.Controllers
             var result = categoriaBusiness
                 .GetCategorias()
                 .ToList()
-                .Select(x => new
-                {
-                    Nome = x.Nome,
-                    Id = x.Id,
-                    Imagem = Convert.ToBase64String(x.Imagem.Conteudo)
-                });
+                .Select(
+                    x =>
+                        new
+                        {
+                            Nome = x.Nome,
+                            Id = x.Id,
+                            Imagem = Convert.ToBase64String(x.Imagem.Conteudo)
+                        }
+                );
 
             return Json(new { result }, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpPost]
         public ActionResult PostCategoria(string Nome, int ArquivoId)
@@ -56,6 +63,5 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
-
     }
 }

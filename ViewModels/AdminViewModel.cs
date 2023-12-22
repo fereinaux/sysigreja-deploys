@@ -20,6 +20,4 @@ namespace SysIgreja.ViewModels
         public List<ListaEquipesViewModel> Equipes { get; set; }
         public List<ReuniaoViewModel> Reunioes { get; set; }
     }
-
-
 }

@@ -9,6 +9,4 @@
         public int Idade { get; set; }
         public string Tipo { get; set; }
     }
-
-
 }

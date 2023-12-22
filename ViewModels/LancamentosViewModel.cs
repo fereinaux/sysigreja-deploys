@@ -1,5 +1,5 @@
-﻿using Core.Models.Participantes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Core.Models.Participantes;
 
 namespace SysIgreja.ViewModels
 {
@@ -30,6 +30,7 @@ namespace SysIgreja.ViewModels
         public string Valor { get; set; }
         public int QtdAnexos { get; set; }
     }
+
     public class LancamentosExcelViewModel
     {
         public string Descricao { get; set; }

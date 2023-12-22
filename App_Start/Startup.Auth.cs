@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Web;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using System.Web;
 
 namespace SysIgreja
 {
@@ -11,17 +11,19 @@ namespace SysIgreja
     {
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         const string applicationCookieName = ".AspNet.ApplicationCookie";
+
         public void ConfigureAuth(IAppBuilder app)
         {
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-
-                ExpireTimeSpan = new System.TimeSpan(90, 0, 0, 0),
-                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/login"),
-                CookieHttpOnly = false,
-                SlidingExpiration = true                
-            });
+            app.UseCookieAuthentication(
+                new CookieAuthenticationOptions
+                {
+                    ExpireTimeSpan = new System.TimeSpan(90, 0, 0, 0),
+                    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                    LoginPath = new PathString("/login"),
+                    CookieHttpOnly = false,
+                    SlidingExpiration = true
+                }
+            );
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
         }
     }

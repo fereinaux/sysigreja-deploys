@@ -1,4 +1,13 @@
-﻿using Arquitetura.Controller;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Arquitetura.ViewModels;
 using Core.Business.Account;
 using Core.Business.Arquivos;
@@ -14,26 +23,17 @@ using Core.Models.Equipe;
 using Core.Models.Igreja;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web.Mvc;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class DevocionalController : System.Web.Mvc.Controller
     {
         private readonly IDevocionalBusiness devocionalBusiness;
+
         public DevocionalController(IDevocionalBusiness devocionalBusiness)
         {
             this.devocionalBusiness = devocionalBusiness;
@@ -48,7 +48,9 @@ namespace SysIgreja.Controllers
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Accept.Add(
+                        new MediaTypeWithQualityHeaderValue("application/json")
+                    );
 
                     var key = ConfigurationManager.AppSettings["GoogleKey"];
                     var channelId = ConfigurationManager.AppSettings["ChannelId"];
@@ -56,11 +58,15 @@ namespace SysIgreja.Controllers
                     var maxResults = 3;
                     var part = "snippet";
 
-                    HttpResponseMessage response = await client.GetAsync($"https://www.googleapis.com/youtube/v3/search?key={key}&channelId={channelId}&order={order}&maxResults={maxResults}&part={part}");
+                    HttpResponseMessage response = await client.GetAsync(
+                        $"https://www.googleapis.com/youtube/v3/search?key={key}&channelId={channelId}&order={order}&maxResults={maxResults}&part={part}"
+                    );
                     if (response.IsSuccessStatusCode)
                     {
                         string jsondata = await response.Content.ReadAsStringAsync();
-                        devocionalBusiness.PostDevocional(new Core.Models.Devocional.PostDevocionalModel { Conteudo = jsondata });
+                        devocionalBusiness.PostDevocional(
+                            new Core.Models.Devocional.PostDevocionalModel { Conteudo = jsondata }
+                        );
                         return Content(jsondata, "application/json");
                     }
                     return Json(1, JsonRequestBehavior.AllowGet);
@@ -70,7 +76,6 @@ namespace SysIgreja.Controllers
             {
                 return Content(devocional.Conteudo, "application/json");
             }
-
         }
     }
 }

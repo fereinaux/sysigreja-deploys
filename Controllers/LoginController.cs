@@ -1,4 +1,7 @@
-﻿using Core.Business.Account;
+﻿using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
 using Data.Context;
@@ -6,9 +9,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using SysIgreja.ViewModels;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
@@ -22,8 +22,16 @@ namespace SysIgreja.Controllers
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IEquipantesBusiness equipantesBusiness;
 
-        public LoginController(IAccountBusiness accountBusiness, IEquipantesBusiness equipantesBusiness, IConfiguracaoBusiness configuracaoBusiness)
-            : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
+        public LoginController(
+            IAccountBusiness accountBusiness,
+            IEquipantesBusiness equipantesBusiness,
+            IConfiguracaoBusiness configuracaoBusiness
+        )
+            : this(
+                new UserManager<ApplicationUser>(
+                    new UserStore<ApplicationUser>(new ApplicationDbContext())
+                )
+            )
         {
             this.accountBusiness = accountBusiness;
             this.equipantesBusiness = equipantesBusiness;
@@ -73,30 +81,29 @@ namespace SysIgreja.Controllers
                 }
                 else
                     ModelState.AddModelError("", "Usuário e/ou senha inválidos.");
-
             }
 
             return View("Index", model);
         }
-        
-
 
         private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager
         {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
+            get { return HttpContext.GetOwinContext().Authentication; }
         }
 
         private async Task SignInAsync(ApplicationUser user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
-            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+            var identity = await UserManager.CreateIdentityAsync(
+                user,
+                DefaultAuthenticationTypes.ApplicationCookie
+            );
+            AuthenticationManager.SignIn(
+                new AuthenticationProperties() { IsPersistent = isPersistent },
+                identity
+            );
         }
-
     }
 }

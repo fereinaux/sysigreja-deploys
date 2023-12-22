@@ -7,6 +7,4 @@
         public int QuantidadeMembros { get; set; }
         public int QtdAnexos { get; set; }
     }
-
-
 }

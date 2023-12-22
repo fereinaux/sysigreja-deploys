@@ -1,6 +1,6 @@
-﻿using Evernote.EDAM.Type;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
+using Evernote.EDAM.Type;
 
 namespace SysIgreja
 {
@@ -12,17 +12,17 @@ namespace SysIgreja
             routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
-               name: "Detalhes",
-               url: "{nome}/inscricoes",
-               defaults: new { controller = "Inscricoes", action = "DetalhesByNome" },
-               constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+                name: "Detalhes",
+                url: "{nome}/inscricoes",
+                defaults: new { controller = "Inscricoes", action = "DetalhesByNome" },
+                constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
             );
 
             routes.MapRoute(
-               name: "Inscrições Equipe",
-               url: "{nome}/equipe",
-               defaults: new { controller = "Inscricoes", action = "GoToEquipe" },
-               constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+                name: "Inscrições Equipe",
+                url: "{nome}/equipe",
+                defaults: new { controller = "Inscricoes", action = "GoToEquipe" },
+                constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
             );
 
             routes.MapRoute(
@@ -33,19 +33,22 @@ namespace SysIgreja
             );
 
             routes.MapRoute(
-             name: "Background",
-             url: "{nome}/background",
-             defaults: new { controller = "Inscricoes", action = "BackgroundByNome" },
-             constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
-         );
+                name: "Background",
+                url: "{nome}/background",
+                defaults: new { controller = "Inscricoes", action = "BackgroundByNome" },
+                constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+            );
 
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Inscricoes", action = "Index", id = UrlParameter.Optional }
+                defaults: new
+                {
+                    controller = "Inscricoes",
+                    action = "Index",
+                    id = UrlParameter.Optional
+                }
             );
-
         }
-
     }
 }

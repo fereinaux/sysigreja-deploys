@@ -12,7 +12,7 @@
 
             doc.setFont('helvetica',"bold")
             doc.text(12, 43, "Nome");
-            doc.text(112, 43, config.EquipeCirculo);
+            doc.text(112, 43, SelectedEvent.EquipeCirculo);
             doc.text(140, 43, "Parente");            
 
             doc.line(10, 45, 195, 45); 

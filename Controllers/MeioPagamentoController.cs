@@ -1,23 +1,28 @@
-﻿using Arquitetura.Controller;
+﻿using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Business.MeioPagamento;
 using Core.Models.MeioPagamento;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class MeioPagamentoController : SysIgrejaControllerBase
     {
         private readonly IMeioPagamentoBusiness meioPagamentosBusiness;
 
-        public MeioPagamentoController(IMeioPagamentoBusiness meioPagamentosBusiness, IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public MeioPagamentoController(
+            IMeioPagamentoBusiness meioPagamentosBusiness,
+            IConfiguracaoBusiness configuracaoBusiness,
+            IEventosBusiness eventosBusiness,
+            IAccountBusiness accountBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.meioPagamentosBusiness = meioPagamentosBusiness;
         }
@@ -32,10 +37,9 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult GetMeioPagamentos(int configuracaoId)
         {
-            var result = meioPagamentosBusiness.GetMeioPagamentos(configuracaoId).Select(x => new
-            {
-                x.Id, x.Descricao
-            });
+            var result = meioPagamentosBusiness
+                .GetMeioPagamentos(configuracaoId)
+                .Select(x => new { x.Id, x.Descricao });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -47,7 +51,6 @@ namespace SysIgreja.Controllers
 
             return Json(new { MeioPagamento = result }, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpPost]
         public ActionResult PostMeioPagamento(PostMeioPagamentoModel model)

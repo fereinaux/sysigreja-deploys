@@ -1,4 +1,8 @@
-﻿using Arquitetura.Controller;
+﻿using System.Linq;
+using System.Linq.Dynamic;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Caronas;
@@ -8,16 +12,11 @@ using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.Carona;
 using SysIgreja.ViewModels;
-using System.Linq;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Services;
-using System.Linq.Dynamic;
-using System.Web;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class CaronaController : SysIgrejaControllerBase
     {
@@ -26,7 +25,15 @@ namespace SysIgreja.Controllers
         private readonly IEquipantesBusiness equipantesBusiness;
         private readonly IMapper mapper;
 
-        public CaronaController(ICaronasBusiness caronasBusiness, IEquipantesBusiness equipantesBusiness, IEquipesBusiness equipesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public CaronaController(
+            ICaronasBusiness caronasBusiness,
+            IEquipantesBusiness equipantesBusiness,
+            IEquipesBusiness equipesBusiness,
+            IEventosBusiness eventosBusiness,
+            IAccountBusiness accountBusiness,
+            IConfiguracaoBusiness configuracaoBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.caronasBusiness = caronasBusiness;
             this.equipesBusiness = equipesBusiness;
@@ -45,32 +52,53 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantes(int EventoId, string Search)
         {
-            var motoristaList = caronasBusiness.GetCaronas().Where(x => x.EventoId == EventoId).Select(x => x.MotoristaId).ToList();
-            var pgList = equipantesBusiness.GetEquipantes().Where(x => (x.Nome.Contains(Search) || x.Apelido.Contains(Search)) && !motoristaList.Contains(x.Id)).ToList().Select(x => new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" });
+            var motoristaList = caronasBusiness
+                .GetCaronas()
+                .Where(x => x.EventoId == EventoId)
+                .Select(x => x.MotoristaId)
+                .ToList();
+            var pgList = equipantesBusiness
+                .GetEquipantes()
+                .Where(
+                    x =>
+                        (x.Nome.Contains(Search) || x.Apelido.Contains(Search))
+                        && !motoristaList.Contains(x.Id)
+                )
+                .ToList()
+                .Select(x => new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" });
 
             return Json(new { Items = pgList }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult GetCaronas(int EventoId, string columnName, string columndir, string search)
+        public ActionResult GetCaronas(
+            int EventoId,
+            string columnName,
+            string columndir,
+            string search
+        )
         {
             var result = caronasBusiness
                 .GetCaronas()
                 .Where(x => x.EventoId == EventoId)
                 .ToList()
-                .Select(x => new CaronaViewModel
-                {
-                    Id = x.Id,
-                    Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.Id).Count().ToString()}/{x.Capacidade.ToString()}",
-                    CapacidadeInt = x.Capacidade,
-                    Quantidade = caronasBusiness.GetParticipantesByCaronas(x.Id).Count(),
-                    Motorista = x.Motorista.Nome,
-                    Latitude = x.Motorista.Latitude,
-                    Longitude = x.Motorista.Longitude,
-                    MotoristaId = x.MotoristaId.Value,
-                    Endereco = $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
-                });
-
+                .Select(
+                    x =>
+                        new CaronaViewModel
+                        {
+                            Id = x.Id,
+                            Capacidade =
+                                $"{caronasBusiness.GetParticipantesByCaronas(x.Id).Count().ToString()}/{x.Capacidade.ToString()}",
+                            CapacidadeInt = x.Capacidade,
+                            Quantidade = caronasBusiness.GetParticipantesByCaronas(x.Id).Count(),
+                            Motorista = x.Motorista.Nome,
+                            Latitude = x.Motorista.Latitude,
+                            Longitude = x.Motorista.Longitude,
+                            MotoristaId = x.MotoristaId.Value,
+                            Endereco =
+                                $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
+                        }
+                );
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -90,7 +118,10 @@ namespace SysIgreja.Controllers
         {
             var result = caronasBusiness.GetCaronaById(Id);
 
-            return Json(new { Carona = mapper.Map<PostCaronaModel>(result) }, JsonRequestBehavior.AllowGet);
+            return Json(
+                new { Carona = mapper.Map<PostCaronaModel>(result) },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpPost]
@@ -120,37 +151,61 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesSemCarona(int EventoId)
         {
-            return Json(new
-            {
-                Participantes = caronasBusiness.GetParticipantesSemCarona(EventoId).Select(x => new
+            return Json(
+                new
                 {
-                    Id = x.Id,
-                    Nome = x.Nome,
-                    Latitude = x.Latitude,
-                    Longitude = x.Longitude,
-                    Endereco = $"{x.Logradouro}, {x.Numero}, {x.Bairro}, {x.Cidade}",
-                }).OrderBy(x => x.Nome).ToList()
-            }, JsonRequestBehavior.AllowGet);
+                    Participantes = caronasBusiness
+                        .GetParticipantesSemCarona(EventoId)
+                        .Select(
+                            x =>
+                                new
+                                {
+                                    Id = x.Id,
+                                    Nome = x.Nome,
+                                    Latitude = x.Latitude,
+                                    Longitude = x.Longitude,
+                                    Endereco = $"{x.Logradouro}, {x.Numero}, {x.Bairro}, {x.Cidade}",
+                                }
+                        )
+                        .OrderBy(x => x.Nome)
+                        .ToList()
+                },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpGet]
         public ActionResult GetCaronasComParticipantes(int EventoId)
         {
-            return Json(new
-            {
-                Caronas = caronasBusiness.GetCaronasComParticipantes(EventoId).ToList().Select(x => new
+            return Json(
+                new
                 {
-                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                    Latitude = x.Participante.Latitude,
-                    Longitude = x.Participante.Longitude,
-                    Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}",
-                    ParticipanteId = x.ParticipanteId,
-                    CaronaId = x.CaronaId,
-                    Motorista = x.Carona.Motorista.Nome,
-                    Quantidade = caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count(),
-                    Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count().ToString()}/{x.Carona.Capacidade.ToString()}",
-                }).OrderBy(x => x.Motorista).ThenBy(x => x.Nome).ToList()
-            }, JsonRequestBehavior.AllowGet);
+                    Caronas = caronasBusiness
+                        .GetCaronasComParticipantes(EventoId)
+                        .ToList()
+                        .Select(
+                            x =>
+                                new
+                                {
+                                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                                    Latitude = x.Participante.Latitude,
+                                    Longitude = x.Participante.Longitude,
+                                    Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}",
+                                    ParticipanteId = x.ParticipanteId,
+                                    CaronaId = x.CaronaId,
+                                    Motorista = x.Carona.Motorista.Nome,
+                                    Quantidade = caronasBusiness
+                                        .GetParticipantesByCaronas(x.CaronaId)
+                                        .Count(),
+                                    Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count().ToString()}/{x.Carona.Capacidade.ToString()}",
+                                }
+                        )
+                        .OrderBy(x => x.Motorista)
+                        .ThenBy(x => x.Nome)
+                        .ToList()
+                },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpPost]
@@ -168,14 +223,21 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByCarona(int CaronaId)
         {
-            var result = caronasBusiness.GetParticipantesByCaronas(CaronaId).OrderBy(x => x.Participante.Nome).ToList().Select(x => new
-            {
-                Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                Motorista = UtilServices.CapitalizarNome(x.Carona.Motorista.Nome),
-                Fone = x.Participante.Fone,
-                Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}"
-            });
+            var result = caronasBusiness
+                .GetParticipantesByCaronas(CaronaId)
+                .OrderBy(x => x.Participante.Nome)
+                .ToList()
+                .Select(
+                    x =>
+                        new
+                        {
+                            Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                            Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
+                            Motorista = UtilServices.CapitalizarNome(x.Carona.Motorista.Nome),
+                            Fone = x.Participante.Fone,
+                            Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}"
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

@@ -9,6 +9,4 @@
         public string Status { get; set; }
         public int? EquipanteId { get; set; }
     }
-
-
 }

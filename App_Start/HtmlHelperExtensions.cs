@@ -7,7 +7,10 @@ namespace SysIgreja
 {
     public static class HtmlExtensions
     {
-        public static MvcHtmlString Script(this HtmlHelper htmlHelper, Func<object, HelperResult> template)
+        public static MvcHtmlString Script(
+            this HtmlHelper htmlHelper,
+            Func<object, HelperResult> template
+        )
         {
             htmlHelper.ViewContext.HttpContext.Items["_script_" + Guid.NewGuid()] = template;
             return MvcHtmlString.Empty;
@@ -19,7 +22,8 @@ namespace SysIgreja
             {
                 if (key.ToString().StartsWith("_script_"))
                 {
-                    var template = htmlHelper.ViewContext.HttpContext.Items[key] as Func<object, HelperResult>;
+                    var template =
+                        htmlHelper.ViewContext.HttpContext.Items[key] as Func<object, HelperResult>;
                     if (template != null)
                     {
                         htmlHelper.ViewContext.Writer.Write(template(null));

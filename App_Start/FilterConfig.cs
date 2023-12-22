@@ -8,7 +8,14 @@ namespace SysIgreja
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new SpaResponseAttribute());
-            filters.Add(new OutputCacheAttribute { VaryByParam = "*", Duration = 0, NoStore = true });
+            filters.Add(
+                new OutputCacheAttribute
+                {
+                    VaryByParam = "*",
+                    Duration = 0,
+                    NoStore = true
+                }
+            );
         }
     }
 }

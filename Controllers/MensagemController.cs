@@ -1,24 +1,29 @@
-﻿using Arquitetura.Controller;
+﻿using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Business.Mensagem;
 using Core.Models.Mensagem;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class MensagemController : SysIgrejaControllerBase
     {
         private readonly IMensagemBusiness mensagemBusiness;
         private readonly IEventosBusiness eventosBusiness;
 
-        public MensagemController(IMensagemBusiness mensagemBusiness, IEventosBusiness eventosBusiness, IConfiguracaoBusiness configuracaoBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public MensagemController(
+            IMensagemBusiness mensagemBusiness,
+            IEventosBusiness eventosBusiness,
+            IConfiguracaoBusiness configuracaoBusiness,
+            IAccountBusiness accountBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.mensagemBusiness = mensagemBusiness;
             this.eventosBusiness = eventosBusiness;
@@ -37,13 +42,16 @@ namespace SysIgreja.Controllers
             var result = mensagemBusiness
                 .GetMensagems(configuracaoId)
                 .ToList()
-                .Select(x => new PostMessageModel
-                {
-                    Titulo = x.Titulo,
-                    Conteudo = x.Conteudo,
-                    Tipos = x.Tipos?.Split(','),
-                    Id = x.Id
-                });
+                .Select(
+                    x =>
+                        new PostMessageModel
+                        {
+                            Titulo = x.Titulo,
+                            Conteudo = x.Conteudo,
+                            Tipos = x.Tipos?.Split(','),
+                            Id = x.Id
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -51,8 +59,9 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult GetMensagensByTipo(int eventoId, string[] tipos)
         {
-            var query = mensagemBusiness
-                .GetMensagems(eventosBusiness.GetEventoById(eventoId).ConfiguracaoId.Value);
+            var query = mensagemBusiness.GetMensagems(
+                eventosBusiness.GetEventoById(eventoId).ConfiguracaoId.Value
+            );
 
             foreach (var tipo in tipos)
             {
@@ -61,12 +70,15 @@ namespace SysIgreja.Controllers
 
             var result = query
                 .ToList()
-                .Select(x => new PostMessageModel
-                {
-                    Titulo = x.Titulo,
-                    Conteudo = x.Conteudo,
-                    Id = x.Id
-                });
+                .Select(
+                    x =>
+                        new PostMessageModel
+                        {
+                            Titulo = x.Titulo,
+                            Conteudo = x.Conteudo,
+                            Id = x.Id
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

@@ -13,7 +13,10 @@ namespace SysIgreja
                 return;
             }
             var httpContext = filterContext.HttpContext;
-            var pathAndQuery = httpContext.Request.Url != null ? httpContext.Request.Url.PathAndQuery : string.Empty;
+            var pathAndQuery =
+                httpContext.Request.Url != null
+                    ? httpContext.Request.Url.PathAndQuery
+                    : string.Empty;
             // remove timestamp added by ajax calls
             var index = pathAndQuery.IndexOf("_=", StringComparison.Ordinal);
             if (index > 0)

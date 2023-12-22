@@ -1,4 +1,9 @@
-﻿using Arquitetura.Controller;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Configuracao;
@@ -6,18 +11,12 @@ using Core.Business.Cracha;
 using Core.Business.Eventos;
 using Core.Models.Cracha;
 using SysIgreja.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 using static Utils.Extensions.EnumExtensions;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class CrachaController : SysIgrejaControllerBase
     {
@@ -25,7 +24,13 @@ namespace SysIgreja.Controllers
         private readonly ICrachaBusiness crachaBusiness;
         private readonly IMapper mapper;
 
-        public CrachaController(IEventosBusiness eventosBusiness, ICrachaBusiness crachaBusiness, IConfiguracaoBusiness configuracaoBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public CrachaController(
+            IEventosBusiness eventosBusiness,
+            ICrachaBusiness crachaBusiness,
+            IConfiguracaoBusiness configuracaoBusiness,
+            IAccountBusiness accountBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.eventosBusiness = eventosBusiness;
             this.crachaBusiness = crachaBusiness;
@@ -42,13 +47,10 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult GetCrachas(int configuracaoId)
         {
-            var result = crachaBusiness.GetCrachas()
-                .Where(x => x.ConfiguracaoId == configuracaoId). 
-                Select(x => new
-                {
-                    x.Titulo,
-                    x.Id
-                });
+            var result = crachaBusiness
+                .GetCrachas()
+                .Where(x => x.ConfiguracaoId == configuracaoId)
+                .Select(x => new { x.Titulo, x.Id });
             var json = Json(new { data = result.ToList() }, JsonRequestBehavior.AllowGet);
             return json;
         }
@@ -72,7 +74,10 @@ namespace SysIgreja.Controllers
         public ActionResult GetCracha(int Id)
         {
             var result = crachaBusiness.GetCrachas().Where(x => x.Id.Equals(Id)).FirstOrDefault();
-            return Json(new { Cracha = mapper.Map<PostCrachaModel>(result) }, JsonRequestBehavior.AllowGet);
+            return Json(
+                new { Cracha = mapper.Map<PostCrachaModel>(result) },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpPost]
@@ -96,6 +101,5 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
-
     }
 }

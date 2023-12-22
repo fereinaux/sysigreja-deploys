@@ -1,4 +1,8 @@
-﻿using Arquitetura.Controller;
+﻿using System;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Configuracao;
@@ -6,16 +10,11 @@ using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.Arquivos;
 using SysIgreja.ViewModels;
-using System;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class ArquivoController : SysIgrejaControllerBase
     {
@@ -24,7 +23,14 @@ namespace SysIgreja.Controllers
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IArquivosBusiness arquivosBusiness;
 
-        public ArquivoController(IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracoesBusiness) : base(eventosBusiness, accountBusiness, configuracoesBusiness)
+        public ArquivoController(
+            IEventosBusiness eventosBusiness,
+            IEquipesBusiness equipesBusiness,
+            IArquivosBusiness arquivosBusiness,
+            IAccountBusiness accountBusiness,
+            IConfiguracaoBusiness configuracoesBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracoesBusiness)
         {
             this.eventosBusiness = eventosBusiness;
             this.equipesBusiness = equipesBusiness;
@@ -39,7 +45,6 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-
         [HttpPost]
         public ActionResult GetArquivos()
         {
@@ -51,7 +56,10 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult GetBoletins()
         {
-            var query = arquivosBusiness.GetArquivos().Where(x => x.Categoria == "Boletim").OrderBy(x => x.DataCadastro);
+            var query = arquivosBusiness
+                .GetArquivos()
+                .Where(x => x.Categoria == "Boletim")
+                .OrderBy(x => x.DataCadastro);
 
             return MapAqruivos(query);
         }
@@ -65,7 +73,11 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetArquivosEquipanteEvento(int eventoid, int? equipanteid, int? equipanteEventoId)
+        public ActionResult GetArquivosEquipanteEvento(
+            int eventoid,
+            int? equipanteid,
+            int? equipanteEventoId
+        )
         {
             if (equipanteEventoId.HasValue)
             {
@@ -102,11 +114,18 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetArquivosEquipeByEventoId(int Equipe, bool IsComunEquipe, int EventoId)
+        public ActionResult GetArquivosEquipeByEventoId(
+            int Equipe,
+            bool IsComunEquipe,
+            int EventoId
+        )
         {
-
             var evento = eventosBusiness.GetEventoById(EventoId);
-            var query = arquivosBusiness.GetArquivosByEquipe(Equipe, IsComunEquipe, evento.ConfiguracaoId.Value);
+            var query = arquivosBusiness.GetArquivosByEquipe(
+                Equipe,
+                IsComunEquipe,
+                evento.ConfiguracaoId.Value
+            );
 
             return MapAqruivos(query);
         }
@@ -122,14 +141,18 @@ namespace SysIgreja.Controllers
 
         private ActionResult MapAqruivos(IQueryable<Data.Entities.Arquivo> query)
         {
-            var result = query.ToList()
-                .Select(x => new
-                {
-                    Id = x.Id,
-                    Nome = x.Nome,
-                    Extensao = x.Extensao,
-                    Data = x.DataCadastro?.ToString("dd/MM/yyyy")
-                });
+            var result = query
+                .ToList()
+                .Select(
+                    x =>
+                        new
+                        {
+                            Id = x.Id,
+                            Nome = x.Nome,
+                            Extensao = x.Extensao,
+                            Data = x.DataCadastro?.ToString("dd/MM/yyyy")
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -139,9 +162,7 @@ namespace SysIgreja.Controllers
         {
             var arquivo = arquivosBusiness.GetArquivoById(Id);
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
-
         }
-
 
         [HttpGet]
         public string GetArquivoBase64(int Id)
@@ -154,7 +175,9 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetFotoByParticipanteId(int Id)
         {
-            var arquivo = arquivosBusiness.GetArquivosByParticipante(Id).FirstOrDefault(x => x.IsFoto);
+            var arquivo = arquivosBusiness
+                .GetArquivosByParticipante(Id)
+                .FirstOrDefault(x => x.IsFoto);
 
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
         }
@@ -167,12 +190,14 @@ namespace SysIgreja.Controllers
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
         }
 
-
         [AllowAnonymous]
         [HttpGet]
         public ActionResult GetBoletim(int Id)
         {
-            var arquivo = arquivosBusiness.GetArquivos().Where(x => x.Categoria == "Boletim").FirstOrDefault(x => x.Id == Id);
+            var arquivo = arquivosBusiness
+                .GetArquivos()
+                .Where(x => x.Categoria == "Boletim")
+                .FirstOrDefault(x => x.Id == Id);
 
             if (arquivo != null)
             {

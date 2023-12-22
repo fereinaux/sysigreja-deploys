@@ -1,3 +1,4 @@
+using System.Web.Mvc;
 using Core.Business.Account;
 using Core.Business.Arquivos;
 using Core.Business.Caronas;
@@ -24,7 +25,6 @@ using Core.Business.Reunioes;
 using Data.Context;
 using Data.Entities;
 using Data.Repository;
-using System.Web.Mvc;
 using Unity;
 using Unity.Mvc5;
 using Utils.Services;
@@ -39,46 +39,115 @@ namespace Web
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
 
-            container.RegisterType<IGenericRepositoryConsulta<ParticipanteConsulta>, GenericRepositoryConsulta<ParticipanteConsulta>>();
-            container.RegisterType<IGenericRepositoryConsulta<EventoConsulta>, GenericRepositoryConsulta<EventoConsulta>>();
-            container.RegisterType<IGenericRepositoryConsulta<EventoLoteConsulta>, GenericRepositoryConsulta<EventoLoteConsulta>>();
+            container.RegisterType<
+                IGenericRepositoryConsulta<ParticipanteConsulta>,
+                GenericRepositoryConsulta<ParticipanteConsulta>
+            >();
+            container.RegisterType<
+                IGenericRepositoryConsulta<EventoConsulta>,
+                GenericRepositoryConsulta<EventoConsulta>
+            >();
+            container.RegisterType<
+                IGenericRepositoryConsulta<EventoLoteConsulta>,
+                GenericRepositoryConsulta<EventoLoteConsulta>
+            >();
             container.RegisterType<IGenericRepository<Evento>, GenericRepository<Evento>>();
             container.RegisterType<IGenericRepository<Igreja>, GenericRepository<Igreja>>();
-            container.RegisterType<IGenericRepository<Notificacao>, GenericRepository<Notificacao>>();
-            container.RegisterType<IGenericRepository<ApplicationUser>, GenericRepository<ApplicationUser>>();
-            container.RegisterType<IGenericRepository<Participante>, GenericRepository<Participante>>();
+            container.RegisterType<
+                IGenericRepository<Notificacao>,
+                GenericRepository<Notificacao>
+            >();
+            container.RegisterType<
+                IGenericRepository<ApplicationUser>,
+                GenericRepository<ApplicationUser>
+            >();
+            container.RegisterType<
+                IGenericRepository<Participante>,
+                GenericRepository<Participante>
+            >();
             container.RegisterType<IGenericRepository<Login>, GenericRepository<Login>>();
             container.RegisterType<IGenericRepository<Devocional>, GenericRepository<Devocional>>();
             container.RegisterType<IGenericRepository<Newsletter>, GenericRepository<Newsletter>>();
             container.RegisterType<IGenericRepository<EventoLote>, GenericRepository<EventoLote>>();
             container.RegisterType<IGenericRepository<Cracha>, GenericRepository<Cracha>>();
             container.RegisterType<IGenericRepository<Padrinho>, GenericRepository<Padrinho>>();
-            container.RegisterType<IGenericRepository<MeioPagamento>, GenericRepository<MeioPagamento>>();
-            container.RegisterType<IGenericRepository<ReuniaoEvento>, GenericRepository<ReuniaoEvento>>();
+            container.RegisterType<
+                IGenericRepository<MeioPagamento>,
+                GenericRepository<MeioPagamento>
+            >();
+            container.RegisterType<
+                IGenericRepository<ReuniaoEvento>,
+                GenericRepository<ReuniaoEvento>
+            >();
             container.RegisterType<IGenericRepository<Equipante>, GenericRepository<Equipante>>();
-            container.RegisterType<IGenericRepository<EquipanteEvento>, GenericRepository<EquipanteEvento>>();
-            container.RegisterType<IGenericRepository<EquipeEvento>, GenericRepository<EquipeEvento>>();
-            container.RegisterType<IGenericRepository<CategoriaEvento>, GenericRepository<CategoriaEvento>>();
-            container.RegisterType<IGenericRepository<PresencaReuniao>, GenericRepository<PresencaReuniao>>();
+            container.RegisterType<
+                IGenericRepository<EquipanteEvento>,
+                GenericRepository<EquipanteEvento>
+            >();
+            container.RegisterType<
+                IGenericRepository<EquipeEvento>,
+                GenericRepository<EquipeEvento>
+            >();
+            container.RegisterType<
+                IGenericRepository<CategoriaEvento>,
+                GenericRepository<CategoriaEvento>
+            >();
+            container.RegisterType<
+                IGenericRepository<PresencaReuniao>,
+                GenericRepository<PresencaReuniao>
+            >();
             container.RegisterType<IGenericRepository<Equipe>, GenericRepository<Equipe>>();
-            container.RegisterType<IGenericRepository<ConfiguracaoEquipes>, GenericRepository<ConfiguracaoEquipes>>();
-            container.RegisterType<IGenericRepository<ConfiguracaoIgrejas>, GenericRepository<ConfiguracaoIgrejas>>();
-            container.RegisterType<IGenericRepository<CentroCusto>, GenericRepository<CentroCusto>>();
+            container.RegisterType<
+                IGenericRepository<ConfiguracaoEquipes>,
+                GenericRepository<ConfiguracaoEquipes>
+            >();
+            container.RegisterType<
+                IGenericRepository<ConfiguracaoIgrejas>,
+                GenericRepository<ConfiguracaoIgrejas>
+            >();
+            container.RegisterType<
+                IGenericRepository<CentroCusto>,
+                GenericRepository<CentroCusto>
+            >();
             container.RegisterType<IGenericRepository<Lancamento>, GenericRepository<Lancamento>>();
             container.RegisterType<IGenericRepository<Arquivo>, GenericRepository<Arquivo>>();
             container.RegisterType<IGenericRepository<Circulo>, GenericRepository<Circulo>>();
             container.RegisterType<IGenericRepository<Quarto>, GenericRepository<Quarto>>();
             container.RegisterType<IGenericRepository<Etiqueta>, GenericRepository<Etiqueta>>();
-            container.RegisterType<IGenericRepository<CirculoParticipante>, GenericRepository<CirculoParticipante>>();
-            container.RegisterType<IGenericRepository<CirculoDirigentes>, GenericRepository<CirculoDirigentes>>();
-            container.RegisterType<IGenericRepository<ParticipantesEtiquetas>, GenericRepository<ParticipantesEtiquetas>>();
-            container.RegisterType<IGenericRepository<QuartoParticipante>, GenericRepository<QuartoParticipante>>();
+            container.RegisterType<
+                IGenericRepository<CirculoParticipante>,
+                GenericRepository<CirculoParticipante>
+            >();
+            container.RegisterType<
+                IGenericRepository<CirculoDirigentes>,
+                GenericRepository<CirculoDirigentes>
+            >();
+            container.RegisterType<
+                IGenericRepository<ParticipantesEtiquetas>,
+                GenericRepository<ParticipantesEtiquetas>
+            >();
+            container.RegisterType<
+                IGenericRepository<QuartoParticipante>,
+                GenericRepository<QuartoParticipante>
+            >();
             container.RegisterType<IGenericRepository<Mensagem>, GenericRepository<Mensagem>>();
-            container.RegisterType<IGenericRepository<Configuracao>, GenericRepository<Configuracao>>();
-            container.RegisterType<IGenericRepository<ConfiguracaoCampos>, GenericRepository<ConfiguracaoCampos>>();
-            container.RegisterType<IGenericRepository<ConfiguracaoCamposEquipe>, GenericRepository<ConfiguracaoCamposEquipe>>();
+            container.RegisterType<
+                IGenericRepository<Configuracao>,
+                GenericRepository<Configuracao>
+            >();
+            container.RegisterType<
+                IGenericRepository<ConfiguracaoCampos>,
+                GenericRepository<ConfiguracaoCampos>
+            >();
+            container.RegisterType<
+                IGenericRepository<ConfiguracaoCamposEquipe>,
+                GenericRepository<ConfiguracaoCamposEquipe>
+            >();
             container.RegisterType<IGenericRepository<Carona>, GenericRepository<Carona>>();
-            container.RegisterType<IGenericRepository<CaronaParticipante>, GenericRepository<CaronaParticipante>>();
+            container.RegisterType<
+                IGenericRepository<CaronaParticipante>,
+                GenericRepository<CaronaParticipante>
+            >();
 
             container.RegisterType<IEmailSender, EmailSender>();
             container.RegisterType<IImageService, ImageService>();

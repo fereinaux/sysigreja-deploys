@@ -1,4 +1,11 @@
-﻿using Arquitetura.Controller;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Linq.Dynamic;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Business.Account;
@@ -12,17 +19,10 @@ using Core.Business.MeioPagamento;
 using Core.Business.Participantes;
 using Core.Models.Lancamento;
 using SysIgreja.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
-using System.Linq.Dynamic;
 
 namespace SysIgreja.Controllers
 {
@@ -38,7 +38,19 @@ namespace SysIgreja.Controllers
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
 
-        public LancamentoController(ILancamentoBusiness lancamentoBusiness, IEquipesBusiness equipesBusiness, IArquivosBusiness arquivosBusiness, ICentroCustoBusiness centroCustoBusiness, IParticipantesBusiness participantesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness, IDatatableService datatableService, IMeioPagamentoBusiness meioPagamentoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public LancamentoController(
+            ILancamentoBusiness lancamentoBusiness,
+            IEquipesBusiness equipesBusiness,
+            IArquivosBusiness arquivosBusiness,
+            ICentroCustoBusiness centroCustoBusiness,
+            IParticipantesBusiness participantesBusiness,
+            IEventosBusiness eventosBusiness,
+            IAccountBusiness accountBusiness,
+            IConfiguracaoBusiness configuracaoBusiness,
+            IDatatableService datatableService,
+            IMeioPagamentoBusiness meioPagamentoBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.centroCustoBusiness = centroCustoBusiness;
             this.equipesBusiness = equipesBusiness;
@@ -60,24 +72,28 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult GetPagamentos(GetPagamentosModel model)
         {
-
             if (model.EquipanteEventoId.HasValue)
             {
-               var equipante = equipesBusiness.GetEquipanteEvento(model.EquipanteEventoId.Value);
+                var equipante = equipesBusiness.GetEquipanteEvento(model.EquipanteEventoId.Value);
                 model.EquipanteId = equipante.Id;
             }
-            var result = (model.ParticipanteId.HasValue ? lancamentoBusiness.GetPagamentosParticipante(model.ParticipanteId.Value) : lancamentoBusiness.GetPagamentosEquipante(model.EquipanteId.Value, model.EventoId.Value))
+            var result = (
+                model.ParticipanteId.HasValue
+                    ? lancamentoBusiness.GetPagamentosParticipante(model.ParticipanteId.Value)
+                    : lancamentoBusiness.GetPagamentosEquipante(
+                        model.EquipanteId.Value,
+                        model.EventoId.Value
+                    )
+            )
                 .ToList()
                 .Select(x => MapLancamentoViewModel(x));
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
-
         [HttpPost]
         public ActionResult GetPagamentosDatatable(FiltrosLancamentoModel model)
         {
-
             var extract = Request.QueryString["extract"];
 
             var query = lancamentoBusiness.GetLancamentos();
@@ -102,7 +118,9 @@ namespace SysIgreja.Controllers
 
             if (model.ConfiguracaoId.HasValue)
             {
-                query = query.Where(x => model.ConfiguracaoId.Value == x.Evento.ConfiguracaoId.Value);
+                query = query.Where(
+                    x => model.ConfiguracaoId.Value == x.Evento.ConfiguracaoId.Value
+                );
             }
 
             if (model.DataIni.HasValue)
@@ -134,23 +152,23 @@ namespace SysIgreja.Controllers
 
             if (model.columns[model.order[0].column].name == "Evento")
             {
-
                 if (model.order[0].dir == "asc")
                 {
-
-                    query = query.OrderBy(x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}");
+                    query = query.OrderBy(
+                        x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"
+                    );
                 }
                 else
                 {
-                    query = query.OrderByDescending(x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}");
+                    query = query.OrderByDescending(
+                        x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"
+                    );
                 }
             }
             else if (model.columns[model.order[0].column].name == "CentroCusto")
             {
-
                 if (model.order[0].dir == "asc")
                 {
-
                     query = query.OrderBy(x => x.CentroCusto.Descricao);
                 }
                 else
@@ -160,10 +178,8 @@ namespace SysIgreja.Controllers
             }
             else if (model.columns[model.order[0].column].name == "FormaPagamento")
             {
-
                 if (model.order[0].dir == "asc")
                 {
-
                     query = query.OrderBy(x => x.MeioPagamento.Descricao);
                 }
                 else
@@ -173,10 +189,8 @@ namespace SysIgreja.Controllers
             }
             else if (model.columns[model.order[0].column].name == "DataLancamento")
             {
-
                 if (model.order[0].dir == "asc")
                 {
-
                     query = query.OrderBy(x => x.DataCadastro);
                 }
                 else
@@ -186,49 +200,56 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                query = query.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+                query = query.OrderBy(
+                    model.columns[model.order[0].column].name + " " + model.order[0].dir
+                );
             }
 
-            query = query.Skip(model.Start)
-                .Take(model.Length);
+            query = query.Skip(model.Start).Take(model.Length);
 
-
-            return Json(new
-            {
-                data = mapper.Map<IEnumerable<LancamentosDatatableViewModel>>(query),
-                recordsTotal = totalResultsCount,
-                recordsFiltered = filteredResultsCount,
-            }, JsonRequestBehavior.AllowGet);
+            return Json(
+                new
+                {
+                    data = mapper.Map<IEnumerable<LancamentosDatatableViewModel>>(query),
+                    recordsTotal = totalResultsCount,
+                    recordsFiltered = filteredResultsCount,
+                },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpPost]
         public ActionResult GetLancamentoReceber(FiltrosLancamentoModel model)
         {
-            var query = lancamentoBusiness.GetLancamentos().Where(x => x.Tipo == TiposLancamentoEnum.Receber);
+            var query = lancamentoBusiness
+                .GetLancamentos()
+                .Where(x => x.Tipo == TiposLancamentoEnum.Receber);
             return GetLancamento(model, ref query);
         }
 
         [HttpPost]
         public ActionResult GetLancamentoPagar(FiltrosLancamentoModel model)
         {
-            var query = lancamentoBusiness.GetLancamentos().Where(x => x.Tipo == TiposLancamentoEnum.Pagar);
+            var query = lancamentoBusiness
+                .GetLancamentos()
+                .Where(x => x.Tipo == TiposLancamentoEnum.Pagar);
             return GetLancamento(model, ref query);
         }
 
-        private ActionResult GetLancamento(FiltrosLancamentoModel model, ref IQueryable<Data.Entities.Lancamento> query)
+        private ActionResult GetLancamento(
+            FiltrosLancamentoModel model,
+            ref IQueryable<Data.Entities.Lancamento> query
+        )
         {
             query = AplicarFiltrosLancamento(model, query);
 
-            var result = query
-                .ToList()
-                .Select(x => MapLancamentoViewModel(x));
+            var result = query.ToList().Select(x => MapLancamentoViewModel(x));
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
         private LancamentosViewModel MapLancamentoViewModel(Data.Entities.Lancamento x)
-        {           
-
+        {
             return new LancamentosViewModel
             {
                 Id = x.Id,
@@ -236,20 +257,29 @@ namespace SysIgreja.Controllers
                 Observacao = x.Observacao,
                 Evento = $"{x.Evento?.Configuracao?.Titulo} ${x.Evento?.Numeracao}",
                 Descricao = UtilServices.CapitalizarNome(x.Descricao),
-                Origem = !string.IsNullOrEmpty(x.Origem) ? UtilServices.CapitalizarNome(x.Origem) : "",
+                Origem = !string.IsNullOrEmpty(x.Origem)
+                    ? UtilServices.CapitalizarNome(x.Origem)
+                    : "",
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),
                 FormaPagamento = x.MeioPagamento.Descricao,
                 Valor = UtilServices.DecimalToMoeda(x.Valor),
-                Participantes = x.Participantes.Select(y => new Core.Models.Participantes.ParticipanteListModel
-                {
-                    Id = y.Id,
-                    Nome = y.Nome
-                }).ToList(),
+                Participantes = x.Participantes.Select(
+                    y =>
+                        new Core.Models.Participantes.ParticipanteListModel
+                        {
+                            Id = y.Id,
+                            Nome = y.Nome
+                        }
+                )
+                    .ToList(),
                 QtdAnexos = x.Arquivos.Count
             };
         }
 
-        private IQueryable<Data.Entities.Lancamento> AplicarFiltrosLancamento(FiltrosLancamentoModel model, IQueryable<Data.Entities.Lancamento> query)
+        private IQueryable<Data.Entities.Lancamento> AplicarFiltrosLancamento(
+            FiltrosLancamentoModel model,
+            IQueryable<Data.Entities.Lancamento> query
+        )
         {
             if (model.EventoId.HasValue)
             {
@@ -273,7 +303,10 @@ namespace SysIgreja.Controllers
 
             if (model.DataIni.HasValue && model.DataFim.HasValue)
             {
-                query = query.Where(x => x.DataCadastro > model.DataIni.Value && x.DataCadastro < model.DataFim.Value);
+                query = query.Where(
+                    x =>
+                        x.DataCadastro > model.DataIni.Value && x.DataCadastro < model.DataFim.Value
+                );
             }
 
             return query;
@@ -308,53 +341,71 @@ namespace SysIgreja.Controllers
         {
             var result = lancamentoBusiness.GetLancamentoById(Id);
 
-            return Json(new
-            {
-                Lancamento = new
+            return Json(
+                new
                 {
-                    result.Id,
-                    result.CentroCustoId,
-                    result.Descricao,
-                    result.Origem,
-                    result.Valor,
-                    DataLancamento = result.DataCadastro,
-                    result.MeioPagamentoId,
-                    result.Observacao
-
-                }
-            }, JsonRequestBehavior.AllowGet);
+                    Lancamento = new
+                    {
+                        result.Id,
+                        result.CentroCustoId,
+                        result.Descricao,
+                        result.Origem,
+                        result.Valor,
+                        DataLancamento = result.DataCadastro,
+                        result.MeioPagamentoId,
+                        result.Observacao
+                    }
+                },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpGet]
         public ActionResult GetConsolidado(int EventoId, string Relatorio)
         {
-
             var arrRel = Relatorio.Split(',');
             var result = lancamentoBusiness
                 .GetLancamentos()
-                .Where(x => x.EventoId == EventoId && x.CentroCustoId.HasValue && arrRel.Contains(x.CentroCustoId.Value.ToString()))
+                .Where(
+                    x =>
+                        x.EventoId == EventoId
+                        && x.CentroCustoId.HasValue
+                        && arrRel.Contains(x.CentroCustoId.Value.ToString())
+                )
                 .ToList()
-                .GroupBy(x => new
-                {
-                    x.Tipo,
-                    MeioPagamento = x.MeioPagamento.Descricao.Contains("Cartão") ? "Cartão" : x.MeioPagamento.Descricao
-                })
-                .Select(x => new {
-                    Tipo = x.Key.Tipo,
-                    MeioPagamento = x.Key.MeioPagamento,
-                    Valor = x.Sum(y => y.Valor)
-                })
+                .GroupBy(
+                    x =>
+                        new
+                        {
+                            x.Tipo,
+                            MeioPagamento = x.MeioPagamento.Descricao.Contains("Cartão")
+                                ? "Cartão"
+                                : x.MeioPagamento.Descricao
+                        }
+                )
+                .Select(
+                    x =>
+                        new
+                        {
+                            Tipo = x.Key.Tipo,
+                            MeioPagamento = x.Key.MeioPagamento,
+                            Valor = x.Sum(y => y.Valor)
+                        }
+                )
                 .ToList()
-                .Select(x => new {
-                    Tipo = x.Tipo.GetDescription(),
-                    MeioPagamento = x.MeioPagamento,
-                    Valor = x.Valor
-                })
+                .Select(
+                    x =>
+                        new
+                        {
+                            Tipo = x.Tipo.GetDescription(),
+                            MeioPagamento = x.MeioPagamento,
+                            Valor = x.Valor
+                        }
+                )
                 .OrderByDescending(x => x.Tipo);
 
             return Json(new { Consolidado = result }, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpGet]
         public ActionResult GetDetalhado(int EventoId, string Relatorio)
@@ -362,17 +413,26 @@ namespace SysIgreja.Controllers
             var arrRel = Relatorio.Split(',');
             var result = lancamentoBusiness
                 .GetLancamentos()
-                .Where(x => x.EventoId == EventoId && x.CentroCustoId.HasValue && arrRel.Contains(x.CentroCustoId.Value.ToString()))
+                .Where(
+                    x =>
+                        x.EventoId == EventoId
+                        && x.CentroCustoId.HasValue
+                        && arrRel.Contains(x.CentroCustoId.Value.ToString())
+                )
                 .ToList()
-                .Select(x => new {
-                    Tipo = x.Tipo.GetDescription(),
-                    MeioPagamento = x.MeioPagamento.Descricao,
-                    Valor = x.Valor,
-                    CentroCusto = x.CentroCusto.Descricao,
-                    Descricao = UtilServices.CapitalizarNome(x.Descricao),
-                    Origem = UtilServices.CapitalizarNome(x.Origem),
-                    Data = x.DataCadastro.Value.ToString("dd/MM/yyyy")
-                })
+                .Select(
+                    x =>
+                        new
+                        {
+                            Tipo = x.Tipo.GetDescription(),
+                            MeioPagamento = x.MeioPagamento.Descricao,
+                            Valor = x.Valor,
+                            CentroCusto = x.CentroCusto.Descricao,
+                            Descricao = UtilServices.CapitalizarNome(x.Descricao),
+                            Origem = UtilServices.CapitalizarNome(x.Origem),
+                            Data = x.DataCadastro.Value.ToString("dd/MM/yyyy")
+                        }
+                )
                 .OrderByDescending(x => x.Tipo)
                 .OrderBy(x => x.CentroCusto);
 

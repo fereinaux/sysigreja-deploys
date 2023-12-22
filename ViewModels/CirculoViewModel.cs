@@ -18,6 +18,4 @@ namespace SysIgreja.ViewModels
         public string Apelido { get; set; }
         public string Fone { get; set; }
     }
-
-
 }

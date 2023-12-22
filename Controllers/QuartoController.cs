@@ -1,4 +1,8 @@
-﻿using Arquitetura.Controller;
+﻿using System.Linq;
+using System.Linq.Dynamic;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Configuracao;
@@ -7,18 +11,13 @@ using Core.Business.Eventos;
 using Core.Business.Quartos;
 using Core.Models.Quartos;
 using SysIgreja.ViewModels;
-using System.Linq.Dynamic;
-using System.Linq;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
-using System.Web;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class QuartoController : SysIgrejaControllerBase
     {
@@ -26,7 +25,14 @@ namespace SysIgreja.Controllers
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IMapper mapper;
 
-        public QuartoController(IQuartosBusiness quartosBusiness, IEquipesBusiness equipesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IConfiguracaoBusiness configuracaoBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public QuartoController(
+            IQuartosBusiness quartosBusiness,
+            IEquipesBusiness equipesBusiness,
+            IEventosBusiness eventosBusiness,
+            IAccountBusiness accountBusiness,
+            IConfiguracaoBusiness configuracaoBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.quartosBusiness = quartosBusiness;
             this.equipesBusiness = equipesBusiness;
@@ -43,7 +49,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Voluntarios()
         {
-            ViewBag.Title = "Quartos da Equipe";
+            ViewBag.Title = "Quartos dos Voluntários";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
             return View();
@@ -52,22 +58,45 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantes(int EventoId)
         {
-            var responsaveisList = quartosBusiness.GetQuartos().Where(x => x.EventoId == EventoId && x.EquipanteId.HasValue).Select(x => x.EquipanteId).ToList();
-            var equipantesList = equipesBusiness.GetEquipantesEvento(EventoId).Where(x => !responsaveisList.Contains(x.EquipanteId)).Select(x => new { x.EquipanteId, Nome = x.Equipante.Nome }).OrderBy(x => x.Nome).ToList();
+            var responsaveisList = quartosBusiness
+                .GetQuartos()
+                .Where(x => x.EventoId == EventoId && x.EquipanteId.HasValue)
+                .Select(x => x.EquipanteId)
+                .ToList();
+            var equipantesList = equipesBusiness
+                .GetEquipantesEvento(EventoId)
+                .Where(x => !responsaveisList.Contains(x.EquipanteId))
+                .Select(x => new { x.EquipanteId, Nome = x.Equipante.Nome })
+                .OrderBy(x => x.Nome)
+                .ToList();
 
             return Json(new { Equipantes = equipantesList }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult GetQuartos(int EventoId, TipoPessoaEnum? tipo, string columnName, string columndir, string search)
+        public ActionResult GetQuartos(
+            int EventoId,
+            TipoPessoaEnum? tipo,
+            string columnName,
+            string columndir,
+            string search
+        )
         {
             var query = quartosBusiness
                 .GetQuartos()
-                .Where(x => x.EventoId == EventoId && x.TipoPessoa == (tipo ?? TipoPessoaEnum.Participante));
+                .Where(
+                    x =>
+                        x.EventoId == EventoId
+                        && x.TipoPessoa == (tipo ?? TipoPessoaEnum.Participante)
+                );
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(x => x.Titulo.Contains(search) || (x.Equipante != null && x.Equipante.Nome.Contains(search)));
+                query = query.Where(
+                    x =>
+                        x.Titulo.Contains(search)
+                        || (x.Equipante != null && x.Equipante.Nome.Contains(search))
+                );
             }
 
             if (!string.IsNullOrEmpty(columnName))
@@ -79,9 +108,13 @@ namespace SysIgreja.Controllers
                 if (columnName == "Capacidade")
                 {
                     if (columndir == "asc")
-                        query = query.OrderBy(x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count());
+                        query = query.OrderBy(
+                            x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count()
+                        );
                     else
-                        query = query.OrderByDescending(x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count());
+                        query = query.OrderByDescending(
+                            x => quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count()
+                        );
                 }
                 if (columnName == "Equipante")
                 {
@@ -93,36 +126,36 @@ namespace SysIgreja.Controllers
                 else
                 {
                     query = query.OrderBy(columnName + " " + columndir);
-
                 }
             }
 
+            var queryResult = query.ToList();
 
-            var queryResult = query
-                 .ToList();
-
-            var result = queryResult
-            .Select(x => new QuartoViewModel
-            {
-                Id = x.Id,
-                Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count().ToString()}/{x.Capacidade.ToString()}",
-                CapacidadeInt = x.Capacidade,
-                Quantidade = quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count(),
-                EquipanteId = x.EquipanteId,
-                Equipante = UtilServices.CapitalizarNome(x.Equipante?.Nome),
-                Titulo = x.Titulo,
-                Sexo = x.Sexo.GetDescription(),
-                CEP = x.CEP,
-                Logradouro = x.Logradouro,
-                Bairro = x.Bairro,
-                Cidade = x.Cidade,
-                Estado = x.Estado,
-                Numero = x.Numero,
-                Complemento = x.Complemento,
-                Referencia = x.Referencia,
-                Latitude = x.Latitude,
-                Longitude = x.Longitude,
-            });
+            var result = queryResult.Select(
+                x =>
+                    new QuartoViewModel
+                    {
+                        Id = x.Id,
+                        Capacidade =
+                            $"{quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count().ToString()}/{x.Capacidade.ToString()}",
+                        CapacidadeInt = x.Capacidade,
+                        Quantidade = quartosBusiness.GetParticipantesByQuartos(x.Id, tipo).Count(),
+                        EquipanteId = x.EquipanteId,
+                        Equipante = UtilServices.CapitalizarNome(x.Equipante?.Nome),
+                        Titulo = x.Titulo,
+                        Sexo = x.Sexo.GetDescription(),
+                        CEP = x.CEP,
+                        Logradouro = x.Logradouro,
+                        Bairro = x.Bairro,
+                        Cidade = x.Cidade,
+                        Estado = x.Estado,
+                        Numero = x.Numero,
+                        Complemento = x.Complemento,
+                        Referencia = x.Referencia,
+                        Latitude = x.Latitude,
+                        Longitude = x.Longitude,
+                    }
+            );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -132,7 +165,10 @@ namespace SysIgreja.Controllers
         {
             var result = quartosBusiness.GetQuartoById(Id);
 
-            return Json(new { Quarto = mapper.Map<PostQuartoModel>(result) }, JsonRequestBehavior.AllowGet);
+            return Json(
+                new { Quarto = mapper.Map<PostQuartoModel>(result) },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpPost]
@@ -151,7 +187,6 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-
         [HttpPost]
         public ActionResult EsvaziarQuarto(int Id)
         {
@@ -159,7 +194,6 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
-
 
         [HttpPost]
         public ActionResult EsvaziarTodosQuarto(int Id, TipoPessoaEnum Tipo)
@@ -180,20 +214,21 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesSemQuarto(int EventoId, TipoPessoaEnum? tipo)
         {
-
-
-            return Json(new
-            {
-                Participantes = tipo == TipoPessoaEnum.Equipante ? quartosBusiness.GetEquipantesSemQuarto(EventoId).Select(x => new
+            return Json(
+                new
                 {
-                    Id = x.Id,
-                    Nome = x.Nome
-                }).ToList() : quartosBusiness.GetParticipantesSemQuarto(EventoId).Select(x => new
-                {
-                    Id = x.Id,
-                    Nome = x.Nome
-                }).ToList()
-            }, JsonRequestBehavior.AllowGet);
+                    Participantes = tipo == TipoPessoaEnum.Equipante
+                        ? quartosBusiness
+                            .GetEquipantesSemQuarto(EventoId)
+                            .Select(x => new { Id = x.Id, Nome = x.Nome })
+                            .ToList()
+                        : quartosBusiness
+                            .GetParticipantesSemQuarto(EventoId)
+                            .Select(x => new { Id = x.Id, Nome = x.Nome })
+                            .ToList()
+                },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpGet]
@@ -201,57 +236,91 @@ namespace SysIgreja.Controllers
         {
             if (tipo == TipoPessoaEnum.Equipante)
             {
-                return Json(new
-                {
-                    Quartos = quartosBusiness.GetQuartosComParticipantes(EventoId, TipoPessoaEnum.Equipante).ToList().Select(x => new
+                return Json(
+                    new
                     {
-                        Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
-                        Titulo = x.Quarto.Titulo,
-                        Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count(),
-                        ParticipanteId = x.EquipanteId,
-                        QuartoId = x.QuartoId,
-                        Sexo = x.Quarto.Sexo.GetDescription(),
-                        CEP = x.Quarto.CEP,
-                        Logradouro = x.Quarto.Logradouro,
-                        Bairro = x.Quarto.Bairro,
-                        Cidade = x.Quarto.Cidade,
-                        Estado = x.Quarto.Estado,
-                        Numero = x.Quarto.Numero,
-                        Complemento = x.Quarto.Complemento,
-                        Referencia = x.Quarto.Referencia,
-                        Latitude = x.Quarto.Latitude,
-                        Longitude = x.Quarto.Longitude,
-                        Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count().ToString()}/{x.Quarto.Capacidade.ToString()}",
-                    }).ToList()
-                }, JsonRequestBehavior.AllowGet);
+                        Quartos = quartosBusiness
+                            .GetQuartosComParticipantes(EventoId, TipoPessoaEnum.Equipante)
+                            .ToList()
+                            .Select(
+                                x =>
+                                    new
+                                    {
+                                        Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
+                                        Titulo = x.Quarto.Titulo,
+                                        Quantidade = quartosBusiness
+                                            .GetParticipantesByQuartos(
+                                                x.QuartoId,
+                                                TipoPessoaEnum.Equipante
+                                            )
+                                            .Count(),
+                                        ParticipanteId = x.EquipanteId,
+                                        QuartoId = x.QuartoId,
+                                        Sexo = x.Quarto.Sexo.GetDescription(),
+                                        CEP = x.Quarto.CEP,
+                                        Logradouro = x.Quarto.Logradouro,
+                                        Bairro = x.Quarto.Bairro,
+                                        Cidade = x.Quarto.Cidade,
+                                        Estado = x.Quarto.Estado,
+                                        Numero = x.Quarto.Numero,
+                                        Complemento = x.Quarto.Complemento,
+                                        Referencia = x.Quarto.Referencia,
+                                        Latitude = x.Quarto.Latitude,
+                                        Longitude = x.Quarto.Longitude,
+                                        Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count().ToString()}/{x.Quarto.Capacidade.ToString()}",
+                                    }
+                            )
+                            .ToList()
+                    },
+                    JsonRequestBehavior.AllowGet
+                );
             }
             else
             {
-
-                return Json(new
-                {
-                    Quartos = quartosBusiness.GetQuartosComParticipantes(EventoId, TipoPessoaEnum.Participante).ToList().Select(x => new
+                return Json(
+                    new
                     {
-                        Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                        Titulo = x.Quarto.Titulo,
-                        Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count(),
-                        ParticipanteId = x.ParticipanteId,
-                        QuartoId = x.QuartoId,
-                        Sexo = x.Quarto.Sexo.GetDescription(),
-                        CEP = x.Quarto.CEP,
-                        Logradouro = x.Quarto.Logradouro,
-                        Bairro = x.Quarto.Bairro,
-                        Cidade = x.Quarto.Cidade,
-                        Estado = x.Quarto.Estado,
-                        Numero = x.Quarto.Numero,
-                        Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count().ToString()}/{x.Quarto.Capacidade.ToString()}",
-                    }).ToList()
-                }, JsonRequestBehavior.AllowGet);
+                        Quartos = quartosBusiness
+                            .GetQuartosComParticipantes(EventoId, TipoPessoaEnum.Participante)
+                            .ToList()
+                            .Select(
+                                x =>
+                                    new
+                                    {
+                                        Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                                        Titulo = x.Quarto.Titulo,
+                                        Quantidade = quartosBusiness
+                                            .GetParticipantesByQuartos(
+                                                x.QuartoId,
+                                                TipoPessoaEnum.Participante
+                                            )
+                                            .Count(),
+                                        ParticipanteId = x.ParticipanteId,
+                                        QuartoId = x.QuartoId,
+                                        Sexo = x.Quarto.Sexo.GetDescription(),
+                                        CEP = x.Quarto.CEP,
+                                        Logradouro = x.Quarto.Logradouro,
+                                        Bairro = x.Quarto.Bairro,
+                                        Cidade = x.Quarto.Cidade,
+                                        Estado = x.Quarto.Estado,
+                                        Numero = x.Quarto.Numero,
+                                        Capacidade = $"{quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante).Count().ToString()}/{x.Quarto.Capacidade.ToString()}",
+                                    }
+                            )
+                            .ToList()
+                    },
+                    JsonRequestBehavior.AllowGet
+                );
             }
         }
 
         [HttpPost]
-        public ActionResult ChangeQuarto(int ParticipanteId, int? DestinoId, TipoPessoaEnum? tipo, int EventoId)
+        public ActionResult ChangeQuarto(
+            int ParticipanteId,
+            int? DestinoId,
+            TipoPessoaEnum? tipo,
+            int EventoId
+        )
         {
             var mensagem = quartosBusiness.ChangeQuarto(ParticipanteId, DestinoId, tipo, EventoId);
             if (mensagem == "OK")
@@ -265,19 +334,28 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipantesByQuarto(int QuartoId)
         {
-            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Equipante).OrderBy(x => x.Equipante.Nome).ToList().Select(x => new
-            {
-                Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
-                Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
-                Titulo = x.Quarto.Titulo,
-                CEP = x.Quarto.CEP,
-                Logradouro = x.Quarto.Logradouro,
-                Bairro = x.Quarto.Bairro,
-                Cidade = x.Quarto.Cidade,
-                Estado = x.Quarto.Estado,
-                Numero = x.Quarto.Numero,
-                Quantidade = quartosBusiness.GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante).Count(),
-            });
+            var result = quartosBusiness
+                .GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Equipante)
+                .OrderBy(x => x.Equipante.Nome)
+                .ToList()
+                .Select(
+                    x =>
+                        new
+                        {
+                            Nome = UtilServices.CapitalizarNome(x.Equipante.Nome),
+                            Apelido = UtilServices.CapitalizarNome(x.Equipante.Apelido),
+                            Titulo = x.Quarto.Titulo,
+                            CEP = x.Quarto.CEP,
+                            Logradouro = x.Quarto.Logradouro,
+                            Bairro = x.Quarto.Bairro,
+                            Cidade = x.Quarto.Cidade,
+                            Estado = x.Quarto.Estado,
+                            Numero = x.Quarto.Numero,
+                            Quantidade = quartosBusiness
+                                .GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Equipante)
+                                .Count(),
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

@@ -8,6 +8,4 @@
         public string Class { get; set; }
         public string DropdownParent { get; set; }
     }
-
-
 }

@@ -1,4 +1,9 @@
-﻿using Arquitetura.Controller;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Etiquetas;
@@ -7,25 +12,24 @@ using Core.Models;
 using Core.Models.Configuracao;
 using Data.Entities;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 using static Utils.Extensions.EnumExtensions;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class ConfiguracaoController : SysIgrejaControllerBase
     {
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IEventosBusiness eventoBusiness;
 
-        public ConfiguracaoController(IConfiguracaoBusiness configuracaoBusiness, IEventosBusiness eventoBusiness, IAccountBusiness accountBusiness) : base(eventoBusiness, accountBusiness, configuracaoBusiness)
+        public ConfiguracaoController(
+            IConfiguracaoBusiness configuracaoBusiness,
+            IEventosBusiness eventoBusiness,
+            IAccountBusiness accountBusiness
+        )
+            : base(eventoBusiness, accountBusiness, configuracaoBusiness)
         {
             this.configuracaoBusiness = configuracaoBusiness;
             this.eventoBusiness = eventoBusiness;
@@ -69,21 +73,31 @@ namespace SysIgreja.Controllers
         public ActionResult GetConfiguracoesSelect()
         {
             var user = GetApplicationUser();
-            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões").Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
-                .Select(x => x.Select(y => new { ConfigId = y.ConfiguracaoId, Eventos = y.Eventos, Role = y.Role })).ToList();
+            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões")
+                .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                .Select(
+                    x =>
+                        x.Select(
+                            y =>
+                                new
+                                {
+                                    ConfigId = y.ConfiguracaoId,
+                                    Eventos = y.Eventos,
+                                    Role = y.Role
+                                }
+                        )
+                )
+                .ToList();
             List<int> configId = new List<int>();
             permissoes.ForEach(permissao =>
             {
                 configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));
             });
 
-            var result = configuracaoBusiness.GetConfiguracoes()
+            var result = configuracaoBusiness
+                .GetConfiguracoes()
                 .Where(x => configId.Contains(x.Id))
-                .Select(x => new
-                {
-                    Id = x.Id,
-                    Titulo = x.Titulo,
-                })
+                .Select(x => new { Id = x.Id, Titulo = x.Titulo, })
                 .ToList();
 
             var jsonRes = Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -95,52 +109,78 @@ namespace SysIgreja.Controllers
         public ActionResult GetConfiguracoes()
         {
             var user = GetApplicationUser();
-            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões").Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
-                .Select(x => x.Select(y => new { ConfigId = y.ConfiguracaoId, Eventos = y.Eventos, Role = y.Role })).ToList();
+            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões")
+                .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                .Select(
+                    x =>
+                        x.Select(
+                            y =>
+                                new
+                                {
+                                    ConfigId = y.ConfiguracaoId,
+                                    Eventos = y.Eventos,
+                                    Role = y.Role
+                                }
+                        )
+                )
+                .ToList();
             List<int> configId = new List<int>();
             permissoes.ForEach(permissao =>
             {
                 configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));
             });
 
-            var result = configuracaoBusiness.GetConfiguracoes()
+            var result = configuracaoBusiness
+                .GetConfiguracoes()
                 .Where(x => configId.Contains(x.Id))
                 .ToList()
-                .Select(x => new PostConfiguracaoModel
-                {
-                    Id = x.Id,
-                    Titulo = x.Titulo,
-                    Identificador = x.Identificador,
-                    BackgroundId = x.BackgroundId,
-                    EquipeCirculoId = x.EquipeCirculoId,
-                    EquipeCaronaId = x.EquipeCaronaId,
-                    CentroCustoInscricaoId = x.CentroCustoInscricaoId,
-                    CentroCustoTaxaId = x.CentroCustoTaxaId,
-                    PublicTokenMercadoPago = x.PublicTokenMercadoPago,
-                    AccessTokenMercadoPago = x.AccessTokenMercadoPago,
-                    CorBotao = x.CorBotao,
-                    CorHoverBotao = x.CorHoverBotao,
-                    TipoCirculoId = x.TipoCirculo,
-                    TipoCirculo = x.TipoCirculo.GetDescription(),
-                    TipoQuartoId = x.TipoQuarto,
-                    TipoQuarto = x.TipoQuarto?.GetDescription(),
-                    TipoEventoId = x.TipoEvento,
-                    TipoEvento = x.TipoEvento?.GetDescription(),
-                    CentroCustos = x.CentroCustos.Select(y => new CentroCustoModel
-                    {
-                        Descricao = y.Descricao,
-                        Tipo = y.Tipo.GetDescription(),
-                        Id = y.Id
-                    }).ToList(),
-                    LogoId = x.LogoId,
-                    LogoRelatorioId = x.LogoRelatorioId,
-                    Logo = x.Logo != null ? Convert.ToBase64String(x.Logo.Conteudo) : "",
-                    Background = x.Background != null ? Convert.ToBase64String(x.Background.Conteudo) : "",
-                    LogoRelatorio = x.LogoRelatorio != null ? Convert.ToBase64String(x.LogoRelatorio.Conteudo) : "",
-                    MsgConclusao = x.MsgConclusao,
-                    MsgConclusaoEquipe = x.MsgConclusaoEquipe,
-
-                });
+                .Select(
+                    x =>
+                        new PostConfiguracaoModel
+                        {
+                            Id = x.Id,
+                            Titulo = x.Titulo,
+                            Identificador = x.Identificador,
+                            BackgroundId = x.BackgroundId,
+                            EquipeCirculoId = x.EquipeCirculoId,
+                            EquipeCaronaId = x.EquipeCaronaId,
+                            CentroCustoInscricaoId = x.CentroCustoInscricaoId,
+                            CentroCustoTaxaId = x.CentroCustoTaxaId,
+                            PublicTokenMercadoPago = x.PublicTokenMercadoPago,
+                            AccessTokenMercadoPago = x.AccessTokenMercadoPago,
+                            CorBotao = x.CorBotao,
+                            CorHoverBotao = x.CorHoverBotao,
+                            TipoCirculoId = x.TipoCirculo,
+                            TipoCirculo = x.TipoCirculo.GetDescription(),
+                            TipoQuartoId = x.TipoQuarto,
+                            TipoQuarto = x.TipoQuarto?.GetDescription(),
+                            TipoEventoId = x.TipoEvento,
+                            TipoEvento = x.TipoEvento?.GetDescription(),
+                            CentroCustos = x.CentroCustos.Select(
+                                y =>
+                                    new CentroCustoModel
+                                    {
+                                        Descricao = y.Descricao,
+                                        Tipo = y.Tipo.GetDescription(),
+                                        Id = y.Id
+                                    }
+                            )
+                                .ToList(),
+                            LogoId = x.LogoId,
+                            LogoRelatorioId = x.LogoRelatorioId,
+                            Logo = x.Logo != null ? Convert.ToBase64String(x.Logo.Conteudo) : "",
+                            Background =
+                                x.Background != null
+                                    ? Convert.ToBase64String(x.Background.Conteudo)
+                                    : "",
+                            LogoRelatorio =
+                                x.LogoRelatorio != null
+                                    ? Convert.ToBase64String(x.LogoRelatorio.Conteudo)
+                                    : "",
+                            MsgConclusao = x.MsgConclusao,
+                            MsgConclusaoEquipe = x.MsgConclusaoEquipe,
+                        }
+                );
 
             var jsonRes = Json(new { data = result }, JsonRequestBehavior.AllowGet);
             jsonRes.MaxJsonLength = Int32.MaxValue;
@@ -167,7 +207,6 @@ namespace SysIgreja.Controllers
             return jsonRes;
         }
 
-
         [HttpGet]
         public ActionResult GetConfiguracaoByEventoId(int Id)
         {
@@ -177,8 +216,6 @@ namespace SysIgreja.Controllers
             jsonRes.MaxJsonLength = Int32.MaxValue;
             return jsonRes;
         }
-
-
 
         [HttpGet]
         public ActionResult GetCamposByEventoId(int id)
@@ -196,23 +233,28 @@ namespace SysIgreja.Controllers
             {
                 List<CamposModel> campos = new List<CamposModel>
                 {
-                    new CamposModel{
+                    new CamposModel
+                    {
                         CampoId = CamposEnum.Nome,
                         Campo = CamposEnum.Nome.GetDescription(),
                     },
-                    new CamposModel{
+                    new CamposModel
+                    {
                         CampoId = CamposEnum.Email,
                         Campo = CamposEnum.Email.GetDescription(),
                     },
-                    new CamposModel{
+                    new CamposModel
+                    {
                         CampoId = CamposEnum.Fone,
                         Campo = CamposEnum.Fone.GetDescription(),
                     },
-                    new CamposModel{
+                    new CamposModel
+                    {
                         CampoId = CamposEnum.Genero,
                         Campo = CamposEnum.Genero.GetDescription(),
                     },
-                    new CamposModel{
+                    new CamposModel
+                    {
                         CampoId = CamposEnum.DataNascimento,
                         Campo = CamposEnum.DataNascimento.GetDescription(),
                     }
@@ -222,8 +264,6 @@ namespace SysIgreja.Controllers
             }
             else
             {
-
-
                 var evento = eventoBusiness.GetEventoById(id);
                 var result = configuracaoBusiness.GetCamposEquipe(evento.ConfiguracaoId.Value);
 
@@ -247,7 +287,6 @@ namespace SysIgreja.Controllers
             return Json(new { Campos = result }, JsonRequestBehavior.AllowGet);
         }
 
-
         [HttpGet]
         public ActionResult GetEquipes(int id)
         {
@@ -264,7 +303,6 @@ namespace SysIgreja.Controllers
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
-
         [HttpPost]
         public ActionResult GetEquipesFilhas(int id, int equipeId)
         {
@@ -276,11 +314,12 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult GetEquipesOrigem(int id, int equipeId)
         {
-            var result = configuracaoBusiness.GetEquipes(id).Where(x => x.EquipesDestinoId.Contains(equipeId));
+            var result = configuracaoBusiness
+                .GetEquipes(id)
+                .Where(x => x.EquipesDestinoId.Contains(equipeId));
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpGet]
         public ActionResult GetIgrejas(int id)
@@ -289,7 +328,6 @@ namespace SysIgreja.Controllers
 
             return Json(new { Igrejas = result }, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpGet]
         public ActionResult GetCamposEnum()
@@ -355,6 +393,15 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult PostConfiguracaoExternal(PostConfiguracaoModel model)
+        {
+            configuracaoBusiness.PostConfiguracao(model);
+
+            return new HttpStatusCodeResult(200);
+        }
+
         [HttpGet]
         public ActionResult GetLogin()
         {
@@ -381,7 +428,6 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-
         [HttpPost]
         public ActionResult PostBackgroundLogin(int sourceId)
         {
@@ -389,6 +435,7 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
+
         [HttpPost]
         public ActionResult PostBackgroundCelularLogin(int sourceId)
         {
@@ -405,7 +452,6 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200);
         }
 
-
         [HttpPost]
         public ActionResult PostBackground(int id, int sourceId)
         {
@@ -421,7 +467,5 @@ namespace SysIgreja.Controllers
 
             return new HttpStatusCodeResult(200);
         }
-
-
     }
 }

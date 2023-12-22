@@ -1,26 +1,31 @@
-﻿using Arquitetura.Controller;
+﻿using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Equipes;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models.Etiquetas;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Utils.Constants;
 using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
-
     [Authorize]
     public class EtiquetaController : SysIgrejaControllerBase
     {
         private readonly IEventosBusiness eventosBusiness;
         private readonly IEtiquetasBusiness etiquetasBusiness;
 
-        public EtiquetaController(IEventosBusiness eventosBusiness, IEtiquetasBusiness etiquetasBusiness, IConfiguracaoBusiness configuracaoBusiness, IAccountBusiness accountBusiness) : base(eventosBusiness, accountBusiness, configuracaoBusiness)
+        public EtiquetaController(
+            IEventosBusiness eventosBusiness,
+            IEtiquetasBusiness etiquetasBusiness,
+            IConfiguracaoBusiness configuracaoBusiness,
+            IAccountBusiness accountBusiness
+        )
+            : base(eventosBusiness, accountBusiness, configuracaoBusiness)
         {
             this.eventosBusiness = eventosBusiness;
             this.etiquetasBusiness = etiquetasBusiness;
@@ -39,12 +44,15 @@ namespace SysIgreja.Controllers
             var result = etiquetasBusiness
                 .GetEtiquetas(configuracaoId)
                 .ToList()
-                .Select(x => new
-                {
-                    Nome = x.Nome,
-                    Id = x.Id,
-                    Cor = x.Cor
-                });
+                .Select(
+                    x =>
+                        new
+                        {
+                            Nome = x.Nome,
+                            Id = x.Id,
+                            Cor = x.Cor
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -55,12 +63,15 @@ namespace SysIgreja.Controllers
             var result = etiquetasBusiness
                 .GetEtiquetas(eventosBusiness.GetEventoById(eventoId).ConfiguracaoId.Value)
                 .ToList()
-                .Select(x => new
-                {
-                    Nome = x.Nome,
-                    Id = x.Id,
-                    Cor = x.Cor
-                });
+                .Select(
+                    x =>
+                        new
+                        {
+                            Nome = x.Nome,
+                            Id = x.Id,
+                            Cor = x.Cor
+                        }
+                );
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -70,17 +81,27 @@ namespace SysIgreja.Controllers
         {
             var result = etiquetasBusiness.GetEtiquetaById(Id);
 
-            return Json(new { Etiqueta = new { Id = result.Id, Nome = result.Nome, Cor = result.Cor } }, JsonRequestBehavior.AllowGet);
+            return Json(
+                new
+                {
+                    Etiqueta = new
+                    {
+                        Id = result.Id,
+                        Nome = result.Nome,
+                        Cor = result.Cor
+                    }
+                },
+                JsonRequestBehavior.AllowGet
+            );
         }
-
 
         [HttpPost]
         public ActionResult PostEtiqueta(PostEtiquetaModel model)
         {
-            return Json(new
-            {
-                Etiqueta = etiquetasBusiness.PostEtiqueta(model),
-            }, JsonRequestBehavior.AllowGet);
+            return Json(
+                new { Etiqueta = etiquetasBusiness.PostEtiqueta(model), },
+                JsonRequestBehavior.AllowGet
+            );
         }
 
         [HttpPost]
@@ -92,7 +113,12 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddEtiqueta(int destinoId, int etiquetaId, TipoPessoaEnum tipo, int? eventoId)
+        public ActionResult AddEtiqueta(
+            int destinoId,
+            int etiquetaId,
+            TipoPessoaEnum tipo,
+            int? eventoId
+        )
         {
             etiquetasBusiness.AddEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 
@@ -100,7 +126,12 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemoveEtiqueta(int destinoId, int etiquetaId, TipoPessoaEnum tipo, int? eventoId)
+        public ActionResult RemoveEtiqueta(
+            int destinoId,
+            int etiquetaId,
+            TipoPessoaEnum tipo,
+            int? eventoId
+        )
         {
             etiquetasBusiness.RemoveEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 

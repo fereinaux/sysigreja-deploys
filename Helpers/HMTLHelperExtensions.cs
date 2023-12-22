@@ -7,9 +7,13 @@ namespace SysIgreja
 {
     public static class HMTLHelperExtensions
     {
-        public static string IsSelected(this HtmlHelper html, string controller = null, string action = null, string cssClass = null)
+        public static string IsSelected(
+            this HtmlHelper html,
+            string controller = null,
+            string action = null,
+            string cssClass = null
+        )
         {
-
             if (String.IsNullOrEmpty(cssClass))
                 cssClass = "active";
 
@@ -22,13 +26,18 @@ namespace SysIgreja
             if (String.IsNullOrEmpty(action))
                 action = currentAction;
 
-            return controller == currentController && action == currentAction ?
-                cssClass : String.Empty;
+            return controller == currentController && action == currentAction
+                ? cssClass
+                : String.Empty;
         }
 
-        public static string IsSelectedMenuItem(this HtmlHelper html, IEnumerable<string> controller = null, IEnumerable<string> actions = null, string cssClass = null)
+        public static string IsSelectedMenuItem(
+            this HtmlHelper html,
+            IEnumerable<string> controller = null,
+            IEnumerable<string> actions = null,
+            string cssClass = null
+        )
         {
-
             if (String.IsNullOrEmpty(cssClass))
                 cssClass = "active";
 
@@ -47,8 +56,7 @@ namespace SysIgreja
                 someActionIsSelected = actions.Contains(currentAction);
             }
 
-            return controllerIsSelected && someActionIsSelected ?
-                cssClass : String.Empty;
+            return controllerIsSelected && someActionIsSelected ? cssClass : String.Empty;
         }
 
         public static string PageClass(this HtmlHelper html)
@@ -56,6 +64,5 @@ namespace SysIgreja
             string currentAction = (string)html.ViewContext.RouteData.Values["action"];
             return currentAction;
         }
-
     }
 }

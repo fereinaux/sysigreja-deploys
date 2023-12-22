@@ -1,9 +1,9 @@
-﻿using Data.Context;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Data.Context;
 using Web;
 
 namespace SysIgreja
@@ -13,7 +13,12 @@ namespace SysIgreja
         protected void Application_Start()
         {
             SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Data.Migrations.Configuration>());
+            Database.SetInitializer(
+                new MigrateDatabaseToLatestVersion<
+                    ApplicationDbContext,
+                    Data.Migrations.Configuration
+                >()
+            );
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -24,8 +29,10 @@ namespace SysIgreja
         protected void Application_EndRequest()
         {
             var context = new HttpContextWrapper(this.Context);
-            if (context.Response.StatusCode == 302
-                && context.Response.SuppressFormsAuthenticationRedirect)
+            if (
+                context.Response.StatusCode == 302
+                && context.Response.SuppressFormsAuthenticationRedirect
+            )
             {
                 context.Response.Clear();
                 context.Response.StatusCode = 401;

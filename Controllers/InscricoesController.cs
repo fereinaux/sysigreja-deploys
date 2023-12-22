@@ -371,7 +371,7 @@ namespace SysIgreja.Controllers
                                     && x.Status == StatusEnum.Informativo
                                 )
                             )
-                            && ((string.IsNullOrEmpty(search)) || x.TituloEvento.Contains(search))
+                            && ((string.IsNullOrEmpty(search)) || UtilServices.RemoveAccents(x.TituloEvento).Contains(UtilServices.RemoveAccents(search)))
                             && (
                                  (identificadores?.Length > 0 && identificadores.Contains(x.Identificador) && identificador == x.Identificador) ||
                                 (identificadores?.Length > 0 && identificadores.Contains(x.Identificador) && string.IsNullOrEmpty(identificador))

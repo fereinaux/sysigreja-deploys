@@ -123,7 +123,7 @@ namespace SysIgreja.Controllers
                         new
                         {
                             Id = x.Id,
-                            UserName = UtilServices.CapitalizarNome(x.UserName),
+                            UserName = x.UserName,
                             Status = x.Status.GetDescription(),
                             Nome = x.Equipante.Nome,
                             EquipanteId = x.EquipanteId,
@@ -157,7 +157,7 @@ namespace SysIgreja.Controllers
                         new UsuarioViewModel
                         {
                             Id = x.Id,
-                            UserName = UtilServices.CapitalizarNome(x.UserName),
+                            UserName = x.UserName,
                             Status = x.Status.GetDescription(),
                             EquipanteId = x.EquipanteId,
                             Perfil = x.Claims.Any(
@@ -339,7 +339,7 @@ namespace SysIgreja.Controllers
                 string senha = Membership.GeneratePassword(6, 1);
                 user = new ApplicationUser()
                 {
-                    UserName = UtilServices.RemoveAccents($"{firstName}{lastName}"),
+                    UserName = equipante.Email,
                     EquipanteId = EquipanteId,
                     Status = StatusEnum.Ativo,
                     HasChangedPassword = false,

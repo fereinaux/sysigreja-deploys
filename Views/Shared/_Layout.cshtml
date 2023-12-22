@@ -405,7 +405,7 @@
         const { jsPDF } = window.jspdf;
         var config = {}
         var campos = []
-        let username = '@UtilServices.CapitalizarNome(User.Identity.GetUserName())'
+        let username = '@User.Identity.GetUserName()'
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         $.fn.modal.Constructor.prototype._enforceFocus = function () { };
 

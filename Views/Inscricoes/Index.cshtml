@@ -5,7 +5,7 @@
 <html>
 <head>
 
-    @if (ViewContext.HttpContext.Request.Path.Contains("sysigreja.com"))
+    @if (ViewContext.HttpContext.Request.UserHostName.Contains("sysigreja.com"))
     {
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5078041564742726"
                 crossorigin="anonymous"></script>

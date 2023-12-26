@@ -66,6 +66,17 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public ActionResult Criar()
+        {
+            var login = configuracaoBusiness.GetLogin();
+            ViewBag.Configuracao = login;
+            ViewBag.Title = "Soluções";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
+
+            return View();
+        }
+
         public ActionResult Informativos()
         {
             ViewBag.Title = "Informativos";

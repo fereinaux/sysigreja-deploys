@@ -1233,6 +1233,7 @@
     <Content Include="Views\Home\Dirigente.cshtml" />
     <Content Include="Views\Ajuda\Index.cshtml" />
     <Content Include="Views\Inscricoes\Presenca.cshtml" />
+    <Content Include="Views\Evento\Criar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

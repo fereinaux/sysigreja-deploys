@@ -1,0 +1,158 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CZ37FW7BZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-2CZ37FW7BZ');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="~/Fonts/font-awesome/css/all.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css"
+          type="text/css" />
+
+    @if (ViewBag.Configuracao.LogoId != null)
+    {
+
+        <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+    }
+    else
+    {
+        <link rel="icon" type="image/png" sizes="16x16" href="~/Images/logo-iecb.png" />
+
+    }
+    <title></title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/main.css" />
+    <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+
+        body {
+            font-family: "Roboto" !important;
+        }
+
+        h3 {
+            text-transform: uppercase !important;
+        }
+
+        span {
+            letter-spacing: 0.5px;
+        }
+
+        .row-eventos, .panel-categorias {
+            width: 70%;
+            margin: auto;
+        }
+
+
+        .wrapper {
+            position: relative;
+            z-index: 100;
+        }
+
+        .img-logo {
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+        }
+
+        .widget {
+            color: #ffffff;
+            border-radius: 12px;
+            height: 375px !important;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: none;
+            }
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper" style="display:flex;flex-direction:column">
+        <div class="row-eventos">
+            <div class="col-xs-12 col-select" style="height:50px;margin-top:20px;display:flex;padding:0">
+                <div class="div-cols" style="width:100%">
+                    <div class="col-md-3 col-xs-12" style="display: flex">
+                        <img style="height: 3rem; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+
+                        <h3 class="desktop" style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Title</h3>
+                    </div>
+                </div>
+            </div>
+            <section id="main">
+            </section>
+            <section id="disclaimer"></section>
+            <section id="features"></section>
+            <section id="features-list"></section>
+        </div>
+
+        <div id="preloader">
+            <div class="loader" id="loader-1"></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/plugins/imaskjs/imask.js"></script>
+<script src="~/Scripts/app/Util/extensions.js"></script>
+<script src="~/Scripts/app/Util/forms-v2.js"></script>
+<script src="~/Scripts/app/Util/inputs-v2.js"></script>
+<script src="~/Scripts/app/Util/messages.js"></script>
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="~/Scripts/plugins/iCheck/icheck.min.js"></script>
+<script src="~/Scripts/plugins/moment/moment-with-locales.min.js"></script>
+<script src="~/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/plugins/chosen/chosen.jquery.js"></script>
+<script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>
+<script src="~/Scripts/app/Util/mapa.js"></script>
+<script src="https://malsup.github.io/jquery.blockUI.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
+<script>
+    let corBotao = '@ViewBag.Configuracao.CorBotao'
+    document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
+
+    if (isMobile) {
+        $('.mobile').css('display', 'flex')
+        $('.desktop').css('display', 'none')
+    } else {
+        $('.desktop').css('display', 'flex')
+        $('.mobile').css('display', 'none')
+    }
+
+    $(document).ready(() => {
+        document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')
+        $('#preloader').fadeOut();
+    })
+
+
+
+
+
+</script>

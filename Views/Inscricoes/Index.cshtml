@@ -508,14 +508,14 @@
         <div class="row-eventos">
             <div class="col-xs-12 col-select" style="height:50px;margin-top:20px;display:flex;padding:0">
                 <div class="div-cols" style="width:100%">
-                    <div class="col-md-3 col-xs-12" style="display: flex">
+                    <div class="col-md-4 col-xs-12" style="display: flex">
                         <img style="height: 3rem; margin-top: auto; margin-bottom: auto;" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
 
                         <h3 class="desktop" style="margin-top: auto; margin-bottom: auto; margin-left: 10px; font-weight: 900;font-size:20px ">@ViewBag.Action</h3>
 
                         @if (ViewBag.CountIgrejas > 0)
                         {
-                            <div class="col-md-3 col-xs-12 select-igreja mobile" style="display: none;padding:0;align-items:center">
+                            <div class="col-md-4 col-xs-12 select-igreja mobile" style="display: none;padding:0;align-items:center">
                                 <i style="margin-left: auto; font-size: 2.5rem;margin-right:5px" class="fas fa-church"></i>
 
 
@@ -539,7 +539,7 @@
                         }
                         else
                         {
-                            <div class="col-md-5 col-xs-12 " style="display: flex">
+                            <div class="col-md-4 col-xs-12 " style="display: flex">
                                 <a style="margin-left: auto;" href="https://lp.sysigreja.com" class="btn btn-outline button-create">CRIE SEU EVENTO</a>
                             </div>
                         }
@@ -565,7 +565,7 @@
 
                     @if (ViewBag.CountIgrejas > 0)
                     {
-                        <div class="col-md-5 col-xs-12 select-igreja desktop" style="display: none;padding-left:0">
+                        <div class="col-md-4 col-xs-12 select-igreja desktop" style="display: none;padding-left:0">
 
                             <h6 style=" margin-left:auto ;margin-top: auto; margin-bottom: auto; margin-right: 10px; font-weight: 700; font-size: 20px ">IGREJA</h6>
                             <select class="form-control" style="width: fit-content !important ; min-width: 200px;  margin-top: auto; margin-bottom: auto; " id="igreja-desktop" onchange=" carregarEventos()">
@@ -588,7 +588,7 @@
                     }
                     else
                     {
-                        <div class="col-md-5 col-xs-12 " style="display: flex">
+                        <div class="col-md-4 col-xs-12 " style="display: flex">
                             <a style="margin-left: auto;" href="https://lp.sysigreja.com" class="btn btn-outline button-create">CRIE SEU EVENTO</a>
                         </div>
                     }

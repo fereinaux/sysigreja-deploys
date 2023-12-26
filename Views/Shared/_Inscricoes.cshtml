@@ -3,6 +3,11 @@
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2CZ37FW7BZ"></script>
+    @if (ViewContext.HttpContext.Request.Path.Contains("sysigreja.com"))
+    {
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5078041564742726"
+                crossorigin="anonymous"></script>
+    }
     <!-- Google Tag Manager (noscript) -->
     <noscript>
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K7BLZ6CG"

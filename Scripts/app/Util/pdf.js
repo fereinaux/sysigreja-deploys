@@ -16,7 +16,7 @@ function AddCabecalhoEvento(doc, titulo, evento) {
     doc.setFontSize(12);
     if (SelectedEvent.LogoRelatorioId) {
         var img = new Image();
-        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId || Login.LogoId}`;
         doc.addImage(img, 'PNG', 10, 10, 50, 21);
     }
     doc.text(64, 14, evento);

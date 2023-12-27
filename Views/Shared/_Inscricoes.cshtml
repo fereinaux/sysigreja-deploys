@@ -116,7 +116,7 @@
     <!-- End Google Tag Manager -->
     <div class="row justify-content-center header-evento" style="display:flex">
         <div class="col-header" style="margin: auto; display: flex">
-            <span onclick="window.location.href = 'https://iecbeventos.com.br'" style="margin-left: 20px; cursor: pointer; margin-right: auto; margin-top: auto; margin-bottom: auto; font-size: 20px; color: white"><i class="fas fa-chevron-left"></i></span>
+            <span onclick="window.location.href = window.location.host" style="margin-left: 20px; cursor: pointer; margin-right: auto; margin-top: auto; margin-bottom: auto; font-size: 20px; color: white"><i class="fas fa-chevron-left"></i></span>
             @if (ViewBag.Configuracao.LogoId != null)
             {
                 <img style="height: 50px; margin: auto; margin-left: -40px;" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />

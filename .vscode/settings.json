@@ -1,6 +1,5 @@
 {
   "sqltools.connections": [
-
     {
       "mssqlOptions": {
         "appName": "SQLTools",
@@ -156,22 +155,6 @@
       "port": 1433,
       "driver": "MSSQL",
       "group": "Local",
-      "database": "teste1012",
-      "name": "teste1012",
-      "username": "sa",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "Local",
       "database": "consulta",
       "name": "Consulta",
       "username": "sa",
@@ -190,6 +173,22 @@
       "group": "Local",
       "database": "recon",
       "name": "Recon",
+      "username": "sa",
+      "password": "Reinaux0)"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "Local",
+      "database": "testevideo",
+      "name": "testevideo",
       "username": "sa",
       "password": "Reinaux0)"
     }

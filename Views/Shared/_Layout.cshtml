@@ -461,7 +461,7 @@
 
             $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
                 max-height: 150px;
-                padding: 15px;" src="/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}">`)
+                padding: 15px;" src="/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId || Login.LogoId}">`)
 
 
         });

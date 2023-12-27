@@ -78,7 +78,7 @@ namespace SysIgreja.Controllers
                 !user.Claims.Any(
                     x =>
                         x.ClaimType == ClaimTypes.Role
-                        && (x.ClaimValue == "Master" || x.ClaimValue == "Geral")
+                        && x.ClaimValue == "Geral"
                 )
             )
             {

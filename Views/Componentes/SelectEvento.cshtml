@@ -16,11 +16,11 @@
             $('#pagamentos-valor').data('valor-equipante', SelectedEvent.ValorTaxa)
             $('.bg-coord').css('background-color', SelectedEvent.CorBotao)
             $('.title-circulo').text(SelectedEvent.EquipeCirculo)
-            if (SelectedEvent.LogoId) {
-                $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
-                $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
+            if (SelectedEvent.LogoId || Login.LogoId) {
+                $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${SelectedEvent.LogoId || Login.LogoId}`)
+                $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoId || Login.LogoId}`)
                 $('#home-button-logo').css('display', 'block')
-                $('#img-logo').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoId}`)
+                $('#img-logo').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoId || Login.LogoId}`)
             } else {
                 $('#home-button-logo').css('display', 'none')
             }

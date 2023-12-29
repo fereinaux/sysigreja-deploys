@@ -54,7 +54,7 @@ function GetLabel(functionClick, functionParameter, color, title,tooltip) {
     }
 
 
-    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:13px" class="m-r-sm pointer text-center label label-${button}"  data-tippy-content="${tooltip}">${title}</span>`;
+    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:13px" class="m-r-sm pointer text-center label label-${button}"  data-tippy-content="${tooltip || title}">${title}</span>`;
 }
 
 function GetCheckBox(id, checked, indeterminate) {

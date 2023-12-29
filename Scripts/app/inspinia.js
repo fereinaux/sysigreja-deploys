@@ -124,6 +124,14 @@ $(document).ready(function () {
         event.preventDefault();
         $("body").toggleClass("mini-navbar");
         $('#side-menu li a i ').toggleClass("icon-menu")
+        tippy(`#side-menu li a i icon-menu`, {
+            content: '',
+            allowHTML: true,
+            followCursor: true, trigger: 'mouseenter',
+            onTrigger: (instance, event) => {
+                instance.setContent($(event.target).parent().text())
+            },
+        });
         SmoothlyMenu();
 
     });

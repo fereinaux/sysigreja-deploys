@@ -14,7 +14,7 @@ function CarregarTabelaEvento() {
         orderMulti: false,
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
         destroy: true,
-        dom: '<"html5buttons"B>lTgitp', 
+        dom: '<"html5buttons"B>lTgitp',
         buttons: getButtonsConfig('Eventos'),
         columns: [
             {
@@ -39,6 +39,10 @@ function CarregarTabelaEvento() {
                     var color = 'green'
 
                     switch (row.Status) {
+                        case Inativo:
+                            color= 'default'
+                            title= "Inscrições em Breve"
+                            break;
                         case InscricoesAbertas:
                             color = 'green'
                             title = "Encerrar Inscrições"
@@ -62,11 +66,15 @@ function CarregarTabelaEvento() {
 
                     var colorEquipe = 'green'
 
-
+                
                     switch (row.StatusEquipe) {
+                        case Inativo:
+                            colorEquipe= 'default'
+                            title= "Inscrições em Breve"
+                            break;
                         case InscricoesAbertas:
                             colorEquipe = 'green'
-                            title= "Encerrar Inscrições"
+                            title = "Encerrar Inscrições"
                             break;
                         case InscricoesEncerradas:
                             colorEquipe = 'red'
@@ -77,7 +85,6 @@ function CarregarTabelaEvento() {
                             title = "Abrir Inscrições"
                             break;
                     }
-
                     return `
 ${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe, row.StatusEquipe, title)}`;
                 }

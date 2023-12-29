@@ -43,13 +43,13 @@ function GetIconTel(tel) {
 function GetLabel(functionClick, functionParameter, color, title,tooltip) {
 
     var button = '';
-
     switch (color) {
         case 'red': button = 'danger'; break;
         case 'yellow': button = 'warning'; break;
         case 'blue': button = 'success'; break;
         case 'green': button = 'primary'; break;
         case 'info': button = 'info'; break;
+        case 'default': button = 'default'; break;
         default: button = 'info'; break;
     }
 

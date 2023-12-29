@@ -587,11 +587,11 @@
                         </div>
                     }
                     @*else
-                    {
-                        <div class="col-md-4 col-xs-12 " style="display: flex">
-                            <a style="margin-left: auto;" href="https://lp.sysigreja.com" class="btn btn-outline button-create">CRIE SEU EVENTO</a>
-                        </div>
-                    }*@
+                        {
+                            <div class="col-md-4 col-xs-12 " style="display: flex">
+                                <a style="margin-left: auto;" href="https://lp.sysigreja.com" class="btn btn-outline button-create">CRIE SEU EVENTO</a>
+                            </div>
+                        }*@
 
 
 
@@ -673,6 +673,9 @@
                 if (!isEquipe && eventos.length > 0) {
                     destaque = eventos.filter(evento => evento.Status == "Aberto" || evento.StatusEquipe == "Aberto")[0]
                     eventos = eventos.filter(evento => !destaque || (evento.Id != destaque.Id && evento.Identificador != destaque.Identificador || evento.UrlDestino != destaque.UrlDestino))
+                    if (destaque) {
+
+
                     html += `       <div class="col-xs-12">
                     <h3 style="font-weight: 900; font-size: 28px;">Próximo evento</h3>
                 </div>
@@ -699,6 +702,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
                         </div>
                     </a>
                 </div>`
+                    }
                 }
 
                 var eventosAbertos = eventos.filter(evento => (evento.Status == "Aberto" || evento.StatusEquipe == "Aberto"))

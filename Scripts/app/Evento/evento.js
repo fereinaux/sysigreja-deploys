@@ -41,16 +41,19 @@ function CarregarTabelaEvento() {
                     switch (row.Status) {
                         case InscricoesAbertas:
                             color = 'green'
+                            title = "Encerrar Inscrições"
                             break;
                         case InscricoesEncerradas:
                             color = 'red'
+                            title = "Inscrições em Breve"
                             break;
                         default:
                             color = 'yellow'
+                            title = "Abrir Inscrições"
                             break;
                     }
 
-                    return `${GetLabel('ToggleEventoStatus', data, color, row.Status)}`
+                    return `${GetLabel('ToggleEventoStatus', data, color, row.Status, title)}`
                 }
             },
             {
@@ -63,17 +66,20 @@ function CarregarTabelaEvento() {
                     switch (row.StatusEquipe) {
                         case InscricoesAbertas:
                             colorEquipe = 'green'
+                            title= "Encerrar Inscrições"
                             break;
                         case InscricoesEncerradas:
                             colorEquipe = 'red'
+                            title = "Inscrições em Breve"
                             break;
                         default:
                             colorEquipe = 'yellow'
+                            title = "Abrir Inscrições"
                             break;
                     }
 
                     return `
-${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe, row.StatusEquipe)}`;
+${GetLabel('ToggleEventoStatusEquipe', data, colorEquipe, row.StatusEquipe, title)}`;
                 }
             },
             {

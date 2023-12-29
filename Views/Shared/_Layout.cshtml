@@ -423,7 +423,7 @@
                 onTrigger: (instance, event) => {
                     if ($('body').hasClass("mini-navbar")) {
                         instance.setContent($(event.target).text())
-                    } 
+                    }
                 },
                 onShow(instance) {
                     if (!$('body').hasClass("mini-navbar")) {
@@ -479,6 +479,15 @@
                 padding: 15px;" src="/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId || Login.LogoId}">`)
 
 
+        });
+
+        $.extend($.fn.dataTable.defaults, {
+            initComplete: function (settings, json) {
+                tippy('[data-tippy-content]');
+                $(settings.nTable).DataTable().on('draw', function () {
+                    tippy('[data-tippy-content]');
+                })
+            }
         });
 
 

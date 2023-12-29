@@ -11,19 +11,19 @@
         default: button = ''; break;
     }
 
-    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:18px" class="${button} pointer p-l-xs"><i class="${(!icon.includes('far') && !icon.includes('fab')) ? 'fa' : ''} ${icon}" aria-hidden="true" title="${title}"></i></span>`;
+    return `<span data-tippy-content="${title}" onclick='${functionClick}(${functionParameter})' style="font-size:18px" class="${button} pointer p-l-xs"><i class="${(!icon.includes('far') && !icon.includes('fab')) ? 'fa' : ''} ${icon}" aria-hidden="true" ></i></span>`;
 }
 
 function GetAnexosButton(functionClick, functionParameter, qtd) {
 
-    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:18px;position:relative" class="text-success  has-badge pointer p-l-xs"  ${qtd > 0 ? 'data-count="' + qtd + '"' : ''}> <i class="fa fa-paperclip data-counter" aria-hidden="true" title="Anexos"></i></span>`
+    return `<span data-tippy-content="Anexos" onclick='${functionClick}(${functionParameter})' style="font-size:18px;position:relative" class="text-success  has-badge pointer p-l-xs"  ${qtd > 0 ? 'data-count="' + qtd + '"' : ''}> <i class="fa fa-paperclip data-counter" aria-hidden="true" title="Anexos"></i></span>`
 
 
 }
 
 function GetIconWhatsApp(tel, text) {
 
-    return `<a target="_blank" href='${GetLinkWhatsApp(tel, text)}' style="font-size:18px; color:green; " class="pointer p-l-xs"><i class="fab fa-whatsapp" aria-hidden="true" title="${tel}"></i></a>`;
+    return `<a data-tippy-content="Whatsapp" target="_blank" href='${GetLinkWhatsApp(tel, text)}' style="font-size:18px; color:green; " class="pointer p-l-xs"><i class="fab fa-whatsapp" aria-hidden="true" title="${tel}"></i></a>`;
 }
 
 
@@ -37,10 +37,10 @@ function GetLinkWhatsApp(tel, text) {
 
 
 function GetIconTel(tel) {
-    return `<a target="_blank" href="tel:${tel}" style="font-size:18px" class="pointer p-l-xs"><i class="fa fa-phone" aria-hidden="true" title="${tel}"></i></a>`;
+    return `<a data-tippy-content="Telefone" target="_blank" href="tel:${tel}" style="font-size:18px" class="pointer p-l-xs"><i class="fa fa-phone" aria-hidden="true" title="${tel}"></i></a>`;
 }
 
-function GetLabel(functionClick, functionParameter, color, title) {
+function GetLabel(functionClick, functionParameter, color, title,tooltip) {
 
     var button = '';
 
@@ -53,7 +53,8 @@ function GetLabel(functionClick, functionParameter, color, title) {
         default: button = 'info'; break;
     }
 
-    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:13px" class="m-r-sm pointer text-center label label-${button}">${title}</span>`;
+
+    return `<span onclick='${functionClick}(${functionParameter})' style="font-size:13px" class="m-r-sm pointer text-center label label-${button}"  data-tippy-content="${tooltip}">${title}</span>`;
 }
 
 function GetCheckBox(id, checked, indeterminate) {

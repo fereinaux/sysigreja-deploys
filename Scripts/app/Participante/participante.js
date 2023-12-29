@@ -142,6 +142,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         fixedHeader: true,
         filter: true,
         createdRow: function (row, data, dataIndex) {
+          
             if (data.HasFoto) {
                 $(row).addClass('foto')
                 $(row).data('id', data.Id)
@@ -251,9 +252,9 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 ${GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                                             
                         ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
-                                <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
+                                <span data-tippy-content="Adicionar Foto"  style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
                                 <input accept="image/*" onchange='Foto(${JSON.stringify({ Nome: row.Nome, Id: row.Id })})' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
-                            </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
+                            </label>`: `<span  data-tippy-content="Remover Foto" style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
                         }
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconWhatsApp(row.Fone)}
@@ -276,7 +277,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
                 callbackFunction()
 
             }
-
+         
             tippy(`.foto`, {
                 content: '',
                 allowHTML: true,

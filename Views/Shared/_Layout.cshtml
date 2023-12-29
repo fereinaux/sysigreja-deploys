@@ -416,12 +416,12 @@
 
 
         $(document).ready(() => {
-            tippy(`#side-menu li a`, {
+            tippy(`#side-menu li a i `, {
                 content: '',
                 allowHTML: true,
                 followCursor: true, trigger: 'mouseenter',
                 onTrigger: (instance, event) => {
-                    instance.setContent($(event.target).text())
+                    instance.setContent($(event.target).parent().text())
                 },
             });
             $(document).trigger('ready-ajax');

@@ -416,7 +416,19 @@
 
 
         $(document).ready(() => {
-           
+            tippy(`#side-menu li a:has(i)`, {
+                content: '',
+                allowHTML: true,
+                followCursor: true, trigger: 'mouseenter',
+                onTrigger: (instance, event) => {
+                    if ($('body').hasClass("mini-navbar")) {
+                        instance.enable()
+                        instance.setContent($(event.target).parent().text())
+                    } else {
+                        instance.disable()
+                    }
+                },
+            });
             $(document).trigger('ready-ajax');
             if (Usuario.FotoId) {
                 $('.img-avatar').attr('src', `/Arquivo/GetArquivo/${Usuario.FotoId}`)

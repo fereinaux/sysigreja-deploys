@@ -123,6 +123,7 @@ $(document).ready(function () {
     $('.navbar-minimalize').on('click', function (event) {
         event.preventDefault();
         $("body").toggleClass("mini-navbar");
+        $('#side-menu li a i ').toggleClass("icon-menu")
         SmoothlyMenu();
 
     });

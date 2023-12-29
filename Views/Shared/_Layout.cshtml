@@ -416,14 +416,7 @@
 
 
         $(document).ready(() => {
-            tippy(`#side-menu li a i `, {
-                content: '',
-                allowHTML: true,
-                followCursor: true, trigger: 'mouseenter',
-                onTrigger: (instance, event) => {
-                    instance.setContent($(event.target).parent().text())
-                },
-            });
+           
             $(document).trigger('ready-ajax');
             if (Usuario.FotoId) {
                 $('.img-avatar').attr('src', `/Arquivo/GetArquivo/${Usuario.FotoId}`)

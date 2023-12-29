@@ -81,19 +81,9 @@
                 {
                     <span onclick="window.location.href = '/Inscricoes/Presenca/@ViewBag.EventoId'" class="btn btn-outline mt-5 btn-default"><i class="fas fa-calendar-check"></i> Marcar Presença</span>
                 }
-                @if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe == 4)
-                {
-
+           
                     <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
-                }
-                else if ((int)ViewBag.Evento.Status == 4 && (int)ViewBag.Evento.StatusEquipe != 4)
-                {
-                    <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
-                }
-                else
-                {
-                    <span onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
-                }
+               
 
             </div>
         </div>
@@ -105,7 +95,7 @@
             <div class="modal-content animated bounceInRight">
                 <div class="modal-body">
 
-                    <div class="decisao" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'">
+                    <div class="decisao" disabled="@((int)ViewBag.Evento.Status != 4)" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'">
                         <i class="fas fa-qrcode"></i>
                         <div>
                             <p>
@@ -116,7 +106,7 @@
                             <small>Você irá participar das atividades regulares do evento</small>
                         </div>
                     </div>
-                    <div class="decisao" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'">
+                    <div class="decisao"  disabled="@((int)ViewBag.Evento.StatusEquipe != 4)" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'">
 
                         <i class="fas fa-broom"></i>
                         <div>
@@ -316,6 +306,12 @@ else if (!String.IsNullOrEmpty(ViewBag.Evento.Conteudo))
         cursor: pointer;
         box-shadow: rgb(25 31 40 / 15%) 0px 6px 24px 0px;
     }
+
+        .decisao[disabled] {
+            color: #b1b1b1;
+            pointer-events: none;
+            cursor: not-allowed !important;
+        }
 
         .decisao i {
             font-size: 30px;

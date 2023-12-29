@@ -386,7 +386,21 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
         }
     });
 
-    table = $("#table-participante").DataTable(tableParticipanteConfig);
+    if (!$.fn.DataTable.isDataTable('#table-participante')) {
+        table = $("#table-participante").DataTable(tableParticipanteConfig);
+    } else {
+
+        table = $("#table-participante").DataTable()
+
+        table.on('preXhr.dt', function (e, settings, data) {
+            var filtros = getFiltros()
+            Object.keys(filtros).forEach(k => data[k] = filtros[k])
+        })
+
+        table.draw()
+    }
+
+
 
     table.on('draw', function () {
         $('.i-checks-green').iCheck({

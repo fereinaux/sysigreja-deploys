@@ -113,7 +113,21 @@ ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
         }
     })
 
-    $("#table-eventos").DataTable(tableEventoConfig);
+
+    if (!$.fn.DataTable.isDataTable('#table-eventos')) {
+        table = $("#table-eventos").DataTable(tableEventoConfig);
+    } else {
+
+        table = $("#table-eventos").DataTable()
+
+        table.on('preXhr.dt', function (e, settings, data) {
+            var filtros = getFiltros()
+            Object.keys(filtros).forEach(k => data[k] = filtros[k])
+        })
+
+        table.draw()
+    }
+
 
 
 }

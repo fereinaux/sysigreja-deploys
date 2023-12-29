@@ -1,4 +1,5 @@
-﻿map = initMap('map')
+﻿loadCirculos = function () { }
+map = initMap('map')
 markerLayer = createMarkerLayer(map)
 map.setView([-8.050000, -34.900002], 13);
 initTableCirculo = false
@@ -116,6 +117,13 @@ function CarregarTabelaCirculo() {
         }
     ]
 
+    const ajaxConfig = {
+        url: '/Circulo/GetCirculos',
+        datatype: "json",
+        data: { EventoId: function () { return SelectedEvent.Id }, },
+        type: "POST"
+    }
+
     const tableCirculoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],
@@ -135,29 +143,81 @@ function CarregarTabelaCirculo() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
-            if (settings.aoData.length > 0) {
-                let column = settings.aoColumns[settings.aaSorting.length > 0 ? settings.aaSorting[0][0] : 0].data
-                let dir = settings.aaSorting > 0 ? settings.aaSorting[0][1] : 'asc'
-                let search = settings.oPreviousSearch.sSearch
+            const arrayData = this.api().rows({ search: 'applied', order: 'applied' })
+                .data()
+                .toArray()
+            loadCirculos(arrayData, SelectedEvent.TipoEvento);
+            GetParticipantesSemCirculo()
+            var bairros = []
+            markerLayer.clearLayers();
+            arrayData.forEach(circulo => {
+                circulo.Participantes.forEach(participante => {
+                    if (participante.Latitude && participante.Longitude) {
+                        if (!setView) {
+                            setView = true
+                            map.setView([participante.Latitude, participante.Longitude], 13);
+                        }
+                        if (!bairros.includes(participante.Bairro)) {
+                            bairros.push(participante.Bairro)
+                        }
 
-            }
+
+                        let addPin = true
+                        map.eachLayer(function (layer) {
+
+                            if (layer._latlng?.lat == participante.Latitude && layer._latlng?.lng == participante.Longitude) {
+                                addPin = false
+                                var div = document.createElement("div");
+
+                                $(div).html(layer._popup?._content)
+
+                                $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${participante.Endereco} - ${participante.Bairro}</span>
+                    <ul class="change-circulo-ul">
+                       ${arrayData.map(c => `<li onclick="ChangeCirculo(${participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
+                    </ul>
+                    </div></div>`)
+
+
+                                layer.bindPopup(div, {
+                                    maxWidth: 710
+                                })
+                            }
+                        })
+                        if (addPin) {
+
+                            addMapa(participante.Latitude, participante.Longitude, participante.Nome, circulo.Cor, participante.ParticipanteId, 'circulo', participante)
+                                .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${participante.Endereco} - ${participante.Bairro}</span>
+                    <ul class="change-circulo-ul">
+                       ${arrayData.map(c => `<li onclick="ChangeCirculo(${participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
+                    </ul>
+                    </div></div></div>`);
+                        }
+
+                    }
+                })
+            })
+            $('.div-map').css('display', 'block')
+            $("#bairros").html(`
+${bairros.map(p => `<option value=${p}>${p}</option>`)}
+`)
+            $("#bairros").select2({
+                placeholder: "Filtro de bairros",
+            })
+
 
 
         },
-        ajax: {
-            url: '/Circulo/GetCirculos',
-            datatype: "json",
-            data: { EventoId: SelectedEvent.Id },
-            type: "POST"
-        }
+        ajax: ajaxConfig
     };
-    var api = $("#table-circulo").DataTable(tableCirculoConfig);
-    settings = api.settings()[0]
 
-    GetCirculosComParticipantes((
-        settings.aoColumns[settings.aaSorting.length > 0 ? settings.aaSorting[0][0] : 0].data),
-        (settings.aaSorting > 0 ? settings.aaSorting[0][1] : 'asc'),
-        settings.oPreviousSearch.sSearch ?? '');
+    if (!$.fn.DataTable.isDataTable('#table-circulo')) {
+        $('#table-circulo').DataTable(tableCirculoConfig)
+    } else {
+
+        $("#table-circulo").DataTable().ajax.reload()
+    }
+
+
 }
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
@@ -527,100 +587,6 @@ function GetParticipantesSemCirculo() {
 
 var setView = false
 
-function GetCirculosComParticipantes(column, dir, search) {
-    $("#circulos").empty();
-    $.ajax({
-        url: '/Circulo/GetCirculos',
-        datatype: "json",
-        data: { EventoId: SelectedEvent.Id, columnName: column, columnDir: dir, search },
-        type: "POST",
-        success: function (result) {
-            result.data.forEach(function (circulo, index, array) {
-
-                let htmlCabecalhoCirculo = circulo.Dirigentes.map(dirigente => `<h4 style="padding-top:5px">${dirigente.Nome}</h4>`).join().replace(/,/g, '')
-
-
-                $("#circulos").append($(`<div data-id="${circulo.Id}" style="margin-bottom:25px;background-color:${circulo.Cor};background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">                     
-                       ${htmlCabecalhoCirculo}
-${circulo.Titulo ? `<h4 style="padding-top:5px">${circulo.Titulo}</h4>` : ""}
-                                    <table class="table">
-                                        <tbody id="pg-${circulo.Id}">
-                                            
-                                        </tbody>
-                                    </table>
- <button type="button" class="btn btn-rounded btn-default print-button" onclick='PrintCirculo(${JSON.stringify(circulo)})'><i class="fa fa-2x fa-print"></i></button>
-                                </div>`));
-            });
-
-            $.ajax({
-                url: "/Circulo/GetCirculosComParticipantes/",
-                data: { EventoId: SelectedEvent.Id },
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    var bairros = []
-                    markerLayer.clearLayers();
-                    data.Circulos.forEach(function (circulo, index, array) {
-                        if (circulo.Latitude && circulo.Longitude) {
-                            if (!setView) {
-                                setView = true
-                                map.setView([circulo.Latitude, circulo.Longitude], 13);
-                            }
-                            if (!bairros.includes(circulo.Bairro)) {
-                                bairros.push(circulo.Bairro)
-                            }
-
-
-                            let addPin = true
-                            map.eachLayer(function (layer) {
-
-                                if (layer._latlng?.lat == circulo.Latitude && layer._latlng?.lng == circulo.Longitude) {
-                                    addPin = false
-                                    var div = document.createElement("div");
-
-                                    $(div).html(layer._popup?._content)
-
-                                    $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
-                                <ul class="change-circulo-ul">
-                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                                </ul>
-                                </div></div>`)
-
-
-                                    layer.bindPopup(div, {
-                                        maxWidth: 710
-                                    })
-                                }
-                            })
-                            if (addPin) {
-
-                                addMapa(circulo.Latitude, circulo.Longitude, circulo.Nome, circulo.Cor, circulo.ParticipanteId, 'circulo', circulo)
-                                    .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${circulo.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${circulo.Endereco} - ${circulo.Bairro}</span>
-                                <ul class="change-circulo-ul">
-                                   ${result.data.map(c => `<li onclick="ChangeCirculo(${circulo.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                                </ul>
-                                </div></div></div>`);
-                            }
-
-                        }
-                        $(`#pg-${circulo.CirculoId}`).append($(`<tr><td class="participante" data-id="${circulo.ParticipanteId}">${circulo.Nome}</td></tr>`));
-                    });
-                    $('.div-map').css('display', 'block')
-                    $("#bairros").html(`
-${bairros.map(p => `<option value=${p}>${p}</option>`)}
-`)
-                    $("#bairros").select2({
-                        placeholder: "Filtro de bairros",
-                    })
-
-                    DragDropg();
-                }
-            });
-        }
-    });
-}
-
 function addMapa(lat, long, nome, cor, id, type, props) {
     let marker = L.marker([lat, long], { icon: getIcon(cor.trim()) })
     marker.props = props
@@ -652,14 +618,8 @@ function DragDropg() {
 
     $('.pg').droppable({
         drop: function (event, ui) {
-            $(ui.draggable).parent().remove();
             ChangeCirculo($(ui.draggable).data('id'), $(this).data('id'));
-            if ($(this).data('id')) {
-                $(`#pg-${$(this).data('id')}`).append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            } else {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            }
-            Drag();
+
         }
     });
 }
@@ -722,7 +682,6 @@ function ChangeCirculo(participanteId, destinoId) {
         })
 
     } else {
-
         $.ajax({
             url: "/Circulo/ChangeCirculo/",
             datatype: "json",
@@ -867,7 +826,6 @@ function DeleteDirigente(id) {
 
 $("#modal-dirigentes").on('hidden.bs.modal', function () {
     CarregarTabelaCirculo();
-    GetParticipantesSemCirculo();
 });
 
 function ListarDirigentes(row) {
@@ -951,7 +909,5 @@ function loadCirculo() {
     } else {
         $('#ibox-mapa-circulo').css('display', 'none')
     }
-
     CarregarTabelaCirculo();
-    GetParticipantesSemCirculo();
 }

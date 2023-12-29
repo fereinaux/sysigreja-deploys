@@ -416,6 +416,14 @@
 
 
         $(document).ready(() => {
+            tippy(`#side-menu li a`, {
+                content: '',
+                allowHTML: true,
+                followCursor: true, trigger: 'mouseenter',
+                onTrigger: (instance, event) => {
+                    instance.setContent($(event.target).text())
+                },
+            });
             $(document).trigger('ready-ajax');
             if (Usuario.FotoId) {
                 $('.img-avatar').attr('src', `/Arquivo/GetArquivo/${Usuario.FotoId}`)
@@ -683,6 +691,10 @@
 
     </script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+    <script src="https://unpkg.com/@("@")babel/standalone/babel.min.js"></script>
     <script>
 
 

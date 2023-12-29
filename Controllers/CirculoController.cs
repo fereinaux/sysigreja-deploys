@@ -65,7 +65,7 @@ namespace SysIgreja.Controllers
                 .ToList()
                 .Select(
                     x =>
-                        new CirculoViewModel
+                        new
                         {
                             Id = x.Id,
                             Dirigentes = x.Dirigentes.Select(
@@ -79,6 +79,19 @@ namespace SysIgreja.Controllers
                                     }
                             )
                                 .ToList(),
+                            Participantes = x.Participantes.Select(y => new
+                            {
+                                Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
+                                y.Participante.SequencialEvento,
+                                y.Participante.Sexo,
+                                ParticipanteId = y.ParticipanteId,
+                                Latitude = y.Participante.Latitude,
+                                Longitude = y.Participante.Longitude,
+                                Endereco = $"{y.Participante.Logradouro} {y.Participante.Numero}",
+                                Bairro = y.Participante.Bairro,
+                                Cidade = y.Participante.Cidade,
+                                Referencia = y.Participante.Referencia
+                            }),
                             QtdParticipantes = circulosBusiness
                                 .GetParticipantesByCirculos(x.Id)
                                 .Count(),

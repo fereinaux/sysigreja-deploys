@@ -64,7 +64,7 @@ namespace SysIgreja.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Title = "Financeiro";
+            ViewBag.Title = "Extrato Financeiro";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             return View();
         }

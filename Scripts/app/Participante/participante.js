@@ -1,7 +1,6 @@
 ﻿
 function CarregarTabelaParticipante(callbackFunction) {
     loadCampos(SelectedEvent.Id)
-    $("#table-participantes").DataTable().destroy()
     casal = false
     handleParticipantes(casal)
     GetCrachas()

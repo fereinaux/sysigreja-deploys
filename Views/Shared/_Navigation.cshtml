@@ -42,7 +42,7 @@
             <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Lancamento","CentroCusto","MeioPagamento"}, actions: new List<string> { "Index"})">
                 <a><i class="far fa-money-bill-alt"></i> <span class="nav-label">Financeiro</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Lancamento","CentroCusto","MeioPagamento"}, actions: new List<string> { "Index" }, cssClass: "in")">
-                    <li class="@Html.IsSelected(action: "Index", controller:"Lancamento")"><a href="@Url.Action("Index", "Lancamento")">Listagem</a></li>
+                    <li class="@Html.IsSelected(action: "Index", controller:"Lancamento")"><a href="@Url.Action("Index", "Lancamento")">Extrato</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "MeioPagamento")"><a href="@Url.Action("Index", "MeioPagamento")">Formas de Pagamento</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller: "CentroCusto")"><a href="@Url.Action("Index", "CentroCusto")">Centros de Custo</a></li>
                 </ul>

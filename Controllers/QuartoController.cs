@@ -133,7 +133,7 @@ namespace SysIgreja.Controllers
 
             var result = queryResult.Select(
                 x =>
-                    new QuartoViewModel
+                    new
                     {
                         Id = x.Id,
                         Capacidade =
@@ -154,6 +154,22 @@ namespace SysIgreja.Controllers
                         Referencia = x.Referencia,
                         Latitude = x.Latitude,
                         Longitude = x.Longitude,
+                        Equipantes = x.Participantes.Where(y => y.EquipanteId.HasValue).Select(
+                                y =>
+                                    new
+                                    {
+                                        Nome = UtilServices.CapitalizarNome(y.Equipante.Nome),
+                                        ParticipanteId = y.EquipanteId,
+                                    }
+                            ),
+                        Participantes = x.Participantes.Where(y => y.ParticipanteId.HasValue).Select(
+                                y =>
+                                    new
+                                    {
+                                        Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
+                                        ParticipanteId = y.ParticipanteId,
+                                    }
+                            )
                     }
             );
 

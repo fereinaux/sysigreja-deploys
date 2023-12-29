@@ -84,9 +84,7 @@ $('.search-data').attr('disabled', true)
 function CarregarTabelaEquipante(callbackFunction) {
 
     $('#btn_bulk').css('display', 'none')
-    if ($.fn.DataTable.isDataTable('#table-equipantes')) {
-        $("#table-equipantes").DataTable().destroy()
-    }
+ 
     const tableEquipanteConfig = {
         language: languageConfig,
         searchDelay: 1000,
@@ -227,16 +225,6 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({ Id: row.Id }), 
             [2, "asc"]
         ],
         drawCallback: function () {
-            $('.i-checks-green').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
-            $('.i-checks-green').on('ifToggled', function (event) {
-                checkBulkActions()
-            });
-            $('#select-all').on('ifClicked', function (event) {
-                $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
-            });
             if (callbackFunction) {
                 callbackFunction()
             }
@@ -353,7 +341,31 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({ Id: row.Id }), 
         }
     });
 
-    table = $("#table-equipantes").DataTable(tableEquipanteConfig);
+    if (!$.fn.DataTable.isDataTable('#table-equipantes')) {
+        table = $("#table-equipantes").DataTable(tableEquipanteConfig);
+    } else {
+        table = $("#table-equipantes").DataTable()
+
+        table.on('preXhr.dt', function (e, settings, data) {
+            var filtros = getFiltros()
+            Object.keys(filtros).forEach(k => data[k] = filtros[k])
+        })
+
+        table.draw()
+    }
+
+    table.on('draw', function () {
+        $('.i-checks-green').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $('.i-checks-green').on('ifToggled', function (event) {
+            checkBulkActions()
+        });
+        $('#select-all').on('ifClicked', function (event) {
+            $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
+        });
+    });
 }
 
 function getEquipes() {

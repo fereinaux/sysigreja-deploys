@@ -233,17 +233,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         order: [
             [2, "asc"]
         ],
-        drawCallback: function () {
-            $('.i-checks-green').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
-            $('.i-checks-green').on('ifToggled', function (event) {
-                checkBulkActions()
-            });
-            $('#select-all').on('ifClicked', function (event) {
-                $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
-            });
+        drawCallback: function () {          
             if (callbackFunction) {
                 callbackFunction()
             }
@@ -266,20 +256,48 @@ function CarregarTabelaEquipante(callbackFunction) {
         },
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
-            data: {
-                EventoId: SelectedEvent.Id,
-                Origem: "Montagem",
-                Etiquetas: $("#equipante-marcadores").val(),
-                NaoEtiquetas: $("#equipante-nao-marcadores").val(),
-                Equipe: $("#equipe-select-filtro").val() != 999 ? $("#equipe-select-filtro").val() : null,
-                StatusMontagem: $("#equipante-status-montagem").val() != 999 ? $("#equipante-status-montagem").val() : null,
-            },
+            data: getFiltros(),
             datatype: "json",
             type: "POST"
         }
     };
 
-    table = $("#table-montagem").DataTable(tableEquipanteConfig);
+    if (!$.fn.DataTable.isDataTable('#table-montagem')) {
+        table = $("#table-montagem").DataTable(tableEquipanteConfig);
+    } else {
+        table = $("#table-montagem").DataTable()
+
+        table.on('preXhr.dt', function (e, settings, data) {
+            var filtros = getFiltros()
+            Object.keys(filtros).forEach(k => data[k] = filtros[k])
+        })
+
+        table.draw()
+    }
+
+    table.on('draw', function () {
+        $('.i-checks-green').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        $('.i-checks-green').on('ifToggled', function (event) {
+            checkBulkActions()
+        });
+        $('#select-all').on('ifClicked', function (event) {
+            $('.i-checks-green').iCheck($('#select-all').iCheck('update')[0].checked ? 'uncheck' : 'check')
+        });
+    });
+}
+
+function getFiltros() {
+    return {
+        EventoId: SelectedEvent.Id,
+        Origem: "Montagem",
+        Etiquetas: $("#equipante-marcadores").val(),
+        NaoEtiquetas: $("#equipante-nao-marcadores").val(),
+        Equipe: $("#equipe-select-filtro").val() != 999 ? $("#equipe-select-filtro").val() : null,
+        StatusMontagem: $("#equipante-status-montagem").val() != 999 ? $("#equipante-status-montagem").val() : null,
+    }
 }
 
 

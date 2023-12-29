@@ -1,11 +1,16 @@
-﻿arrayCaronas = []
+﻿
+rootCarona = ReactDOM.createRoot(document.getElementById("caronas"));
+
+arrayCaronas = []
 arrayCaroneiros = []
 map = initMap('map')
+loadCaronas = typeof loadCaronas !== 'undefined' ? loadCaronas : function () { }
 markerLayer = createMarkerLayer(map)
-map.setView([-8.050000, -34.900002], 13);
 setInterval(function () {
     map.invalidateSize();
 }, 100);
+
+var setView = false
 
 function CarregarTabelaCarona() {
 
@@ -45,34 +50,70 @@ function CarregarTabelaCarona() {
         ],
         drawCallback: function (settings) {
             var api = this.api();
-            var dataArray = api.rows().data().toArray()
-            if (settings.aoData.length > 0) {
+            var dataArray = api.rows({ search: 'applied', order: 'applied' }).data().toArray()
 
-                let column = settings.aoColumns[settings.aaSorting[0][0]].data
-                let dir = settings.aaSorting[0][1]
-                let search = settings.oPreviousSearch.sSearch
-
-                GetCaronasComParticipantes(column, dir, search);
-            }
+            loadCaronas(dataArray);
+            GetParticipantesSemCarona();
 
             if (dataArray.length > 0) {
 
-                $('#carona-motoristas').html('')
-                $('#carona-motoristas').append($(`<option value="0">Selecione</option>`));
+                markerLayer.getLayers().forEach(mark => mark.remove())
+
+                if (!setView) {
+                    setView = true
+                    mapSetView = dataArray.filter(x => x.Participantes.some(y => y.Latitude && y.Longitude))[0].Participantes[0]
+                    map.setView([mapSetView.Latitude, mapSetView.Longitude], 10);
+                }
                 dataArray.forEach(function (carona, index, array) {
-                    $('#carona-motoristas').append($(`<option value="${carona.Id}">${carona.Motorista}</option>`));
+
+                    if (carona.Latitude && carona.Longitude) {
+
+                        addMapa(carona.Latitude, carona.Longitude, carona.Motorista, 'carpng', carona.MotoristaId, 'motorista')
+                            .bindPopup(`<h4>Motorista: ${carona.Motorista}</h4> <span>${carona.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${carona.Endereco}')" class="fas fa-clipboard"></i></span>`);
+                    }
+
+                    carona.Participantes.forEach(participante => {
+
+                        let addCarona = true
+                        map.eachLayer(function (layer) {
+
+                            if (layer._latlng?.lat == participante.Latitude && layer._latlng?.lng == participante.Longitude) {
+                                addCarona = false
+                                layer.bindPopup(layer._popup?._content + `<h4>Participante: ${participante.Nome}</h4>
+<h4>Motorista: ${carona.Motorista}</h4>
+                        <span>${carona.Endereco}</span>`)
+                            }
+                        })
+                        if (addCarona) {
+                            addMapa(participante.Latitude, participante.Longitude, participante.Nome, '#d93c3c', participante.ParticipanteId, 'carona')
+                                .bindPopup(`<h4>Participante: ${participante.Nome}</h4>
+<h4>Motorista: ${carona.Motorista}</h4>
+                        <span>${carona.Endereco}</span>`)
+                        }
+
+                    })
+
                 });
-                $("#carona-motoristas").val($("#carona-motoristas option:first").val()).trigger("chosen:updated");
             }
+
+            $('.div-map').css('display', 'block')
         },
         ajax: {
             url: '/Carona/GetCaronas',
             datatype: "json",
-            data: { EventoId: SelectedEvent.Id },
+            data: { EventoId: function () { return SelectedEvent.Id }, },
             type: "POST"
         }
     };
-    $("#table-carona").DataTable(tableCaronaConfig);
+
+    if (!$.fn.DataTable.isDataTable('#table-carona')) {
+        $("#table-carona").DataTable(tableCaronaConfig);
+    } else {
+
+        $("#table-carona").DataTable().ajax.reload()
+    }
+
+
 }
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
@@ -91,8 +132,6 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
 function CaronaRefresh(destinoId) {
 
     CarregarTabelaCarona();
-    GetParticipantesSemCarona();
-    getChangeCarona(destinoId)
 }
 
 function PrintCarona(row) {
@@ -178,110 +217,6 @@ function GetCarona(id) {
         $("#carona-id").val(0);
         $("#carona-motorista").val("").trigger("change")
     }
-}
-
-function getChangeCarona(destinoId) {
-
-    $.ajax({
-        url: '/Carona/GetCaronas',
-        datatype: "json",
-        data: { EventoId: SelectedEvent.Id },
-        type: "POST",
-        success: function (data) {
-            arrayCaroneiros = []
-            data.data.forEach(function (carona, index, array) {
-                arrayCaroneiros.push(carona);
-            });
-            if (destinoId) {
-                $("#carona-motoristas").val(destinoId).trigger("change");
-
-            }
-            $.ajax({
-                url: "/Carona/GetCaronasComParticipantes/",
-                data: { EventoId: SelectedEvent.Id },
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data2) {
-
-                    arrayCaronas = []
-                    data2.Caronas.forEach(function (carona, index, array) {
-                        arrayCaronas.push({ CaronaId: carona.CaronaId, Motorista: carona.Motorista, Endereco: carona.Endereco, ParticipanteId: carona.ParticipanteId, Latitude: carona.Latitude, Longitude: carona.Longitude, Nome: carona.Nome })
-                    });
-
-                    let caroneiro = arrayCaroneiros.find(x => x.Id == $("#carona-motoristas").val())
-                    let caronistas = arrayCaronas.filter(x => x.CaronaId == $("#carona-motoristas").val())
-                    markerLayer.getLayers().forEach(mark => mark.remove())
-                    if ($("#carona-motoristas").val() == 0) {
-                        arrayCaroneiros.forEach(caroneiro => {
-                            if (caroneiro.Latitude && caroneiro.Longitude) {
-
-                                addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
-                                    .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
-                                map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
-                            }
-                        })
-                        arrayCaronas.forEach(carona => {
-                            let addCarona = true
-                            map.eachLayer(function (layer) {
-
-                                if (layer._latlng?.lat == carona.Latitude && layer._latlng?.lng == carona.Longitude) {
-                                    addCarona = false
-                                    layer.bindPopup(layer._popup?._content + `<h4>Participante: ${carona.Nome}</h4>
-<h4>Motorista: ${carona.Motorista}</h4>
-                        <span>${carona.Endereco}</span>`)
-                                }
-                            })
-                            if (addCarona) {
-
-                                addMapa(carona.Latitude, carona.Longitude, carona.Nome, '#d93c3c', carona.ParticipanteId, 'carona')
-                                    .bindPopup(`<h4>Participante: ${carona.Nome}</h4>
-<h4>Motorista: ${carona.Motorista}</h4>
-                        <span>${carona.Endereco}</span>`)
-                            }
-                        })
-                    } else if (caroneiro) {
-                        if (caroneiro.Latitude && caroneiro.Longitude) {
-                            addMapa(caroneiro.Latitude, caroneiro.Longitude, caroneiro.Motorista, 'carpng', caroneiro.MotoristaId, 'motorista')
-                                .bindPopup(`<h4>Motorista: ${caroneiro.Motorista}</h4> <span>${caroneiro.Endereco}<i style="cursor:pointer;margin-left:3px;font-size:15px" onclick="copyContent('${caroneiro.Endereco}')" class="fas fa-clipboard"></i></span>`);
-                            map.setView([caroneiro.Latitude, caroneiro.Longitude], 14);
-                        }
-                    }
-                    caronistas.forEach(carona => {
-                        let addCarona = true
-                        map.eachLayer(function (layer) {
-
-                            if (layer._latlng?.lat == carona.Latitude && layer._latlng?.lng == carona.Longitude) {
-                                addCarona = false
-                                layer.bindPopup(layer._popup?._content + `<h4>Participante: ${carona.Nome}</h4>
-                        <span>${carona.Endereco}</span>`)
-                            }
-                        })
-                        if (addCarona) {
-
-                            addMapa(carona.Latitude, carona.Longitude, carona.Nome, '#d93c3c', carona.ParticipanteId, 'carona')
-                                .bindPopup(`<h4>Participante: ${carona.Nome}</h4>
-                        <span>${carona.Endereco}</span>`)
-                        }
-                    })
-
-                    mapaSemCarona.forEach(participante => {
-
-                        if (participante.Latitude && participante.Longitude) {
-                            addMapa(participante.Latitude, participante.Longitude, participante.Nome, '#939393', participante.Id, 'carona')
-                                .bindPopup(`<h4>Participante: ${participante.Nome}</h4>
-                        <span>${participante.Endereco}</span>`)
-                        }
-
-                    })
-                    $('.div-map').css('display', 'block')
-                }
-            });
-        }
-    });
-
-
-
 }
 
 function EditCarona(row) {
@@ -382,8 +317,6 @@ function GetEquipantes(id) {
 
 }
 
-mapaSemCarona = []
-
 function GetParticipantesSemCarona() {
     $("#table-participantes").empty();
 
@@ -394,10 +327,16 @@ function GetParticipantesSemCarona() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            mapaSemCarona = []
             data.Participantes.forEach(function (participante, index, array) {
                 $('#table-participantes').append($(`<tr><td class="participante" data-id="${participante.Id}">${participante.Nome}</td></tr>`));
-                mapaSemCarona.push(participante)
+
+
+                if (participante.Latitude && participante.Longitude) {
+                    addMapa(participante.Latitude, participante.Longitude, participante.Nome, '#939393', participante.Id, 'carona')
+                        .bindPopup(`<h4>Participante: ${participante.Nome}</h4>
+                        <span>${participante.Endereco}</span>`)
+                }
+
 
             });
 
@@ -420,58 +359,11 @@ $("#modal-cores").on('hidden.bs.modal', function () {
 
 
 
-function GetCaronasComParticipantes(column, dir, search) {
-    $("#caronas").empty();
-
-    $.ajax({
-        url: '/Carona/GetCaronas',
-        datatype: "json",
-        data: { EventoId: SelectedEvent.Id, columnName: column, columnDir: dir, search },
-        type: "POST",
-        success: function (data) {
-            data.data.forEach(function (carona, index, array) {
-                $("#caronas").append($(`<div data-id="${carona.Id}" style="margin-bottom:25px;background-color:#424242;background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">
-                  <h4 style="padding-top:5px">${carona.Motorista}</h4>
-                                    <table class="table">
-                                        <tbody id="pg-${carona.Id}">
-                                            
-                                        </tbody>
-                                    </table>
- <button type="button" class="btn btn-rounded btn-default print-button" onclick='PrintCarona(${JSON.stringify(carona)})'><i class="fa fa-2x fa-print"></i></button>
-                                </div>`));
-            });
-
-            $.ajax({
-                url: "/Carona/GetCaronasComParticipantes/",
-                data: { EventoId: SelectedEvent.Id },
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-
-                    data.Caronas.forEach(function (carona, index, array) {
-                        $(`#pg-${carona.CaronaId}`).append($(`<tr><td class="participante" data-id="${carona.ParticipanteId}">${carona.Nome}</td></tr>`));
-                    });
-                    DragDropg();
-                }
-            });
-        }
-    });
-}
-
 function DragDropg() {
     Drag();
-
     $('.pg').droppable({
         drop: function (event, ui) {
-            $(ui.draggable).parent().remove();
             ChangeCarona($(ui.draggable).data('id'), $(this).data('id'));
-            if ($(this).data('id')) {
-                $(`#pg-${$(this).data('id')}`).append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            } else {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            }
-            Drag();
         }
     });
 }
@@ -499,7 +391,7 @@ function ChangeCarona(participanteId, destinoId) {
                 DestinoId: destinoId
             }),
         success: function () {
-            CaronaRefresh($("#carona-motoristas").val());
+            CarregarTabelaCarona()
         }
     });
 }

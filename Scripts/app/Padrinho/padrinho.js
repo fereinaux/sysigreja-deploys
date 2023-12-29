@@ -1,4 +1,6 @@
 ﻿
+rootPadrinhos = ReactDOM.createRoot(document.getElementById("padrinhos"));
+loadPadrinhos = typeof loadPadrinhos !== 'undefined' ? loadPadrinhos : function () { }
 function CarregarTabelaPadrinho() {
 
     $('#gerenciar').text("Gerenciar Padrinhos");
@@ -35,23 +37,26 @@ function CarregarTabelaPadrinho() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
-            if (settings.aoData.length > 0) {
-                let column = settings.aoColumns[settings.aaSorting[0][0]].data
-                let dir = settings.aaSorting[0][1]
-                let search = settings.oPreviousSearch.sSearch
-
-                GetPadrinhosComParticipantes(column, dir, search);
-            }
-
+            const arrayData = this.api().rows({ search: 'applied', order: 'applied' })
+                .data()
+                .toArray()
+            loadPadrinhos(arrayData);
+            GetParticipantesSemPadrinho();
         },
         ajax: {
             url: '/Padrinho/GetPadrinhos',
             datatype: "json",
-            data: { EventoId: SelectedEvent.Id },
+            data: { EventoId: function () { return SelectedEvent.Id }, },
             type: "POST"
         }
     };
-    $("#table-padrinho").DataTable(tablePadrinhoConfig);
+
+    if (!$.fn.DataTable.isDataTable('#table-padrinho')) {
+        $('#table-padrinho').DataTable(tablePadrinhoConfig)
+    } else {
+
+        $("#table-padrinho").DataTable().ajax.reload()
+    }
 }
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
@@ -265,58 +270,12 @@ function GetParticipantesSemPadrinho() {
     });
 }
 
-
-function GetPadrinhosComParticipantes(column, dir, search) {
-    $("#padrinhos").empty();
-    $.ajax({
-        url: '/Padrinho/GetPadrinhos',
-        datatype: "json",
-        data: { EventoId: SelectedEvent.Id, columnName: column, columnDir: dir, search },
-        type: "POST",
-        success: function (data) {
-            data.data.forEach(function (padrinho, index, array) {
-                $("#padrinhos").append($(`<div data-id="${padrinho.Id}" style="margin-bottom:25px;background-color:#424242;background-clip: content-box;border-radius: 28px;" class="p-xs col-xs-12 col-lg-4 pg text-center text-white">
-                  <h4 style="padding-top:5px">${padrinho.Padrinho}</h4>
-                                    <table class="table">
-                                        <tbody id="pg-${padrinho.Id}">
-                                            
-                                        </tbody>
-                                    </table>
- <button type="button" class="btn btn-rounded btn-default print-button" onclick='PrintPadrinho(${JSON.stringify(padrinho)})'><i class="fa fa-2x fa-print"></i></button>
-                                </div>`));
-            });
-
-            $.ajax({
-                url: "/Padrinho/GetPadrinhosComParticipantes/",
-                data: { EventoId: SelectedEvent.Id },
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-
-                    data.Padrinhos.forEach(function (padrinho, index, array) {
-                        $(`#pg-${padrinho.PadrinhoId}`).append($(`<tr><td class="participante" data-id="${padrinho.ParticipanteId}">${padrinho.Nome}</td></tr>`));
-                    });
-                    DragDropg();
-                }
-            });
-        }
-    });
-}
-
 function DragDropg() {
     Drag();
 
     $('.pg').droppable({
         drop: function (event, ui) {
-            $(ui.draggable).parent().remove();
-            ChangePadrinho($(ui.draggable).data('id'), $(this).data('id'));
-            if ($(this).data('id')) {
-                $(`#pg-${$(this).data('id')}`).append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            } else {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            }
-            Drag();
+            ChangePadrinho($(ui.draggable).data('id'), $(this).data('id'));           
         }
     });
 }
@@ -344,7 +303,7 @@ function ChangePadrinho(participanteId, destinoId) {
                 DestinoId: destinoId || null
             }),
         success: function () {
-            PadrinhoRefresh(destinoId);
+            CarregarTabelaPadrinho();
         }
     });
 }

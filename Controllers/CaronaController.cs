@@ -84,7 +84,7 @@ namespace SysIgreja.Controllers
                 .ToList()
                 .Select(
                     x =>
-                        new CaronaViewModel
+                        new
                         {
                             Id = x.Id,
                             Capacidade =
@@ -97,6 +97,17 @@ namespace SysIgreja.Controllers
                             MotoristaId = x.MotoristaId.Value,
                             Endereco =
                                 $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
+                            Participantes = x.Participantes.Select(
+                            y =>
+                                new
+                                {
+                                    Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
+                                    Latitude = y.Participante.Latitude,
+                                    Longitude = y.Participante.Longitude,
+                                    Endereco = $"{y.Participante.Logradouro}, {y.Participante.Numero}, {y.Participante.Bairro}, {y.Participante.Cidade}",
+                                    ParticipanteId = y.ParticipanteId,
+                                }
+                        )
                         }
                 );
 

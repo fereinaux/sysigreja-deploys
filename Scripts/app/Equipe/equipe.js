@@ -34,11 +34,18 @@ function CarregarTabelaEquipe() {
         ajax: {
             url: '/Equipe/GetEquipes',
             datatype: "json",
-            data: { EventoId: SelectedEvent.Id },
+            data: { EventoId: function () { return SelectedEvent.Id } },
             type: "POST"
         }
     };
-    $("#table-equipe").DataTable(tableEquipeConfig);
+
+    if (!$.fn.DataTable.isDataTable('#table-equipe')) {
+        $('#table-equipe').DataTable(tableEquipeConfig)
+    } else {
+
+        $("#table-equipe").DataTable().ajax.reload()
+    }
+
 }
 
 function PrintAll() {
@@ -107,13 +114,18 @@ function GetAnexos(id) {
         ],
         ajax: {
             url: '/Arquivo/GetArquivosEquipe',
-            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, ConfiguracaoId: SelectedEvent.ConfiguracaoId },
+            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, EventoId: function () { return SelectedEvent.ConfiguracaoId } },
             datatype: "json",
             type: "POST"
         }
     };
+    
+    if (!$.fn.DataTable.isDataTable('#table-anexos')) {
+        $('#table-anexos').DataTable(tableArquivoConfig)
+    } else {
 
-    $("#table-anexos").DataTable(tableArquivoConfig);
+        $("#table-anexos").DataTable().ajax.reload()
+    }
 }
 
 function GetArquivo(id) {

@@ -1,4 +1,7 @@
-﻿loadCirculos = function () { }
+﻿
+rootCirculos = ReactDOM.createRoot(document.getElementById("circulos"));
+
+loadCirculos = typeof loadCirculos !== 'undefined' ? loadCirculos : function () { }
 map = initMap('map')
 markerLayer = createMarkerLayer(map)
 map.setView([-8.050000, -34.900002], 13);

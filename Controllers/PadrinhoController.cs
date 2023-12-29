@@ -110,12 +110,24 @@ namespace SysIgreja.Controllers
 
             var result = queryResult.Select(
                 x =>
-                    new PadrinhoViewModel
+                    new
                     {
                         Id = x.Id,
                         Quantidade = x.Participantes.Count(),
                         Padrinho = x.EquipanteEvento.Equipante.Nome,
-                        PadrinhoId = x.EquipanteEvento.EquipanteId.Value
+                        PadrinhoId = x.EquipanteEvento.EquipanteId.Value,
+                        Participantes = x.Participantes.Select(
+                            y =>
+                                new
+                                {
+                                    Nome = UtilServices.CapitalizarNome(y.Nome),
+                                    ParticipanteId = y.Id,
+                                    PadrinhoId = y.PadrinhoId,
+                                    Padrinho = UtilServices.CapitalizarNome(
+                                       x.EquipanteEvento.Equipante.Nome
+                                    )
+                                }
+                        )
                     }
             );
 

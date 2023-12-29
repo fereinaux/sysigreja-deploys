@@ -107,7 +107,7 @@ function HideMenu() {
     $("body").addClass("mini-navbar");
     $('#side-menu li a i ').addClass("icon-menu")
 
-    tippy(`#side-menu li a i icon-menu`, {
+    tippy(`#side-menu li a i.icon-menu`, {
         content: '',
         allowHTML: true,
         followCursor: true, trigger: 'mouseenter',

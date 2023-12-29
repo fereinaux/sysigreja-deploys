@@ -422,12 +422,14 @@
                 followCursor: true, trigger: 'mouseenter',
                 onTrigger: (instance, event) => {
                     if ($('body').hasClass("mini-navbar")) {
-                        instance.enable()
-                        instance.setContent($(event.target).parent().text())
-                    } else {
-                        instance.disable()
-                    }
+                        instance.setContent($(event.target).text())
+                    } 
                 },
+                onShow(instance) {
+                    if (!$('body').hasClass("mini-navbar")) {
+                        return false; // cancels it
+                    }
+                }
             });
             $(document).trigger('ready-ajax');
             if (Usuario.FotoId) {

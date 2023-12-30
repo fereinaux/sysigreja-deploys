@@ -121,6 +121,8 @@
             transform: scale(1.15);
         }
 
+    
+
         .img-wrapper {
             margin: 10px auto;
             width: 110px;
@@ -219,155 +221,167 @@
             max-height: 70%;
         }
 
-        @@media (max-width: 768px) {
 
-            .button-create {
-                margin-top: 15px;
-                width: 100%;
-            }
-
-            .bloco-normal > .img-logo {
-                padding-top: 10px;
-            }
-
-            #search-evento {
-                font-size: 13px !important;
-            }
-
-            #calendar {
-                width: 300px !important;
-                left: calc(100vw - 350px) !important;
-                top: 60px !important;
-            }
-
-            .col-select {
-                height: fit-content !important;
-            }
-
-            .select-igreja h6 {
-                margin-left: 0 !important;
-            }
-
-
-
-            .button-destaque {
-                position: relative;
-                width: 100%;
-                bottom: 0;
-            }
-
-
-            .row-eventos {
-                width: 100%;
-            }
-
-            .col-evento-select {
-                height: 125px;
-            }
-
-
-            input {
-                margin-top: 20px !important
-            }
-
-            .row-eventos > div {
-                padding: 0
-            }
-
-            .card-destaque {
-                border-top-right-radius: 0px;
-                border-bottom-left-radius: 12px;
-            }
-
-            .destaque-a {
-                flex-direction: column
-            }
-
-            .bloco-destaque {
-                height: 200px !important;
-                width: 100%;
-                border-top-right-radius: 12px;
-                border-top-left-radius: 12px;
-                border-bottom-left-radius: 0px;
-                border-bottom-right-radius: 0px;
-                display: flex;
-                position: relative;
-            }
-
-            .img-desatque {
-                max-height: 90%;
-                max-width: 90%;
-            }
-
-            .a-normal {
-                display: flex;
-                height: 100px !important;
-                margin-bottom: 20px;
-            }
-
-            .bloco-normal {
-                width: 40%;
-                height: 100px !important;
-                border-bottom-left-radius: 12px !important;
-                border-top-right-radius: 0px !important;
-            }
-
+        @@media (min-width: 768px) {
             .card-body {
-                border-top-right-radius: 12px;
-            }
-
-            .a-normal h3 {
-                font-size: 14px
-            }
-
-            .a-normal > .card-body {
-                flex: 1;
-                background: transparent;
-            }
-
-            .a-normal span, .a-normal p {
-                font-size: 12px;
-            }
-
-            .div-cols > div {
-                padding: 0;
-            }
-
-            .badge {
-                font-size: 0.85rem !important;
-            }
-
-            .search-icon {
-                position: absolute;
-                top: 30px;
-                left: 9px;
-                font-size: 15px;
+                height: 95px !important;
             }
         }
 
-        @@media (max-width: 300px) {
+            @@media (max-width: 768px) {
 
 
-            .select-igreja, .pesquisa-evento {
-                display: none !important;
+                .card-body {
+                    border-bottom-left-radius: 0px;
+                }
+
+                .button-create {
+                    margin-top: 15px;
+                    width: 100%;
+                }
+
+                .bloco-normal > .img-logo {
+                    padding-top: 10px;
+                }
+
+                #search-evento {
+                    font-size: 13px !important;
+                }
+
+                #calendar {
+                    width: 300px !important;
+                    left: calc(100vw - 350px) !important;
+                    top: 60px !important;
+                }
+
+                .col-select {
+                    height: fit-content !important;
+                }
+
+                .select-igreja h6 {
+                    margin-left: 0 !important;
+                }
+
+
+
+                .button-destaque {
+                    position: relative;
+                    width: 100%;
+                    bottom: 0;
+                }
+
+
+                .row-eventos {
+                    width: 100%;
+                }
+
+                .col-evento-select {
+                    height: 125px;
+                }
+
+
+                input {
+                    margin-top: 20px !important
+                }
+
+                .row-eventos > div {
+                    padding: 0
+                }
+
+                .card-destaque {
+                    border-top-right-radius: 0px;
+                    border-bottom-left-radius: 12px;
+                }
+
+                .destaque-a {
+                    flex-direction: column
+                }
+
+                .bloco-destaque {
+                    height: 200px !important;
+                    width: 100%;
+                    border-top-right-radius: 12px;
+                    border-top-left-radius: 12px;
+                    border-bottom-left-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                    display: flex;
+                    position: relative;
+                }
+
+                .img-desatque {
+                    max-height: 90%;
+                    max-width: 90%;
+                }
+
+                .a-normal {
+                    display: flex;
+                    height: 100px !important;
+                    margin-bottom: 20px;
+                }
+
+                .bloco-normal {
+                    width: 40%;
+                    height: 100px !important;
+                    border-bottom-left-radius: 12px !important;
+                    border-top-right-radius: 0px !important;
+                }
+
+                .card-body {
+                    border-top-right-radius: 12px;
+                }
+
+                .a-normal h3 {
+                    font-size: 14px
+                }
+
+                .a-normal > .card-body {
+                    flex: 1;
+                    background: transparent;
+                }
+
+                .a-normal span, .a-normal p {
+                    font-size: 12px;
+                }
+
+                .div-cols > div {
+                    padding: 0;
+                }
+
+                .badge {
+                    font-size: 0.85rem !important;
+                }
+
+                .search-icon {
+                    position: absolute;
+                    top: 30px;
+                    left: 9px;
+                    font-size: 15px;
+                }
             }
 
-            .bloco.bloco-normal {
-                width: 100% !important;
-                height: 140px !important;
+            @@media (max-width: 300px) {
+
+
+                .select-igreja, .pesquisa-evento {
+                    display: none !important;
+                }
+
+                .bloco.bloco-normal {
+                    width: 100% !important;
+                    height: 140px !important;
+                }
+
+                .a-normal {
+                    flex-direction: column;
+                    height: 230px !important;
+                }
+
+                .col-evento-select {
+                    height: fit-content;
+                }
             }
 
-            .a-normal {
-                flex-direction: column;
-                height: 230px !important;
-            }
-
-            .col-evento-select {
-                height: fit-content;
-            }
-        }
-
-        .fc-event-title {
+            .fc-event-title {
             color: #fff !important;
         }
 
@@ -714,6 +728,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
                 <div class="col-xs-12">
                     <h3 style="font-weight:900;font-size:22px">Inscrições Abertas</h3>
                 </div>
+
                      ${eventosAbertos.map(evento => `<div class="col-md-3 col col-xs-12 col-evento-select">
                         <a target="_blank" href='${evento.UrlDestino}' class="a-normal">
 

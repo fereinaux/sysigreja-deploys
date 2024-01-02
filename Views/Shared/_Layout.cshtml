@@ -198,6 +198,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.6/css/colReorder.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.3.0/css/rowGroup.dataTables.min.css" type="text/css" />
+
     <link rel="stylesheet" href="https://datatables.net/release-datatables/extensions/FixedHeader/css/fixedHeader.dataTables.css" type="text/css" />
 
 
@@ -282,6 +283,8 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/rowgroup/1.3.0/js/dataTables.rowGroup.min.js"></script>
     <script src="https://datatables.net/release-datatables/extensions/FixedHeader/js/dataTables.fixedHeader.js"></script>
+
+    <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
 
 
     <script src="https://cdn.datatables.net/colreorder/1.5.6/js/dataTables.colReorder.min.js"></script>
@@ -693,7 +696,7 @@
             });
 
             $(document).ajaxError(function (e, xhr) {
-    
+
                 if (xhr.status == 400) {
                     const res = xhr.responseJSON || JSON.parse(xhr.responseText)
                     if (res?.Message) {

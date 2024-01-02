@@ -1,4 +1,5 @@
 ﻿function CarregarTabelaReuniao() {
+    $.fn.dataTable.moment('DD/MM/YYYY HH:mm');
     const tableReuniaoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],

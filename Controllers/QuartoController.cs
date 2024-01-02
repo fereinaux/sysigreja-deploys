@@ -192,7 +192,7 @@ namespace SysIgreja.Controllers
         {
             quartosBusiness.PostQuarto(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -200,7 +200,7 @@ namespace SysIgreja.Controllers
         {
             quartosBusiness.DeleteQuarto(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -208,7 +208,7 @@ namespace SysIgreja.Controllers
         {
             quartosBusiness.EsvaziarQuarto(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -216,7 +216,7 @@ namespace SysIgreja.Controllers
         {
             quartosBusiness.EsvaziarTodosQuarto(Id, Tipo);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -224,7 +224,7 @@ namespace SysIgreja.Controllers
         {
             quartosBusiness.DistribuirQuartos(EventoId, tipo ?? TipoPessoaEnum.Participante);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -341,7 +341,7 @@ namespace SysIgreja.Controllers
             var mensagem = quartosBusiness.ChangeQuarto(ParticipanteId, DestinoId, tipo, EventoId);
             if (mensagem == "OK")
             {
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200, "OK");
             }
 
             return new HttpStatusCodeResult(400, mensagem);

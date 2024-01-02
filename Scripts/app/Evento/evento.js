@@ -309,10 +309,7 @@ function ToggleEventoStatus(id) {
             }),
         success: function () {
             CarregarTabelaEvento();
-        },
-        error: function (error) {
-            ErrorMessage(error.statusText);
-        }
+        },        
     });
 }
 
@@ -328,10 +325,7 @@ function ToggleEventoStatusEquipe(id) {
             }),
         success: function () {
             CarregarTabelaEvento();
-        },
-        error: function (error) {
-            ErrorMessage(error.statusText);
-        }
+        },        
     });
 }
 

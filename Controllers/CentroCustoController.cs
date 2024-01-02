@@ -102,7 +102,7 @@ namespace SysIgreja.Controllers
         {
             centroCustoBusiness.DeleteCentroCusto(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

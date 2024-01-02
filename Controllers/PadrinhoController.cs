@@ -193,7 +193,7 @@ namespace SysIgreja.Controllers
         {
             padrinhosBusiness.DeletePadrinho(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -201,7 +201,7 @@ namespace SysIgreja.Controllers
         {
             padrinhosBusiness.DistribuirPadrinhos(EventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -254,7 +254,7 @@ namespace SysIgreja.Controllers
         {
             padrinhosBusiness.ChangePadrinho(ParticipanteId, DestinoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]

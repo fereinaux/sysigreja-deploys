@@ -140,7 +140,7 @@ namespace SysIgreja.Controllers
         {
             caronasBusiness.PostCarona(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -148,7 +148,7 @@ namespace SysIgreja.Controllers
         {
             caronasBusiness.DeleteCarona(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -156,7 +156,7 @@ namespace SysIgreja.Controllers
         {
             caronasBusiness.DistribuirCarona(EventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -225,7 +225,7 @@ namespace SysIgreja.Controllers
             var mensagem = caronasBusiness.ChangeCarona(ParticipanteId, DestinoId);
             if (mensagem == "OK")
             {
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200,"OK");
             }
 
             return new HttpStatusCodeResult(400, mensagem);

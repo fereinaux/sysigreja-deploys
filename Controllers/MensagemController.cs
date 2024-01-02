@@ -96,7 +96,7 @@ namespace SysIgreja.Controllers
         {
             mensagemBusiness.PostMensagem(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -104,7 +104,7 @@ namespace SysIgreja.Controllers
         {
             mensagemBusiness.DeleteMensagem(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

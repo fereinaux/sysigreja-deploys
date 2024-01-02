@@ -57,7 +57,7 @@ namespace SysIgreja.Controllers
         {
             meioPagamentosBusiness.PostMeioPagamento(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -65,7 +65,7 @@ namespace SysIgreja.Controllers
         {
             meioPagamentosBusiness.DeleteMeioPagamento(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

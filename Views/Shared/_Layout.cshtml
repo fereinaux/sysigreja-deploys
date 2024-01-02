@@ -618,6 +618,14 @@
 
         function renderPage(xhr, pushHistory) {
             AajaxLoading = true
+
+
+            if (xhr.getResponseHeader("X-Responded-JSON") != null
+                && JSON.parse(xhr.getResponseHeader("X-Responded-JSON")).status == "401") {
+                window.location.href = JSON.parse(xhr.getResponseHeader("X-Responded-JSON")).headers.location
+                return;
+            }
+
             var naoAutorizado = xhr.getResponseHeader('NaoAutorizado');
             if (naoAutorizado) {
                 window.location.href = '/Account/NaoAutorizado'
@@ -683,6 +691,21 @@
             $(document).ajaxComplete(function (e, xhr) {
                 xhrPool = $.grep(xhrPool, function (x) { return x != xhr; });
             });
+
+            $(document).ajaxError(function (e, xhr) {
+    
+                if (xhr.status == 400) {
+                    const res = xhr.responseJSON || JSON.parse(xhr.responseText)
+                    if (res?.Message) {
+                        let message = res?.Message
+                        if (res.Message.toLowerCase().includes('reference constraint')) {
+                            message = "Dados relacionados encontrados! Antes de prosseguir esvazie o registro ou entre em contato com o suporte"
+                        }
+
+                        ErrorMessage(message)
+                    }
+                }
+            });
         });
 
         var xhrPool = [];
@@ -725,7 +748,7 @@
             $('#home-button-logo').css('display', 'block')
             $('#img-logo').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('title').text($('#title').text())
-            $('.title-circulo').text("Círculo")
+            $('.title-circulo').text("Equipe de Grupos")
         }
 
         function handleParticipantes(opt) {

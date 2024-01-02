@@ -535,7 +535,7 @@ namespace SysIgreja.Controllers
         {
             equipesBusiness.TogglePresenca(EquipanteEventoId, ReuniaoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         public ActionResult Index()
@@ -624,7 +624,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200,"OK");
             }
         }
     }

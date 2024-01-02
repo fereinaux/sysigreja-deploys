@@ -109,7 +109,7 @@ namespace SysIgreja.Controllers
         {
             etiquetasBusiness.DeleteEtiqueta(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -122,7 +122,7 @@ namespace SysIgreja.Controllers
         {
             etiquetasBusiness.AddEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -135,7 +135,7 @@ namespace SysIgreja.Controllers
         {
             etiquetasBusiness.RemoveEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

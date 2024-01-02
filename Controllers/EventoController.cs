@@ -580,14 +580,14 @@ namespace SysIgreja.Controllers
         public ActionResult ToggleEventoStatusEquipe(int Id)
         {
             eventosBusiness.ToggleEventoStatusEquipe(Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
         public ActionResult ToggleEventoStatus(int Id)
         {
             eventosBusiness.ToggleEventoStatus(Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -595,7 +595,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.PostEvento(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -603,7 +603,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.PostInformativo(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -611,7 +611,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.PostArte(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -619,7 +619,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.CreateLote(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -627,7 +627,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.CloneEvento(id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -635,7 +635,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.DeleteEvento(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -643,7 +643,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.OfertaEvento(Id, Valor);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -651,7 +651,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.DeleteLote(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

@@ -663,10 +663,7 @@ function ToggleMembroEquipeTipo(row) {
                 windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
             }
 
-        },
-        error: function (error) {
-            ErrorMessage(error.statusText);
-        }
+        },       
     });
 }
 
@@ -684,10 +681,7 @@ function ToggleStatusMontagem(row) {
             }),
         success: function (data) {
             CarregarTabelaEquipante();
-        },
-        error: function (error) {
-            ErrorMessage(error.statusText);
-        }
+        },       
     });
 }
 

@@ -61,7 +61,7 @@ namespace SysIgreja.Controllers
         {
             categoriaBusiness.PostCategoria(Nome, ArquivoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

@@ -15,7 +15,7 @@
             $('#pagamentos-valor').data('valor-realista', SelectedEvent.Valor)
             $('#pagamentos-valor').data('valor-equipante', SelectedEvent.ValorTaxa)
             $('.bg-coord').css('background-color', SelectedEvent.CorBotao)
-            $('.title-circulo').text(SelectedEvent.EquipeCirculo)
+            $('.title-circulo').text(SelectedEvent.EquipeCirculo || "Equipe de Grupos")
             if (SelectedEvent.LogoId || Login.LogoId) {
                 $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${SelectedEvent.LogoId || Login.LogoId}`)
                 $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${SelectedEvent.LogoId || Login.LogoId}`)

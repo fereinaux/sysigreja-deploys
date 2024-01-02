@@ -297,7 +297,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
 
     tableParticipanteConfig.buttons.forEach(function (o) {
         if (o.extend === "excel") {
-            let equipe = $('.title-circulo').first().text()
+            let equipe = $('.title-circulo').first().text() || "Equipe de Grupos"
             o.action = function (e, dt, button, config) {
                 var div = document.createElement("div");
                 selected = false

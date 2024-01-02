@@ -274,7 +274,7 @@ namespace SysIgreja.Controllers
                 jsonRes.MaxJsonLength = Int32.MaxValue;
                 return jsonRes;
             }
-            return new HttpStatusCodeResult(404);
+            return new HttpStatusCodeResult(404, "Não encontrado");
         }
 
         [HttpGet]
@@ -298,7 +298,7 @@ namespace SysIgreja.Controllers
 
             UserManager.Update(user);
             UserManager.ChangePassword(User.Identity.GetUserId(), oldPassword, senha);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -306,7 +306,7 @@ namespace SysIgreja.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
             accountBusiness.DeleteUsuario(user.Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -316,7 +316,7 @@ namespace SysIgreja.Controllers
             user.FotoId = arquivoId;
 
             UserManager.Update(user);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -665,7 +665,7 @@ namespace SysIgreja.Controllers
 
                 UserManager.ChangePassword(user.Id, oldPassword, Password);
                 UserManager.Update(user);
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200,"OK");
             }
             else
             {
@@ -706,7 +706,7 @@ namespace SysIgreja.Controllers
                 UserManager.Update(user);
                 emailSender.SendEmail(email, "Recuperação de senha", body, config.Identificador);
 
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200,"OK");
             }
             else
             {
@@ -937,14 +937,14 @@ namespace SysIgreja.Controllers
         public ActionResult ToggleUsuarioStatus(string Id)
         {
             accountBusiness.ToggleUsuarioStatus(Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
         public ActionResult DeleteUsuario(string Id)
         {
             accountBusiness.DeleteUsuario(Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]

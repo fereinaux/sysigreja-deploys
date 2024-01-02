@@ -8,7 +8,7 @@
         if (SelectedConfig) {
             localStorage.setItem('configId', SelectedConfig.Id)
             $('title').text($('#title').text())
-            $('.title-circulo').text(SelectedConfig.EquipeCirculo)
+            $('.title-circulo').text(SelectedConfig.EquipeCirculo || "Equipe de Grupos")
             $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo').css('display', 'block')

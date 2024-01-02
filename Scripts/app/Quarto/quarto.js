@@ -1,4 +1,7 @@
-﻿table = undefined
+﻿rootQuartos = ReactDOM.createRoot(document.getElementById("quartos"));
+
+table = undefined
+loadQuartos = typeof loadQuartos !== 'undefined' ? loadQuartos : function () { }
 swalQuartos = {
     title: "Impressão de Quartos",
     icon: "info",
@@ -75,24 +78,42 @@ function CarregarTabelaQuarto() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
-           
+            if (SelectedEvent.TipoQuarto == "Endereco") {
+                $('.quarto-endereco').css('display', 'block')
+            } else {
+                $('.quarto-endereco').css('display', 'none')
+            }
+
+            const arrayData = this.api().rows({ search: 'applied', order: 'applied' })
+                .data()
+                .toArray()
+            loadQuartos(arrayData);
+            GetParticipantesSemQuarto();
+
+            arrayData.forEach(quarto => {
+
+
+                if (quarto.Latitude && quarto.Longitude) {
+                    addMapa(quarto.Latitude, quarto.Longitude, quarto.Titulo, "#000000", quarto.QuartoId, 'quarto')
+                        .bindPopup(`<h4>${quarto.Titulo}</h4><div style="display:flex;flex-direction:column"><span>Capacidade: ${quarto.Capacidade}</span><span>${quarto.Logradouro} - ${quarto.Bairro}</span></div>`);
+                }
+            })
 
         },
         ajax: {
             url: '/Quarto/GetQuartos',
             datatype: "json",
-            data: { EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
+            data: { EventoId: function () { return SelectedEvent.Id }, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
             type: "POST"
         }
     };
-    table = $("#table-quarto").DataTable(tableQuartoConfig);
 
-    settings = table.settings()[0]
+    if (!$.fn.DataTable.isDataTable('#table-quarto')) {
+        $('#table-quarto').DataTable(tableQuartoConfig)
+    } else {
 
-    GetQuartosComParticipantes((
-        settings.aoColumns[settings.aaSorting.length > 0 ? settings.aaSorting[0][0] : 0].data),
-        (settings.aaSorting > 0 ? settings.aaSorting[0][1] : 'asc'),
-        settings.oPreviousSearch.sSearch ?? '');
+        $("#table-quarto").DataTable().ajax.reload()
+    }
 }
 
 
@@ -393,7 +414,6 @@ function DistribuirQuartos() {
                 Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
             }),
         success: function () {
-            //teste
             SuccessMesageOperation();
             CarregarTabelaQuarto();
             $("#modal-quarto").modal("hide");
@@ -420,74 +440,13 @@ function GetParticipantesSemQuarto() {
     });
 }
 
-
-function GetQuartosComParticipantes(column, dir, search) {
-    $("#quartos").empty();
-
-    $.ajax({
-        url: '/Quarto/GetQuartos',
-        datatype: "json",
-        data: {
-            EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1,
-            columnName: column, columnDir: dir, search
-        },
-        type: "POST",
-        success: function (data) {
-            data.data.forEach(function (quarto, index, array) {
-
-                if (quarto.Latitude && quarto.Longitude) {
-                    addMapa(quarto.Latitude, quarto.Longitude, quarto.Titulo, "#000000", quarto.QuartoId, 'quarto')
-                        .bindPopup(`<h4>${quarto.Titulo}</h4><div style="display:flex;flex-direction:column"><span>Capacidade: ${quarto.Capacidade}</span><span>${quarto.Logradouro} - ${quarto.Bairro}</span></div>`);
-                }
-
-                $("#quartos").append($(`<div data-id="${quarto.Id}" style="margin-bottom:25px;background-color:${{ Masculino: "#0095ff", Feminino: "#ff00d4", Misto: "#424242" }[quarto.Sexo]}; background-clip: content-box;border-radius: 28px;" class= "p-xs col-xs-12 col-lg-4 quarto text-center text-white" >
-            <div class="p-h-xs"><h4 id="capacidade-${quarto.Id}">${quarto.Capacidade}</h4>
-                <h4>${quarto.Titulo}</h4>
-                ${quarto.Equipante ? `<h5>${quarto.Equipante}</h5></div>` : ""}
-                <table class="table">
-                    <tbody id="quarto-${quarto.Id}">
-
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-rounded btn-default print-button" onclick='PrintQuarto(${JSON.stringify(quarto)})'><i class="fa fa-2x fa-print"/></button>
-            </div>`));
-            });
-            $('.div-map-geral').css('display', 'block')
-            $.ajax({
-                url: "/Quarto/GetQuartosComParticipantes/",
-                data: { EventoId: SelectedEvent.Id, Tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1 },
-                datatype: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    data.Quartos.forEach(function (quarto, index, array) {
-                        $(`#quarto-${quarto.QuartoId}`).append($(`<tr><td class="participante" data-id="${quarto.ParticipanteId}">${quarto.Nome}</td></tr>`));
-                    });
-
-                    GetParticipantesSemQuarto();
-                    DragDropg();
-                }
-            });
-        }
-    });
-}
-
 function DragDropg() {
     Drag();
 
     $('.quarto').droppable({
         drop: function (event, ui) {
-            var origem = $($($(ui.draggable).parent().parent().parent().parent().children()[0]).children()[0]);
-            $(ui.draggable).parent().remove();
             ChangeQuarto($(ui.draggable).data('id'), $(this).data('id'));
-            origem.text(AddMembroQuarto(origem.text(), -1));
-            if ($(this).data('id')) {
-                $(`#capacidade-${$(this).data('id')}`).text(AddMembroQuarto($(`#capacidade - ${$(this).data('id')}`).text(), 1));
-                $(`#quarto-${$(this).data('id')}`).append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            } else {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${$(ui.draggable).data('id')}">${$(ui.draggable).text()}</td></tr>`));
-            }
-            Drag();
+
         }
     });
 }
@@ -525,10 +484,6 @@ function ChangeQuarto(participanteId, destinoId) {
             }),
         success: function () {
             CarregarTabelaQuarto();
-        },
-        error: function (error) {
-            ErrorMessage(error.statusText);
-
         }
     });
 }

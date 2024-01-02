@@ -796,10 +796,7 @@ function AddDirigente() {
 
                         windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
                     }
-                },
-                error: function (error) {
-                    ErrorMessage(error.statusText);
-                }
+                },               
             });
         })
     }
@@ -906,7 +903,7 @@ function GetDirigentes() {
 function loadCirculo() {
 
     $('title').text(`${SelectedEvent.Titulo} | ${SelectedEvent.EquipeCirculo}`)
-    $('.title-circulo').text(SelectedEvent.EquipeCirculo)
+    $('.title-circulo').text(SelectedEvent.EquipeCirculo || "Equipe de Grupos")
     if (SelectedEvent.TipoCirculo == 'Endereco') {
         $('#ibox-mapa-circulo').css('display', 'block')
     } else {

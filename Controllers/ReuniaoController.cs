@@ -88,7 +88,7 @@ namespace SysIgreja.Controllers
         {
             reuniaosBusiness.PostReuniao(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -96,7 +96,7 @@ namespace SysIgreja.Controllers
         {
             reuniaosBusiness.DeleteReuniao(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

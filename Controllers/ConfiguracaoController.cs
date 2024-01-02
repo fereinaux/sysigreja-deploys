@@ -342,7 +342,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostCampos(campos, id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -350,7 +350,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostCamposEquipe(campos, id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -358,7 +358,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostEquipes(equipes, id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -366,7 +366,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.EditEquipePai(equipe);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -374,7 +374,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.EditEquipeDestino(equipe);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -382,7 +382,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostIgrejas(igrejas, id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -390,7 +390,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostConfiguracao(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [AllowAnonymous]
@@ -399,7 +399,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostConfiguracao(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -417,7 +417,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostLogin(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -425,7 +425,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostLogoLogin(sourceId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -433,7 +433,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostBackgroundLogin(sourceId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -441,7 +441,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostBackgroundCelularLogin(sourceId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -449,7 +449,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostLogo(sourceId, id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -457,7 +457,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostBackground(sourceId, id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -465,7 +465,7 @@ namespace SysIgreja.Controllers
         {
             configuracaoBusiness.PostLogoRelatorio(sourceId, id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

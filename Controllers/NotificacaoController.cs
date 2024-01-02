@@ -128,7 +128,7 @@ namespace SysIgreja.Controllers
         {
             notificacaoBusiness.SetNotificacoesLidas();
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

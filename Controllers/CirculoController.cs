@@ -171,7 +171,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.PostCirculo(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -179,7 +179,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.DeleteCirculo(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -187,7 +187,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.DistribuirCirculos(EventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -210,7 +210,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200,"OK");
             }
         }
 
@@ -284,7 +284,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.ChangeCirculo(ParticipanteId, DestinoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -327,7 +327,7 @@ namespace SysIgreja.Controllers
                     JsonRequestBehavior.AllowGet
                 );
             }
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -335,7 +335,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.EsvaziarCirculo(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -343,14 +343,14 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.EsvaziarTodosCirculo(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
         public ActionResult DeleteDirigente(int Id)
         {
             circulosBusiness.DeleteDirigente(Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -358,7 +358,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.SaveGrupo(grupoId, circuloId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -366,7 +366,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.TogglePresenca(ParticipanteId, ReuniaoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

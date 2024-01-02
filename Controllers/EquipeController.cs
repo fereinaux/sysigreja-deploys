@@ -77,7 +77,7 @@ namespace SysIgreja.Controllers
         {
             equipesBusiness.TogglePresenca(EquipanteEventoId, ReuniaoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [AllowAnonymous]
@@ -95,7 +95,7 @@ namespace SysIgreja.Controllers
         {
             equipesBusiness.Justificar(EquipanteEventoId, ReuniaoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -439,7 +439,7 @@ namespace SysIgreja.Controllers
                     JsonRequestBehavior.AllowGet
                 );
             }
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -457,7 +457,7 @@ namespace SysIgreja.Controllers
         public ActionResult AddMembroEquipe(PostEquipeMembroModel model)
         {
             equipesBusiness.ChangeEquipe(model);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -465,7 +465,7 @@ namespace SysIgreja.Controllers
         {
             var result = equipesBusiness.DeleteMembroEquipe(Id);
             if (result == "ok")
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200,"OK");
             else
             {
                 return new HttpStatusCodeResult(400, result);
@@ -512,7 +512,7 @@ namespace SysIgreja.Controllers
         {
             equipesBusiness.SaveGrupo(grupoId, eventoId, equipeId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -520,7 +520,7 @@ namespace SysIgreja.Controllers
         {
             equipesBusiness.DeleteEquipe(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

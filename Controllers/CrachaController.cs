@@ -84,14 +84,14 @@ namespace SysIgreja.Controllers
         public ActionResult DeleteCracha(int Id)
         {
             crachaBusiness.DeleteCracha(Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
         public ActionResult CloneCracha(int Id)
         {
             crachaBusiness.CloneCracha(Id);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -99,7 +99,7 @@ namespace SysIgreja.Controllers
         {
             crachaBusiness.PostCracha(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

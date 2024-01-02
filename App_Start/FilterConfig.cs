@@ -6,8 +6,9 @@ namespace SysIgreja
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new HandleErrorAttribute());           
             filters.Add(new SpaResponseAttribute());
+            filters.Add(new HandleExceptionAttribute());
             filters.Add(
                 new OutputCacheAttribute
                 {

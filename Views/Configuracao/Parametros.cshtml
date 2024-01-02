@@ -710,7 +710,7 @@
 
 
         $('title').text($('#title').text())
-        $('.title-circulo').text(SelectedConfig.EquipeCirculo)
+        $('.title-circulo').text(SelectedConfig.EquipeCirculo || "Equipe de Grupos")
 
         $(document).off('ready-ajax').on('ready-ajax', () => {
             verifyPermissionsConfig()

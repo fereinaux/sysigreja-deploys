@@ -87,7 +87,7 @@ namespace SysIgreja.Controllers
         {
             igrejasBusiness.DeleteIgreja(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

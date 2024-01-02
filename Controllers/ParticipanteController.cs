@@ -264,7 +264,7 @@ namespace SysIgreja.Controllers
         public ActionResult PostInfo(PostInfoModel model)
         {
             participantesBusiness.PostInfo(model);
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -1443,7 +1443,7 @@ namespace SysIgreja.Controllers
         {
             participantesBusiness.CancelarInscricao(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1451,7 +1451,7 @@ namespace SysIgreja.Controllers
         {
             participantesBusiness.AtivarInscricao(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1459,7 +1459,7 @@ namespace SysIgreja.Controllers
         {
             participantesBusiness.DeletarInscricao(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1467,7 +1467,7 @@ namespace SysIgreja.Controllers
         {
             participantesBusiness.ToggleSexo(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1475,7 +1475,7 @@ namespace SysIgreja.Controllers
         {
             participantesBusiness.ToggleTeste(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1483,7 +1483,7 @@ namespace SysIgreja.Controllers
         {
             participantesBusiness.ToggleCheckin(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]

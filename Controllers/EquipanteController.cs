@@ -1591,7 +1591,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return new HttpStatusCodeResult(200);
+                return new HttpStatusCodeResult(200,"OK");
             }
         }
 
@@ -1600,7 +1600,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.PostEtiquetas(etiquetas, id, obs, eventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]
@@ -1719,7 +1719,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.RemoverDuplicado(Original, Duplicado);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1727,7 +1727,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.DeleteEquipante(Id, EventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1735,7 +1735,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleSexo(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1743,7 +1743,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleTeste(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1751,7 +1751,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleCheckin(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -1759,7 +1759,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleStatusMontagem(Id, EventoId);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]

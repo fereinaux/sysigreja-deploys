@@ -317,7 +317,7 @@ namespace SysIgreja.Controllers
         {
             lancamentoBusiness.DeleteLancamento(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -325,7 +325,7 @@ namespace SysIgreja.Controllers
         {
             lancamentoBusiness.PostPagamento(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -333,7 +333,7 @@ namespace SysIgreja.Controllers
         {
             lancamentoBusiness.PostLancamento(model);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpGet]

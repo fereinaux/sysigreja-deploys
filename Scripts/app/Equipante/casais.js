@@ -66,7 +66,7 @@ function loadEquipes() {
 }
 
 function CarregarTabelaEquipante(callbackFunction) {
-    $('#btn_bulk').css('display', 'none')
+    
     if ($.fn.DataTable.isDataTable('#table-equipantes')) {
         $("#table-equipantes").DataTable().destroy()
     }
@@ -1114,6 +1114,15 @@ function PostPagamento() {
 $(document).off('ready-ajax').on('ready-ajax', () => {
     loadEquipes()
     loadCampos(SelectedEvent.Id);
+    tippy(`div:has(> #btn_bulk)`, {
+        content: 'Você deve selecionar registros para habilitar as ações',
+        followCursor: true, trigger: 'mouseenter',
+        onShow(instance) {
+
+            if (!$('#btn_bulk').attr('disabled'))
+                return false; // cancels it
+        }
+    });
 
 });
 
@@ -1174,9 +1183,9 @@ function getFiltros(Foto) {
 
 function checkBulkActions() {
     if ($('input[type=checkbox][id!=select-all]:checked').length > 0) {
-        $('#btn_bulk').css('display', 'inline-block')
+        $('#btn_bulk').attr('disabled', false)
     } else {
-        $('#btn_bulk').css('display', 'none')
+        $('#btn_bulk').attr('disabled', true)
     }
 }
 

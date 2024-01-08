@@ -1,3 +1,5 @@
+import { DraggablePanel } from "../components/DraggablePanels";
+
 const { useEffect, useState } = React;
 // var orderBy = require('orderby');
 
@@ -42,32 +44,9 @@ function CirculosComponent({ circulos, tipoEvento }) {
         }}
         className="p-xs col-xs-12 col-lg-4 pg text-center text-white"
       >
-        {circulo.Titulo && (
-          <h4 style={{ paddingTop: "5px" }}>{circulo.Titulo}</h4>
-        )}
-        <table className="table">
-          <tbody id={`pg-${circulo.Id}`}>
-            {circulo.Participantes.map((participante) => (
-              <tr
-                key={`participante-${circulo.Id}-${participante.ParticipanteId}`}
-              >
-                <td
-                  className="participante"
-                  data-id={participante.ParticipanteId}
-                >
-                  {participante.Nome}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <button
-          type="button"
-          className="btn btn-rounded btn-default print-button"
-          onClick={() => PrintCirculo(circulo)}
-        >
-          <i className="fa fa-2x fa-print"></i>
-        </button>
+       <DraggablePanel.Title title={circulo.Titulo}/>
+       <DraggablePanel.Table panel={circulo}/>
+       <DraggablePanel.Button handleClick={PrintCirculo} panel={circulo}/>       
       </div>
     ))
   );

@@ -60,16 +60,8 @@
             </div>
             <div class="ibox-content">
                 <div class="row p-m">
-                    <div class="col-xs-12 col-lg-3 sem-circulo pg text-center">
-                        <h4 class="p-h-xs">Participantes sem <span class="title-circulo">Círculos</span></h4>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>@Html.TextBox("Participante", null, new { @class = "form-control", placeholder = "Buscar Participante" })  </th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-participantes"></tbody>
-                        </table>
+                    <div id="list" class="col-xs-12 col-lg-3 sem-circulo pg droppable text-center">
+
                     </div>
                     <div class="col-xs-12 col-lg-9">
                         <div class="row">
@@ -186,13 +178,15 @@
 }
 
 @section Scripts {
- 
+
 
     <script src="~/Scripts/app/Circulo/circulo.js"></script>
+    <script type="text/babel" src="~/Scripts/app/Componentes/DraggablePanel.jsx"></script>
+    <script type="text/babel" src="~/Scripts/app/Componentes/FilterableList.jsx"></script>
 
     <script>
 
     </script>
-    
+
 }
 

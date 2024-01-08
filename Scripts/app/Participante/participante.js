@@ -4,7 +4,6 @@ function CarregarTabelaParticipante(callbackFunction) {
     casal = false
     handleParticipantes(casal)
     GetCrachas()
-    $('#btn_bulk').css('display', 'none')
     if (SelectedEvent.Id != eventoId) {
         var filtros = getFiltros()
         $.ajax({
@@ -865,6 +864,16 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
     if (queryId) {
         Opcoes({ Id: queryId })
     }
+
+    tippy(`div:has(> #btn_bulk)`, {
+        content: 'Você deve selecionar registros para habilitar as ações',
+        followCursor: true, trigger: 'mouseenter',
+        onShow(instance) {
+
+            if (!$('#btn_bulk').attr('disabled'))
+                return false; // cancels it
+        }
+    });
 });
 
 
@@ -1831,12 +1840,11 @@ function getFiltros(Foto) {
     } else return filtros
 
 }
-
 function checkBulkActions() {
     if ($('input[type=checkbox][id!=select-all]:checked').length > 0) {
-        $('#btn_bulk').css('display', 'inline-block')
+        $('#btn_bulk').attr('disabled', false)
     } else {
-        $('#btn_bulk').css('display', 'none')
+        $('#btn_bulk').attr('disabled', true)
     }
 }
 

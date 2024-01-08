@@ -10,6 +10,15 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
     $('.not-convite').css('display', isConvite ? 'none' : 'block')
     loadMontagem()
     loadCampos(999)
+    tippy(`div:has(> #btn_bulk)`, {
+        content: 'Você deve selecionar registros para habilitar as ações',
+        followCursor: true, trigger: 'mouseenter',
+        onShow(instance) {
+
+            if (!$('#btn_bulk').attr('disabled'))
+                return false; // cancels it
+        }
+    });
 })
 $('.search-data').attr('disabled', true)
 $('.search-data').on('keyup change clear', _.debounce(function () {
@@ -98,7 +107,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
 
 function CarregarTabelaEquipante(callbackFunction) {
     newEventoId = SelectedEvent.Id
-    $('#btn_bulk').css('display', 'none')
+    
 
     const tableEquipanteConfig = {
         language: languageConfig,
@@ -379,9 +388,9 @@ function CarregarTabelaHistorico(id) {
 
 function checkBulkActions() {
     if ($('input[type=checkbox][id!=select-all]:checked').length > 0) {
-        $('#btn_bulk').css('display', 'inline-block')
+        $('#btn_bulk').attr('disabled', false)
     } else {
-        $('#btn_bulk').css('display', 'none')
+        $('#btn_bulk').attr('disabled', true)
     }
 }
 

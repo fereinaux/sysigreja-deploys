@@ -14,7 +14,7 @@ $('.search-data').on('keyup change clear', _.debounce(function () {
 function loadSearch() {
     $('.search-data').each((i, elm) => {
         $(elm).val($('#table-equipantes').DataTable().state()?.columns[$(elm).data('column')].search.search)
-        $(elm).attr('disabled',false)
+        $(elm).attr('disabled', false)
     })
 }
 
@@ -83,8 +83,8 @@ $('.search-data').attr('disabled', true)
 
 function CarregarTabelaEquipante(callbackFunction) {
 
-    $('#btn_bulk').css('display', 'none')
- 
+
+
     const tableEquipanteConfig = {
         language: languageConfig,
         searchDelay: 1000,
@@ -1029,7 +1029,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 
             $('#equipante-etiquetas').val(data.Equipante.Etiquetas.map(etiqueta => etiqueta.Id))
             $('.equipante-etiquetas').select2({ ...createTagOptions, dropdownParent: $("#form-opcoes") }).off('select2:select').on('select2:select', function (e) {
-                if (e.params.data.newTag) {                    
+                if (e.params.data.newTag) {
                     $.ajax({
                         url: "/Etiqueta/PostEtiqueta/",
                         datatype: "json",
@@ -1220,6 +1220,15 @@ function PostPagamento() {
 $(document).off('ready-ajax').on('ready-ajax', () => {
     loadEquipes()
 
+    tippy(`div:has(> #btn_bulk)`, {
+        content: 'Você deve selecionar registros para habilitar as ações',
+        followCursor: true, trigger: 'mouseenter',
+        onShow(instance) {
+
+            if (!$('#btn_bulk').attr('disabled'))
+                return false; // cancels it
+        }
+    });
 });
 
 function previous() {
@@ -1280,9 +1289,9 @@ function getFiltros(Foto) {
 
 function checkBulkActions() {
     if ($('input[type=checkbox][id!=select-all]:checked').length > 0) {
-        $('#btn_bulk').css('display', 'inline-block')
+        $('#btn_bulk').attr('disabled', false)
     } else {
-        $('#btn_bulk').css('display', 'none')
+        $('#btn_bulk').attr('disabled', true)
     }
 }
 

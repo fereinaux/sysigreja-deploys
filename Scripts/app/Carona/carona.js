@@ -1,10 +1,11 @@
 ﻿
 rootCarona = ReactDOM.createRoot(document.getElementById("caronas"));
-
+rootList = ReactDOM.createRoot(document.getElementById("list"));
+loadList = typeof loadList !== 'undefined' ? loadList : function () { }
 arrayCaronas = []
 arrayCaroneiros = []
 map = initMap('map')
-loadCaronas = typeof loadCaronas !== 'undefined' ? loadCaronas : function () { }
+loadPanels = typeof loadPanels !== 'undefined' ? loadPanels : function () { }
 markerLayer = createMarkerLayer(map)
 setInterval(function () {
     map.invalidateSize();
@@ -52,7 +53,17 @@ function CarregarTabelaCarona() {
             var api = this.api();
             var dataArray = api.rows({ search: 'applied', order: 'applied' }).data().toArray()
 
-            loadCaronas(dataArray);
+            loadPanels(rootCarona, dataArray.map((carona) => {
+                return {
+                    ...carona,
+                    Cor: '#424242',
+                    Title: carona.Motorista,
+                    Participantes:
+                        carona.Participantes.length > 0
+                            ? _.orderBy(carona.Participantes, "Nome", "asc")
+                            : _.orderBy(carona.Equipantes, "Nome", "asc"),
+                };
+            }), PrintCarona)
             GetParticipantesSemCarona();
 
             if (dataArray.length > 0) {
@@ -318,8 +329,6 @@ function GetEquipantes(id) {
 }
 
 function GetParticipantesSemCarona() {
-    $("#table-participantes").empty();
-
     $.ajax({
         url: "/Carona/GetParticipantesSemCarona/",
         data: { EventoId: SelectedEvent.Id },
@@ -327,10 +336,13 @@ function GetParticipantesSemCarona() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+
+            loadList(rootList, data.Participantes.map(item => ({
+                ...item,
+                Value: item.Nome
+            })), `Participantes sem Carona`, "Buscar Participante")
+
             data.Participantes.forEach(function (participante, index, array) {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${participante.Id}">${participante.Nome}</td></tr>`));
-
-
                 if (participante.Latitude && participante.Longitude) {
                     addMapa(participante.Latitude, participante.Longitude, participante.Nome, '#939393', participante.Id, 'carona')
                         .bindPopup(`<h4>Participante: ${participante.Nome}</h4>
@@ -339,8 +351,6 @@ function GetParticipantesSemCarona() {
 
 
             });
-
-            DragDropg();
         }
     });
 }
@@ -361,7 +371,7 @@ $("#modal-cores").on('hidden.bs.modal', function () {
 
 function DragDropg() {
     Drag();
-    $('.pg').droppable({
+    $('.droppable').droppable({
         drop: function (event, ui) {
             ChangeCarona($(ui.draggable).data('id'), $(this).data('id'));
         }
@@ -369,7 +379,7 @@ function DragDropg() {
 }
 
 function Drag() {
-    $('.participante').each(function () {
+    $('.draggable').each(function () {
         $(this).css("cursor", "move");
         $(this).draggable({
             zIndex: 999,

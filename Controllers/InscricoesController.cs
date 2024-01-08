@@ -128,6 +128,25 @@ namespace SysIgreja.Controllers
             }
         }
 
+        public ActionResult PresencaByNome(string nome)
+        {
+            var evento = eventosBusiness
+                .GetEventos()
+                .Where(x => x.Configuracao.Identificador.ToLower() == nome.ToLower())
+                .OrderByDescending(x => x.DataEvento)
+                .FirstOrDefault();
+
+            if (evento != null)
+            {
+                return Presenca(evento.Id);
+            }
+            else
+            {
+                return Index();
+            }
+        }
+
+
         public ActionResult GoToEquipe(string nome)
         {
             var evento = eventosBusiness

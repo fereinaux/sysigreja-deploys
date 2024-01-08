@@ -1,6 +1,8 @@
 ﻿
 rootPadrinhos = ReactDOM.createRoot(document.getElementById("padrinhos"));
-loadPadrinhos = typeof loadPadrinhos !== 'undefined' ? loadPadrinhos : function () { }
+rootList = ReactDOM.createRoot(document.getElementById("list"));
+loadList = typeof loadList !== 'undefined' ? loadList : function () { }
+loadPanels = typeof loadPanels !== 'undefined' ? loadPanels : function () { }
 function CarregarTabelaPadrinho() {
 
     $('#gerenciar').text("Gerenciar Padrinhos");
@@ -37,10 +39,19 @@ function CarregarTabelaPadrinho() {
             [0, "asc"]
         ],
         drawCallback: function (settings) {
+
+
             const arrayData = this.api().rows({ search: 'applied', order: 'applied' })
                 .data()
                 .toArray()
-            loadPadrinhos(arrayData);
+            loadPanels(rootPadrinhos, arrayData.map((padrinho) => {
+                return {
+                    ...padrinho,
+                    Cor: '#424242',
+                    Title: padrinho.Padrinho,
+                    Participantes: _.orderBy(padrinho.Participantes, "Nome", "asc"),
+                };
+            }), PrintPadrinho)
             GetParticipantesSemPadrinho();
         },
         ajax: {
@@ -252,7 +263,7 @@ function GetEquipantes(id) {
 
 
 function GetParticipantesSemPadrinho() {
-    $("#table-participantes").empty();
+ 
 
     $.ajax({
         url: "/Padrinho/GetParticipantesSemPadrinho/",
@@ -261,11 +272,10 @@ function GetParticipantesSemPadrinho() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            data.Participantes.forEach(function (participante, index, array) {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${participante.Id}">${participante.Nome}</td></tr>`));
-            });
-
-            DragDropg();
+            loadList(rootList, data.Participantes.map(item => ({
+                ...item,
+                Value: item.Nome
+            })), `Participantes sem Padrinho`, "Buscar Participante")
         }
     });
 }
@@ -273,15 +283,15 @@ function GetParticipantesSemPadrinho() {
 function DragDropg() {
     Drag();
 
-    $('.pg').droppable({
+    $('.droppable').droppable({
         drop: function (event, ui) {
-            ChangePadrinho($(ui.draggable).data('id'), $(this).data('id'));           
+            ChangePadrinho($(ui.draggable).data('id'), $(this).data('id'));
         }
     });
 }
 
 function Drag() {
-    $('.participante').each(function () {
+    $('.draggable').each(function () {
         $(this).css("cursor", "move");
         $(this).draggable({
             zIndex: 999,

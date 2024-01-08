@@ -1,7 +1,8 @@
 ﻿rootQuartos = ReactDOM.createRoot(document.getElementById("quartos"));
-
+rootList = ReactDOM.createRoot(document.getElementById("list"));
+loadList = typeof loadList !== 'undefined' ? loadList : function () { }
 table = undefined
-loadQuartos = typeof loadQuartos !== 'undefined' ? loadQuartos : function () { }
+loadPanels = typeof loadQuartos !== 'undefined' ? loadPanels : function () { }
 swalQuartos = {
     title: "Impressão de Quartos",
     icon: "info",
@@ -87,7 +88,21 @@ function CarregarTabelaQuarto() {
             const arrayData = this.api().rows({ search: 'applied', order: 'applied' })
                 .data()
                 .toArray()
-            loadQuartos(arrayData);
+
+            loadPanels(rootQuartos, arrayData.map((quarto) => {
+                return {
+                    ...quarto,
+                    Title: quarto.Titulo,
+                    SubTitle: quarto.Equipante,
+                    Cor: {
+                        Masculino: "#0095ff",
+                        Feminino: "#ff00d4",
+                        Misto: "#424242",
+                    }[quarto.Sexo],
+                    Participantes: quarto.Participantes.length > 0 ? _.orderBy(quarto.Participantes, "Nome", "asc") : _.orderBy(quarto.Equipantes, "Nome", "asc"),
+                };
+            }), PrintQuarto)
+
             GetParticipantesSemQuarto();
 
             arrayData.forEach(quarto => {
@@ -422,7 +437,7 @@ function DistribuirQuartos() {
 }
 
 function GetParticipantesSemQuarto() {
-    $("#table-participantes").empty();
+   
 
     $.ajax({
         url: "/Quarto/GetParticipantesSemQuarto/",
@@ -431,11 +446,10 @@ function GetParticipantesSemQuarto() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            data.Participantes.forEach(function (participante, index, array) {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${participante.Id}">${participante.Nome}</td></tr>`));
-            });
-
-            DragDropg();
+            loadList(rootList, data.Participantes.map(item => ({
+                ...item,
+                Value: item.Nome
+            })), `Participantes sem Quarto`, "Buscar Participante")
         }
     });
 }
@@ -443,7 +457,7 @@ function GetParticipantesSemQuarto() {
 function DragDropg() {
     Drag();
 
-    $('.quarto').droppable({
+    $('.droppable').droppable({
         drop: function (event, ui) {
             ChangeQuarto($(ui.draggable).data('id'), $(this).data('id'));
 
@@ -459,7 +473,7 @@ function AddMembroQuarto(capacidade, qtd) {
 }
 
 function Drag() {
-    $('.participante').each(function () {
+    $('.draggable').each(function () {
         $(this).css("cursor", "move");
         $(this).draggable({
             zIndex: 999,

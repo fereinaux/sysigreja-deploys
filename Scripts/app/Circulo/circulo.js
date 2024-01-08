@@ -1,7 +1,9 @@
 ﻿
 rootCirculos = ReactDOM.createRoot(document.getElementById("circulos"));
+rootList = ReactDOM.createRoot(document.getElementById("list"));
 
-loadCirculos = typeof loadCirculos !== 'undefined' ? loadCirculos : function () { }
+loadPanels = typeof loadPanels !== 'undefined' ? loadPanels : function () { }
+loadList = typeof loadList !== 'undefined' ? loadList : function () { }
 map = initMap('map')
 markerLayer = createMarkerLayer(map)
 map.setView([-8.050000, -34.900002], 13);
@@ -149,7 +151,23 @@ function CarregarTabelaCirculo() {
             const arrayData = this.api().rows({ search: 'applied', order: 'applied' })
                 .data()
                 .toArray()
-            loadCirculos(arrayData, SelectedEvent.TipoEvento);
+
+            loadPanels(rootCirculos, arrayData.map((circulo) => {
+                return {
+                    ...circulo,
+                    Title: circulo.Titulo,
+                    Participantes:
+                        SelectedEvent.TipoEvento == "Individual"
+                            ? _.orderBy(circulo.Participantes, "Nome", "asc")
+                            : _.orderBy(
+                                circulo.Participantes,
+                                ["SequencialEvento", "Sexo"],
+                                "asc"
+                            ),
+                };
+            }), PrintCirculo)
+
+
             GetParticipantesSemCirculo()
             var bairros = []
             markerLayer.clearLayers();
@@ -570,7 +588,7 @@ function DistribuirCirculos() {
 }
 
 function GetParticipantesSemCirculo() {
-    $("#table-participantes").empty();
+
 
     $.ajax({
         url: "/Circulo/GetParticipantesSemCirculo/",
@@ -579,11 +597,12 @@ function GetParticipantesSemCirculo() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            data.Participantes.forEach(function (participante, index, array) {
-                $('#table-participantes').append($(`<tr><td class="participante" data-id="${participante.Id}">${participante.Nome}</td></tr>`));
-            });
 
-            DragDropg();
+            loadList(rootList, data.Participantes.map(item => ({
+                ...item,
+                Value: item.Nome
+            })), `Participantes sem ${SelectedEvent.EquipeCirculo}`, "Buscar Participante")
+
         }
     });
 }
@@ -619,7 +638,7 @@ function filtrarNome() {
 function DragDropg() {
     Drag();
 
-    $('.pg').droppable({
+    $('.droppable').droppable({
         drop: function (event, ui) {
             ChangeCirculo($(ui.draggable).data('id'), $(this).data('id'));
 
@@ -628,7 +647,7 @@ function DragDropg() {
 }
 
 function Drag() {
-    $('.participante').each(function () {
+    $('.draggable').each(function () {
         $(this).css("cursor", "move");
         $(this).draggable({
             zIndex: 999,
@@ -796,7 +815,7 @@ function AddDirigente() {
 
                         windowReference.location = GetLinkWhatsApp(data.User.Fone, MsgUsuario(data.User))
                     }
-                },               
+                },
             });
         })
     }

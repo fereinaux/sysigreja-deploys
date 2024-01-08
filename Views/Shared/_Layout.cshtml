@@ -419,6 +419,7 @@
 
 
         $(document).ready(() => {
+            Babel.transformScriptTags()
             tippy(`#side-menu li a:has(i)`, {
                 content: '',
                 allowHTML: true,
@@ -671,6 +672,7 @@
             } else {
                 $('#spa-content').html(xhr.responseText);
                 // init new page
+                Babel.transformScriptTags()
                 initControls($('#spa-content'));
                 initInputs()
 
@@ -737,16 +739,13 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
     <script src="https://unpkg.com/@("@")babel/standalone/babel.min.js"></script>
-    <script type="text/babel" src="~/Scripts/app/Circulo/circulo.jsx"></script>
-    <script type="text/babel" src="~/Scripts/app/Quarto/quarto.jsx"></script>
-    <script type="text/babel" src="~/Scripts/app/Padrinho/padrinho.jsx"></script>
-    <script type="text/babel" src="~/Scripts/app/Carona/carona.jsx"></script>
+
     <script>
 
 
 
         function defaultLogin() {
-            $('link[rel="icon"]').attr('href', `/Arquivo/GetArquivo/${Login.LogoId}`)
+            $('link[rel="icon"]').attr('href', `/Armquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo img').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)
             $('#home-button-logo').css('display', 'block')
             $('#img-logo').attr('src', `/Arquivo/GetArquivo/${Login.LogoId}`)

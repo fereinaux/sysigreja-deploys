@@ -1174,7 +1174,7 @@
     <Content Include="Views\Equipante\Index.cshtml" />
     <Content Include="Views\Participante\Index.cshtml" />
     <Content Include="Views\Equipe\Index.cshtml" />
-    <Content Include="Views\Equipe\Presenca.cshtml" />
+    <Content Include="Views\Equipe\AtaPresenca.cshtml" />
     <Content Include="Views\Home\Admin.cshtml" />
     <Content Include="Views\ContaBancaria\Index.cshtml" />
     <Content Include="Views\CentroCusto\Index.cshtml" />
@@ -1234,7 +1234,7 @@
     <Content Include="Views\Relatorio\Painel.cshtml" />
     <Content Include="Views\Home\Dirigente.cshtml" />
     <Content Include="Views\Ajuda\Index.cshtml" />
-    <Content Include="Views\Inscricoes\AtaPresenca.cshtml" />
+    <Content Include="Views\Inscricoes\Presenca.cshtml" />
     <Content Include="Views\Evento\Criar.cshtml" />
   </ItemGroup>
   <ItemGroup>

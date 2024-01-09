@@ -65,7 +65,7 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-        public ActionResult Presenca()
+        public ActionResult AtaPresenca()
         {
             ViewBag.Title = "Ata de Presença";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));

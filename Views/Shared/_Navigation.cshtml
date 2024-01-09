@@ -24,14 +24,14 @@
 
                 </ul>
             </li>
-            <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Equipe","Equipante","Quarto","Home"}, actions: new List<string> { "Duplicados","Coordenador","Index","Presenca","Montagem","Voluntarios","Casais"})">
+            <li class="@Html.IsSelectedMenuItem(controller: new string[] {"Equipe","Equipante","Quarto","Home"}, actions: new List<string> { "Duplicados","Coordenador","Index","AtaPresenca","Montagem","Voluntarios","Casais"})">
                 <a><i class="fas fa-broom"></i> <span class="nav-label">Voluntários</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelectedMenuItem(controller: new string[] {"Equipe","Equipante","Quarto"}, actions: new List<string> { "Duplicados","Index","Presenca","Equipe", "Montagem","Casais" }, cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Index", controller:"Equipante") @Html.IsSelected(action: "Casais", controller:"Equipante")"><a id="equipante-menu" onclick="handleEquipantes()">Listagem</a></li>
                     <li class="@Html.IsSelected(action: "Montagem", controller:"Equipante")"><a href="@Url.Action("Montagem", "Equipante")">Montagem</a></li>
                     <li class="@Html.IsSelected(action: "Index", controller:"Equipe")"><a href="@Url.Action("Index", "Equipe")">Equipes</a></li>
                     <li class="@Html.IsSelected(action: "Coordenador", controller:"Home")"><a href="@Url.Action("Coordenador", "Home")">Coordenador</a></li>
-                    <li class="@Html.IsSelected(action: "Presenca", controller:"Equipe")"><a href="@Url.Action("Presenca", "Equipe")">Ata de Presença</a></li>
+                    <li class="@Html.IsSelected(action: "AtaPresenca", controller:"Equipe")"><a href="@Url.Action("AtaPresenca", "Equipe")">Ata de Presença</a></li>
                     <li class="@Html.IsSelected(action: "Voluntarios", controller:"Quarto")"><a href="@Url.Action("Voluntarios", "Quarto")">Quartos</a></li>
                     <li class="@Html.IsSelected(action: "Duplicados", controller:"Equipante")"><a href="@Url.Action("Duplicados", "Equipante")">Remover Duplicados</a></li>
                 </ul>

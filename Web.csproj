@@ -1234,7 +1234,7 @@
     <Content Include="Views\Relatorio\Painel.cshtml" />
     <Content Include="Views\Home\Dirigente.cshtml" />
     <Content Include="Views\Ajuda\Index.cshtml" />
-    <Content Include="Views\Inscricoes\Presenca.cshtml" />
+    <Content Include="Views\Inscricoes\AtaPresenca.cshtml" />
     <Content Include="Views\Evento\Criar.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -992,7 +992,7 @@ namespace SysIgreja.Controllers
                             result = result.Where(
                                 x =>
                                     x.Equipante.ParticipantesEtiquetas.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
+                                        y => y.EtiquetaId.ToString() == etiqueta && y.EventoId == model.EventoId
                                     )
                             )
                     );
@@ -1005,7 +1005,7 @@ namespace SysIgreja.Controllers
                             result = result.Where(
                                 x =>
                                     !x.Equipante.ParticipantesEtiquetas.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
+                                        y => y.EtiquetaId.ToString() == etiqueta && y.EventoId == model.EventoId
                                     )
                             )
                     );

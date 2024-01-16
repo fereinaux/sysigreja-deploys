@@ -116,27 +116,7 @@
             {
                 @Html.AntiForgeryToken()
 
-                <ul class="navbar-right" style="margin-left: auto">
-
-                    <li class="menu-notification" style="margin-right: 5px; display: flex; height: 50px">
-                        <a class="dropdown-toggle count-info" href="#">
-                            <span class="label label-primary label-notificacao" id="contador-notificacoes" style="cursor: pointer; display: none">3</span>
-                        </a>
-                        <i class="fa fa-bell" style="cursor: pointer"></i>
-
-                        <div class="dropdown-content">
-                            <ul class="nav navbar-top-links" id="panel-notificao">
-                                <li class="hover-menu">
-                                    <a href="/Notificacao" class="dropdown-item">
-                                        <div>
-                                            <strong>Todas as notificações</strong>
-                                            <i class="fa fa-angle-right"></i>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                <ul class="navbar-right" style="margin-left: auto">               
 
                     <li class="menu-user" style="margin-right: 40px; display: flex;height:50px">
                         <img class="img-avatar inputFile" style="margin: auto; width: 40px; height: 40px; border-radius: 50%; margin-left: 10px; cursor: pointer " src="~/Images/profile.jpg" />
@@ -325,101 +305,7 @@
 
     }
 
-    function pagarSistema(id, valor) {
-        let input = document.createElement("input");
-        input.type = 'number';
-        input.value = valor;
-        input.className = 'swal-content__input';
-        CustomSwal({
-            title: "Oferta do Sistema",
-            text: "Quanto você deseja ofertar?",
-            icon: "info",
-            content: input,
-            button: {
-                text: "Ofertar"
-            },
-            className: "button-center",
-
-        }).then(result => {
-            if (result)
-                ofertar(id, input.value)
-
-        })
-    }
-
-    const handleTipo = (tipo, quantidade, valor) => {
-        switch (tipo) {
-            case "Inscrição":
-                return {
-                    titulo: `${quantidade} ${quantidade > 1 ? "novas inscrições" : "nova inscrição"}`,
-                    link: "/Participante",
-                    icon: '<i class="fas fa-user-plus"></i>'
-                }
-            default:
-                return {
-                    titulo: `Oferta do ${tipo}`,
-                    onClick: `pagarSistema(${quantidade},${valor})`,
-                    icon: '<i class="fas fa-money-bill-alt"></i>'
-                }
-        }
-    }
-
-
-    const consultarNotificacoes = () => {
-        $.ajax({
-            url: "/Notificacao/GetNotificacoesNaoLidas/",
-            datatype: "json",
-            type: "GET",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
-                const { Notificacoes, Eventos } = data
-
-                const qtdNofitificacoes = Notificacoes.length + Eventos.length;
-
-                $('#contador-notificacoes').text(qtdNofitificacoes);
-
-                $('#contador-notificacoes').css('display', qtdNofitificacoes > 0 ? 'block' : 'none')
-
-                $('.item-notificacao').remove()
-
-                Notificacoes.forEach(notificacao => {
-                    $('#panel-notificao').prepend(divBase(notificacao.Titulo, notificacao.Quantidade))
-                })
-
-                Eventos.forEach(evento => {
-                    $('#panel-notificao').prepend(divBase(evento.Evento, evento.Id, evento.Valor))
-                })
-            }
-        })
-
-
-    }
-
-    function ofertar(id, valor) {
-
-
-        $.ajax({
-            url: "/Evento/OfertaEvento/",
-            datatype: "json",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                { Id: id, Valor: valor }),
-            success: (data) => {
-                consultarNotificacoes()
-
-                let div = document.createElement("div");
-
-                $(div).html(`<h4>Informações para transferência</h4><p>PIX CPF: <strong>100.778.704-09</strong> - Felipe Reinaux </p><p>Enviar comprovante para <strong>(81)9.9718-7441</strong></p>`)
-                swal({
-                    className: "button-center",
-                    title: "Oferta Computada",
-                    icon: "success",
-                    content: div
-                });
-            }
-        });
-    }
+    
 
 </script>
 

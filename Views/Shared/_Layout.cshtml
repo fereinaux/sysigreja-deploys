@@ -439,8 +439,6 @@
             if (Usuario.FotoId) {
                 $('.img-avatar').attr('src', `/Arquivo/GetArquivo/${Usuario.FotoId}`)
             }
-            consultarNotificacoes()
-            setInterval(consultarNotificacoes, 60000)
 
             $('.menu-user, .menu-notification').on('click', (event) => {
                 $(event.target).parent().find('.dropdown-content').css('display', 'block')

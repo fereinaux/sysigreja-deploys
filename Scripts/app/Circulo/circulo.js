@@ -72,31 +72,12 @@ map.on(L.Draw.Event.CREATED, function (e) {
         }
     });
     setTimeout(() => {
-        selectedMarkersCirculo[0].openPopup()
 
+        selectedMarkersCirculo[0]._icon._tippy.show()
 
     }, 100)
 
 });
-
-map.on('popupopen', function (e) {
-
-    if (selectedMarkersCirculo.length > 1) {
-        $('.hide-multiple').css('display', 'none')
-    } else {
-        $('.hide-multiple').css('display', 'block')
-    }
-})
-
-
-map.on('popupclose', function (e) {
-
-    selectedMarkersCirculo = []
-    Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
-    $("#bairros").val([]).trigger('change');
-    $('#filtro-nome').val('')
-
-})
 
 function CarregarTabelaCirculo() {
     var columnsTb = [
@@ -188,33 +169,51 @@ function CarregarTabelaCirculo() {
                         map.eachLayer(function (layer) {
 
                             if (layer._latlng?.lat == participante.Latitude && layer._latlng?.lng == participante.Longitude) {
+
+
                                 addPin = false
                                 var div = document.createElement("div");
-
-                                $(div).html(layer._popup?._content)
-
-                                $(div).find('.popup-handler').append(`<div style="width:350px"><h4 class="hide-multiple">Nome: ${participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${participante.Endereco} - ${participante.Bairro}</span>
+                                layer.props["ParticipantesId"] = layer.props.ParticipantesId ? [...layer.props.ParticipantesId, participante.ParticipanteId] : [layer.props.ParticipanteId, participante.ParticipanteId];
+                                $(div).html(layer._icon._tippy.props.content)
+                                $(div).find('.popup-handler').css('width','700px')
+                                $(div).find('.popup-handler').append(`<div class="hide-multiple" style="width:350px"><h4 class="hide-multiple">Nome: ${participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${participante.Endereco} - ${participante.Bairro}</span>
                     <ul class="change-circulo-ul">
                        ${arrayData.map(c => `<li onclick="ChangeCirculo(${participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                         ${`<li onclick = "ChangeCirculo(${participante.ParticipanteId + "@@@@@@" + null})" class="change-circulo-li" style = "background:#bb2d2d"><span>Remover</span></li>`.replace(/,/g, '').replace(/@@@@@@/g, ',')}
                     </ul>
                     </div></div>`)
 
-
-                                layer.bindPopup(div, {
-                                    maxWidth: 710
-                                })
+                                layer._icon._tippy.setContent(div)
                             }
                         })
                         if (addPin) {
-
-                            addMapa(participante.Latitude, participante.Longitude, participante.Nome, circulo.Cor, participante.ParticipanteId, 'circulo', participante)
-                                .bindPopup(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${participante.Endereco} - ${participante.Bairro}</span>
+                            instance = tippy(addMapa(participante.Latitude, participante.Longitude, participante.Nome, circulo.Cor, participante.ParticipanteId, 'circulo', participante)._icon, {
+                                allowHTML: true,
+                                content: `<div class="popup-handler" style="display:flex;flex-wrap:wrap"><div style="width:350px"><h4 class="hide-multiple">Nome: ${participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${participante.Endereco} - ${participante.Bairro}</span>
                     <ul class="change-circulo-ul">
                        ${arrayData.map(c => `<li onclick="ChangeCirculo(${participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
                      ${`<li onclick = "ChangeCirculo(${participante.ParticipanteId + "@@@@@@" + null})" class="change-circulo-li" style = "background:#bb2d2d"><span>Remover</span></li>`.replace(/,/g, '').replace(/@@@@@@/g, ',')}
                        </ul>
-                    </div></div></div>`);
+                    </div></div></div>`,
+                                placement: 'right-start',
+                                maxWidth: 700,
+                                trigger: 'click',
+                                interactive: true,
+                                arrow: false,
+                                onMount: () => {
+                                    if (selectedMarkersCirculo.length > 1) {
+                                        $('.hide-multiple').css('display', 'none')
+                                    } else {
+                                        $('.hide-multiple').css('display', 'block')
+                                    }
+                                },
+                                onHide: () => {
+                                    selectedMarkersCirculo = []
+                                    Object.values(map._layers).filter(e => e.props).forEach(e => map._layers[e._leaflet_id].setOpacity(1))
+                                    $("#bairros").val([]).trigger('change');
+                                    $('#filtro-nome').val('')
+                                }
+                            });
                         }
 
                     }
@@ -590,7 +589,7 @@ function DistribuirCirculos() {
     });
 }
 
-var semCirculo 
+var semCirculo
 
 function GetParticipantesSemCirculo() {
 
@@ -679,7 +678,7 @@ function DragDropg() {
         });
     });
 
-  
+
 }
 
 function ChangeCirculo(participanteId, destinoId) {
@@ -707,6 +706,10 @@ function ChangeCirculo(participanteId, destinoId) {
                 }
             });
 
+            marker.props.ParticipantesId = marker.props.ParticipantesId ?? [marker.props.ParticipanteId]
+
+            marker.props.ParticipantesId.forEach(participanteId => 
+    
             arrPromises.push($.ajax({
                 url: "/Circulo/ChangeCirculo/",
                 datatype: "json",
@@ -714,10 +717,11 @@ function ChangeCirculo(participanteId, destinoId) {
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        ParticipanteId: marker.props.ParticipanteId,
+                        ParticipanteId: participanteId,
                         DestinoId: destinoId
                     })
             }))
+            )
         })
 
         Promise.all(arrPromises).then((r) => {
@@ -725,6 +729,7 @@ function ChangeCirculo(participanteId, destinoId) {
             map.closePopup()
             selectedMarkersCirculo = []
             $.unblockUI();
+            tippy.hideAll()
         })
 
     } else {

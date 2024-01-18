@@ -49,6 +49,7 @@ function CarregarTabelaPadrinho() {
                     ...padrinho,
                     Cor: '#424242',
                     Title: padrinho.Padrinho,
+                    Total: padrinho.Quantidade,
                     Participantes: _.orderBy(padrinho.Participantes, "Nome", "asc"),
                 };
             }), PrintPadrinho)
@@ -272,6 +273,7 @@ function GetParticipantesSemPadrinho() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            semPadrinho = data.Participantes
             loadList(rootList, data.Participantes.map(item => ({
                 ...item,
                 Value: item.Nome
@@ -281,26 +283,47 @@ function GetParticipantesSemPadrinho() {
 }
 
 function DragDropg() {
-    Drag();
-
-    $('.droppable').droppable({
-        drop: function (event, ui) {
-            ChangePadrinho($(ui.draggable).data('id'), $(this).data('id'));
-        }
-    });
-}
-
-function Drag() {
     $('.draggable').each(function () {
-        $(this).css("cursor", "move");
-        $(this).draggable({
-            zIndex: 999,
-            revert: true,
-            revertDuration: 0
+        instance = tippy(this, {
+            allowHTML: true,
+            content: '',
+            placement: 'right-start',
+            trigger: 'click',
+            interactive: true,
+            arrow: false,
+            onTrigger: (instance, event) => {
+
+                var Padrinhos = $("#table-padrinho").DataTable().data().toArray();
+
+                var PadrinhoParticipante = Padrinhos.find(x => x.Participantes.some(y => y.ParticipanteId == $(this).data('id')))
+
+                if (PadrinhoParticipante) {
+
+                    var Participante = PadrinhoParticipante.Participantes.find(x => x.ParticipanteId == $(this).data('id'))
+
+                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
+                    <ul class="change-circulo-ul">
+                       ${Padrinhos.filter(x => x.Id != PadrinhoParticipante.Id).map(c => `<li onclick="ChangePadrinho(${Participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:#424242"><span>${c.Padrinho}</span><span>Participantes: ${c.Quantidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
+                    ${`<li onclick = "ChangePadrinho(${Participante.ParticipanteId + "@@@@@@" + null})" class="change-circulo-li" style = "background:#bb2d2d"><span>Remover</span></li>`.replace(/,/g, '').replace(/@@@@@@/g, ',')}
+                       </ul>
+                    </div></div></div>`)
+
+                } else {
+                    var Participante = semPadrinho.find(x => x.Id == $(this).data('id'))
+
+                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
+                    <ul class="change-circulo-ul">
+                       ${Padrinhos.map(c => `<li onclick="ChangePadrinho(${Participante.Id + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:#424242"><span>${c.Padrinho}</span><span>Participantes: ${c.Quantidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
+                    </ul>
+                    </div></div></div>`)
+                }
+            },
         });
     });
+  
 }
 
+var semPadrinho
 function ChangePadrinho(participanteId, destinoId) {
     $.ajax({
         url: "/Padrinho/ChangePadrinho/",
@@ -313,6 +336,7 @@ function ChangePadrinho(participanteId, destinoId) {
                 DestinoId: destinoId || null
             }),
         success: function () {
+            tippy.hideAll()
             CarregarTabelaPadrinho();
         }
     });

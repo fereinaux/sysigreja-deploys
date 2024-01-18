@@ -94,6 +94,7 @@ function CarregarTabelaQuarto() {
                     ...quarto,
                     Title: quarto.Titulo,
                     SubTitle: quarto.Equipante,
+                    Total: quarto.Capacidade,
                     Cor: {
                         Masculino: "#0095ff",
                         Feminino: "#ff00d4",
@@ -436,8 +437,10 @@ function DistribuirQuartos() {
     });
 }
 
+var semQuarto
+
 function GetParticipantesSemQuarto() {
-   
+
 
     $.ajax({
         url: "/Quarto/GetParticipantesSemQuarto/",
@@ -446,6 +449,7 @@ function GetParticipantesSemQuarto() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            semQuarto = data.Participantes
             loadList(rootList, data.Participantes.map(item => ({
                 ...item,
                 Value: item.Nome
@@ -455,13 +459,72 @@ function GetParticipantesSemQuarto() {
 }
 
 function DragDropg() {
-    Drag();
+    $('.draggable').each(function () {
+        instance = tippy(this, {
+            allowHTML: true,
+            content: '',
+            placement: 'right-start',
+            trigger: 'click',
+            interactive: true,
+            arrow: false,
+            onTrigger: (instance, event) => {
 
-    $('.droppable').droppable({
-        drop: function (event, ui) {
-            ChangeQuarto($(ui.draggable).data('id'), $(this).data('id'));
 
-        }
+                var Quartos = $("#table-quarto").DataTable().data().toArray();
+
+                if (window.location.href.includes('Quarto/Voluntarios')) {
+                    var QuartoParticipante = Quartos.find(x => x.Equipantes.some(y => y.ParticipanteId == $(this).data('id')))
+                } else {
+                    var QuartoParticipante = Quartos.find(x => x.Participantes.some(y => y.ParticipanteId == $(this).data('id')))
+                }
+
+                if (QuartoParticipante) {
+
+
+                    if (window.location.href.includes('Quarto/Voluntarios')) {
+                        var Participante = QuartoParticipante.Equipantes.find(x => x.ParticipanteId == $(this).data('id'))
+                    } else {
+                        var Participante = QuartoParticipante.Participantes.find(x => x.ParticipanteId == $(this).data('id'))
+                    }
+
+                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><h4 class="hide-multiple">Quarto:  <span style="background-color:${{
+                        Masculino: "#0095ff",
+                        Feminino: "#ff00d4",
+                        Misto: "#424242",
+                    }[QuartoParticipante.Sexo]}" class="dot"></span> ${QuartoParticipante.Titulo}</h4><div>
+                    <ul class="change-circulo-ul">
+                      ${Quartos.filter(x => x.Id != QuartoParticipante.Id && (x.Sexo == Participante.Sexo || x.Sexo == "Misto") && x.CapacidadeInt > x.Quantidade).map(c => `<li onclick="ChangeQuarto(${Participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${{
+                        Masculino: "#0095ff",
+                        Feminino: "#ff00d4",
+                        Misto: "#424242",
+                    }[c.Sexo]}"><span>${c.Titulo}</span><span>Participantes: ${c.Capacidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
+                      ${`<li onclick = "ChangeQuarto(${Participante.ParticipanteId + "@@@@@@" + null})" class="change-circulo-li" style = "background:#bb2d2d"><span>Remover</span></li>`.replace(/,/g, '').replace(/@@@@@@/g, ',')}
+
+                    </ul>
+                    </div></div></div>`)
+
+                } else {
+                    var Participante = semQuarto.find(x => x.Id == $(this).data('id'))
+
+                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
+                    <ul class="change-circulo-ul">
+                       ${Quartos.filter(x => (({
+                        Masculino: 1,
+                        Feminino: 2
+                    }[x.Sexo] == Participante.Sexo || x.Sexo == "Misto") && x.CapacidadeInt > x.Quantidade)).length > 0 ? Quartos.filter(x => (({
+                        Masculino: 1,
+                        Feminino: 2
+                    }[x.Sexo] == Participante.Sexo || x.Sexo == "Misto") && x.CapacidadeInt > x.Quantidade)).map(c => `<li onclick="ChangeQuarto(${Participante.Id + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${{
+                        Masculino: "#0095ff",
+                        Feminino: "#ff00d4",
+                        Misto: "#424242",
+                    }[c.Sexo]}"><span>${c.Titulo}</span><span>Participantes: ${c.Capacidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',') : `<h5>Não há Quartos disponíveis</h5>`}
+                    </ul>
+                    </div></div></div>`)
+                }
+
+            },
+        });
     });
 }
 
@@ -470,17 +533,6 @@ function AddMembroQuarto(capacidade, qtd) {
     arrayCapacidade[0] = (Number(arrayCapacidade[0]) + Number(qtd)).toString();
 
     return arrayCapacidade.join('');
-}
-
-function Drag() {
-    $('.draggable').each(function () {
-        $(this).css("cursor", "move");
-        $(this).draggable({
-            zIndex: 999,
-            revert: true,
-            revertDuration: 0
-        });
-    });
 }
 
 function ChangeQuarto(participanteId, destinoId) {
@@ -497,6 +549,7 @@ function ChangeQuarto(participanteId, destinoId) {
                 tipo: window.location.href.includes('Quarto/Voluntarios') ? 0 : 1
             }),
         success: function () {
+            tippy.hideAll()
             CarregarTabelaQuarto();
         }
     });

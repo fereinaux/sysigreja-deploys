@@ -42,23 +42,12 @@
             </div>
             <div class="ibox-content">
                 <div class="row p-m">
-                    <div class="col-xs-12 col-lg-3 sem-padrinho pg text-center">
-                        <h4 class="p-h-xs">Participantes sem Padrinho</h4>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>@Html.TextBox("Participante", null, new { @class = "form-control", placeholder = "Buscar Participante" })  </th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-participantes"></tbody>
-                        </table>
+                    <div id="list" class="col-xs-12 col-lg-3 sem-padrinho droppable pg text-center">
                     </div>
                     <div class="col-xs-12 col-lg-9">
-                        <div class="row">
-                            <div id="padrinhos">
+                            <div id="padrinhos"  class="draggable-panel-container">
 
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -148,5 +137,7 @@
 
 @section Scripts {
     <script src="~/Scripts/app/Padrinho/padrinho.js"></script>
+    <script type="text/babel" src="~/Scripts/app/Componentes/DraggablePanel.jsx"></script>
+    <script type="text/babel" src="~/Scripts/app/Componentes/FilterableList.jsx"></script>
 
 }

@@ -160,6 +160,7 @@ namespace SysIgreja.Controllers
                                     {
                                         Nome = UtilServices.CapitalizarNome(y.Equipante.Nome),
                                         ParticipanteId = y.EquipanteId,
+                                        Sexo = y.Equipante.Sexo.GetDescription()
                                     }
                             ),
                         Participantes = x.Participantes.Where(y => y.ParticipanteId.HasValue).Select(
@@ -168,6 +169,7 @@ namespace SysIgreja.Controllers
                                     {
                                         Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
                                         ParticipanteId = y.ParticipanteId,
+                                        Sexo = y.Participante.Sexo.GetDescription()
                                     }
                             )
                     }
@@ -236,11 +238,11 @@ namespace SysIgreja.Controllers
                     Participantes = tipo == TipoPessoaEnum.Equipante
                         ? quartosBusiness
                             .GetEquipantesSemQuarto(EventoId)
-                            .Select(x => new { Id = x.Id, Nome = x.Nome })
+                            .Select(x => new { Id = x.Id, Nome = x.Nome, x.Sexo })
                             .ToList()
                         : quartosBusiness
                             .GetParticipantesSemQuarto(EventoId)
-                            .Select(x => new { Id = x.Id, Nome = x.Nome })
+                            .Select(x => new { Id = x.Id, Nome = x.Nome, x.Sexo })
                             .ToList()
                 },
                 JsonRequestBehavior.AllowGet

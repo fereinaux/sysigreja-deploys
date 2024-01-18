@@ -7,6 +7,8 @@ newEventoId = undefined
 isConvite = SelectedEvent.Role == "Convites"
 HideMenu();
 $(document).off('ready-ajax').on('ready-ajax', () => {
+    tippy('#btn_Adicionar', { content: "Irá incluir um vountário no banco de dados com os campos essenciais" })
+    
     $('.not-convite').css('display', isConvite ? 'none' : 'block')
     loadMontagem()
     loadCampos(999)
@@ -37,6 +39,7 @@ function loadSearch() {
 
 
 function loadMontagem() {
+    tippy('#btn_addEquipe', { content: `Irá adicionar um voluntário a uma equipe no ${SelectedEvent.Numeracao}º ${SelectedEvent.Titulo}` })
     $.ajax({
         url: '/Etiqueta/GetEtiquetasByEventoId',
         data: { eventoId: SelectedEvent.Id },

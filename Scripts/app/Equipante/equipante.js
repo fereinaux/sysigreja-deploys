@@ -143,7 +143,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                     tippyProfile(td, rowData.Id, "Quartos", function () {
                         rootProfile = []
                         tippy.hideAll()
-                        CarregarTabelaParticipante();
+                        CarregarTabelaEquipante();
                     },"Equipante")
 
                 }, render: function (data, type, row) {

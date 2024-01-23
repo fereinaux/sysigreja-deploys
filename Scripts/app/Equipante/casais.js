@@ -118,7 +118,19 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Nome", name: "Nome", title: "Nome", autoWidth: true, render: function (data, type, row) {
+                data: "Nome", name: "Nome", title: "Nome", autoWidth: true, createdCell: function (td, cellData, rowData, row, col) {
+
+                    $(td).css('cursor', 'pointer')
+                    if (td._tippy) {
+                        rotdw._tippy.destroy()
+                    }
+                    tippyProfile(td, rowData.Id, "Quartos", function () {
+                        rootProfile = []
+                        tippy.hideAll()
+                        CarregarTabelaEquipante();
+                    }, "Equipante")
+
+                }, render: function (data, type, row) {
                     return `<div>
                         <span>${row.Nome}</br></span>
                         ${SelectedEvent.Id != 999 ? row.Etiquetas.map(etiqueta => {
@@ -172,12 +184,7 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify(row), 'cinza', 'f
         order: [
             [2, "asc"]
         ],
-        createdRow: function (row, data, dataIndex) {
-            if (data.HasFoto) {
-                $(row).addClass('foto')
-                $(row).data('id', data.Id)
-            }
-        },
+       
         drawCallback: function () {
             $('.i-checks-green').iCheck({
                 checkboxClass: 'icheckbox_square-green',
@@ -197,16 +204,7 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify(row), 'cinza', 'f
             } else {
                 $('.hide-tipoevento').addClass('d-none')
             }
-
-            tippy(`.foto`, {
-                content: '',
-                allowHTML: true,
-                followCursor: true,
-                onTrigger: (instance, event) => {
-                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByEquipanteId/${$(event.target).data('id')}" />`)
-                },
-            });
-           
+       
             newEventoId = SelectedEvent.Id
             loadSearch()
         },

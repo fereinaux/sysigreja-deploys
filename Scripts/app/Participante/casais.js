@@ -163,7 +163,19 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }
             },
             {
-                data: "Nome", name: "Nome", width: "25%", render: function (data, type, row) {
+                data: "Nome", name: "Nome", width: "25%", createdCell: function (td, cellData, rowData, row, col) {
+
+                    $(td).css('cursor', 'pointer')
+                    if (td._tippy) {
+                        rotdw._tippy.destroy()
+                    }
+                    tippyProfile(td, rowData.Id, "Círculos", function () {
+                        rootProfile = []
+                        tippy.hideAll()
+                        CarregarTabelaParticipante();
+                    })
+
+                }, render: function (data, type, row) {
                     var reg = /^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/i
                     var titulo = row.Circulo?.trim()
                     var isCor = reg.test(titulo)
@@ -258,21 +270,9 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
                 callbackFunction()
             }
 
-             tippy(`.foto`, {
-                content: '',
-                allowHTML: true,
-                followCursor: true,
-                onTrigger: (instance, event) => {
-                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByParticipanteId/${$(event.target).data('id')}" />`)
-                },
-            });
+            
         },
-        createdRow: function (row, data, dataIndex) {
-            if (data.HasFoto) {
-                $(row).addClass('foto')
-                $(row).data('id', data.Id)
-            }
-        },
+
         ajax: {
             url: '/Participante/GetCasaisDatatable',
             data: getFiltros(),

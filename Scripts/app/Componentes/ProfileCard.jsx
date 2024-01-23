@@ -270,7 +270,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                 <div className="actions">
                 <span
                     onClick={() => {
-                      if (window.location.href.includes("Participante")) {
+                      if (window.location.pathname == "/Participante") {
                         tippy.hideAll();
                         Pagamentos(participante.Id);
                       } else {
@@ -290,7 +290,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   </span>
                   <span
                     onClick={() => {
-                      if (window.location.href.includes("Participante")) {
+                      if (window.location.pathname == "/Participante") {
                         tippy.hideAll();
                         Anexos(participante.Id);
                       } else {
@@ -322,7 +322,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   </a>
                   <span
                     onClick={() => {
-                      if (window.location.href.includes("Participante")) {
+                      if (window.location.pathname == "/Participante") {
                         tippy.hideAll();
                         EditParticipante(participante.Id);
                       } else {
@@ -339,7 +339,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   </span>
                   <span
                     onClick={() => {
-                      if (window.location.href.includes("Participante")) {
+                      if (window.location.pathname == "/Participante") {
                         tippy.hideAll();
                         Opcoes(participante.Id);
                       } else {

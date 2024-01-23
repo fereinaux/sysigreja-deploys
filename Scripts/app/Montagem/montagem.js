@@ -119,12 +119,19 @@ function CarregarTabelaEquipante(callbackFunction) {
         colReorder: true,
         serverSide: true,
         scrollX: true,
-        createdRow: function (row, data, dataIndex) {
-            if (data.HasFoto) {
-                $(row).addClass('foto')
-                $(row).data('id', data.Id)
+        createdCell: function (td, cellData, rowData, row, col) {
+
+            $(td).css('cursor', 'pointer')
+            if (td._tippy) {
+                rotdw._tippy.destroy()
             }
-        },
+            tippyProfile(td, rowData.Id, "Quartos", function () {
+                rootProfile = []
+                tippy.hideAll()
+                CarregarTabelaEquipante();
+            }, "Equipante")
+
+        }, 
         scrollXollapse: true,
         orderCellsTop: true,
         fixedHeader: true,
@@ -255,14 +262,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                 $('.hide-tipoevento').addClass('d-none')
             }          
 
-            tippy(`.foto`, {
-                content: '',
-                allowHTML: true,
-                followCursor: true,
-                onTrigger: (instance, event) => {
-                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByEquipanteId/${$(event.target).data('id')}" />`)
-                },
-            });
+          
             newEventoId = SelectedEvent.Id
             loadSearch()
         },

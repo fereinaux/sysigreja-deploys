@@ -40,7 +40,7 @@ function GetIconTel(tel) {
     return `<a data-tippy-content="Telefone" target="_blank" href="tel:${tel}" style="font-size:18px" class="pointer p-l-xs"><i class="fa fa-phone" aria-hidden="true" title="${tel}"></i></a>`;
 }
 
-function GetLabel(functionClick, functionParameter, color, title,tooltip) {
+function GetLabel(functionClick, functionParameter, color, title, tooltip) {
 
     var button = '';
     switch (color) {
@@ -59,4 +59,31 @@ function GetLabel(functionClick, functionParameter, color, title,tooltip) {
 
 function GetCheckBox(id, checked, indeterminate) {
     return `<div class="checkbox i-checks-green ${indeterminate ? "indeterminate" : ""}"><label> <input type="checkbox" data-id='${id}' value="" ${indeterminate ? "" : (checked ? 'checked=""' : '')}> <i></i></label></div>`;
+}
+
+loadProfile = typeof loadProfile !== 'undefined' ? loadProfile : function () { }
+var rootProfile = [];
+
+
+function tippyProfile(element, Id, aba, callbackFuntion, type) {
+
+    instance = tippy(element, {
+        allowHTML: true,
+        content: '',
+        placement: 'top',
+        zIndex: 99999,
+        duration: [10, 10],
+        appendTo: document.body,
+        trigger: 'click',
+        interactive: true,
+        arrow: false,
+        flipOnUpdate: true,
+        onShown: (instance) => {
+            loadProfile(ReactDOM.createRoot(document.getElementById(`profile-${instance.props.Id}`)), instance.props.Id, aba, callbackFuntion, type || "Participante")
+        },
+        onTrigger: (instance, event) => {
+            instance.setContent(`<div id="profile-${Id}"></div>`)
+            instance.props.Id = Id
+        },
+    });
 }

@@ -1,5 +1,4 @@
-﻿
-rootCirculos = ReactDOM.createRoot(document.getElementById("circulos"));
+﻿rootCirculos = ReactDOM.createRoot(document.getElementById("circulos"));
 rootList = ReactDOM.createRoot(document.getElementById("list"));
 
 loadPanels = typeof loadPanels !== 'undefined' ? loadPanels : function () { }
@@ -175,7 +174,7 @@ function CarregarTabelaCirculo() {
                                 var div = document.createElement("div");
                                 layer.props["ParticipantesId"] = layer.props.ParticipantesId ? [...layer.props.ParticipantesId, participante.ParticipanteId] : [layer.props.ParticipanteId, participante.ParticipanteId];
                                 $(div).html(layer._icon._tippy.props.content)
-                                $(div).find('.popup-handler').css('width','700px')
+                                $(div).find('.popup-handler').css('width', '700px')
                                 $(div).find('.popup-handler').append(`<div class="hide-multiple" style="width:350px"><h4 class="hide-multiple">Nome: ${participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}: <span style="background-color:${circulo.Cor}" class="dot"></span> ${circulo.Titulo}</h4><div><span class="hide-multiple">${participante.Endereco} - ${participante.Bairro}</span>
                     <ul class="change-circulo-ul">
                        ${arrayData.map(c => `<li onclick="ChangeCirculo(${participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
@@ -641,44 +640,16 @@ function filtrarNome() {
 
 function DragDropg() {
     $('.draggable').each(function () {
-        instance = tippy(this, {
-            allowHTML: true,
-            content: '',
-            placement: 'right-start',
-            trigger: 'click',
-            interactive: true,
-            arrow: false,
-            onTrigger: (instance, event) => {
-
-                var Circulos = $("#table-circulo").DataTable().data().toArray();
-
-                var CirculoParticipante = Circulos.find(x => x.Participantes.some(y => y.ParticipanteId == $(this).data('id')))
-
-                if (CirculoParticipante) {
-
-                    var Participante = CirculoParticipante.Participantes.find(x => x.ParticipanteId == $(this).data('id'))
-
-                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><h4 class="hide-multiple">${SelectedEvent.EquipeCirculo}:  <span style="background-color:${CirculoParticipante.Cor}" class="dot"></span> ${CirculoParticipante.Titulo}</h4><div><span class="hide-multiple">${Participante.Endereco} - ${Participante.Bairro}</span>
-                    <ul class="change-circulo-ul">
-                       ${Circulos.filter(x => x.Id != CirculoParticipante.Id).map(c => `<li onclick="ChangeCirculo(${Participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                       ${`<li onclick = "ChangeCirculo(${Participante.ParticipanteId + "@@@@@@" + null})" class="change-circulo-li" style = "background:#bb2d2d"><span>Remover</span></li>`.replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                    </ul>
-                    </div></div></div>`)
-
-                } else {
-                    var Participante = semCirculo.find(x => x.Id == $(this).data('id'))
-
-                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
-                    <ul class="change-circulo-ul">
-                       ${Circulos.map(c => `<li onclick="ChangeCirculo(${Participante.Id + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:${c.Cor}"><span>${c.Titulo}</span><span>Participantes: ${c.QtdParticipantes}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                    </ul>
-                    </div></div></div>`)
-                }
-            },
-        });
+        if (!this._tippy) {
+            tippyProfile(this,$(this).data('id'), "Círculos", function () {
+                tippy.hideAll()
+                CarregarTabelaCirculo();
+                map.closePopup()
+                selectedMarkersCirculo = []
+                rootProfile = []
+            })           
+        }
     });
-
-
 }
 
 function ChangeCirculo(participanteId, destinoId) {
@@ -708,19 +679,19 @@ function ChangeCirculo(participanteId, destinoId) {
 
             marker.props.ParticipantesId = marker.props.ParticipantesId ?? [marker.props.ParticipanteId]
 
-            marker.props.ParticipantesId.forEach(participanteId => 
-    
-            arrPromises.push($.ajax({
-                url: "/Circulo/ChangeCirculo/",
-                datatype: "json",
-                type: "POST",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(
-                    {
-                        ParticipanteId: participanteId,
-                        DestinoId: destinoId
-                    })
-            }))
+            marker.props.ParticipantesId.forEach(participanteId =>
+
+                arrPromises.push($.ajax({
+                    url: "/Circulo/ChangeCirculo/",
+                    datatype: "json",
+                    type: "POST",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(
+                        {
+                            ParticipanteId: participanteId,
+                            DestinoId: destinoId
+                        })
+                }))
             )
         })
 
@@ -730,6 +701,7 @@ function ChangeCirculo(participanteId, destinoId) {
             selectedMarkersCirculo = []
             $.unblockUI();
             tippy.hideAll()
+            rootProfile = []
         })
 
     } else {
@@ -748,6 +720,7 @@ function ChangeCirculo(participanteId, destinoId) {
                 CarregarTabelaCirculo();
                 map.closePopup()
                 selectedMarkersCirculo = []
+                rootProfile = []
             }
         });
     }

@@ -173,6 +173,17 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetFotoByEmail(string email)
+        {
+            var arquivo = arquivosBusiness
+                .GetArquivosByEmail(email)
+                .OrderBy(x => x.EquipanteId)
+                .FirstOrDefault(x => x.IsFoto);
+
+            return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+        }
+
+        [HttpGet]
         public ActionResult GetFotoByParticipanteId(int Id)
         {
             var arquivo = arquivosBusiness
@@ -181,6 +192,7 @@ namespace SysIgreja.Controllers
 
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
         }
+
 
         [HttpGet]
         public ActionResult GetFotoByEquipanteId(int Id)
@@ -205,7 +217,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return new HttpStatusCodeResult(404);
+                return new HttpStatusCodeResult(404, "Não encontrado");
             }
         }
 
@@ -220,7 +232,7 @@ namespace SysIgreja.Controllers
         {
             arquivosBusiness.DeleteArquivo(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -228,7 +240,7 @@ namespace SysIgreja.Controllers
         {
             arquivosBusiness.DeleteFotoParticipante(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
 
         [HttpPost]
@@ -236,7 +248,7 @@ namespace SysIgreja.Controllers
         {
             arquivosBusiness.DeleteFotoEquipante(Id);
 
-            return new HttpStatusCodeResult(200);
+            return new HttpStatusCodeResult(200,"OK");
         }
     }
 }

@@ -369,45 +369,15 @@ $("#modal-cores").on('hidden.bs.modal', function () {
     ChangeCarona($("#participante-id").val(), $('#participante-cor').val())
 });
 
-
-
 function DragDropg() {
     $('.draggable').each(function () {
-        instance = tippy(this, {
-            allowHTML: true,
-            content: '',
-            placement: 'right-start',
-            trigger: 'click',
-            interactive: true,
-            arrow: false,
-            onTrigger: (instance, event) => {
-
-                var Caronas = $("#table-carona").DataTable().data().toArray();
-
-                var CaronaParticipante = Caronas.find(x => x.Participantes.some(y => y.ParticipanteId == $(this).data('id')))
-
-                if (CaronaParticipante) {
-
-                    var Participante = CaronaParticipante.Participantes.find(x => x.ParticipanteId == $(this).data('id'))
-
-                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
-                    <ul class="change-circulo-ul">
-                       ${Caronas.filter(x => x.CapacidadeInt > x.Quantidade  && x.Id != CaronaParticipante.Id).map(c => `<li onclick="ChangeCarona(${Participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:#424242"><span>${c.Motorista}</span><span>Participantes: ${c.Quantidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                    ${`<li onclick = "ChangeCarona(${Participante.ParticipanteId + "@@@@@@" + null})" class="change-circulo-li" style = "background:#bb2d2d"><span>Remover</span></li>`.replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                       </ul>
-                    </div></div></div>`)
-
-                } else {
-                    var Participante = semCarona.find(x => x.Id == $(this).data('id'))
-
-                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
-                    <ul class="change-circulo-ul">
-                       ${Caronas.filter(x => x.CapacidadeInt > x.Quantidade).map(c => `<li onclick="ChangeCarona(${Participante.Id + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:#424242"><span>${c.Motorista}</span><span>Participantes: ${c.Quantidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                    </ul>
-                    </div></div></div>`)
-                }
-            },
-        });
+        if (!this._tippy) {
+            tippyProfile(this, $(this).data('id'), "Caronas", function () {
+                tippy.hideAll()
+                CarregarTabelaCarona()
+                rootProfile = []
+            })
+        }
     });
 }
 

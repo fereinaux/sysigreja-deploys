@@ -994,6 +994,7 @@
     <Content Include="manifest.json" />
     <Content Include="Scripts\app\Componentes\DraggablePanel.jsx" />
     <Content Include="Scripts\app\Componentes\FilterableList.jsx" />
+    <Content Include="Scripts\app\Componentes\ProfileCard.jsx" />
     <Content Include="Scripts\app\Home\dirigente.js" />
     <Content Include="Scripts\plugins\dataTables\vsfonts.js" />
     <Content Include="Scripts\plugins\instascan\instascan.min.js" />

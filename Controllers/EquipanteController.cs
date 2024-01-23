@@ -1368,37 +1368,47 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetEquipante(int Id, int? eventoId)
         {
-            var query = equipantesBusiness.GetEquipantes();
+
 
             if (eventoId.HasValue)
             {
-                query = query
-                    .IncludeFilter(x => x.ParticipantesEtiquetas.Where(y => y.EventoId == eventoId))
-                    .IncludeFilter(
-                        x =>
-                            x.ParticipantesEtiquetas.Where(y => y.EventoId == eventoId)
-                                .Select(y => y.Etiqueta)
-                    );
+                var queryEvento = equipesBusiness
+                         .GetQueryEquipantesEvento(eventoId.Value)
+                         .Include(x => x.Equipante)
+                         .Include(x => x.Evento)
+                         .Include(x => x.Evento.Reunioes)
+                         .Include(x => x.Equipante.Arquivos)
+                         .Include(x => x.Equipante.Lancamentos)
+                         .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento))
+                         .Include(x => x.Equipante.Lancamentos.Select(y => y.Evento.Configuracao))
+                         .Include(x => x.Equipe)
+                         .Include(x => x.Equipante.Quartos)
+                         .Include(x => x.Equipante.Quartos.Select(y => y.Quarto))
+                         .IncludeOptimized(
+                             x =>
+                                 x.Equipante.ParticipantesEtiquetas.Where(
+                                     y => y.EventoId == eventoId
+                                 )
+                         )
+                         .IncludeOptimized(
+                             x =>
+                                 x.Equipante.ParticipantesEtiquetas.Where(
+                                     y => y.EventoId == eventoId
+                                 )
+                                     .Select(y => y.Etiqueta)
+                         );
+                var resultEvento = mapper.Map<EquipanteListModel>(queryEvento.FirstOrDefault(x => x.EquipanteId == Id));
+                return Json(new { Equipante = resultEvento }, JsonRequestBehavior.AllowGet);
             }
-
-            var result = mapper.Map<EquipanteListModel>(query.FirstOrDefault(x => x.Id == Id));
-
-            var dadosAdicionais = new
+            else
             {
-                Status = result?.Status?.GetDescription(),
-                Quarto = eventoId.HasValue
-                    ? (
-                        quartosBusiness
-                            .GetQuartosComParticipantes(eventoId.Value, TipoPessoaEnum.Equipante)
-                            .Where(x => x.EquipanteId == Id)
-                            .FirstOrDefault()
-                            ?.Quarto
-                            ?.Titulo
-                    )
-                    : ""
-            };
 
-            return Json(new { Equipante = result }, JsonRequestBehavior.AllowGet);
+                var query = equipantesBusiness.GetEquipantes();
+                var result = mapper.Map<EquipanteListModel>(query.FirstOrDefault(x => x.Id == Id));
+
+
+                return Json(new { Equipante = result }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost]
@@ -1591,7 +1601,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return new HttpStatusCodeResult(200,"OK");
+                return new HttpStatusCodeResult(200, "OK");
             }
         }
 
@@ -1600,7 +1610,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.PostEtiquetas(etiquetas, id, obs, eventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpGet]
@@ -1719,7 +1729,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.RemoverDuplicado(Original, Duplicado);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -1727,7 +1737,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.DeleteEquipante(Id, EventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -1735,7 +1745,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleSexo(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -1743,7 +1753,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleTeste(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -1751,7 +1761,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleCheckin(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -1759,7 +1769,7 @@ namespace SysIgreja.Controllers
         {
             equipantesBusiness.ToggleStatusMontagem(Id, EventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]

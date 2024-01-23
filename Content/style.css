@@ -6016,6 +6016,7 @@ a.compose-mail {
 /* PROFILE */
 .profile-content {
     border-top: none !important;
+
 }
 
 .profile-stats {
@@ -10525,12 +10526,13 @@ th {
     }
 
 .draggable-panel {
-        position: relative;
+    position: relative;
 }
-.draggable {
-cursor: pointer;
 
+.draggable {
+    cursor: pointer;
 }
+
 .draggable-total {
     position: absolute;
     bottom: 15px;
@@ -10539,4 +10541,81 @@ cursor: pointer;
 
 .select2-search__field {
     padding: 5px;
+}
+
+.profile-container {
+    border-radius: 8px;
+    border: 1px solid white;
+    padding: 10px;
+    margin: 10px;
+    width: 100%;
+}
+
+.profile-card {
+    display: flex;
+
+}
+
+
+.profile-container .etiquetas {
+    margin-top: 20px;
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.profile-container .actions {
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+    .profile-container .actions a, .profile-container .actions span {
+        color: white;
+        font-size: 16px;
+    }
+
+.profile-card .without-avatar {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    border-radius: 100%;
+    background-color: #828282;
+    font-size: 40px;
+}
+
+.profile-card img {
+    border-radius: 100%;
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+    .profile-card .basic-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        text-align: left
+    }
+
+
+
+    .aba-selector {
+color: #b1b1b1;
+    }
+
+        .aba-selector .active {
+            color:white;
+        }
+
+        .popup-handler {
+        }
+
+.tippy-content:has([id*='profile']) {
+    padding: 0px !important
 }

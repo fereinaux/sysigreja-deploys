@@ -212,9 +212,9 @@ ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                            ${GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico')}
           ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
-                            ${SelectedEvent.Id != 999 ? GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }), 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
+                            ${SelectedEvent.Id != 999 ? GetButton('Pagamentos', data, 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
                            ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
-${SelectedEvent.Id != 999 ? GetButton('Opcoes', JSON.stringify({ Id: row.Id }), 'cinza', 'fas fa-info-circle', 'Opções') : ""}
+${SelectedEvent.Id != 999 ? GetButton('Opcoes',data, 'cinza', 'fas fa-info-circle', 'Opções') : ""}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 
 `;
@@ -769,15 +769,13 @@ function CarregarTabelaPagamentos(id) {
     $("#table-pagamentos").DataTable(tablePagamentosConfig);
 }
 
-function Pagamentos(row) {
-    $("#pagamentos-whatsapp").val(row.Fone);
+function Pagamentos(Id) {
     $("#pagamentos-valor").val($("#pagamentos-valor").data("valor-equipante"));
     $("#pagamentos-origem").val('')
     $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
-    $("#pagamentos-equipanteid").val(row.Id);
+    $("#pagamentos-equipanteid").val(Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
-    CarregarTabelaPagamentos(row.Id);
-    realista = row
+    CarregarTabelaPagamentos(Id);
     $("#modal-pagamentos").modal();
     $("#EquipanteIdModal").val(null);
 }
@@ -997,11 +995,11 @@ function enviar() {
 
 
 }
-function Opcoes(row) {
+function Opcoes(Id) {
     $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Equipante/GetEquipante/",
-        data: { Id: row.Id, eventoId: SelectedEvent.Id },
+        data: { Id, eventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',
@@ -1061,7 +1059,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             $('#equipante-obs').val(data.Equipante.Observacao)
 
             arrayData = table.data().toArray()
-            let index = arrayData.findIndex(r => r.Id == row.Id)
+            let index = arrayData.findIndex(r => r.Id == Id)
 
             $('#btn-previous').css('display', 'block')
             $('#btn-next').css('display', 'block')
@@ -1219,6 +1217,30 @@ function PostPagamento() {
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
     loadEquipes()
+
+    const searchParams = new URLSearchParams(window.location.search)
+    const queryId = searchParams.get('Id')
+    const edit = searchParams.get('action')
+    const action = searchParams.get('action')
+    if (queryId) {
+        switch (action) {
+            case "options":
+                Opcoes(queryId)
+                break;
+            case "edit":
+                EditEquipante(queryId)
+                break;
+            case "money":
+                Pagamentos(queryId)
+                break;
+            case "files":
+                Anexos(queryId)
+                break;
+            default:
+                break;
+        }
+
+    }
 
     tippy(`div:has(> #btn_bulk)`, {
         content: 'Você deve selecionar registros para habilitar as ações',

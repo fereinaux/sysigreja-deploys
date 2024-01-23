@@ -282,45 +282,17 @@ function GetParticipantesSemPadrinho() {
     });
 }
 
+
 function DragDropg() {
     $('.draggable').each(function () {
-        instance = tippy(this, {
-            allowHTML: true,
-            content: '',
-            placement: 'right-start',
-            trigger: 'click',
-            interactive: true,
-            arrow: false,
-            onTrigger: (instance, event) => {
-
-                var Padrinhos = $("#table-padrinho").DataTable().data().toArray();
-
-                var PadrinhoParticipante = Padrinhos.find(x => x.Participantes.some(y => y.ParticipanteId == $(this).data('id')))
-
-                if (PadrinhoParticipante) {
-
-                    var Participante = PadrinhoParticipante.Participantes.find(x => x.ParticipanteId == $(this).data('id'))
-
-                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
-                    <ul class="change-circulo-ul">
-                       ${Padrinhos.filter(x => x.Id != PadrinhoParticipante.Id).map(c => `<li onclick="ChangePadrinho(${Participante.ParticipanteId + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:#424242"><span>${c.Padrinho}</span><span>Participantes: ${c.Quantidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                    ${`<li onclick = "ChangePadrinho(${Participante.ParticipanteId + "@@@@@@" + null})" class="change-circulo-li" style = "background:#bb2d2d"><span>Remover</span></li>`.replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                       </ul>
-                    </div></div></div>`)
-
-                } else {
-                    var Participante = semPadrinho.find(x => x.Id == $(this).data('id'))
-
-                    instance.setContent(`<div class="popup-handler" style="display:flex"><div style="width:350px"><h4 class="hide-multiple">Nome: ${Participante.Nome}</h4><div>
-                    <ul class="change-circulo-ul">
-                       ${Padrinhos.map(c => `<li onclick="ChangePadrinho(${Participante.Id + "@@@@@@" + c.Id})" class="change-circulo-li" style="background:#424242"><span>${c.Padrinho}</span><span>Participantes: ${c.Quantidade}</span></li>`).join().replace(/,/g, '').replace(/@@@@@@/g, ',')}
-                    </ul>
-                    </div></div></div>`)
-                }
-            },
-        });
+        if (!this._tippy) {
+            tippyProfile(this, $(this).data('id'), "Padrinhos", function () {
+                tippy.hideAll()
+                CarregarTabelaPadrinho();
+                rootProfile = []
+            })
+        }
     });
-  
 }
 
 var semPadrinho

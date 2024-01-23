@@ -5,12 +5,14 @@ using System.Linq;
 using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Models.Carona;
+using Core.Models.Circulos;
 using Core.Models.Configuracao;
 using Core.Models.Cracha;
 using Core.Models.Equipantes;
 using Core.Models.Etiquetas;
 using Core.Models.Eventos;
 using Core.Models.Mensagem;
+using Core.Models.Padrinhos;
 using Core.Models.Participantes;
 using Core.Models.Quartos;
 using CsQuery.ExtensionMethods;
@@ -473,6 +475,8 @@ namespace SysIgreja.Controllers
                     );
                 cfg.CreateMap<Carona, PostCaronaModel>()
                     .ForMember(dest => dest.Motorista, opt => opt.MapFrom(x => x.Motorista.Nome));
+                cfg.CreateMap<Circulo, PostCirculoModel>();
+                cfg.CreateMap<Padrinho, PostPadrinhoModel>();
                 cfg.CreateMap<Quarto, PostQuartoModel>()
                     .ForMember(
                         dest => dest.Equipante,
@@ -564,6 +568,34 @@ namespace SysIgreja.Controllers
                         dest => dest.Situacao,
                         opt => opt.MapFrom(x => x.Status.GetDescription())
                     );
+                cfg.CreateMap<Participante, ParticipantePerfilModel>()
+                   .ForMember(
+                       dest => dest.Nome,
+                       opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome))
+                   )
+                   .ForMember(
+                       dest => dest.Apelido,
+                       opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido))
+                   )
+                   .ForMember(
+                       dest => dest.Idade,
+                       opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento))
+                   )
+                   .ForMember(dest => dest.Endereco, opt => opt.MapFrom(x => $"{x.Logradouro} {x.Numero}"))
+                   .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()))
+                   .ForMember(
+                       dest => dest.FotoId,
+                       opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto) ? x.Arquivos.FirstOrDefault(y => y.IsFoto).Id : 0)
+                   )
+                   .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
+                   .ForMember(
+                       dest => dest.Etiquetas,
+                       opt => opt.MapFrom(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta))
+                   )
+                   .ForMember(
+                       dest => dest.Status,
+                       opt => opt.MapFrom(x => x.Status.GetDescription())
+                   );
                 cfg.CreateMap<Participante, ParticipanteListModel>()
                     .ForMember(
                         dest => dest.Nome,
@@ -586,6 +618,7 @@ namespace SysIgreja.Controllers
                         dest => dest.HasFoto,
                         opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto))
                     )
+
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
                     .ForMember(
                         dest => dest.DataCasamento,
@@ -607,6 +640,26 @@ namespace SysIgreja.Controllers
                                         : null
                             )
                     )
+                      .ForMember(
+                        dest => dest.PadrinhoId,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.PadrinhoId
+                            )
+                    )
+                           .ForMember(
+                        dest => dest.CirculoId,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.Circulos.Any()
+                                        ? (
+                                            x.Circulos.LastOrDefault().CirculoId.ToString()
+                                        )
+                                        : null
+                            )
+                    )
                     .ForMember(
                         dest => dest.Circulo,
                         opt =>
@@ -620,9 +673,31 @@ namespace SysIgreja.Controllers
                                         : ""
                             )
                     )
+                         .ForMember(
+                        dest => dest.CirculoTitulo,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.Circulos.Any()
+                                        ? (
+                                      x.Circulos.LastOrDefault().Circulo.Titulo
+                                        )
+                                        : ""
+                            )
+                    )
                     .ForMember(
                         dest => dest.Etiquetas,
                         opt => opt.MapFrom(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta))
+                    )
+                     .ForMember(
+                        dest => dest.QuartoId,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.Quartos.Any()
+                                        ? x.Quartos.First().QuartoId.ToString()
+                                        : ""
+                            )
                     )
                     .ForMember(
                         dest => dest.Quarto,
@@ -634,6 +709,16 @@ namespace SysIgreja.Controllers
                                         : ""
                             )
                     )
+                      .ForMember(
+                        dest => dest.QuartoSexo,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.Quartos.Any()
+                                        ? x.Quartos.Select(y => y.Quarto).First().Sexo.GetDescription()
+                                        : ""
+                            )
+                    )
                     .ForMember(
                         dest => dest.Motorista,
                         opt =>
@@ -641,6 +726,16 @@ namespace SysIgreja.Controllers
                                 x =>
                                     x.Caronas.Any()
                                         ? x.Caronas.LastOrDefault().Carona.Motorista.Nome
+                                        : ""
+                            )
+                    )
+                              .ForMember(
+                        dest => dest.CaronaId,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.Caronas.Any()
+                                        ? x.Caronas.LastOrDefault().CaronaId.ToString()
                                         : ""
                             )
                     )
@@ -682,6 +777,21 @@ namespace SysIgreja.Controllers
                         opt => opt.MapFrom(x => x.Arquivos.Any(y => y.IsFoto))
                     )
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()));
+                cfg.CreateMap<Circulo, CirculoCompleteViewModel>()
+                    .ForMember(dest => dest.QtdParticipantes, opt => opt.MapFrom(x => x.Participantes.Count));
+                cfg.CreateMap<CirculoDirigentes, DirigenteViewModel>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Equipante.Nome)));
+                cfg.CreateMap<CirculoParticipante, CirculoParticipanteViewModel>()
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Participante.Nome)))
+                .ForMember(dest => dest.ParticipanteId, opt => opt.MapFrom(x => x.ParticipanteId))
+                .ForMember(dest => dest.SequencialEvento, opt => opt.MapFrom(x => x.Participante.SequencialEvento))
+                .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Participante.Sexo))
+                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(x => x.Participante.Latitude))
+                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(x => x.Participante.Longitude))
+                .ForMember(dest => dest.Endereco, opt => opt.MapFrom(x => $"{x.Participante.Logradouro} {x.Participante.Numero}"))
+                .ForMember(dest => dest.Bairro, opt => opt.MapFrom(x => x.Participante.Bairro))
+                .ForMember(dest => dest.Cidade, opt => opt.MapFrom(x => x.Participante.Cidade))
+                .ForMember(dest => dest.Referencia, opt => opt.MapFrom(x => x.Participante.Referencia));
                 cfg.CreateMap<CirculoParticipante, EquipanteListModel>()
                     .ForMember(
                         dest => dest.DataNascimento,
@@ -865,6 +975,7 @@ namespace SysIgreja.Controllers
                         opt => opt.MapFrom(x => x.Equipante.Status.GetDescription())
                     )
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)))
+                    .ForMember(dest => dest.EquipeId, opt => opt.MapFrom(x => (x.Equipe.Id.ToString())))
                     .ForMember(dest => dest.CEP, opt => opt.MapFrom(x => x.Equipante.CEP))
                     .ForMember(
                         dest => dest.Logradouro,
@@ -909,6 +1020,35 @@ namespace SysIgreja.Controllers
                                             .Select(y => y.Quarto)
                                             .First()
                                             .Titulo
+                                        : ""
+                            )
+                    )
+                       .ForMember(
+                        dest => dest.QuartoId,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.Equipante.Quartos.Any(y => y.Quarto.EventoId == x.EventoId)
+                                        ? x.Equipante.Quartos.Where(
+                                            y => y.Quarto.EventoId == x.EventoId
+                                        )
+                                            .Select(y => y.Quarto)
+                                            .First()
+                                            .Id.ToString()
+                                        : ""
+                            )
+                    ).ForMember(
+                        dest => dest.QuartoSexo,
+                        opt =>
+                            opt.MapFrom(
+                                x =>
+                                    x.Equipante.Quartos.Any(y => y.Quarto.EventoId == x.EventoId)
+                                        ? x.Equipante.Quartos.Where(
+                                            y => y.Quarto.EventoId == x.EventoId
+                                        )
+                                            .Select(y => y.Quarto)
+                                            .First()
+                                            .Sexo.GetDescription()
                                         : ""
                             )
                     )

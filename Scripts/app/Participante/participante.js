@@ -141,11 +141,8 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         fixedHeader: true,
         filter: true,
         createdRow: function (row, data, dataIndex) {
-          
-            if (data.HasFoto) {
-                $(row).addClass('foto')
-                $(row).data('id', data.Id)
-            }
+            
+
         },
         orderMulti: false,
         responsive: true, stateSave: true, stateSaveCallback: stateSaveCallback, stateLoadCallback: stateLoadCallback,
@@ -179,7 +176,19 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }
             },
             {
-                data: "Nome", name: "Nome", title: "Nome", width: "25%", render: function (data, type, row) {
+                data: "Nome", name: "Nome", title: "Nome", width: "25%", createdCell: function (td, cellData, rowData, row, col) {
+
+                    $(td).css('cursor','pointer')
+                    if (td._tippy) {
+                        rotdw._tippy.destroy()
+                    }
+                    tippyProfile(td, rowData.Id, "Círculos", function () {
+                        rootProfile = []
+                        tippy.hideAll()
+                        CarregarTabelaParticipante();
+                    })
+
+                }, render: function (data, type, row) {
                     var reg = /^#+([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/i
                     var titulo = row.Circulo?.trim()
                     var isCor = reg.test(titulo)
@@ -248,7 +257,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return row.Status != Cancelado && row.Status != Espera ?
 
                         `<form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
-${GetButton('Pagamentos', JSON.stringify({ Nome: row.Nome, Id: row.Id, Fone: row.Fone }), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
+${GetButton('Pagamentos',data, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                                             
                         ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
                                 <span data-tippy-content="Adicionar Foto"  style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
@@ -275,16 +284,8 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
             if (callbackFunction) {
                 callbackFunction()
 
-            }
-         
-            tippy(`.foto`, {
-                content: '',
-                allowHTML: true,
-                followCursor: true,
-                onTrigger: (instance, event) => {
-                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByParticipanteId/${$(event.target).data('id')}" />`)
-                },
-            });
+            }           
+
         },
         ajax: {
             url: '/Participante/GetParticipantesDatatable',
@@ -861,9 +862,28 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
     CarregarTabelaParticipante();
     const searchParams = new URLSearchParams(window.location.search)
     const queryId = searchParams.get('Id')
+    const action = searchParams.get('action')
     if (queryId) {
-        Opcoes({ Id: queryId })
+        switch (action) {
+            case "options":
+                Opcoes(queryId)
+                break;
+            case "edit":
+                EditParticipante(queryId)
+                break;
+            case "money":
+                Pagamentos(queryId)
+                break;
+            case "files":
+                Anexos(queryId)
+                break;
+            default:
+                break;
+        }
+
     }
+
+
 
     tippy(`div:has(> #btn_bulk)`, {
         content: 'Você deve selecionar registros para habilitar as ações',
@@ -877,15 +897,13 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
 });
 
 
-function Pagamentos(row) {
-    realista = row;
-    $("#pagamentos-whatsapp").val(row.Fone);
+function Pagamentos(Id) {
     $("#pagamentos-valor").val($("#pagamentos-valor").data("valor-realista"));
     $("#pagamentos-origem").val('')
     $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
-    $("#pagamentos-participanteid").val(row.Id);
+    $("#pagamentos-participanteid").val(Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
-    CarregarTabelaPagamentos(row.Id);
+    CarregarTabelaPagamentos(Id);
     $("#modal-pagamentos").modal();
 }
 

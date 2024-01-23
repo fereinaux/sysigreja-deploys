@@ -138,7 +138,7 @@ ${GetButton('GetUsers', data, 'blue', 'fa-users-cog', 'Usuários')}
             Object.keys(filtros).forEach(k => data[k] = filtros[k])
         })
 
-        table.draw()
+        table.draw(false)
     }
 
 

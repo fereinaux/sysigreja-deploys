@@ -8,7 +8,7 @@ newEventoId = undefined
 
 $('.search-data').on('keyup change clear', _.debounce(function () {
     if ($('#table-equipantes').DataTable().column($(this).data('column')).search() !== this.value) {
-        $('#table-equipantes').DataTable().column($(this).data('column')).search(this.value).draw()
+        $('#table-equipantes').DataTable().column($(this).data('column')).search(this.value).draw(false)
     }
 
 }, 500))
@@ -1146,8 +1146,8 @@ function next() {
 
 
 
-async function loadCrachaImprimir(Foto) {
-    ids = [];
+async function loadCrachaImprimir(Foto, id) {
+    let ids = id ? [id] : []
     $('input[type=checkbox]:checked').each((index, input) => {
         if ($(input).data('id') && $(input).data('id') != 'all') {
             ids.push($(input).data('id'))

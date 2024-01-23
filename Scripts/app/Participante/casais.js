@@ -381,7 +381,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'r
             Object.keys(filtros).forEach(k => data[k] = filtros[k])
         })
 
-        table.draw()
+        table.draw(false)
     }
 
 
@@ -1755,8 +1755,8 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
 }
 
 
-async function loadCrachaImprimir(Foto) {
-    let ids = getCheckedIds()
+async function loadCrachaImprimir(Foto, id) {
+    let ids = id ? [id] : getCheckedIds()
     const result = await $.ajax(
         {
             processData: false,

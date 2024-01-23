@@ -25,7 +25,7 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
 $('.search-data').attr('disabled', true)
 $('.search-data').on('keyup change clear', _.debounce(function () {
     if ($('#table-montagem').DataTable().column($(this).data('column')).search() !== this.value) {
-        $('#table-montagem').DataTable().column($(this).data('column')).search(this.value).draw()
+        $('#table-montagem').DataTable().column($(this).data('column')).search(this.value).draw(false)
     }
 
 }, 500))
@@ -284,7 +284,7 @@ function CarregarTabelaEquipante(callbackFunction) {
             Object.keys(filtros).forEach(k => data[k] = filtros[k])
         })
 
-        table.draw()
+        table.draw(false)
     }
 
     table.on('draw', function () {

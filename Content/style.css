@@ -6016,7 +6016,6 @@ a.compose-mail {
 /* PROFILE */
 .profile-content {
     border-top: none !important;
-
 }
 
 .profile-stats {
@@ -10481,6 +10480,7 @@ th {
     padding: 0;
     height: 300px;
     overflow: auto;
+    margin-top: 20px;
 }
 
 .change-circulo-li {
@@ -10543,17 +10543,15 @@ th {
     padding: 5px;
 }
 
-.profile-container {
+.profile-container, .action-handler {
     border-radius: 8px;
     border: 1px solid white;
-    padding: 10px;
-    margin: 10px;
+    padding: 15px 20px;
     width: 100%;
 }
 
 .profile-card {
     display: flex;
-
 }
 
 
@@ -10564,17 +10562,22 @@ th {
     flex-wrap: wrap;
     gap: 5px;
 }
+
 .profile-container .actions {
     display: flex;
-    justify-content: start;
+    justify-content: space-around;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
     .profile-container .actions a, .profile-container .actions span {
-        color: white;
-        font-size: 16px;
+        color: #b5b5b5;
+        font-size: 18px;
     }
+
+        .profile-container .actions a, .profile-container .actions span:hover {
+            color: white;
+        }
 
 .profile-card .without-avatar {
     min-width: 100px !important;
@@ -10596,25 +10599,26 @@ th {
     margin-right: 15px;
 }
 
-    .profile-card .basic-info {
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        text-align: left
+.profile-card .basic-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    margin-left: 10px;
+}
+
+
+
+.aba-selector {
+    color: #b1b1b1;
+}
+
+    .aba-selector .active {
+        color: white;
     }
 
-
-
-    .aba-selector {
-color: #b1b1b1;
-    }
-
-        .aba-selector .active {
-            color:white;
-        }
-
-        .popup-handler {
-        }
+.popup-handler {
+}
 
 .tippy-content:has([id*='profile']) {
     padding: 0px !important

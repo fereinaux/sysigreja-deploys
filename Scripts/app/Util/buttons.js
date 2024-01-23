@@ -70,16 +70,15 @@ function tippyProfile(element, Id, aba, callbackFuntion, type) {
     instance = tippy(element, {
         allowHTML: true,
         content: '',
-        placement: 'top',
+        placement: 'auto-end',
         zIndex: 99999,
-        duration: [10, 10],
         appendTo: document.body,
         trigger: 'click',
         interactive: true,
-        arrow: false,
-        flipOnUpdate: true,
+        arrow: false,       
         onShown: (instance) => {
-            loadProfile(ReactDOM.createRoot(document.getElementById(`profile-${instance.props.Id}`)), instance.props.Id, aba, callbackFuntion, type || "Participante")
+            console.log(instance);
+            loadProfile(ReactDOM.createRoot(document.getElementById(`profile-${instance.props.Id}`)), instance.props.Id, aba, callbackFuntion, type || "Participante", instance)
         },
         onTrigger: (instance, event) => {
             instance.setContent(`<div id="profile-${Id}"></div>`)

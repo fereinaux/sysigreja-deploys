@@ -6,7 +6,7 @@ newEventoId = undefined
 
 $('.search-data').on('keyup change clear', _.debounce(function () {
     if ($('#table-equipantes').DataTable().column($(this).data('column')).search() !== this.value) {
-        $('#table-equipantes').DataTable().column($(this).data('column')).search(this.value).draw()
+        $('#table-equipantes').DataTable().column($(this).data('column')).search(this.value).draw(false)
     }
 
 }, 500))
@@ -95,7 +95,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         scrollXollapse: true,
         orderCellsTop: true,
         fixedHeader: true,
-  
+
         filter: true,
         orderMulti: false,
         responsive: true,
@@ -144,7 +144,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                         rootProfile = []
                         tippy.hideAll()
                         CarregarTabelaEquipante();
-                    },"Equipante")
+                    }, "Equipante")
 
                 }, render: function (data, type, row) {
 
@@ -221,7 +221,8 @@ ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconTel(row.Fone)}
                             ${SelectedEvent.Id != 999 ? GetButton('Pagamentos', data, 'verde', 'far fa-money-bill-alt', 'Pagamentos') : ""}
                            ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
-${SelectedEvent.Id != 999 ? GetButton('Opcoes',data, 'cinza', 'fas fa-info-circle', 'Opções') : ""}
+${SelectedEvent.Id != 999 ? GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções') : ""}
+${GetButton('openModalCracha', data, 'blue', 'fa-id-badge', 'Crachá')}
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
                         </form> 
 `;
@@ -349,7 +350,7 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes',data, 'cinza', 'fas fa-info-circl
             Object.keys(filtros).forEach(k => data[k] = filtros[k])
         })
 
-        table.draw()
+        table.draw(false)
     }
 
     table.on('draw', function () {
@@ -1234,6 +1235,9 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
             case "files":
                 Anexos(queryId)
                 break;
+            case "badge":
+                openModalCracha(queryId)
+                break;
             default:
                 break;
         }
@@ -1273,8 +1277,8 @@ function next() {
 
 
 
-async function loadCrachaImprimir(Foto) {
-    ids = [];
+async function loadCrachaImprimir(Foto, id) {
+    let ids = id ? [id] : []
     $('input[type=checkbox]:checked').each((index, input) => {
         if ($(input).data('id') && $(input).data('id') != 'all') {
             ids.push($(input).data('id'))

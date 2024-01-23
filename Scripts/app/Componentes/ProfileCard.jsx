@@ -1,17 +1,31 @@
 const { useEffect, useState } = React;
 
-function loadProfile(rootElement, ParticipanteId, Aba, functionCallback, type) {
+function loadProfile(
+  rootElement,
+  ParticipanteId,
+  Aba,
+  functionCallback,
+  type,
+  instance
+) {
   rootElement.render(
     <ProfileCard
       ParticipanteId={ParticipanteId}
       Aba={Aba}
       functionCallback={functionCallback}
       type={type}
+      instance={instance}
     />
   );
 }
 
-function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
+function ProfileCard({
+  ParticipanteId,
+  Aba,
+  functionCallback,
+  type,
+  instance,
+}) {
   const [participante, setParticipante] = useState(undefined);
   const [aba, setAba] = useState(Aba);
   const [Circulos, SetCirculos] = useState(undefined);
@@ -25,6 +39,10 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
   useEffect(() => {
     loadParticipante(ParticipanteId);
   }, [ParticipanteId]);
+
+  useEffect(() => {
+    instance.popperInstance.update();
+  });
 
   useEffect(() => {
     switch (aba) {
@@ -126,7 +144,9 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
   }
 
   const attrClip =
-    participante?.QtdAnexos > 0 ? { "data-count": participante?.QtdAnexos } : {};
+    participante?.QtdAnexos > 0
+      ? { "data-count": participante?.QtdAnexos }
+      : {};
 
   async function loadQuartos() {
     const req = await fetch("/Quarto/GetQuartos", {
@@ -156,7 +176,12 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
     const jsonParticipantes = await reqParticipante.json();
     setParticipante(
       type == "Participante"
-        ? jsonParticipantes.Participante
+        ? {
+            ...jsonParticipantes.Participante,
+            Status: jsonParticipantes.Participante.Checkin
+              ? "Presente"
+              : jsonParticipantes.Participante.Status,
+          }
         : jsonParticipantes.Equipante
     );
     setLoading(false);
@@ -164,8 +189,6 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
   let rgx = new RegExp(/(\p{L}{1})\p{L}+/, "gu");
 
   const initials = [...(participante?.Nome?.matchAll(rgx) ?? [])] || [];
-
-  tippy("[data-tippy-content]");
 
   return (
     <div
@@ -176,6 +199,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
         alignItems: "center",
         width: "350px",
         padding: "10px",
+        gap: "10px",
       }}
     >
       {loading ? (
@@ -217,63 +241,55 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                 <div className="without-avatar">{showInitials}</div>
               )}
               <div className="basic-info">
-                <span className="hide-multiple">Nome: {participante.Nome}</span>
+                <h4>
+                  <i
+                    style={{
+                      fontSize: "15px",
+                      color: "#fff",
+                    }}
+                    className={`fa fa-${
+                      { Masculino: "male", Feminino: "female" }[
+                        participante.Sexo
+                      ]
+                    }`}
+                  ></i>
+                  {" - "}
+                  {participante.Nome}
+                </h4>
                 {participante.Status && (
-                  <span className="hide-multiple">
-                    Status:{" "}
-                    {participante.Checkin ? "Presente" : participante.Status}
-                  </span>
-                )}
-                {participante.Circulo && (
-                  <span className="hide-multiple">
-                    {SelectedEvent.EquipeCirculo}:{" "}
-                    <span
-                      style={{ backgroundColor: participante.Circulo }}
-                      className="dot"
-                    ></span>{" "}
-                    {participante.CirculoTitulo}
-                  </span>
-                )}
-                {participante.Quarto && (
-                  <span className="hide-multiple">
-                    Quarto:{" "}
+                  <div>
                     <span
                       style={{
-                        backgroundColor: {
-                          Masculino: "#0095ff",
-                          Feminino: "#ff00d4",
-                          Misto: "#424242",
-                        }[participante.QuartoSexo],
+                        fontSize: "11px",
                       }}
-                      className="dot"
-                    ></span>{" "}
-                    {participante.Quarto}
-                  </span>
+                      className={`text-center label label-${
+                        {
+                          Confirmado: "primary",
+                          Cancelado: "danger",
+                          Presente: "warning",
+                          Inscrito: "success",
+                          Espera: "default",
+                        }[participante.Status]
+                      }`}
+                    >
+                      {participante.Status}
+                    </span>
+                  </div>
                 )}
-                {participante.Padrinho && (
-                  <span className="hide-multiple">
-                    Padrinho: {participante.Padrinho}
-                  </span>
-                )}
-                {participante.Equipe && (
-                  <span className="hide-multiple">
-                    Equipe: {participante.Equipe}
-                  </span>
-                )}
-                {participante.Motorista && (
-                  <span className="hide-multiple">
-                    Carona: {participante.Motorista}
-                  </span>
-                )}
+
                 {participante.Endereco && (
                   <span className="hide-multiple">
                     Endereço: {participante.Endereco} - {participante.Bairro}
                   </span>
                 )}
+              </div>
+            </div>
+            {participante.Status !== "Cancelado" && (
+              <>
                 <div className="actions">
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante") {
+                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
                         tippy.hideAll();
                         Pagamentos(participante.Id);
                       } else {
@@ -293,7 +309,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   </span>
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante") {
+                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
                         tippy.hideAll();
                         Anexos(participante.Id);
                       } else {
@@ -325,7 +341,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   </a>
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante") {
+                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
                         tippy.hideAll();
                         EditParticipante(participante.Id);
                       } else {
@@ -342,7 +358,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   </span>
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante") {
+                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
                         tippy.hideAll();
                         Opcoes(participante.Id);
                       } else {
@@ -357,139 +373,223 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   >
                     <i className="fas fa-info-circle" aria-hidden="true"></i>
                   </span>
+                  <span
+                    onClick={() => {
+                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
+                        tippy.hideAll();
+                        openModalCracha(participante.Id);
+                      } else {
+                        window.open(
+                          type == "Participante"
+                            ? `/Participante?Id=${participante.Id}&action=badge`
+                            : `/Equipante?Id=${participante.Id}&action=badge`
+                        );
+                      }
+                    }}
+                    className="pointer"
+                  >
+                    <i className="fas fa-id-badge" aria-hidden="true"></i>
+                  </span>
                 </div>
-              </div>
-            </div>
-            <div className="etiquetas">
-              {participante.Etiquetas?.map((etiqueta) => (
-                <span
-                  key={`etiqueta-${etiqueta.Id}`}
-                  className="badge"
+
+                <div className="etiquetas">
+                  {participante.Etiquetas?.map((etiqueta) => (
+                    <span
+                      key={`etiqueta-${etiqueta.Id}`}
+                      className="badge"
+                      style={{
+                        backgroundColor: etiqueta.Cor,
+                        color: "#fff",
+                      }}
+                    >
+                      {etiqueta.Nome}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          {participante.Status !== "Cancelado" && (
+            <>
+              <div className="action-handler">
+                <div
+                  className="aba-selector"
                   style={{
-                    backgroundColor: etiqueta.Cor,
-                    color: "#fff",
+                    display: "flex",
+                    gap: "20px",
+                    justifyContent: "space-around",
+                    flexWrap: "wrap",
+                    width: "100%",
                   }}
                 >
-                  {etiqueta.Nome}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div
-            className="aba-selector"
-            style={{
-              display: "flex",
-              gap: "10px",
-              justifyContent: "space-around",
-              width: "100%",
-            }}
-          >
-            {type == "Participante" && (
-              <span
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "start",
-                  textAlign: "center",
-                }}
-                onClick={() => setAba("Círculos")}
-                className={`pointer ${aba === "Círculos" ? "active" : ""}`}
-              >
-                <i className="fas fa-user-friends" aria-hidden="true"></i>{" "}
-                {SelectedEvent.EquipeCirculo}
-              </span>
-            )}
-            <span
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "start",
-                textAlign: "center",
-              }}
-              onClick={() => setAba("Quartos")}
-              className={`pointer ${aba === "Quartos" ? "active" : ""}`}
-            >
-              <i className="fas fa-bed" aria-hidden="true"></i> Quartos
-            </span>
-            {type == "Participante" && (
-              <span
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "start",
-                  textAlign: "center",
-                }}
-                onClick={() => setAba("Padrinhos")}
-                className={`pointer ${aba === "Padrinhos" ? "active" : ""}`}
-              >
-                <i className="fas fa-users-cog" aria-hidden="true"></i>{" "}
-                Padrinhos
-              </span>
-            )}
-            {type == "Participante" && (
-              <span
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "start",
-                  textAlign: "center",
-                }}
-                onClick={() => setAba("Caronas")}
-                className={`pointer ${aba === "Caronas" ? "active" : ""}`}
-              >
-                <i className="fas fa-car" aria-hidden="true"></i> Caronas
-              </span>
-            )}
-            {type == "Equipante" && (
-              <span
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "start",
-                  textAlign: "center",
-                }}
-                onClick={() => setAba("Equipes")}
-                className={`pointer ${aba === "Equipes" ? "active" : ""}`}
-              >
-                <i className="fas fa-broom" aria-hidden="true"></i> Equipes
-              </span>
-            )}
-          </div>
-          {aba == "Círculos" && Circulos && Circulos.length > 0 && (
-            <ChangeCirculoComponent
-              Participante={participante}
-              Circulos={Circulos}
-              functionCallback={functionCallback}
-            />
-          )}
-          {aba == "Quartos" && Quartos && Quartos.length > 0 && (
-            <ChangeQuartoComponent
-              Participante={participante}
-              Quartos={Quartos}
-              functionCallback={functionCallback}
-              type={type}
-            />
-          )}
-          {aba == "Padrinhos" && Padrinhos && Padrinhos.length > 0 && (
-            <ChangePadrinhoComponent
-              Participante={participante}
-              Padrinhos={Padrinhos}
-              functionCallback={functionCallback}
-            />
-          )}
-          {aba == "Caronas" && Caronas && Caronas.length > 0 && (
-            <ChangeCaronaComponent
-              Participante={participante}
-              Caronas={Caronas}
-              functionCallback={functionCallback}
-            />
-          )}
-          {aba == "Equipes" && Equipes && Equipes.length > 0 && (
-            <ChangeEquipesComponent
-              Participante={participante}
-              Equipes={Equipes}
-              functionCallback={functionCallback}
-            />
+                  {type == "Participante" && (
+                    <strong
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "start",
+                        textAlign: "center",
+                        flex: "1 1 45%",
+                      }}
+                      onClick={() => setAba("Círculos")}
+                      className={`pointer ${
+                        aba === "Círculos" ? "active" : ""
+                      }`}
+                    >
+                      <i className="fas fa-user-friends" aria-hidden="true"></i>{" "}
+                      {SelectedEvent.EquipeCirculo}
+                      <span
+                        style={{
+                          fontWeight: 400,
+                        }}
+                      >
+                        <span
+                          style={{ backgroundColor: participante.Circulo }}
+                          className="dot"
+                        ></span>{" "}
+                        {participante.CirculoTitulo}
+                      </span>
+                    </strong>
+                  )}
+                  <strong
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "start",
+                      textAlign: "center",
+                      flex: "1 1 45%",
+                    }}
+                    onClick={() => setAba("Quartos")}
+                    className={`pointer ${aba === "Quartos" ? "active" : ""}`}
+                  >
+                    <i className="fas fa-bed" aria-hidden="true"></i> Quartos
+                    <span
+                      style={{
+                        fontWeight: 400,
+                      }}
+                    >
+                      <span
+                        style={{
+                          backgroundColor: {
+                            Masculino: "#0095ff",
+                            Feminino: "#ff00d4",
+                            Misto: "#424242",
+                          }[participante.QuartoSexo],
+                        }}
+                        className="dot"
+                      ></span>{" "}
+                      {participante.Quarto}
+                    </span>
+                  </strong>
+                  {type == "Participante" && (
+                    <strong
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "start",
+                        textAlign: "center",
+                        flex: "1 1 45%",
+                      }}
+                      onClick={() => setAba("Padrinhos")}
+                      className={`pointer ${
+                        aba === "Padrinhos" ? "active" : ""
+                      }`}
+                    >
+                      <i className="fas fa-users-cog" aria-hidden="true"></i>{" "}
+                      Padrinhos
+                      <span
+                        style={{
+                          fontWeight: 400,
+                        }}
+                      >
+                        {participante.Padrinho}
+                      </span>
+                    </strong>
+                  )}
+                  {type == "Participante" && (
+                    <strong
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "start",
+                        textAlign: "center",
+                        flex: "1 1 45%",
+                      }}
+                      onClick={() => setAba("Caronas")}
+                      className={`pointer ${aba === "Caronas" ? "active" : ""}`}
+                    >
+                      <i className="fas fa-car" aria-hidden="true"></i> Caronas
+                      <span
+                        style={{
+                          fontWeight: 400,
+                        }}
+                      >
+                        {participante.Motorista}
+                      </span>
+                    </strong>
+                  )}
+                  {type == "Equipante" && (
+                    <strong
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "start",
+                        textAlign: "center",
+                        flex: "1 1 45%",
+                      }}
+                      onClick={() => setAba("Equipes")}
+                      className={`pointer ${aba === "Equipes" ? "active" : ""}`}
+                    >
+                      <i className="fas fa-broom" aria-hidden="true"></i>{" "}
+                      Equipes
+                      <span
+                        style={{
+                          fontWeight: 400,
+                        }}
+                      >
+                        {participante.Equipe}
+                      </span>
+                    </strong>
+                  )}
+                </div>
+                {aba == "Círculos" && Circulos && Circulos.length > 0 && (
+                  <ChangeCirculoComponent
+                    Participante={participante}
+                    Circulos={Circulos}
+                    functionCallback={functionCallback}
+                  />
+                )}
+                {aba == "Quartos" && Quartos && Quartos.length > 0 && (
+                  <ChangeQuartoComponent
+                    Participante={participante}
+                    Quartos={Quartos}
+                    functionCallback={functionCallback}
+                    type={type}
+                  />
+                )}
+                {aba == "Padrinhos" && Padrinhos && Padrinhos.length > 0 && (
+                  <ChangePadrinhoComponent
+                    Participante={participante}
+                    Padrinhos={Padrinhos}
+                    functionCallback={functionCallback}
+                  />
+                )}
+                {aba == "Caronas" && Caronas && Caronas.length > 0 && (
+                  <ChangeCaronaComponent
+                    Participante={participante}
+                    Caronas={Caronas}
+                    functionCallback={functionCallback}
+                  />
+                )}
+                {aba == "Equipes" && Equipes && Equipes.length > 0 && (
+                  <ChangeEquipesComponent
+                    Participante={participante}
+                    Equipes={Equipes}
+                    functionCallback={functionCallback}
+                  />
+                )}
+              </div>
+            </>
           )}
         </>
       )}
@@ -515,11 +615,7 @@ function ChangeCirculoComponent({ Participante, Circulos, functionCallback }) {
   }
 
   return (
-    <div
-      style={{
-        width: "350px",
-      }}
-    >
+    <div>
       <div>
         <ul className="change-circulo-ul">
           {Circulos.filter((c) => c.Id != Participante?.CirculoId).map((c) => (
@@ -531,8 +627,8 @@ function ChangeCirculoComponent({ Participante, Circulos, functionCallback }) {
                 backgroundColor: c.Cor,
               }}
             >
-              <span>{c.Titulo}</span>
-              <span>Participantes: {c.QtdParticipantes}</span>
+              <strong>{c.Titulo}</strong>
+              <small>Participantes: {c.QtdParticipantes}</small>
             </li>
           ))}
           {Participante.CirculoId && (
@@ -543,7 +639,7 @@ function ChangeCirculoComponent({ Participante, Circulos, functionCallback }) {
                 backgroundColor: "#bb2d2d",
               }}
             >
-              <span>Remover</span>
+              <span>Desassociar</span>
             </li>
           )}
         </ul>
@@ -586,11 +682,7 @@ function ChangeEquipesComponent({ Participante, Equipes, functionCallback }) {
   }
 
   return (
-    <div
-      style={{
-        width: "350px",
-      }}
-    >
+    <div>
       <div>
         <ul className="change-circulo-ul">
           {Equipes.filter((c) => c.Id != Participante?.EquipeId).map((c) => (
@@ -602,8 +694,8 @@ function ChangeEquipesComponent({ Participante, Equipes, functionCallback }) {
                 backgroundColor: "#424242",
               }}
             >
-              <span>{c.Equipe}</span>
-              <span>Voluntários: {c.QuantidadeMembros}</span>
+              <strong>{c.Equipe}</strong>
+              <small>Voluntários: {c.QuantidadeMembros}</small>
             </li>
           ))}
           {Participante?.EquipeId && (
@@ -614,7 +706,7 @@ function ChangeEquipesComponent({ Participante, Equipes, functionCallback }) {
                 backgroundColor: "#bb2d2d",
               }}
             >
-              <span>Remover</span>
+              <span>Desassociar</span>
             </li>
           )}
         </ul>
@@ -641,11 +733,7 @@ function ChangeCaronaComponent({ Participante, Caronas, functionCallback }) {
   }
 
   return (
-    <div
-      style={{
-        width: "350px",
-      }}
-    >
+    <div>
       <div>
         <ul className="change-circulo-ul">
           {Caronas.filter(
@@ -660,8 +748,8 @@ function ChangeCaronaComponent({ Participante, Caronas, functionCallback }) {
                 backgroundColor: "#424242",
               }}
             >
-              <span>{c.Motorista}</span>
-              <span>Participantes: {c.Capacidade}</span>
+              <strong>{c.Motorista}</strong>
+              <smal>Capacidade: {c.Capacidade}</smal>
             </li>
           ))}
           {Participante?.CaronaId && (
@@ -672,7 +760,7 @@ function ChangeCaronaComponent({ Participante, Caronas, functionCallback }) {
                 backgroundColor: "#bb2d2d",
               }}
             >
-              <span>Remover</span>
+              <span>Desassociar</span>
             </li>
           )}
         </ul>
@@ -703,11 +791,7 @@ function ChangePadrinhoComponent({
   }
 
   return (
-    <div
-      style={{
-        width: "350px",
-      }}
-    >
+    <div>
       <div>
         <ul className="change-circulo-ul">
           {Padrinhos.filter((c) => c.Id != Participante?.PadrinhoId).map(
@@ -720,8 +804,8 @@ function ChangePadrinhoComponent({
                   backgroundColor: "#424242",
                 }}
               >
-                <span>{c.Padrinho}</span>
-                <span>Participantes: {c.Quantidade}</span>
+                <strong>{c.Padrinho}</strong>
+                <small>Participantes: {c.Quantidade}</small>
               </li>
             )
           )}
@@ -733,7 +817,7 @@ function ChangePadrinhoComponent({
                 backgroundColor: "#bb2d2d",
               }}
             >
-              <span>Remover</span>
+              <span>Desassociar</span>
             </li>
           )}
         </ul>
@@ -767,11 +851,7 @@ function ChangeQuartoComponent({
   }
 
   return (
-    <div
-      style={{
-        width: "350px",
-      }}
-    >
+    <div>
       <div>
         <ul className="change-circulo-ul">
           {Quartos.filter(
@@ -792,8 +872,8 @@ function ChangeQuartoComponent({
                 }[c.Sexo],
               }}
             >
-              <span>{c.Titulo}</span>
-              <span>Participantes: {c.Capacidade}</span>
+              <strong>{c.Titulo}</strong>
+              <small>Capacidade: {c.Capacidade}</small>
             </li>
           ))}
           {Participante?.QuartoId && (
@@ -804,7 +884,7 @@ function ChangeQuartoComponent({
                 backgroundColor: "#bb2d2d",
               }}
             >
-              <span>Remover</span>
+              <span>Desassociar</span>
             </li>
           )}
         </ul>

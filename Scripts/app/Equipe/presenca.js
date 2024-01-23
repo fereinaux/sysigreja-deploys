@@ -39,7 +39,7 @@ function CarregarTabelaPresenca() {
                                 dt.on('buttons-action', function (e, buttonApi, dataTable, node, config) {
 
                                     if (node[0].className.includes('Visibility')) {
-                                        dt.draw()
+                                        dt.draw(false)
                                     }
                                 });
                                 $.fn.dataTable.ext.buttons.collection.action.call(this, e, dt, node, config);
@@ -155,7 +155,7 @@ function TogglePresenca(obj) {
                 data.Reunioes[obj.ReuniaoIndex].Presenca = true
             }
 
-            table.row(obj.RowIndex).data(data).draw()
+            table.row(obj.RowIndex).data(data).draw(false)
         }
     });
 }
@@ -178,7 +178,7 @@ function Justificar(obj) {
 
             data.Reunioes[obj.ReuniaoIndex].Justificada = true
 
-            table.row(obj.RowIndex).data(data).draw()
+            table.row(obj.RowIndex).data(data).draw(false)
         }
     });
 }

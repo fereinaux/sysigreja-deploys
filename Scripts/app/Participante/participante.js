@@ -267,7 +267,8 @@ ${GetButton('Pagamentos',data, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconWhatsApp(row.Fone)}
                             ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}                               
-                            ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}                            
+                            ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}  
+                            ${GetButton('openModalCracha', data, 'blue', 'fa-id-badge', 'Crachá')}
                             ${GetButton('CancelarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
                         : `${(SelectedEvent.Role == 'Admin') ? ` ${GetLabel('AtivarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'green', 'Ativar Inscrição')}
@@ -397,7 +398,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
             Object.keys(filtros).forEach(k => data[k] = filtros[k])
         })
 
-        table.draw()
+        table.draw(false)
     }
 
 
@@ -876,6 +877,9 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
                 break;
             case "files":
                 Anexos(queryId)
+                break;
+            case "badge":
+                openModalCracha(queryId);
                 break;
             default:
                 break;
@@ -1821,8 +1825,8 @@ ${campos.find(x => x.Campo == 'Restrição Alimentar') ? `<div class="col-sm-12 
 }
 
 
-async function loadCrachaImprimir(Foto) {
-    let ids = getCheckedIds()
+async function loadCrachaImprimir(Foto, id) {
+    let ids = id ? [id] : getCheckedIds()
     const result = await $.ajax(
         {
             processData: false,

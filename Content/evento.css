@@ -195,7 +195,7 @@ td {
 
 
 .fa-male {
-    color: #0095ff !important;
+    color: #0095ff;
 }
 
 .male {
@@ -204,7 +204,7 @@ td {
 }
 
 .fa-female {
-    color: #ff00d4 !important;
+    color: #ff00d4;
 }
 
 .female {

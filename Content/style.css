@@ -10577,7 +10577,7 @@ th {
     }
 
 .profile-card .without-avatar {
-    width: 100px;
+    min-width: 100px !important;
     height: 100px;
     display: flex;
     justify-content: center;

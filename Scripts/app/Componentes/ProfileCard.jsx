@@ -305,7 +305,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                       position: "relative"
                     }}
                     className="has-badge pointer "
-                    data-count={participante.QtdAnexos}
+                    data-count={participante.QtdAnexos > 0 ? participante.QtdAnexos  : false}
                   >
                     {" "}
                     <i

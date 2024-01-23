@@ -125,6 +125,9 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
     SetPadrinhos(json.data);
   }
 
+  const attrClip =
+    participante.QtdAnexos > 0 ? { "data-count": participante.QtdAnexos } : {};
+
   async function loadQuartos() {
     const req = await fetch("/Quarto/GetQuartos", {
       method: "POST",
@@ -268,7 +271,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   </span>
                 )}
                 <div className="actions">
-                <span
+                  <span
                     onClick={() => {
                       if (window.location.pathname == "/Participante") {
                         tippy.hideAll();
@@ -302,10 +305,10 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                       }
                     }}
                     style={{
-                      position: "relative"
+                      position: "relative",
                     }}
                     className="has-badge pointer "
-                    data-count={participante.QtdAnexos > 0 ? participante.QtdAnexos  : false}
+                    {...attrClip}
                   >
                     {" "}
                     <i
@@ -354,7 +357,6 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   >
                     <i className="fas fa-info-circle" aria-hidden="true"></i>
                   </span>
-                 
                 </div>
               </div>
             </div>

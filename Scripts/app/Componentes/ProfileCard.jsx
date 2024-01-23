@@ -126,7 +126,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
   }
 
   const attrClip =
-    participante.QtdAnexos > 0 ? { "data-count": participante.QtdAnexos } : {};
+    participante?.QtdAnexos > 0 ? { "data-count": participante?.QtdAnexos } : {};
 
   async function loadQuartos() {
     const req = await fetch("/Quarto/GetQuartos", {

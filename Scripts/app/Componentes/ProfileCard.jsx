@@ -309,7 +309,7 @@ function ProfileCard({ ParticipanteId, Aba, functionCallback, type }) {
                   >
                     {" "}
                     <i
-                      class="fa fa-paperclip data-counter"
+                      className="fa fa-paperclip data-counter"
                       aria-hidden="true"
                     ></i>
                   </span>

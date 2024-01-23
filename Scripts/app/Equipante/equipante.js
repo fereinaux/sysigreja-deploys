@@ -95,12 +95,7 @@ function CarregarTabelaEquipante(callbackFunction) {
         scrollXollapse: true,
         orderCellsTop: true,
         fixedHeader: true,
-        createdRow: function (row, data, dataIndex) {
-            if (data.HasFoto) {
-                $(row).addClass('foto')
-                $(row).data('id', data.Id)
-            }
-        },
+  
         filter: true,
         orderMulti: false,
         responsive: true,
@@ -139,7 +134,19 @@ function CarregarTabelaEquipante(callbackFunction) {
                 }
             },
             {
-                data: "Nome", name: "Nome", title: "Nome", autoWidth: true, render: function (data, type, row) {
+                data: "Nome", name: "Nome", title: "Nome", autoWidth: true, createdCell: function (td, cellData, rowData, row, col) {
+
+                    $(td).css('cursor', 'pointer')
+                    if (td._tippy) {
+                        rotdw._tippy.destroy()
+                    }
+                    tippyProfile(td, rowData.Id, "Quartos", function () {
+                        rootProfile = []
+                        tippy.hideAll()
+                        CarregarTabelaParticipante();
+                    },"Equipante")
+
+                }, render: function (data, type, row) {
 
                     if (type === 'export') {
                         return data
@@ -233,15 +240,6 @@ ${SelectedEvent.Id != 999 ? GetButton('Opcoes',data, 'cinza', 'fas fa-info-circl
             } else {
                 $('.hide-tipoevento').addClass('d-none')
             }
-
-            tippy(`.foto`, {
-                content: '',
-                allowHTML: true,
-                followCursor: true,
-                onTrigger: (instance, event) => {
-                    instance.setContent(`<img id="foto-participante" style="width:200px" src="/Arquivo/GetFotoByEquipanteId/${$(event.target).data('id')}" />`)
-                },
-            });
             newEventoId = SelectedEvent.Id
             loadSearch()
         },

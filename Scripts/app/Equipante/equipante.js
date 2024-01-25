@@ -455,7 +455,7 @@ function GetAnexosLancamento(id) {
 
 function AnexosLancamento(row) {
     $("#LancamentoIdModal").val(row.Id);
-    $("#equipanteIdModal").val(row.equipanteId);
+    $("#EquipanteIdModal").val(row.equipanteId);
     GetAnexosLancamento(row.Id)
     $("#modal-pagamentos").modal('hide');
     $("#modal-anexos").modal();

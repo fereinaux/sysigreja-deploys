@@ -776,7 +776,6 @@ function Pagamentos(Id) {
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
     CarregarTabelaPagamentos(Id);
     $("#modal-pagamentos").modal();
-    $("#EquipanteIdModal").val(null);
 }
 
 function GetEquipante(id) {

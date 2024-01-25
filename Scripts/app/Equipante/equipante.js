@@ -140,7 +140,7 @@ function CarregarTabelaEquipante(callbackFunction) {
                     if (td._tippy) {
                         rotdw._tippy.destroy()
                     }
-                    tippyProfile(td, rowData.Id, "Quartos", function () {
+                    tippyProfile(td, rowData.Id, "Equipes", function () {
                         rootProfile = []
                         tippy.hideAll()
                         CarregarTabelaEquipante();

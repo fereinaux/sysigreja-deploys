@@ -182,7 +182,12 @@ function ProfileCard({
               ? "Presente"
               : jsonParticipantes.Participante.Status,
           }
-        : jsonParticipantes.Equipante
+        : {
+            ...jsonParticipantes.Equipante, 
+            Status: jsonParticipantes.Equipante.HasOferta
+            ? "Pago"
+            : "Pendente",
+          }
     );
     setLoading(false);
   }
@@ -265,6 +270,9 @@ function ProfileCard({
                       className={`text-center label label-${
                         {
                           Confirmado: "primary",
+                          Ativo: "primary",
+                          Pago: "primary",
+                          Pendente: "warning",
                           Cancelado: "danger",
                           Presente: "warning",
                           Inscrito: "success",

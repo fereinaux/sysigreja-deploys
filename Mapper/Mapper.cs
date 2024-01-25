@@ -927,6 +927,10 @@ namespace SysIgreja.Controllers
                         dest => dest.Congregacao,
                         opt => opt.MapFrom(x => x.Equipante.Congregacao)
                     )
+                      .ForMember(
+                        dest => dest.Observacao,
+                        opt => opt.MapFrom(x => x.Equipante.Observacao)
+                    )
                     .ForMember(dest => dest.Email, opt => opt.MapFrom(x => x.Equipante.Email))
                     .ForMember(
                         dest => dest.Apelido,

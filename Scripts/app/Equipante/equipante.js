@@ -520,7 +520,11 @@ function DeleteArquivo(id) {
                     }),
                 success: function () {
                     SuccessMesageDelete();
-                    GetAnexos();
+                    if ($('#LancamentoIdModal').val()) {
+                        GetAnexosLancamento();
+                    } else {
+                        GetAnexos();
+                    }
                 }
             });
         }

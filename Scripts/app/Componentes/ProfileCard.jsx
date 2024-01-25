@@ -289,7 +289,10 @@ function ProfileCard({
                 <div className="actions">
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
+                      if (
+                        window.location.pathname == "/Participante" ||
+                        window.location.pathname == "/Equipante"
+                      ) {
                         tippy.hideAll();
                         Pagamentos(participante.Id);
                       } else {
@@ -309,7 +312,10 @@ function ProfileCard({
                   </span>
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
+                      if (
+                        window.location.pathname == "/Participante" ||
+                        window.location.pathname == "/Equipante"
+                      ) {
                         tippy.hideAll();
                         Anexos(participante.Id);
                       } else {
@@ -341,7 +347,10 @@ function ProfileCard({
                   </a>
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
+                      if (
+                        window.location.pathname == "/Participante" ||
+                        window.location.pathname == "/Equipante"
+                      ) {
                         tippy.hideAll();
                         EditParticipante(participante.Id);
                       } else {
@@ -358,7 +367,10 @@ function ProfileCard({
                   </span>
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
+                      if (
+                        window.location.pathname == "/Participante" ||
+                        window.location.pathname == "/Equipante"
+                      ) {
                         tippy.hideAll();
                         Opcoes(participante.Id);
                       } else {
@@ -375,7 +387,10 @@ function ProfileCard({
                   </span>
                   <span
                     onClick={() => {
-                      if (window.location.pathname == "/Participante" || window.location.pathname == "/Equipante") {
+                      if (
+                        window.location.pathname == "/Participante" ||
+                        window.location.pathname == "/Equipante"
+                      ) {
                         tippy.hideAll();
                         openModalCracha(participante.Id);
                       } else {

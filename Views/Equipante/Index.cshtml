@@ -17,6 +17,41 @@
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox" id="inserir-membro">
+        <div class="ibox-title" style="display: flex;justify-content: space-between;">
+            <h4>Pesquisar</h4>
+            <div class="ibox-tools pull-right">
+                <button class="btn btn-primary not-convite" id="btn_addEquipe" onclick="AddMembroEquipe()">Incluir no Evento</button>
+                <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Novo Voluntário</button>
+
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-xs-12 col-lg-3">
+                    <h5>Evento</h5>
+                    <div style="display: flex">
+                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "eventoid", OnChange = "loadMontagem", Roles = "Financeiro,Administrativo,Admin,Convites" })
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-lg-6 not-convite">
+                    <h5>Voluntário</h5>
+                    <div style=" display: flex; align-items: center; gap: 5px;">
+                        <select class="form-control " id="listagem"></select>
+                        <i class="fas fa-history" id="getHistButton" style="width:15px;cursor:pointer" onclick="GetHistorico($('#listagem').val())"></i>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-lg-3 not-convite">
+                    <h5>Equipe</h5>
+                    <select class="form-control" id="equipe-select-montagem"></select>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>Filtros</h4>
@@ -87,7 +122,6 @@
             <div class="ibox-tools pull-right">
                 <button class="btn btn-default hide-tipoevento" id="btn_Imprimir" onclick="openModalCracha()">Credencial</button>
                 <div><button class="btn btn-default" id="btn_bulk" disabled onclick="openBulkActions()">Ações em massa</button></div>
-                <button class="btn btn-default" id="btn_Adicionar" onclick="EditEquipante(0)">Adicionar</button>
             </div>
         </div>
         <div class="ibox-content">

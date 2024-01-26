@@ -71,6 +71,36 @@ function loadEquipes() {
     casal = false
     handleEquipantes(casal)
     loadCampos(SelectedEvent.Id)
+
+    $('#listagem').select2({
+        ajax: {
+            delay: 750,
+            url: '/Equipante/GetEquipanteTipoEvento',
+            data: function (params) {
+                var query = {
+                    Search: params.term,
+                    EventoId: SelectedEvent.Id
+                }
+
+                // Query parameters will be ?search=[term]&type=public
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.Items
+                };
+            }
+        },
+        placeholder: "Pesquisar",
+        minimumInputLength: 3,
+
+        templateSelection: function (data) {
+            tipo = data.Tipo
+            $('#getHistButton').css('display', tipo == "Equipante" ? 'block' : 'none')
+            return data.text;
+        }
+    });    
     checkEvento()
 
     getEquipes()
@@ -78,6 +108,33 @@ function loadEquipes() {
     GetCrachas()
 
 }
+
+tipo = undefined
+
+function AddMembroEquipe() {
+    if ($("#listagem").val()) {
+        $.ajax({
+            url: "/Equipe/AddMembroEquipe/",
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(
+                {
+                    EquipanteId: $("#listagem").val(),
+                    EventoId: SelectedEvent.Id,
+                    EquipeId: $("#equipe-select-montagem").val(),
+                    Tipo: tipo,
+                }),
+            success: function () {
+                $("#listagem").val('');
+                $("#listagem").trigger('change');
+                CarregarTabelaEquipante()
+                $("#listagem").select2('open')
+            }
+        });
+    }
+}
+
 
 $('.search-data').attr('disabled', true)
 
@@ -376,6 +433,10 @@ function getEquipes() {
             data: { EventoId: SelectedEvent.Id },
             type: "POST",
             success: (result) => {
+                $("#equipe-select-montagem").html(`
+${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
+`)
+                $('#equipe-select').select2();
                 $("#equipe-select").html(`
 <option value=999>Selecione</option>
 ${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}

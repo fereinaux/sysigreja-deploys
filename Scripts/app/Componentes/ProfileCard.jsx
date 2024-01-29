@@ -183,10 +183,8 @@ function ProfileCard({
               : jsonParticipantes.Participante.Status,
           }
         : {
-            ...jsonParticipantes.Equipante, 
-            Status: jsonParticipantes.Equipante.HasOferta
-            ? "Pago"
-            : "Pendente",
+            ...jsonParticipantes.Equipante,
+            Status: jsonParticipantes.Equipante.HasOferta ? "Pago" : "Pendente",
           }
     );
     setLoading(false);

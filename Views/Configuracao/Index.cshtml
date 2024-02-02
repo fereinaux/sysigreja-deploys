@@ -339,7 +339,7 @@
         function CarregarTabelaConfiguracao() {
             const tableConfiguracaoConfig = {
                 language: languageConfig,
-                lengthMenu: [200, 500, 1000],
+                lengthMenu: [10, 50, 100],
                 colReorder: false,
                 serverSide: false,
                 deferloading: 0,
@@ -356,12 +356,12 @@
                     {
                         data: "Id", title: "Ajustes", name: "Id", orderable: false, width: "20%",
                         "render": function (data, type, row) {
-                            return `${GetButton('EditConfiguracao', data, 'blue', 'fa-edit', 'Editar Informações')}
-                                                                            ${GetButton('EditCampos', data, 'blue', 'fa-th-list', 'Editar Campos')}
-                                                                            ${GetButton('EditEquipes', data, 'blue', 'fa-broom', 'Editar Equipes')}
-                                                                            ${GetButton('EditMensagens', data, 'blue', 'fa-envelope', 'Editar Mensages')}
-                                                                                  ${GetButton('EditMidia', data, 'blue', 'fa-images', 'Editar Mídias')}
-                                                                               ${GetButton('EditIntegracao', data, 'blue', 'fa-credit-card', 'Editar Integrações de Pagamento')}
+                            return `${GetButton('EditConfiguracao', data, 'cinza', 'fa-edit', 'Editar Informações')}
+                                                                            ${GetButton('EditCampos', data, 'cinza', 'fa-th-list', 'Editar Campos')}
+                                                                            ${GetButton('EditEquipes', data, 'cinza', 'fa-broom', 'Editar Equipes')}
+                                                                            ${GetButton('EditMensagens', data, 'cinza', 'fa-envelope', 'Editar Mensages')}
+                                                                                  ${GetButton('EditMidia', data, 'cinza', 'fa-images', 'Editar Mídias')}
+                                                                               ${GetButton('EditIntegracao', data, 'cinza', 'fa-credit-card', 'Editar Integrações de Pagamento')}
                                                                             `;
                         }
                     }
@@ -454,7 +454,7 @@
         function GetConfiguracao(id) {
             if (id > 0) {
                 $.ajax({
-                    url: "/Configuracao/GetConfiguracao/",
+                    url: "/Configuracao/GetConfiguracaoEdit/",
                     data: { Id: id },
                     datatype: "json",
                     type: "GET",
@@ -602,7 +602,7 @@
 
         function EditMidia(id) {
             $.ajax({
-                url: "/Configuracao/GetConfiguracao/",
+                url: "/Configuracao/GetConfiguracaoEdit/",
                 data: { Id: id },
                 datatype: "json",
                 type: "GET",
@@ -685,7 +685,7 @@
         function EditIntegracao(id) {
 
             $.ajax({
-                url: "/Configuracao/GetConfiguracao/",
+                url: "/Configuracao/GetConfiguracaoEdit/",
                 data: { Id: id },
                 datatype: "json",
                 type: "GET",
@@ -702,7 +702,7 @@
         function EditMensagens(id) {
 
             $.ajax({
-                url: "/Configuracao/GetConfiguracao/",
+                url: "/Configuracao/GetConfiguracaoEdit/",
                 data: { Id: id },
                 datatype: "json",
                 type: "GET",
@@ -760,7 +760,7 @@
         function EditCampos(id) {
 
             $.ajax({
-                url: "/Configuracao/GetConfiguracao/",
+                url: "/Configuracao/GetConfiguracaoEdit/",
                 data: { Id: id },
                 datatype: "json",
                 type: "GET",
@@ -818,7 +818,7 @@
         function EditEquipes(id) {
 
             $.ajax({
-                url: "/Configuracao/GetConfiguracao/",
+                url: "/Configuracao/GetConfiguracaoEdit/",
                 data: { Id: id },
                 datatype: "json",
                 type: "GET",

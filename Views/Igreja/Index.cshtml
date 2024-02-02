@@ -28,7 +28,7 @@
                 <thead>
                     <tr>
                         <th>Igreja</th>
-                        <th>Ações</th>  
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -43,14 +43,14 @@
             <div class="modal-body">
                 <div class="moldura-modal p-h-xs" id="form-igreja">
                     <div class="row p-h-xs">
-                        <input type="hidden" id="igreja-id"/>
+                        <input type="hidden" id="igreja-id" />
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Igreja</h5>
 
                             <input type="text" class="form-control required" id="igreja-nome" data-field="Igreja" />
-                        </div>                       
+                        </div>
                     </div>
-                </div>             
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
@@ -61,12 +61,12 @@
     </div>
 </div>
 
-@section Styles {   
-    
+@section Styles {
+
 }
 
 @section Scripts {
-    
+
 
     <script>
         function CarregarTabelaIgreja() {
@@ -89,8 +89,8 @@
                     {
                         data: "Id", name: "Id", orderable: false, width: "10%",
                         "render": function (data, type, row) {
-                            return `${GetButton('EditIgreja', data, 'blue', 'fa-edit', 'Editar')}                            
-                            ${GetButton('DeleteIgreja', data, 'red', 'fa-trash', 'Excluir')}`;
+                            return `${GetButton('EditIgreja', data, 'blue', 'fa-edit', 'Editar')}
+                                ${GetButton('DeleteIgreja', data, 'red', 'fa-trash', 'Excluir')}`;
                         }
                     }
                 ],

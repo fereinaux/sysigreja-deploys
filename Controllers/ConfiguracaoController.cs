@@ -8,10 +8,12 @@ using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
+using Core.Business.Reunioes;
 using Core.Models;
 using Core.Models.Configuracao;
 using Data.Entities;
 using Newtonsoft.Json;
+using SysIgreja.ViewModels;
 using Utils.Constants;
 using Utils.Enums;
 using static Utils.Extensions.EnumExtensions;
@@ -36,6 +38,14 @@ namespace SysIgreja.Controllers
         }
 
         public ActionResult Parametros()
+        {
+            ViewBag.Title = "Parâmetros";
+            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
+
+            return View();
+        }
+
+        public ActionResult Index()
         {
             ViewBag.Title = "Parâmetros";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
@@ -185,6 +195,50 @@ namespace SysIgreja.Controllers
             var jsonRes = Json(new { data = result }, JsonRequestBehavior.AllowGet);
             jsonRes.MaxJsonLength = Int32.MaxValue;
             return jsonRes;
+        }
+
+
+        [HttpPost]
+        public ActionResult GetConfiguracoesDatatable()
+        {
+
+            var user = GetApplicationUser();
+            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões")
+                .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                .Select(
+                    x =>
+                        x.Select(
+                            y =>
+                                new
+                                {
+                                    ConfigId = y.ConfiguracaoId,
+                                    Eventos = y.Eventos,
+                                    Role = y.Role
+                                }
+                        )
+                )
+                .ToList();
+            List<int> configId = new List<int>();
+            permissoes.ForEach(permissao =>
+            {
+                configId.AddRange(permissao.Where(x => x.Role == "Admin").Select(x => x.ConfigId));
+            });
+
+
+            var result = configuracaoBusiness
+              .GetConfiguracoes()
+              .Where(x => configId.Contains(x.Id))
+              .ToList()
+              .Select(
+                  x =>
+                      new PostConfiguracaoModel
+                      {
+                          Id = x.Id,
+                          Titulo = x.Titulo,                      
+                      }
+              );
+
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

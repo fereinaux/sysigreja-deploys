@@ -10,10 +10,10 @@ namespace SysIgreja.ViewModels
         public int Presenca { get; set; }
         public string Pauta { get; set; }
         public string Titulo { get; set; }
-        public ICollection<EquipesModel> Equipes { get; set; }
+        public ICollection<EquipesReuniaoModel> Equipes { get; set; }
     }
 
-    public class EquipesModel
+    public class EquipesReuniaoModel
     {
         public string Equipe { get; set; }
         public string Presenca { get; set; }

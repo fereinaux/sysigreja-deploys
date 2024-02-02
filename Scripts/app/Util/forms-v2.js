@@ -511,4 +511,17 @@ function openBase64InSameTab(data, mimeType) {
     window.open(fileURL, "_self");
 }
 
+function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
 
+    $.map(unindexed_array, function (n, i) {
+        indexed_array[n['name']] = n['value'];
+    });
+
+    indexed_array["EventoId"] = SelectedEvent.Id
+    indexed_array["CamposCustomizados"] = {
+    UmCampoQualquer: "Valor do Campo Qualquer"}
+
+    return indexed_array;
+}

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace SysIgreja.ViewModels
 {
@@ -90,5 +91,6 @@ namespace SysIgreja.ViewModels
         public string Parente { get; set; }
         public string Padrinho { get; set; }
         public string Quarto { get; set; }
+        public Dictionary<string, string> CamposCustomizados { get; set; }
     }
 }

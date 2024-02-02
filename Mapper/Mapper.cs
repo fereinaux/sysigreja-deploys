@@ -19,6 +19,7 @@ using CsQuery.ExtensionMethods;
 using CsQuery.ExtensionMethods.Internal;
 using Data.Context;
 using Data.Entities;
+using Newtonsoft.Json;
 using SysIgreja.ViewModels;
 using Utils.Extensions;
 using Utils.Services;
@@ -505,6 +506,10 @@ namespace SysIgreja.Controllers
                         dest => dest.Apelido,
                         opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido))
                     )
+                       .ForMember(
+                        dest => dest.CamposCustomizados,
+                        opt => opt.MapFrom(x => JsonConvert.DeserializeObject<Dictionary<string, string>>(x.CamposCustomizados))
+                    )
                     .ForMember(
                         dest => dest.Idade,
                         opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento))
@@ -600,6 +605,10 @@ namespace SysIgreja.Controllers
                     .ForMember(
                         dest => dest.Nome,
                         opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome))
+                    )
+                     .ForMember(
+                        dest => dest.CamposCustomizados,
+                        opt => opt.MapFrom(x => JsonConvert.DeserializeObject<Dictionary<string, string>>(x.CamposCustomizados))
                     )
                     .ForMember(
                         dest => dest.MercadoPagoPreferenceId,
@@ -926,6 +935,10 @@ namespace SysIgreja.Controllers
                     .ForMember(
                         dest => dest.Congregacao,
                         opt => opt.MapFrom(x => x.Equipante.Congregacao)
+                    )
+                     .ForMember(
+                        dest => dest.CamposCustomizados,
+                        opt => opt.MapFrom(x => JsonConvert.DeserializeObject<Dictionary<string, string>>(x.Equipante.CamposCustomizados))
                     )
                       .ForMember(
                         dest => dest.Observacao,

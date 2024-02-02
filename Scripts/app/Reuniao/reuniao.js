@@ -1,4 +1,7 @@
-﻿function CarregarTabelaReuniao() {
+﻿rootModal = ReactDOM.createRoot(document.getElementById("root-reunioes"));
+loadModal = typeof loadModal !== 'undefined' ? loadModal : function () { }
+
+function CarregarTabelaReuniao() {
     $.fn.dataTable.moment('DD/MM/YYYY HH:mm');
     const tableReuniaoConfig = {
         language: languageConfig,
@@ -46,6 +49,23 @@
 }
 
 function GetReuniao(id) {
+
+    campos = [
+        {
+            Campo: "Id",
+            Tipo: "Id"
+        },
+        {
+            Titulo: "Título",
+            Campo: "Titulo",
+            Tipo: "String"
+        }, {
+            Titulo: "Data da Reunião",
+            Campo: "DataReuniao",
+            Tipo: "DataHora"
+        }
+    ]
+
     if (id > 0) {
         $.ajax({
             url: "/Reuniao/GetReuniao/",
@@ -54,15 +74,12 @@ function GetReuniao(id) {
             type: "GET",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
-                $("#reuniao-id").val(data.Reuniao.Id);
-                $("#reuniao-titulo").val(data.Reuniao.Titulo),
-                    $("#reuniao-data").val(moment(data.Reuniao.DataReuniao).format('DD/MM/YYYY  HH:mm'));
+                loadModal(rootModal,"modal-reuniao", data.Reuniao.Titulo, campos, data.Reuniao, PostReuniao)
             }
         });
     }
     else {
-        $("#reuniao-id").val(0);
-        $("#reuniao-data").val("");
+        loadModal(rootModal,"modal-reuniao", "Nova Reunião", campos, {}, PostReuniao)
     }
 }
 
@@ -96,7 +113,6 @@ function PresencaReuniao(equipes) {
 
 function EditReuniao(id) {
     GetReuniao(id);
-    $("#modal-reunioes").modal();
 }
 
 function DeleteReuniao(id) {
@@ -127,19 +143,11 @@ function PostReuniao() {
             datatype: "json",
             type: "POST",
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(
-                {
-                    Id: $("#reuniao-id").val(),
-                    EventoId: SelectedEvent.Id,
-                    Titulo: $("#reuniao-titulo").val(),
-                    Tipo: 0,
-                    //Pauta: pauta.summernote('code'),
-                    DataReuniao: moment($("#reuniao-data").val(), 'DD/MM/YYYY HH:mm', 'pt-br').toJSON()
-                }),
+            data: JSON.stringify(getFormData($("#modal-reuniao form"))),
             success: function () {
                 SuccessMesageOperation();
                 CarregarTabelaReuniao();
-                $("#modal-reunioes").modal("hide");
+                $("#modal-reuniao").modal("hide");
             }
         });
     }

@@ -62,7 +62,6 @@ function GetResultadosGeral() {
                         img.classList.add('img-calendar')
                         bg.classList.add('bg-calendar')
                         div.classList.add('div-calendar')
-                        overlay.classList.add('overlay-calendar')
                         div.dataset.id = arg.event.extendedProps.id
                         span.classList.add('span-calendar')
                         spanContainer.classList.add('span-container-calendar')

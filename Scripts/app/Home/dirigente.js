@@ -168,7 +168,7 @@ function CarregarTela() {
         success: (data) => {
             CirculoId = data.result.CirculoId
             Grupo = data.result.Grupo
-            $('.equipe').text(`${singularize($('.title-circulo').text())} ${data.result.Circulo}` )
+            $('.equipe').text(`${singularize($('.title-circulo').text()) || "Equipe de Grupos"} ${data.result.Circulo}`)
             $('#btn-excel').prop('disabled', false)
             $('#btn-grupo').prop('disabled', Grupo != null)
 
@@ -438,35 +438,37 @@ function GetReuniao(id) {
 }
 
 function CarregarTabelaPresenca() {
-    $.ajax({
-        url: '/Home/GetPresencaParticipantes',
-        datatype: "json",
-        data: { ReuniaoId: $("#reuniaoid").val() },
-        type: "GET",
-        success: (data) => {
-            html = '';
-            $(membros).each((i, element) => {
-                html += `<tr>                        
+    if ($("#reuniaoid").val()) {
+        $.ajax({
+            url: '/Home/GetPresencaParticipantes',
+            datatype: "json",
+            data: { ReuniaoId: $("#reuniaoid").val() },
+            type: "GET",
+            success: (data) => {
+                html = '';
+                $(membros).each((i, element) => {
+                    html += `<tr>                        
                         <td>${element.Nome}</td>                        
                         <td class="membro-fone"><div class="checkbox i-checks-green"><label> <input type="checkbox" data-id="${element.Id}" value="" ${data.presenca.indexOf(element.Id) > 0 ? 'checked=""' : ''}> <i></i></label></div></td>
                     </tr>`;
-            });
+                });
 
-            $('.tbpresenca').html(html);
+                $('.tbpresenca').html(html);
 
-            $('.i-checks-green').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
-            $('.i-checks-green').on('ifClicked', function (event) {
-                TogglePresenca($(event.target).data("id"));
-            });
+                $('.i-checks-green').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green'
+                });
+                $('.i-checks-green').on('ifClicked', function (event) {
+                    TogglePresenca($(event.target).data("id"));
+                });
 
-            $("td.fa").css("font-size", "25px");
-            $("td").css("font-size", "15px");
-            $("th").css("font-size", "15px");
-        }
-    });
+                $("td.fa").css("font-size", "25px");
+                $("td").css("font-size", "15px");
+                $("th").css("font-size", "15px");
+            }
+        });
+    }
 }
 
 

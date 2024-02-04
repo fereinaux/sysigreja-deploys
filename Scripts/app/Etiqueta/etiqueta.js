@@ -14,12 +14,11 @@
         dom: domConfig,
         buttons: getButtonsConfig('Marcadores'),
         columns: [
-            { data: "Nome", name: "Nome", autoWidth: true },
             {
-                data: "Cor", className:"pos-relative", name: "Cor", autoWidth: true, render: function (data, type, row) {
-
-                    return `<span style="background-color:${data};position:absolute;top:0;left:0;right:0;bottom:0"></span>`;
-                } },
+                data: "Nome", name: "Nome", autoWidth: true, render: function (data, type, row) {
+                    return `<span  class="badge m-r-xs" style="background-color:${row.Cor};color:#fff">${row.Nome}</span>`
+                }
+            },           
             {
                 data: "Id", name: "Id", orderable: false, width: "25%",
                 "render": function (data, type, row) {

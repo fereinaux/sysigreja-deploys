@@ -126,6 +126,14 @@
             })
         }
 
+        setInterval($.ajax({
+            url: "/Notificacao/GetNotificacoesNaoLidas/",
+            datatype: "json",
+            type: "GET",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) { }
+        }) ,60000)
+
 
     </script>
     <!-- Add local styles, mostly for plugins css file -->

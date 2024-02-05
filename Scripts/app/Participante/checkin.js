@@ -452,21 +452,10 @@ function GetParticipante() {
                     $('.restricaoalimentar').addClass('d-none')
                 }
 
-                $('.status').text(data.Participante.Status);
-                $('.circulo').text(data.DadosAdicionais.Circulo || `Sem ${SelectedEvent.EquipeCirculo}`);
-                $('.quarto').text(data.DadosAdicionais.Quarto || "Sem Quarto");
-
-                var quartoAtual = data.DadosAdicionais.QuartoAtual;
-
+                loadProfile(ReactDOM.createRoot(document.getElementById(`info-geral`)), data.Participante.Id, "Quartos", GetParticipante, "Participante", null, "checkin")
 
                 $(".participante-info").removeClass('d-none');
-                if (!data.DadosAdicionais.Quarto && quartoAtual.Quarto) {
-                    $(".quarto-info").removeClass('d-none');
-                    $('.quarto-atual').text(`${quartoAtual.Participantes}/${quartoAtual.Quarto.Capacidade}`);
-                }
-                else
-                    $(".quarto-info").addClass('d-none');
-
+                $(`#participante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
                 if (data.Participante.Checkin) {
                     $('.status').text("Presente");
                     $('.btn-cancelarcheckin').removeClass('d-none');
@@ -476,7 +465,6 @@ function GetParticipante() {
                     $('.btn-checkin').removeClass('d-none');
                 }
 
-                $(`#participante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
 
                 if (!checkin && isMobile) {
 
@@ -520,7 +508,7 @@ function GetEquipante() {
                 $(`#participante-email`).val(data.Equipante.Email);
                 $(`#participante-camisa`).val(data.Equipante.Camisa);
                 $(`#participante-nome-pai`).val(data.Equipante.NomePai);
-                $('#participante-obs').css('display','none')
+                $('#participante-obs').css('display', 'none')
                 setNumber('participante-fone', data.Equipante.Fone)
                 setNumber('participante-fone-mae', data.Equipante.FoneMae)
                 setNumber('participante-fone-pai', data.Equipante.FonePai)
@@ -606,13 +594,9 @@ function GetEquipante() {
                 Pagamentos($("#equipantes").val());
                 GetAnexos();
 
-                $(`.equipe`).text(data.Equipante.Equipe);
-
-                $(".participante-info").removeClass('d-none');
-
-
-                $('.quarto').text(data.Equipante.Quarto || "Sem Quarto");
+                loadProfile(ReactDOM.createRoot(document.getElementById(`info-geral`)), data.Equipante.Id, "Quartos", GetEquipante, "Equipante", null, "checkin")
                 $(`#participante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
+                $(".participante-info").removeClass('d-none');
 
                 if (data.Equipante.Checkin) {
                     $('.status').text("Presente");

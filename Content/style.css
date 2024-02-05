@@ -10543,7 +10543,24 @@ th {
     padding: 5px;
 }
 
-.profile-container, .action-handler {
+.checkin .profile-container, .checkin .action-handler {
+    border: 1px solid #ccc;
+}
+
+    .checkin .profile-container .actions a, .checkin .profile-container .actions span {
+        color: #7c7a7a;
+    }
+
+    .checkin .profile-container .actions a, .checkin .profile-container .actions span {
+        color: #7c7a7a;
+        font-size: 18px;
+    }
+
+        .checkin .profile-container .actions a:hover, .checkin .profile-container .actions span:hover {
+            color: #5bbfc1;
+        }
+
+    .profile-container, .action-handler {
     border-radius: 8px;
     border: 1px solid white;
     padding: 15px 20px;
@@ -10575,7 +10592,7 @@ th {
         font-size: 18px;
     }
 
-        .profile-container .actions a, .profile-container .actions span:hover {
+        .profile-container .actions a:hover, .profile-container .actions span:hover {
             color: white;
         }
 
@@ -10588,6 +10605,7 @@ th {
     margin-right: 15px;
     border-radius: 100%;
     background-color: #828282;
+    color: white;
     font-size: 40px;
 }
 
@@ -10607,6 +10625,15 @@ th {
     margin-left: 10px;
 }
 
+
+
+.checkin .aba-selector {
+    color: #676a6c;
+}
+
+    .checkin .aba-selector .active {
+        color: #5bbfc1;
+    }
 
 
 .aba-selector {

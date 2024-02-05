@@ -79,40 +79,7 @@
             </div>
 
             <div id="info-geral" class="moldura-modal p-h-xs m-t-md m-b-md participante-info d-none">
-                <div class="row p-h-xs text-center">
-                    <div class="col-xs-4 col-md-2 p-w-md text-center">
-                        <i class="fa fa-info-circle fa-3x"></i>
-                        <h5 class="text-center status"></h5>
-                    </div>
-                    <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
-                        <i class="far fa-circle fa-3x"></i>
-                        <h5 class="text-center circulo"></h5>
-                    </div>
-                    <div class="col-xs-4 col-md-2 p-w-md text-center">
-                        <i class="fa fa-home fa-3x"></i>
-                        <h5 class="text-center quarto"></h5>
-                    </div>
-                    <div class="col-xs-4 col-md-2 p-w-md text-center dados-equipante">
-                        <i class="fa fa-paste fa-3x"></i>
-                        <h5 class="text-center equipe"></h5>
-                    </div>
 
-                    <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
-                        <i class="fas fa-laptop fa-3x"></i>
-                        <h5 class="text-center padrinho">Padrinho</h5>
-                    </div>
-                    <div class="col-xs-4 col-md-2 p-w-md text-center dados-participante-contato">
-                        <i class="fas fa-car fa-3x"></i>
-                        <h5 class="text-center motorista">Motorista</h5>
-                    </div>
-                </div>
-                <div class="row p-h-xs">
-                    <div class="col-xs-12 col-md-12 p-w-md text-center ">
-                        <div id="marcadores">
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -136,10 +103,7 @@
                     <input type="hidden" id="participante-id" />
                     <input type="hidden" id="equipante-id" />
                     <input type="hidden" id="participante-checkin" />
-                    <input type="hidden" id="participante-cancelarcheckin" />
-                    <div class="col-sm-6" style="display:none" id="div-foto">
-                        <img id="foto" style="height:300px;margin:auto" src="" class="m-auto" />
-                    </div>
+                    <input type="hidden" id="participante-cancelarcheckin" />     
                     <div class="col-sm-6 p-w-md m-t-md text-center">
                         <h5>Marcadores</h5>
                         <select class="form-control participante-etiquetas" id="participante-etiquetas" multiple="multiple" style="width: 100%">
@@ -268,6 +232,7 @@
 
 @section Scripts {
 
+    <script type="text/babel" src="~/Scripts/app/Componentes/ProfileCard.jsx"></script>
     <script src="~/Scripts/app/Participante/checkin.js"></script>
     <script src="~/Scripts/app/Cracha/print.js"></script>
 

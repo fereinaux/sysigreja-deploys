@@ -496,12 +496,24 @@
 
         $.extend($.fn.dataTable.defaults, {
             initComplete: function (settings, json) {
+                    var api = this.api();
                 tippy('[data-tippy-content]');
+                handleServerSidePagin(settings, api);
                 $(settings.nTable).DataTable().on('draw', function () {
                     tippy('[data-tippy-content]');
-                })
+                    handleServerSidePagin(settings, api);
+                })             
             }
         });
+
+        function handleServerSidePagin(settings, api) {
+            if (settings.oInit.serverSide) {
+                let page = (settings._iDisplayStart / settings._iDisplayLength) 
+                if (settings._iRecordsDisplay < ((page) * settings._iDisplayLength)) {
+                    api.page(page - 1).draw()
+                }
+            }
+        }
 
 
         let div = document.createElement("div");

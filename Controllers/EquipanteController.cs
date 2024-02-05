@@ -1471,6 +1471,27 @@ namespace SysIgreja.Controllers
                     model.MercadoPagoId = g.ToString();
                     var request = new PreferenceRequest
                     {
+                        PaymentMethods = new PreferencePaymentMethodsRequest
+                        {                       
+                            ExcludedPaymentMethods = new List<PreferencePaymentMethodRequest>
+                            {
+                                new PreferencePaymentMethodRequest
+                                {
+                                    Id = "pec",
+                                },
+                                        new PreferencePaymentMethodRequest
+                                {
+                                    Id = "bolbradesco",
+                                },
+                            },
+                            ExcludedPaymentTypes = new List<PreferencePaymentTypeRequest>
+                            {
+                                new PreferencePaymentTypeRequest
+                                {
+                                    Id = "debit_card",
+                                },
+                            },
+                        },
                         Items = new List<PreferenceItemRequest>
                         {
                             new PreferenceItemRequest

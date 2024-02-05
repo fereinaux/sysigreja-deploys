@@ -520,8 +520,6 @@ function getFormData($form) {
     });
 
     indexed_array["EventoId"] = SelectedEvent.Id
-    indexed_array["CamposCustomizados"] = {
-    UmCampoQualquer: "Valor do Campo Qualquer"}
 
     return indexed_array;
 }

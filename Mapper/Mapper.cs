@@ -930,10 +930,7 @@ namespace SysIgreja.Controllers
                         dest => dest.Congregacao,
                         opt => opt.MapFrom(x => x.Equipante.Congregacao)
                     )
-                     .ForMember(
-                        dest => dest.CamposCustomizados,
-                        opt => opt.MapFrom(x => JsonConvert.DeserializeObject<Dictionary<string, string>>(x.Equipante.CamposCustomizados))
-                    )
+                   
                       .ForMember(
                         dest => dest.Observacao,
                         opt => opt.MapFrom(x => x.Equipante.Observacao)

@@ -91,6 +91,5 @@ namespace SysIgreja.ViewModels
         public string Parente { get; set; }
         public string Padrinho { get; set; }
         public string Quarto { get; set; }
-        public Dictionary<string, string> CamposCustomizados { get; set; }
     }
 }

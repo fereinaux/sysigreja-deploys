@@ -280,8 +280,8 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
             [2, "asc"]
         ],
 
-        drawCallback: function () {
-
+        drawCallback: function (settings) {
+            
             if (callbackFunction) {
                 callbackFunction()
 

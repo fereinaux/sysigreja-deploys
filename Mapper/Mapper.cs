@@ -506,10 +506,7 @@ namespace SysIgreja.Controllers
                         dest => dest.Apelido,
                         opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido))
                     )
-                       .ForMember(
-                        dest => dest.CamposCustomizados,
-                        opt => opt.MapFrom(x => JsonConvert.DeserializeObject<Dictionary<string, string>>(x.CamposCustomizados))
-                    )
+                       
                     .ForMember(
                         dest => dest.Idade,
                         opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento))
@@ -606,10 +603,7 @@ namespace SysIgreja.Controllers
                         dest => dest.Nome,
                         opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome))
                     )
-                     .ForMember(
-                        dest => dest.CamposCustomizados,
-                        opt => opt.MapFrom(x => JsonConvert.DeserializeObject<Dictionary<string, string>>(x.CamposCustomizados))
-                    )
+                     
                     .ForMember(
                         dest => dest.MercadoPagoPreferenceId,
                         opt => opt.MapFrom(x => x.MercadoPagoPreferenceId)

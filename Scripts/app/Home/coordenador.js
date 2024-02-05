@@ -345,3 +345,79 @@ function toggleFoto(id) {
     }
     )
 }
+
+function PrintEquipe() {
+    $.ajax({
+        url: '/Equipe/GetMembrosEquipeDatatable',
+        data: { EventoId: SelectedEvent.Id, EquipeId },
+        datatype: "json",
+        type: "POST",
+        success: (result) => {
+            var doc = new jsPDF('l', 'mm', "a4");
+            FillDoc(doc, result)
+
+            printDoc(doc);
+        }
+    });
+}
+
+function header(doc, evento, page, equipe) {
+    if (SelectedEvent.LogoRelatorioId) {
+        var img = new Image();
+        img.src = `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`;
+        doc.addImage(img, 'PNG', 10, 10, 50, 21);
+    }
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(64, 14, evento);
+    doc.text(64, 22, equipe || Titulo);
+    doc.text(64, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')} - Página ${page}`);
+
+    var widthP = 285
+    doc.line(10, 38, widthP, 38);
+
+    doc.setFont('helvetica', "bold")
+    doc.text(17, 43, "Nome completo");
+    doc.text(127, 43, "Credencial");
+    doc.text(172, 43, "Idade/Data de Nascimento");
+    doc.text(240, 43, "Whatsapp");
+
+    doc.line(10, 45, widthP, 45);
+    doc.setFont('helvetica', "normal")
+}
+
+function FillDoc(doc, result) {
+
+    var widthP = 285
+    var evento = `${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`;
+    header(doc, evento, 1, result.data[0].Equipe)
+
+
+    height = 50;
+
+    $(result.data).each((index, participante) => {
+        if (index > 0 && index % 19 == 0) {
+            doc.addPage()
+            header(doc, evento, (index / 19) + 1, result.data[0].Equipe)
+            height = 50;
+        }
+
+        doc.setFont()
+
+        doc.setFont("helvetica", participante.Tipo == 'Coordenador' ? "bold" : "normal");
+        doc.text(17, height, participante.Tipo == 'Coordenador' ? `Coord: ${participante.Nome}` : participante.Nome);
+        doc.text(127, height, participante.Apelido);
+        doc.text(195, height, `${participante.Idade}`);
+        doc.text(240, height, `${participante.Fone}`);
+        height += 2;
+        doc.line(10, height, widthP, height);
+        height += 6;
+
+    });
+
+    for (var i = height; i < 192; i += 8) {
+        doc.line(10, i, widthP, i);
+    }
+
+    AddCount(doc, result.data, 200, widthP);
+}

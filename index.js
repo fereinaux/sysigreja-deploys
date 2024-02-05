@@ -3,7 +3,7 @@ const axios = require('axios').default
 
 async function commit() {
   await git.simpleGit().add('.')
-  await git.simpleGit().commit('deploy')
+  await git.simpleGit().commit(`deploy ${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()} `)
   await git.simpleGit().push()
   console.log('commit done')
 

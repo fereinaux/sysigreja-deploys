@@ -389,7 +389,7 @@
                 contentType: `application/json; charset=utf-8`,
                 data: JSON.stringify(
                     {
-                        ...Config,
+                        ...ConfigLocal,
                         VincularMontagem: $(`#configuracao-vincular:checked`).length > 0,
                         EquipeCirculoId: $(`#configuracao-equipecirculo`).val(),
                         EquipeCaronaId: $(`#configuracao-equipecarona`).val(),
@@ -402,7 +402,7 @@
                         contentType: `application/json; charset=utf-8`,
                         data: JSON.stringify(
                             {
-                                id: Config.Id,
+                                id: ConfigLocal.Id,
                                 equipes: $(`#configuracao-equipes`).val().map(equipe => { return { EquipeId: equipe, ShowInscricao: $(`#configuracao-equipes-inscricao`).val().length == 0 || $(`#configuracao-equipes-inscricao`).val().find(eq => eq == equipe) != undefined } })
 
                             }),
@@ -425,7 +425,7 @@
                 contentType: `application/json; charset=utf-8`,
                 data: JSON.stringify(
                     {
-                        id: Config.Id,
+                        id: ConfigLocal.Id,
                         campos: $(`#configuracao-campos`).val().map(campo => { return { CampoId: campo } })
 
                     }),
@@ -437,7 +437,7 @@
                         contentType: `application/json; charset=utf-8`,
                         data: JSON.stringify(
                             {
-                                id: Config.Id,
+                                id: ConfigLocal.Id,
                                 campos: $(`#configuracao-camposequipe`).val().map(campo => { return { CampoId: campo } })
 
                             }),
@@ -612,25 +612,25 @@
                 success: function (dataConfiguracao) {
                     ConfigLocal = dataConfiguracao.Configuracao
                     $('#logo').val('')
-                    if (Config.LogoId) {
+                    if (ConfigLocal.LogoId) {
                         $(`#img-logo`).css(`display`, `block`)
-                        $(`#img-logo`).attr("src", `/Arquivo/GetArquivo/${Config.LogoId}`)
+                        $(`#img-logo`).attr("src", `/Arquivo/GetArquivo/${ConfigLocal.LogoId}`)
                     } else {
                         $(`#img-logo`).css(`display`, `none`)
                     }
 
                     $('#background').val('')
-                    if (Config.BackgroundId) {
+                    if (ConfigLocal.BackgroundId) {
                         $(`#img-background`).css(`display`, `block`)
-                        $(`#img-background`).attr("src", `/Arquivo/GetArquivo/${Config.BackgroundId}`)
+                        $(`#img-background`).attr("src", `/Arquivo/GetArquivo/${ConfigLocal.BackgroundId}`)
                     } else {
                         $(`#img-background`).css(`display`, `none`)
                     }
 
                     $('#logorelatorio').val('')
-                    if (Config.LogoRelatorioId) {
+                    if (ConfigLocal.LogoRelatorioId) {
                         $(`#img-logorelatorio`).css(`display`, `block`)
-                        $(`#img-logorelatorio`).attr("src", `/Arquivo/GetArquivo/${Config.LogoRelatorioId}`)
+                        $(`#img-logorelatorio`).attr("src", `/Arquivo/GetArquivo/${ConfigLocal.LogoRelatorioId}`)
                     } else {
                         $(`#img-logorelatorio`).css(`display`, `none`)
                     }
@@ -673,7 +673,7 @@
                                 type: "POST",
                                 contentType: `application/json; charset=utf-8`,
                                 url: `/Configuracao/Post${tipo}`,
-                                data: `{ Id: ${Config.Id}, sourceId: ${data}
+                                data: `{ Id: ${ConfigLocal.Id}, sourceId: ${data}
                                                                                                                                                                         }`,
                                 success: function () {
                                     SuccessMesageOperation()
@@ -694,8 +694,8 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (dataConfiguracao) {
                     ConfigLocal = dataConfiguracao.Configuracao
-                    $(`#configuracao-public`).val(Config.PublicTokenMercadoPago)
-                    $(`#configuracao-access`).val(Config.AccessTokenMercadoPago)
+                    $(`#configuracao-public`).val(ConfigLocal.PublicTokenMercadoPago)
+                    $(`#configuracao-access`).val(ConfigLocal.AccessTokenMercadoPago)
                     $("#modal-integracao").modal();
                 }
             })
@@ -918,7 +918,7 @@
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        ...Config,
+                        ...ConfigLocal,
                         PublicTokenMercadoPago: $(`#configuracao-public`).val(),
                         AccessTokenMercadoPago: $(`#configuracao-access`).val(),
                     }),
@@ -937,7 +937,7 @@
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(
                     {
-                        ...Config,
+                        ...ConfigLocal,
                         MsgConclusao: $(`#configuracao-msg`).summernote('code'),
                         MsgConclusaoEquipe: $(`#configuracao-msgequipe`).summernote('code'),
                     }),
@@ -958,7 +958,7 @@
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(
                         {
-                            ...Config,
+                            ...ConfigLocal,
                             Titulo: $("#configuracao-titulo").val(),
                             Identificador: $(`#configuracao-identificador`).val(),
                             CorBotao: $(`#configuracao-corbotao`).val(),
@@ -976,7 +976,7 @@
                             contentType: `application/json; charset=utf-8`,
                             data: JSON.stringify(
                                 {
-                                    id: Config.Id,
+                                    id: ConfigLocal.Id,
                                     igrejas: $(`#configuracao-igreja`).val().map(igreja => { return { IgrejaId: igreja } })
 
                                 }),

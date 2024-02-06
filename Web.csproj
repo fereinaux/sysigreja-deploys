@@ -1238,7 +1238,6 @@
     <Content Include="Views\Ajuda\Index.cshtml" />
     <Content Include="Views\Inscricoes\Presenca.cshtml" />
     <Content Include="Views\Evento\Criar.cshtml" />
-    <Content Include="Views\Configuracao\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -46,14 +46,6 @@ namespace SysIgreja.Controllers
             return View();
         }
 
-        public ActionResult Index()
-        {
-            ViewBag.Title = "Parâmetros";
-            Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-
-            return View();
-        }
-
         public ActionResult Login()
         {
             IsGeral();

@@ -379,7 +379,7 @@
             $("#table-configuracao").DataTable(tableConfiguracaoConfig);
         }
 
-        ConfigLocal;
+        ConfigLocal = {};
 
         function PostEquipes() {
             $.ajax({
@@ -713,14 +713,18 @@
                     ConfigLocal = dataConfiguracao.Configuracao
                     $(`#configuracao-msg`).summernote({
                         height: 300,
-                        lang: 'pt-BR',
+                        lang: 'pt-BR',      
                         toolbar: [
-                            ['style', ['style']],
-                            ['font', ['bold', 'italic']],
+                            ['style', ['style','bold', 'italic', 'underline', 'clear']],
+                            ['font', ['strikethrough', 'superscript', 'subscript']],
                             ['fontname', ['fontname']],
-                            ['view', ['codeview']],
-                            ['mybutton', ['Id', 'Nome', 'Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]],
-                        ],
+                            ['fontsize', ['fontsize']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['height', ['height']],
+                            ['insert', ['link']],
+                            ['view', ['codeview']]]
+                        ['mybutton', ['Id', 'Nome', 'Apelido', 'Evento', "NumeracaoEvento", "DescricaoEvento", 'Data', 'Valor', 'NomePadrinho', 'FonePadrinho',]], ,
                         buttons: {
                             Nome: NomeButton,
                             Apelido: ApelidoButton,

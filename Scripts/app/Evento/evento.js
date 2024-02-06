@@ -40,8 +40,8 @@ function CarregarTabelaEvento() {
 
                     switch (row.Status) {
                         case Inativo:
-                            color= 'default'
-                            title= "Inscrições em Breve"
+                            color = 'default'
+                            title = "Inscrições em Breve"
                             break;
                         case InscricoesAbertas:
                             color = 'green'
@@ -66,11 +66,11 @@ function CarregarTabelaEvento() {
 
                     var colorEquipe = 'green'
 
-                
+
                     switch (row.StatusEquipe) {
                         case Inativo:
-                            colorEquipe= 'default'
-                            title= "Inscrições em Breve"
+                            colorEquipe = 'default'
+                            title = "Inscrições em Breve"
                             break;
                         case InscricoesAbertas:
                             colorEquipe = 'green'
@@ -183,15 +183,15 @@ function GetEvento(id) {
                     height: 300,
                     lang: 'pt-BR',
                     toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['style', ['style', 'bold', 'italic', 'underline', 'clear']],
                         ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontname', ['fontname']],
                         ['fontsize', ['fontsize']],
                         ['color', ['color']],
                         ['para', ['ul', 'ol', 'paragraph']],
                         ['height', ['height']],
                         ['insert', ['link']],
-                        ['view', ['codeview']]],
-
+                        ['view', ['codeview']]]
                 }).summernote('code', data.Evento.Conteudo)
                 $("#evento-valor").val(data.Evento.Valor);
                 $('#evento-global').iCheck((data.Evento.Global ? 'check' : 'uncheck'))
@@ -309,7 +309,7 @@ function ToggleEventoStatus(id) {
             }),
         success: function () {
             CarregarTabelaEvento();
-        },        
+        },
     });
 }
 
@@ -325,7 +325,7 @@ function ToggleEventoStatusEquipe(id) {
             }),
         success: function () {
             CarregarTabelaEvento();
-        },        
+        },
     });
 }
 

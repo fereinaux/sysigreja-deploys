@@ -929,7 +929,14 @@
             localStorage.setItem('email_cadastro', $('#participante-email').val())
             localStorage.setItem('nome_cadastro', $('#participante-nome').val())
 
-            evento = evento || '@ViewBag.Evento.Numeracao @ViewBag.Configuracao.Titulo'
+            @if (ViewBag.Evento.Numeracao > 0) {
+
+                @:evento = '@(ViewBag.Evento.Numeracao)º @ViewBag.Configuracao.Titulo'
+            } else
+            {
+                @:evento = '@ViewBag.Configuracao.Titulo'
+            }
+
 
             var div = document.createElement("div");
 

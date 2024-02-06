@@ -481,6 +481,7 @@ namespace SysIgreja.Controllers
             ViewBag.EventoId = Id;
             var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
+            ViewBag.Evento = evento;
             ViewBag.Login = configuracaoBusiness.GetLogin();
             ViewBag.Igrejas = configuracaoBusiness.GetIgrejas(evento.ConfiguracaoId.Value);
             ViewBag.Email = email;

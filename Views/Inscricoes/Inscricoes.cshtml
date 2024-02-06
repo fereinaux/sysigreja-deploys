@@ -28,7 +28,7 @@
                                 <label for="participante-nome" class="">Nome completo do @ViewBag.Sujeito</label>
                                 <input type="text" class="form-control required" id="participante-nome" name="name" data-field="Nome" value="@ViewBag.Nome" />
                             </div>
-                        }
+                        }{
                         @if (ViewBag.Campos.Contains(CamposEnum.Apelido.GetDescription()))
                         {
                             <div class="form-group">
@@ -929,6 +929,7 @@
             localStorage.setItem('email_cadastro', $('#participante-email').val())
             localStorage.setItem('nome_cadastro', $('#participante-nome').val())
 
+            evento = evento || '@ViewBag.Evento.Numeracao @ViewBag.Configuracao.Titulo'
 
             var div = document.createElement("div");
 

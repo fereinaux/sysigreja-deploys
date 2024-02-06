@@ -784,7 +784,7 @@
                         type: "GET",
                         contentType: `application/json; charset=utf-8`,
                         success: function (dataCampos) {
-                            camposConfigLocal = dataCampos.Campos
+                            camposConfig = dataCampos.Campos
                             $(".configuracao-campos").html(`${[...camposConfig].map(p => `<option value=${p.Id}>${p.Description}</option>`)}`)
 
                             $.ajax({

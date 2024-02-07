@@ -53,19 +53,28 @@ function CarregarTabelaPresenca() {
                                 columns: isMobile ? ':not(.noExport), .export' : ':not(.noExport):visible, .export', orthogonal: 'export'
                             }, customize: function (doc) {
 
-                                doc.content.splice(0, 1, {
-                                    columns: [
-                                        {
-                                            margin: [5, 5, 25, 15],
-                                            alignment: 'left',
-                                            image: `/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId}`,
-                                            width: 70
-                                        },
-                                        { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
+                                $.ajax({
+                                    url: `/Arquivo/GetArquivoBase64/${SelectedEvent.LogoRelatorioId}`, 
+                                    datatype: "json",
+                                    type: "GET",
+                                    contentType: 'application/json; charset=utf-8',                                  
+                                    success: function (data) {
+                                        doc.content.splice(0, 1, {
+                                            columns: [
+                                                {
+                                                    margin: [5, 5, 25, 15],
+                                                    alignment: 'left',
+                                                    image: `data:image/png;base64,${data}`,
+                                                    width: 70
+                                                },
+                                                { ...doc.content[0], alignment: 'left', margin: [15, 25, 5, 5], }
 
-                                    ]
+                                            ]
 
-                                });
+                                        });
+}
+                                })
+                                
                             }
                         },
                         {

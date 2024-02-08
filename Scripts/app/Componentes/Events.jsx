@@ -101,7 +101,6 @@ function Events({ search, identificador }) {
       initialView: "listMonth",
       locale: "pt-br",
       height: 400,
-      contentHeight: "auto",
       buttons: {
         today: false,
       },
@@ -143,6 +142,7 @@ function Events({ search, identificador }) {
       },
     });
     calendar.render();
+    calendarEl.style.overflow = "auto";
 
     $("#preloader").fadeOut();
 

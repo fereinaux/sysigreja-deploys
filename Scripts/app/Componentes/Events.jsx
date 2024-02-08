@@ -96,8 +96,54 @@ function Events({ search, identificador }) {
 
     let { Eventos } = res;
 
-    setEventos(res.Eventos);
-    setEventosCalendario(res.Eventos);
+    var calendarEl = document.getElementById("calendar");
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "listMonth",
+      locale: "pt-br",
+      height: 400,
+      buttons: {
+        today: false,
+      },
+      events: Eventos.map((e) => {
+        return {
+          title: `${e.Numeracao > 0 ? `${e.Numeracao}º ` : ""}${e.Titulo}`,
+          start: e.DataCalendar,
+          color: "transparent",
+          extendedProps: {
+            url: e.UrlDestino,
+            logo: e.Logo,
+            bg: e.Background,
+            id: e.Id,
+          },
+        };
+      }),
+      eventContent: function (arg) {
+        let div = document.createElement("div");
+        let overlay = document.createElement("div");
+        let spanContainer = document.createElement("div");
+        let span = document.createElement("span");
+        let img = document.createElement("img");
+        let bg = document.createElement("img");
+        img.classList.add("img-calendar");
+        bg.classList.add("bg-calendar");
+        div.classList.add("div-calendar");
+        div.dataset.id = arg.event.extendedProps.id;
+        div.dataset.url = arg.event.extendedProps.url;
+        span.classList.add("span-calendar");
+        spanContainer.classList.add("span-container-calendar");
+        span.innerHTML = arg.event.title;
+        bg.src = `/Inscricoes/GetBGEventoGlobal/${div.dataset.id}`;
+
+        div.append(bg);
+
+        spanContainer.append(span);
+        div.append(spanContainer);
+        return { domNodes: [div] };
+      },
+    });
+    calendar.render();
+
+    $("#preloader").fadeOut();
 
     if (!isEquipe && Eventos.length > 0) {
       let ldestaque = Eventos.filter(
@@ -114,8 +160,6 @@ function Events({ search, identificador }) {
       setEventos(Eventos);
       setDestaque(ldestaque);
     }
-
-    $("#preloader").fadeOut();
   }
 
   return (

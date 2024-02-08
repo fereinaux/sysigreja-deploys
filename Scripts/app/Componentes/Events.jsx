@@ -77,7 +77,7 @@ function Events({ search, identificador }) {
 
   useEffect(() => {
     carregarEventos();
-  }, [search]);
+  }, [search, identificador]);
 
   async function carregarEventos() {
     const res = await $.ajax({

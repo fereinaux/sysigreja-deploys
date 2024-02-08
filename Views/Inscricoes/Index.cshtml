@@ -866,15 +866,9 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
                         spanContainer.classList.add('span-container-calendar')
                         span.innerHTML = arg.event.title
                         bg.src = `/Inscricoes/GetBGEventoGlobal/${arg.event.id}`
-                        if (arg.event.extendedProps.logo) {
-
-                            div.append(img)
-                        }
-                        if (arg.event.extendedProps.bg) {
-
+              
                             div.append(bg)
-                            div.append(overlay)
-                        }
+                       
                         spanContainer.append(span)
                         div.append(spanContainer)
                         return { domNodes: [div] }

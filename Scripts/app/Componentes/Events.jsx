@@ -101,6 +101,7 @@ function Events({ search, identificador }) {
       initialView: "listMonth",
       locale: "pt-br",
       height: 400,
+      contentHeight: "auto",
       buttons: {
         today: false,
       },

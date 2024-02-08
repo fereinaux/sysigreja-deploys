@@ -865,8 +865,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
                         span.classList.add('span-calendar')
                         spanContainer.classList.add('span-container-calendar')
                         span.innerHTML = arg.event.title
-                        img.src = `data:image/png;base64,${arg.event.extendedProps.logo}`
-                        bg.src = `data:image/png;base64,${arg.event.extendedProps.bg}`
+                        bg.src = `/Inscricoes/GetBGEventoGlobal/${evento.Id}`
                         if (arg.event.extendedProps.logo) {
 
                             div.append(img)

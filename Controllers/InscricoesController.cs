@@ -15,6 +15,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using AutoMapper;
+using Core.Business.Arquivos;
 using Core.Business.Categorias;
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
@@ -355,12 +356,24 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetBGEventoGlobal(int Id)
+        {
+
+            var evento = eventosBusiness
+               .GetEventosGlobais()
+               .Where(x => x.Id == Id).FirstOrDefault();
+
+            return File(evento.Background, "image/jpeg", "Background");
+        }
+
+        [HttpGet]
         [AllowAnonymous]
         public ActionResult GetEventosInscricao(
             string type,
             string identificador,
             string search,
-            bool? isMobile
+            bool? isMobile,
+            bool? linkBg = false
         )
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
@@ -430,19 +443,17 @@ namespace SysIgreja.Controllers
                             DataEvento = x.DataEvento,
                             DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
                             Descricao = x.Descricao,
-                            Identificador = identificadores?.Length > 0 ? x.Identificador : "",
+                            Identificador = x.Identificador,
                             Titulo = x.TituloEvento,
                             Status = x.Status.GetDescription(),
                             StatusEquipe = x.StatusEquipe.GetDescription(),
-                            Background =
-                                x.Background != null
+                            Background = (!(linkBg ?? false) && x.Background != null)
                                     ? (
                                         isMobile.HasValue && isMobile.Value
                                             ? imageService.ResizeImage(x.Background, 400)
                                             : imageService.ResizeImage(x.Background, 700)
                                     )
                                     : "",
-                            Logo = "",
                         }
                 )
                 .OrderBy(x => x.DataEvento)

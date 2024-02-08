@@ -674,7 +674,8 @@
                 type: action,
                 identificador: isMobile ? $('#igreja-mobile').val() : $('#igreja-desktop').val(),
                 search: $('#search-evento').val(),
-                isMobile
+                isMobile,
+                linkBg: true,
             },
             datatype: "json",
             type: "GET",
@@ -696,7 +697,7 @@
                 <div class="col col-xs-12">
                     <a target="_blank" href='${destaque.UrlDestino}' class="destaque-a" style="margin-bottom: 25px;">
 
-                        <div class="bloco bloco-destaque" style=" background: url('data:image/png;base64,${destaque.Background}');
+                        <div class="bloco bloco-destaque" style=" background: url('/Inscricoes/GetBGEventoGlobal/${destaque.Id}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;">
@@ -732,7 +733,7 @@ ${destaque.Valor > 0 ? `<p style="display: block; color: #686464;">${destaque.Va
                      ${eventosAbertos.map(evento => `<div class="col-md-3 col col-xs-12 col-evento-select">
                         <a target="_blank" href='${evento.UrlDestino}' class="a-normal">
 
-                            <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');
+                            <div class="bloco bloco-normal" style="        background: url('/Inscricoes/GetBGEventoGlobal/${evento.Id}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -773,7 +774,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
 
   ${informativos.map(evento => `<div class="col-md-3 col col-xs-12" style="margin-bottom:15px">
   <a target="_blank" href='${evento.UrlDestino}' class="a-normal">
-                        <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');
+                        <div class="bloco bloco-normal" style="        background: url('/Inscricoes/GetBGEventoGlobal/${evento.Id}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -806,7 +807,7 @@ ${evento.Valor > 0 ? ` <p style="display: block; color: #686464;">${evento.Valor
 
   ${eventosEncerrados.map(evento => `<div class="col-md-3 col col-xs-12 a-normal">
 
-                        <div class="bloco bloco-normal" style="        background: url('data:image/png;base64,${evento.Background}');
+                        <div class="bloco bloco-normal" style="        background: url('/Inscricoes/GetBGEventoGlobal/${evento.Id}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

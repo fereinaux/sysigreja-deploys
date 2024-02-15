@@ -237,7 +237,7 @@ function Events({ search, identificador }) {
                     marginBottom: "4px",
                   }}
                 >
-                  {destaque.Numeracao > 0 ? `${destaque.Numeracao}º` : ""}
+                  {destaque.Numeracao > 0 ? `${destaque.Numeracao}º ` : ""}
                   {destaque.Titulo}
                 </h3>
                 {destaque.Valor > 0 && (
@@ -329,7 +329,7 @@ function Events({ search, identificador }) {
                   marginBottom: "4px",
                 }}
               >
-                {evento.Numeracao > 0 ? `${evento.Numeracao}º` : ""}
+                {evento.Numeracao > 0 ? `${evento.Numeracao}º ` : ""}
                 {evento.Titulo}
               </h3>
 
@@ -419,7 +419,7 @@ function Events({ search, identificador }) {
                   marginBottom: "4px",
                 }}
               >
-                {evento.Numeracao > 0 ? `${evento.Numeracao}º` : ""}
+                {evento.Numeracao > 0 ? `${evento.Numeracao}º ` : ""}
                 {evento.Titulo}
               </h3>
 
@@ -507,7 +507,7 @@ function Events({ search, identificador }) {
                 marginBottom: "4px",
               }}
             >
-              {evento.Numeracao > 0 ? `${evento.Numeracao}º` : ""}
+              {evento.Numeracao > 0 ? `${evento.Numeracao}º ` : ""}
               {evento.Titulo}
             </h3>
 

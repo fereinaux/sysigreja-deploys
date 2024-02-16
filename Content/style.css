@@ -10650,3 +10650,7 @@ th {
 .tippy-content:has([id*='profile']) {
     padding: 0px !important
 }
+
+.select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
+    padding: 5px 12px !important;
+}

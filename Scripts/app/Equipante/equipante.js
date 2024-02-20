@@ -1005,7 +1005,7 @@ function GetEquipante(id) {
 }
 
 function EditEquipante(id) {
-    $(`#equipante-nome`).prop("disabled", !(SelectedEvent.Role == 'Admin'));
+    $(`#equipante-nome`).prop("disabled", (!(SelectedEvent.Role == 'Admin') && id > 0 ));
     $(`#equipante-logradouro`).prop("disabled", true);
     $(`#equipante-bairro`).prop("disabled", true);
     $(`#equipante-cidade`).prop("disabled", true);

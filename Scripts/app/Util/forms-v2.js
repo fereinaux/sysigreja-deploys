@@ -516,7 +516,11 @@ function getFormData($form) {
     var indexed_array = {};
 
     $.map(unindexed_array, function (n, i) {
-        indexed_array[n['name']] = n['value'];
+        if ($(`#${n['name']}`).hasClass('full-date-time')) {
+            indexed_array[n['name']] = moment($(`#${n['name']}`).val(), 'DD/MM/YYYY HH:mm', 'pt-br').toJSON()
+        } else {
+            indexed_array[n['name']] = n['value'];
+        }
     });
 
     indexed_array["EventoId"] = SelectedEvent.Id

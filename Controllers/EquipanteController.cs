@@ -1462,66 +1462,6 @@ namespace SysIgreja.Controllers
         public ActionResult PostEquipante(PostInscricaoModel model)
         {
             var evento = eventosBusiness.GetEventoById(model.EventoId);
-            if (model.Inscricao)
-            {
-                if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
-                {
-                    MercadoPagoConfig.AccessToken = evento.Configuracao.AccessTokenMercadoPago;
-                    Guid g = Guid.NewGuid();
-                    model.MercadoPagoId = g.ToString();
-                    var request = new PreferenceRequest
-                    {
-                        PaymentMethods = new PreferencePaymentMethodsRequest
-                        {                       
-                            ExcludedPaymentMethods = new List<PreferencePaymentMethodRequest>
-                            {
-                                new PreferencePaymentMethodRequest
-                                {
-                                    Id = "pec",
-                                },
-                                        new PreferencePaymentMethodRequest
-                                {
-                                    Id = "bolbradesco",
-                                },
-                            },
-                            ExcludedPaymentTypes = new List<PreferencePaymentTypeRequest>
-                            {
-                                new PreferencePaymentTypeRequest
-                                {
-                                    Id = "debit_card",
-                                },
-                            },
-                        },
-                        Items = new List<PreferenceItemRequest>
-                        {
-                            new PreferenceItemRequest
-                            {
-                                Id = "",
-                                Title =
-                                    $"Inscrição {evento.Numeracao.ToString()}º {evento.Configuracao.Titulo}",
-                                Quantity = 1,
-                                CurrencyId = "BRL",
-                                UnitPrice = evento.ValorTaxa,
-                                PictureUrl =
-                                    $"https://{System.Web.HttpContext.Current.Request.Url.Host}/{evento.Configuracao.Identificador}/logo"
-                            },
-                        },
-                        AutoReturn = "approved",
-                        BackUrls = new PreferenceBackUrlsRequest
-                        {
-                            Success =
-                                $"https://{System.Web.HttpContext.Current.Request.Url.Host}/Inscricoes/PagamentoConcluido",
-                        },
-                        ExternalReference = model.MercadoPagoId
-                    };
-
-                    // Cria a preferência usando o client
-                    var client = new PreferenceClient();
-                    Preference preference = client.Create(request);
-
-                    model.MercadoPagoPreferenceId = preference.Id;
-                }
-            }
 
             var equipante = equipantesBusiness.PostEquipante(model);
 

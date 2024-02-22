@@ -74,7 +74,7 @@
             <div class="modal-body">
                 <div class="moldura-modal p-h-xs" id="form-evento">
                     <div class="row p-h-xs">
-                        <input type="hidden" id="evento-id" />                       
+                        <input type="hidden" id="evento-id" />
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Numeraçao</h5>
 
@@ -107,7 +107,7 @@
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Tipo do Evento</h5>
 
-                            @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "evento-tipo", OnChange = "notExistFunction", DropdownParent = "form-evento" })                      
+                            @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "evento-tipo", OnChange = "notExistFunction", DropdownParent = "form-evento" })
                         </div>
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Valor de Inscrição</h5>
@@ -118,7 +118,7 @@
                             <h5>Taxa de Voluntários</h5>
 
                             <input type="number" class="form-control required" id="evento-taxa" data-field="Taxa" />
-                        </div>                    
+                        </div>
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Url externa</h5>
 
@@ -137,6 +137,16 @@
                                     <input type="text" class="form-control" id="evento-linklocal" data-field="Link do Google para o local" />
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-sm-6 p-w-md text-center">
+                            <h5>Idade Mínima</h5>
+
+                            <input type="number" class="form-control" id="evento-min" data-field="Idade Mínima" />
+                        </div>
+                        <div class="col-sm-6 p-w-md text-center">
+                            <h5>Idade Máxima</h5>
+
+                            <input type="number" class="form-control" id="evento-max" data-field="Idade Máxima" />
                         </div>
                         <div class="col-sm-12 p-w-md m-t-md text-center">
                             <h5>Conteúdo</h5>

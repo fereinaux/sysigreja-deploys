@@ -180,7 +180,7 @@ namespace SysIgreja.Controllers
 
             if (arquivo != null)
             {
-                return File(imageService.ResizeImage(arquivo.Conteudo,100), arquivo.Tipo, arquivo.Nome);
+                return File(imageService.ResizeImageByte(arquivo.Conteudo,100), arquivo.Tipo, arquivo.Nome);
             }
             else
             {
@@ -202,7 +202,7 @@ namespace SysIgreja.Controllers
 
             if (arquivo != null)
             {
-                return File(imageService.ResizeImage(arquivo.Conteudo, 400), arquivo.Tipo, arquivo.Nome);
+                return File(imageService.ResizeImageByte(arquivo.Conteudo, 400), arquivo.Tipo, arquivo.Nome);
             }
             else
             {
@@ -363,7 +363,7 @@ namespace SysIgreja.Controllers
                .GetEventosGlobais()
                .Where(x => x.Id == Id).FirstOrDefault();
 
-            return File(imageService.ResizeImage(evento.Background, 400), "image/jpeg", "Background");
+            return File(imageService.ResizeImageByte(evento.Background, 400), "image/jpeg", "Background");
         }
 
         [HttpGet]

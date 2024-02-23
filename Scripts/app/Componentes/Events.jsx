@@ -136,7 +136,7 @@ function Events({ search, identificador }) {
     <>
 
       {abertos.length > 0 && (
-        <div className="col-xs-12">
+        <div >
           <h3
             style={{
               fontWeight: 900,
@@ -146,11 +146,12 @@ function Events({ search, identificador }) {
             Inscrições Abertas
           </h3>
         </div>
-      )}
+          )}
+          <div class="events-holder">
       {abertos.map((evento) => (
         <div
           key={evento.Id}
-          className="col-md-3 col col-xs-12 col-evento-select"
+          className="col-evento-select"
         >
           <a target="_blank" href={evento.UrlDestino} className="a-normal">
             <div
@@ -224,9 +225,9 @@ function Events({ search, identificador }) {
           </a>
         </div>
       ))}
-
+          </div>
       {informativos.length > 0 && (
-        <div className="col-xs-12">
+        <div >
           <h3
             style={{
               fontWeight: 900,
@@ -237,10 +238,11 @@ function Events({ search, identificador }) {
           </h3>
         </div>
       )}
+          <div class="events-holder">
       {informativos.map((evento) => (
         <div
           key={evento.Id}
-          className="col-md-3 col col-xs-12 col-evento-select"
+          className="col-evento-select"
         >
           <a target="_blank" href={evento.UrlDestino} className="a-normal">
             <div
@@ -314,8 +316,9 @@ function Events({ search, identificador }) {
           </a>
         </div>
       ))}
+          </div>
       {emBreve.length > 0 && (
-        <div className="col-xs-12">
+        <div >
           <h3
             style={{
               fontWeight: 900,
@@ -325,11 +328,12 @@ function Events({ search, identificador }) {
             Inscrições em breve
           </h3>
         </div>
-      )}
+          )}
+          <div class="events-holder">
       {emBreve.map((evento) => (
         <div
           key={evento.Id}
-          className="col-md-3 col col-xs-12 col-evento-select"
+          className="col-evento-select"
         >
           <div
             className="bloco bloco-normal"
@@ -401,6 +405,7 @@ function Events({ search, identificador }) {
           </div>
         </div>
       ))}
+          </div>
     </>
   );
 }

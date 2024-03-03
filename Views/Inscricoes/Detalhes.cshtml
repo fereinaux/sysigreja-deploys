@@ -90,8 +90,15 @@
                     <span onclick="window.location.href = '/Inscricoes/Presenca/@ViewBag.EventoId'" class="btn btn-outline mt-5 btn-default"><i class="fas fa-calendar-check"></i> Marcar Presença</span>
                 }
 
-                <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                @if (ViewBag.Evento.UrlExterna != null)
+                {
+                    <span onclick="window.location.href = '@ViewBag.Evento.UrlExterna'" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                }
+                else
+                {
 
+                    <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                }
 
             </div>
         </div>

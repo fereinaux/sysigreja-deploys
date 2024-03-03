@@ -27,6 +27,22 @@
       "port": 1433,
       "driver": "MSSQL",
       "group": "IECB",
+      "database": "calvario",
+      "name": "Calvário",
+      "username": "reinaux",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "group": "IECB",
       "database": "sysigreja",
       "name": "SysIgreja",
       "username": "reinaux",

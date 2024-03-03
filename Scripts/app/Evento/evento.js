@@ -174,6 +174,8 @@ function GetEvento(id) {
                 $("#evento-descricao").val(data.Evento.Descricao);
                 $("#evento-urlexterna").val(data.Evento.UrlExterna);
                 $("#evento-numeracao").val(data.Evento.Numeracao);
+                $("#evento-min").val(data.Evento.IdadeMin);
+                $("#evento-max").val(data.Evento.IdadeMax);
                 $("#evento-nomelocal").val(data.Evento.NomeLocal);
                 $("#evento-linklocal").val(data.Evento.LinkLocal);
                 $("#evento-faixaetaria").val(data.Evento.FaixaEtaria);
@@ -204,6 +206,8 @@ function GetEvento(id) {
     else {
         $("#evento-id").val(0);
         $("#evento-numeracao").val("");
+        $("#evento-min").val("");
+        $("#evento-max").val("");
         $("#evento-urlexterna").val("");
         $('#evento-global').iCheck('uncheck')
         $("#evento-descricao").val("");
@@ -363,6 +367,8 @@ function PostEvento() {
                     Global: $('#evento-global:checked').length > 0,
                     ConfiguracaoId: $("#evento-tipo").val(),
                     Numeracao: $("#evento-numeracao").val(),
+                    IdadeMin: $("#evento-min").val(),
+                    IdadeMax: $("#evento-max").val(),
                     NomeLocal: $("#evento-nomelocal").val(),
                     LinkLocal: $("#evento-linklocal").val(),
                     Descricao: $("#evento-descricao").val(),

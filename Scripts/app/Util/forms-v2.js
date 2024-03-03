@@ -111,6 +111,7 @@ function ValidateForm(form) {
     var formResult = IniciarFormResult();
 
     formResult = ValidateRequired(form, formResult);
+    formResult = ValidateMinMax(form, formResult);
     formResult = ValidateMinLength(form, formResult);
     formResult = ValidateMaxLength(form, formResult);
     formResult = ValidateEmail(form, formResult);
@@ -155,6 +156,25 @@ function ValidateForm(form) {
     }
 
     return true;
+}
+
+
+function ValidateMinMax(form, formResult) {
+    AplicarCssPadrao($(`${form} .required`)); 
+    $(`${form} input.required.full-date-changed`).each(function () {
+        var input = $(this);
+        if (input.data('min') && input.data('max')) {
+
+        var age = moment().diff(moment(input.val(), 'DD/MM/YYYY', 'pt-br'), 'years', false)        
+        if (age > (input.data('max')) || age < (input.data('min'))) {
+                formResult.IsValid = false;
+            AplicarCssErro(input);
+            formResult.ErrorsValidacao += AddErro(`O participante precisa ter entre ${input.data('min')} e ${input.data('max')} anos`);
+            }
+        
+        }
+    }); 
+    return formResult;
 }
 
 function ValidateRequired(form, formResult) {
@@ -516,7 +536,11 @@ function getFormData($form) {
     var indexed_array = {};
 
     $.map(unindexed_array, function (n, i) {
-        indexed_array[n['name']] = n['value'];
+        if ($(`#${n['name']}`).hasClass('full-date-time')) {
+            indexed_array[n['name']] = moment($(`#${n['name']}`).val(), 'DD/MM/YYYY HH:mm', 'pt-br').toJSON()
+        } else {
+            indexed_array[n['name']] = n['value'];
+        }
     });
 
     indexed_array["EventoId"] = SelectedEvent.Id

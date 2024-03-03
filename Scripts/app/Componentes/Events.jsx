@@ -134,105 +134,9 @@ function Events({ search, identificador }) {
 
   return (
     <>
-      //{destaque && (
-      //  <>
-      //    <div className="col-xs-12">
-      //      <h3
-      //        style={{
-      //          fontWeight: 900,
-      //          fontSize: "28px",
-      //        }}
-      //      >
-      //        Próximo evento
-      //      </h3>
-      //    </div>
 
-      //    <div className="col col-xs-12">
-      //      <a
-      //        target="_blank"
-      //        href={destaque.UrlDestino}
-      //        className="destaque-a"
-      //        style={{
-      //          marginBottom: "25px",
-      //        }}
-      //      >
-      //        <div
-      //          className="bloco bloco-destaque"
-      //          style={{
-      //            justifyContent: "center",
-      //            alignItems: "center",
-      //          }}
-      //        >
-      //          <AsyncImage
-      //            style={{
-      //              width: "100%",
-      //              objectFit: "cover",
-      //              height: "100%",
-      //            }}
-      //            src={`/Inscricoes/GetBGEventoGlobal/${destaque.Id}`}
-      //          ></AsyncImage>
-      //          <span
-      //            className="badge m-r-xs"
-      //            style={{
-      //              position: "absolute",
-      //              top: "5px",
-      //              left: "5px",
-      //              zIndex: 999999,
-      //              background: "#fff",
-      //              color: "#000",
-      //              textOverflow: "ellipsis",
-      //              maxWidth: "90%",
-      //              overflowX: "hidden",
-      //            }}
-      //          >
-      //            {destaque.Identificador}
-      //          </span>
-      //        </div>
-
-      //        <div className="card-body card-destaque">
-      //          <span
-      //            style={{
-      //              display: "block",
-      //              color: "#9b2125",
-      //              fontSize: "16px",
-      //            }}
-      //          >
-      //            {destaque.Data}
-      //          </span>
-      //          <h3
-      //            style={{
-      //              fontSize: "28px",
-      //              marginTop: "4px",
-      //              marginBottom: "4px",
-      //            }}
-      //          >
-      //            {destaque.Numeracao > 0 ? `${destaque.Numeracao}º ` : ""}
-      //            {destaque.Titulo}
-      //          </h3>
-      //          {destaque.Valor > 0 && (
-      //            <p
-      //              style={{
-      //                display: "block",
-      //                color: "#686464",
-      //              }}
-      //            >
-      //              {destaque.Valor.toLocaleString("pt-BR", {
-      //                minimumFractionDigits: 2,
-      //                style: "currency",
-      //                currency: "BRL",
-      //              })}
-      //            </p>
-      //          )}
-      //          <span className="button-destaque btn btn-outline">
-      //            VER DETALHES
-      //          </span>
-      //        </div>
-      //      </a>
-      //    </div>
-      //  </>
-      //)}
       {abertos.length > 0 && (
-        <div className="col-xs-12">
+        <div >
           <h3
             style={{
               fontWeight: 900,
@@ -242,11 +146,12 @@ function Events({ search, identificador }) {
             Inscrições Abertas
           </h3>
         </div>
-      )}
+          )}
+          <div class="events-holder">
       {abertos.map((evento) => (
         <div
           key={evento.Id}
-          className="col-md-3 col col-xs-12 col-evento-select"
+          className="col-evento-select"
         >
           <a target="_blank" href={evento.UrlDestino} className="a-normal">
             <div
@@ -320,9 +225,9 @@ function Events({ search, identificador }) {
           </a>
         </div>
       ))}
-
+          </div>
       {informativos.length > 0 && (
-        <div className="col-xs-12">
+        <div >
           <h3
             style={{
               fontWeight: 900,
@@ -333,10 +238,11 @@ function Events({ search, identificador }) {
           </h3>
         </div>
       )}
+          <div class="events-holder">
       {informativos.map((evento) => (
         <div
           key={evento.Id}
-          className="col-md-3 col col-xs-12 col-evento-select"
+          className="col-evento-select"
         >
           <a target="_blank" href={evento.UrlDestino} className="a-normal">
             <div
@@ -410,8 +316,9 @@ function Events({ search, identificador }) {
           </a>
         </div>
       ))}
+          </div>
       {emBreve.length > 0 && (
-        <div className="col-xs-12">
+        <div >
           <h3
             style={{
               fontWeight: 900,
@@ -421,11 +328,12 @@ function Events({ search, identificador }) {
             Inscrições em breve
           </h3>
         </div>
-      )}
+          )}
+          <div class="events-holder">
       {emBreve.map((evento) => (
         <div
           key={evento.Id}
-          className="col-md-3 col col-xs-12 col-evento-select"
+          className="col-evento-select"
         >
           <div
             className="bloco bloco-normal"
@@ -497,6 +405,7 @@ function Events({ search, identificador }) {
           </div>
         </div>
       ))}
+          </div>
     </>
   );
 }

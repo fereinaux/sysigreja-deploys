@@ -235,7 +235,7 @@ namespace SysIgreja.Controllers
                                         Id = y.Id
                                     }
                             ),
-                            Etiquetas = x.Configuracao.Etiquetas.Select(
+                            Etiquetas = x.Configuracao.Etiquetas.Where(y => y.Status != StatusEnum.Deletado).Select(
                                 y =>
                                     new EtiquetaModel
                                     {

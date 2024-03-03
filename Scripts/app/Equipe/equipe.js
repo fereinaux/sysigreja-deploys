@@ -114,7 +114,7 @@ function GetAnexos(id) {
         ],
         ajax: {
             url: '/Arquivo/GetArquivosEquipe',
-            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, EventoId: function () { return SelectedEvent.ConfiguracaoId } },
+            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, ConfiguracaoId: function () { return SelectedEvent.ConfiguracaoId } },
             datatype: "json",
             type: "POST"
         }

@@ -202,7 +202,7 @@ namespace SysIgreja.Controllers
 
             if (arquivo != null)
             {
-                return File(imageService.ResizeImageByte(arquivo.Conteudo, 400), arquivo.Tipo, arquivo.Nome);
+                return File(imageService.ResizeImageByte(arquivo.Conteudo, 200), arquivo.Tipo, arquivo.Nome);
             }
             else
             {

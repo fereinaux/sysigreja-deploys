@@ -10654,15 +10654,3 @@ th {
 .select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
     padding: 5px 12px !important;
 }
-
-.events-holder {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 10px;
-}
-
-@media (max-width: 500px) {
-    .events-holder {
-        grid-template-columns: 1fr 1fr;
-    }
-}

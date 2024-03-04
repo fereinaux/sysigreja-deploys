@@ -1,244 +1,26 @@
 {
-  "sqltools.connections": [
+  "mssql.connections": [
     {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
+      "server": "(LocalDb)\\MSSQLLocalDB",
+      "database": "",
+      "authenticationType": "Integrated",
+      "profileName": "Localhost",
+      "password": ""
+    },
+    {
       "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "trindade",
-      "name": "Trindade",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "calvario",
-      "name": "Calvário",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "sysigreja",
-      "name": "SysIgreja",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "Anglicana",
-      "database": "anglicanazn",
-      "name": "AnglicanaZN",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "recon",
-      "name": "Recon",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "getsemani",
-      "name": "Getsemani",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "iecbeventos",
-      "name": "Iecbeventos",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "pdc",
-      "name": "PDC",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "consultaimpacto",
-      "name": "Consulta Impacto",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "impacto",
-      "name": "Impacto",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "IECB",
-      "database": "consulta",
-      "name": "Consulta",
-      "username": "reinaux",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "Local",
-      "database": "trindade",
-      "name": "Trindade",
-      "username": "sa",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "Local",
-      "database": "consulta",
-      "name": "Consulta",
-      "username": "sa",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "Local",
-      "database": "recon",
-      "name": "Recon",
-      "username": "sa",
-      "password": "Reinaux0)"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "localhost",
-      "port": 1433,
-      "driver": "MSSQL",
-      "group": "Local",
-      "database": "testevideo",
-      "name": "testevideo",
-      "username": "sa",
-      "password": "Reinaux0)"
+      "database": "",
+      "authenticationType": "SqlLogin",
+      "user": "reinaux",
+      "password": "",
+      "emptyPasswordInput": false,
+      "savePassword": true,
+      "profileName": "MyInterServer",
+      "encrypt": "Mandatory",
+      "trustServerCertificate": true,
+      "connectTimeout": 15,
+      "commandTimeout": 30,
+      "applicationName": "vscode-mssql"
     }
   ],
   "dotnet.defaultSolution": "sysigreja-deploys.sln"

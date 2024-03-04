@@ -159,17 +159,13 @@ function Events({ search, identificador }) {
                                 style={{
                                     justifyContent: "center",
                                     alignItems: "center",
+                                    width: "100%",
+                                    paddingBottom: "100%",
+                                    backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}')`,
+                                    backgroundSize: "cover"
                                 }}
                             >
-                                <AsyncImage
-                                    style={{
-                                        width: "100%",
-                                        objectFit: "cover",
-                                        height: 160,
-                                        width: 160
-                                    }}
-                                    src={`/Inscricoes/GetBGEventoGlobal/${evento.Id}`}
-                                ></AsyncImage>
+                   
                                 <span
                                     className="badge m-r-xs"
                                     style={{

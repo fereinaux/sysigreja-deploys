@@ -85,6 +85,7 @@ function PrintAll() {
 }
 
 function GetAnexos(id) {
+    console.log(id ? id : $("#Equipe").val());
     const tableArquivoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],
@@ -114,7 +115,8 @@ function GetAnexos(id) {
         ],
         ajax: {
             url: '/Arquivo/GetArquivosEquipe',
-            data: { Equipe: id ? id : $("#Equipe").val(), IsComunEquipe: false, ConfiguracaoId: function () { return SelectedEvent.ConfiguracaoId } },
+            data: {
+                Equipe: function () { return $("#Equipe").val() }, IsComunEquipe: false, ConfiguracaoId: function () { return SelectedEvent.ConfiguracaoId } },
             datatype: "json",
             type: "POST"
         }

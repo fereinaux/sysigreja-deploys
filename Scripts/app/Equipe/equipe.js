@@ -85,7 +85,6 @@ function PrintAll() {
 }
 
 function GetAnexos(id) {
-    console.log(id ? id : $("#Equipe").val());
     const tableArquivoConfig = {
         language: languageConfig,
         lengthMenu: [200, 500, 1000],

@@ -356,14 +356,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetBGEventoGlobal(int Id)
+        public ActionResult GetBGEventoGlobal(int Id, int? size)
         {
 
             var evento = eventosBusiness
                .GetEventosGlobais()
                .Where(x => x.Id == Id).FirstOrDefault();
 
-            return File(imageService.ResizeImageByte(evento.Background, 200), "image/jpeg", "Background");
+            return File(imageService.ResizeImageByte(evento.Background, size ?? 200), "image/jpeg", "Background");
         }
 
         [HttpGet]

@@ -161,7 +161,7 @@ function Events({ search, identificador }) {
                                     alignItems: "center",
                                     width: "100%",
                                     paddingBottom: "100%",
-                                    backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}')`,
+                                    backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width())}')`,
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                 }}
@@ -250,7 +250,7 @@ function Events({ search, identificador }) {
                                     alignItems: "center",
                                     width: "100%",
                                     paddingBottom: "100%",
-                                    backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}')`,
+                                    backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width())}')`,
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                 }}
@@ -337,7 +337,7 @@ function Events({ search, identificador }) {
                                 alignItems: "center",
                                 width: "100%",
                                 paddingBottom: "100%",
-                                backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}')`,
+                                backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width())}')`,
                                 backgroundSize: "cover",
                                 backgroundPosition: "center",
                             }}

@@ -1722,6 +1722,14 @@ function verificaCep(input) {
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',
+            timeout: 3000,
+            error: function () {
+                $(`#equipante-logradouro`).prop("disabled", false);
+                $(`#equipante-bairro`).prop("disabled", false);
+                $(`#equipante-cidade`).prop("disabled", false);
+                $(`#equipante-estado`).prop("disabled", false);
+                $.unblockUI();
+            },
             success: function (data) {
                 $(`#equipante-logradouro`).val(data.logradouro)
                 $(`#equipante-bairro`).val(data.bairro)

@@ -1383,7 +1383,14 @@ function verificaCep(input) {
             url: `https://api.iecbeventos.com.br/api/cep/${cep.replaceAll('-', '')}`,
             datatype: "json",
             type: "GET",
-            contentType: 'application/json; charset=utf-8',
+            contentType: 'application/json; charset=utf-8', timeout: 3000,
+            error: function () {
+                $(`#participante-logradouro`).prop("disabled", false);
+                $(`#participante-bairro`).prop("disabled", false);
+                $(`#participante-cidade`).prop("disabled", false);
+                $(`#participante-estado`).prop("disabled", false);
+                $.unblockUI();
+            },
             success: function (data) {
                 $(`#participante-logradouro`).prop("disabled", typeof (data.logradouro) == "string");
                 $(`#participante-logradouro`).val(data.logradouro)

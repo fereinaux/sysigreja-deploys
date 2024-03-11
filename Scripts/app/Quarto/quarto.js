@@ -637,6 +637,14 @@ function verificaCep(input) {
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8',
+            timeout: 3000,
+            error: function () {
+                $(`#quarto-logradouro`).prop("disabled", false);
+                $(`#quarto-bairro`).prop("disabled", false);
+                $(`#quarto-cidade`).prop("disabled", false);
+                $(`#quarto-estado`).prop("disabled", false);
+                $.unblockUI();
+            },
             success: function (data) {
                 $(`#quarto-logradouro`).val(data.logradouro)
                 $(`#quarto-bairro`).val(data.bairro)

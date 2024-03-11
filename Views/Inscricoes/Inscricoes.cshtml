@@ -565,6 +565,7 @@
                            $(`#participante-bairro`).prop("disabled", false);
                            $(`#participante-cidade`).prop("disabled", false);
                            $(`#participante-estado`).prop("disabled", false);
+                           $.unblockUI();
 },
                        success: function (data) {
                            $(`#participante-logradouro`).prop("disabled", typeof (data.logradouro) == "string");

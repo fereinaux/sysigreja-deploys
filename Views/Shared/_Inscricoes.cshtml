@@ -119,7 +119,7 @@
             <span onclick="window.location.href =`https://${window.location.host}`" style="margin-left: 20px; cursor: pointer; margin-right: auto; margin-top: auto; margin-bottom: auto; font-size: 20px; color: white"><i class="fas fa-chevron-left"></i></span>
             @if (ViewBag.Configuracao.LogoId != null)
             {
-                <img style="height: 50px; margin: auto; margin-left: -40px;" alt="@ViewBag.Configuracao.Titulo" src="data:image/png;base64,@ViewBag.Configuracao.Logo" />
+                <img style="height: 50px; margin: auto; margin-left: -40px;" alt="@ViewBag.Configuracao.Titulo" src="~/Inscricoes/LogoById/@ViewBag.Configuracao.Id" />
             }
             else
             {

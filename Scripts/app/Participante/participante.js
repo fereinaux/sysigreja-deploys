@@ -141,7 +141,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         fixedHeader: true,
         filter: true,
         createdRow: function (row, data, dataIndex) {
-
+            
 
         },
         orderMulti: false,
@@ -178,7 +178,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             {
                 data: "Nome", name: "Nome", title: "Nome", width: "25%", createdCell: function (td, cellData, rowData, row, col) {
 
-                    $(td).css('cursor', 'pointer')
+                    $(td).css('cursor','pointer')
                     if (td._tippy) {
                         rotdw._tippy.destroy()
                     }
@@ -257,7 +257,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return row.Status != Cancelado && row.Status != Espera ?
 
                         `<form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
-${GetButton('Pagamentos', data, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
+${GetButton('Pagamentos',data, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                                             
                         ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
                                 <span data-tippy-content="Adicionar Foto"  style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
@@ -281,11 +281,11 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
         ],
 
         drawCallback: function (settings) {
-
+            
             if (callbackFunction) {
                 callbackFunction()
 
-            }
+            }           
 
         },
         ajax: {
@@ -677,8 +677,8 @@ function PostArquivo() {
 
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
     var filename = dataToPost.get('arquivo-modal').name
-
-    var arquivo = new File([dataToPost.get('arquivo-modal')], filename);
+  
+        var arquivo = new File([dataToPost.get('arquivo-modal')], filename);
 
     dataToPost.set('Arquivo', arquivo)
     dataToPost.set('ParticipanteId', dataToPost.get('ParticipanteIdModal'))

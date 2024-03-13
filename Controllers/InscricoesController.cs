@@ -180,7 +180,7 @@ namespace SysIgreja.Controllers
 
             if (arquivo != null)
             {
-                return File(imageService.ResizeImageByte(arquivo.Conteudo,50), arquivo.Tipo, arquivo.Nome);
+                return File(imageService.ResizeImageByte(arquivo.Conteudo, 50), arquivo.Tipo, arquivo.Nome);
             }
             else
             {
@@ -810,7 +810,20 @@ namespace SysIgreja.Controllers
                             )
                         )
                         .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
-          
+                    if (
+                        !ev.Presencas.Any(
+                            x =>
+                                x.Reuniao.DataReuniao.Date == DateTime.Today.Date
+                                && x.Reuniao.Status != StatusEnum.Deletado
+                        )
+                    )
+                    {
+                        ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(
+                            x =>
+                                x.DataReuniao.Date == DateTime.Today.Date
+                                && x.Status != StatusEnum.Deletado
+                        );
+                    }
                     ViewBag.QRCode =
                         $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
 

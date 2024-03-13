@@ -908,21 +908,7 @@ namespace SysIgreja.Controllers
                                 CultureInfo.CreateSpecificCulture("pt-BR")
                             )
                         )
-                        .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
-                    if (
-                        !ev.Presencas.Any(
-                            x =>
-                                x.Reuniao.DataReuniao.Date == DateTime.Today.Date
-                                && x.Reuniao.Status != StatusEnum.Deletado
-                        )
-                    )
-                    {
-                        ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(
-                            x =>
-                                x.DataReuniao.Date == DateTime.Today.Date
-                                && x.Status != StatusEnum.Deletado
-                        );
-                    }
+                        .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));                    
                     ViewBag.QRCode =
                         $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
 

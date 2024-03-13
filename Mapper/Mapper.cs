@@ -50,7 +50,6 @@ namespace SysIgreja.Controllers
         public string Titulo { get; set; }
         public string PublicTokenMercadoPago { get; set; }
         public string AccessTokenMercadoPago { get; set; }
-        public string TokenPagSeguro { get; set; }
         public int? BackgroundId { get; set; }
         public int? LogoId { get; set; }
         public int? LogoRelatorioId { get; set; }

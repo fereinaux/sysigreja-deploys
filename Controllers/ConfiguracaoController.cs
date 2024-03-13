@@ -151,7 +151,6 @@ namespace SysIgreja.Controllers
                             CentroCustoTaxaId = x.CentroCustoTaxaId,
                             PublicTokenMercadoPago = x.PublicTokenMercadoPago,
                             AccessTokenMercadoPago = x.AccessTokenMercadoPago,
-                            TokenPagSeguro = x.TokenPagSeguro,
                             CorBotao = x.CorBotao,
                             CorHoverBotao = x.CorHoverBotao,
                             TipoCirculoId = x.TipoCirculo,
@@ -260,7 +259,6 @@ namespace SysIgreja.Controllers
                     Tipo = x.Tipo.GetDescription()
                 }).ToList(),
                 Id = result.Id,
-                TokenPagSeguro = result.TokenPagSeguro,
                 AccessTokenMercadoPago = result.AccessTokenMercadoPago,
                 BackgroundId = result.BackgroundId,
                 CentroCustoInscricaoId = result.CentroCustoInscricaoId,

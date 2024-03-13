@@ -256,12 +256,6 @@
 
                             <input type="text" class="form-control " id="configuracao-access" data-field="Access Token Mercado Pago" />
                         </div>
-
-                        <div class="col-sm-12 col-md-6  p-w-md text-center">
-                            <h5>Token PagSeguro</h5>
-
-                            <input type="text" class="form-control " id="configuracao-token" data-field="Token PagSeguro" />
-                        </div>
                     </div>
                 </div>
 
@@ -702,7 +696,6 @@
                     ConfigLocal = dataConfiguracao.Configuracao
                     $(`#configuracao-public`).val(ConfigLocal.PublicTokenMercadoPago)
                     $(`#configuracao-access`).val(ConfigLocal.AccessTokenMercadoPago)
-                    $(`#configuracao-token`).val(ConfigLocal.TokenPagSeguro)
                     $("#modal-integracao").modal();
                 }
             })
@@ -936,7 +929,6 @@
                         ...ConfigLocal,
                         PublicTokenMercadoPago: $(`#configuracao-public`).val(),
                         AccessTokenMercadoPago: $(`#configuracao-access`).val(),
-                        TokenPagSeguro: $(`#configuracao-token`).val()
                     }),
                 success: function () {
                     SuccessMesageOperation();

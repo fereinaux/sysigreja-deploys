@@ -35,6 +35,7 @@ namespace SysIgreja.Controllers
             this.eventosBusiness = eventosBusiness;
             this.equipesBusiness = equipesBusiness;
             this.arquivosBusiness = arquivosBusiness;
+            this.configuracaoBusiness = configuracaoBusiness;
         }
 
         public ActionResult Boletim()

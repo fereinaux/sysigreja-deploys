@@ -824,6 +824,7 @@ namespace SysIgreja.Controllers
                                 && x.Status != StatusEnum.Deletado
                         );
                     }
+                    ViewBag.EventoId = EventoId;
                     ViewBag.QRCode =
                         $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
 

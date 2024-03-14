@@ -347,7 +347,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Situacao"> Situação <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel " type="checkbox" value="Circulo"><span class="title-circulo"> ${equipe} </span><i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Quarto"> Quarto <i></i></label>
-<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Carona"> Carona <i></i></label>
+<label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Motorista"> Carona <i></i></label>
 
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Padrinho"> Padrinho <i></i></label>
 <label style="display:block"> <input id="campos-excel" class="campos-excel" type="checkbox" value="DataCadastro"> Data/Hora Inscrição <i></i></label>

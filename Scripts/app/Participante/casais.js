@@ -242,21 +242,21 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return row.Status != Cancelado && row.Status != Espera ?
 
                         `<form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
-${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
+${GetButton('Pagamentos', data, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                                             
                         ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
                                 <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
-                                <input accept="image/*" onchange='Foto(${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
+                                <input accept="image/*" onchange='Foto(${JSON.stringify({ Nome: row.Nome, Id: row.Id }) })' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
                         }
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconWhatsApp(row.Fone)}
                             ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}                               
-                            ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}                            
-                            ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
+                            ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}                            
+                            ${GetButton('CancelarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'red', 'fa-times', 'Cancelar Inscrição')}
                     </form>`
-                        : `${(SelectedEvent.Role == 'Admin') ? ` ${GetLabel('AtivarInscricao', JSON.stringify(row), 'green', 'Ativar Inscrição')}
-${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify(row), 'red', 'Deletar Inscrição') : ''}` : ''}`
+                        : `${(SelectedEvent.Role == 'Admin') ? ` ${GetLabel('AtivarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'green', 'Ativar Inscrição')}
+${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: row.Nome, Id: row.Id }), 'red', 'Deletar Inscrição') : ''}` : ''}`
                 }
             }
         ],
@@ -859,18 +859,15 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
     });
 });
 
-
-function Pagamentos(row) {
-    realista = row;
-    $("#pagamentos-whatsapp").val(row.Fone);
+function Pagamentos(Id) {
     $("#pagamentos-valor").val($("#pagamentos-valor").data("valor-realista"));
     $("#pagamentos-origem").val('')
     $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
-    $("#pagamentos-participanteid").val(row.Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
-    CarregarTabelaPagamentos(row.Id);
+    CarregarTabelaPagamentos(Id);
     $("#modal-pagamentos").modal();
 }
+
 
 $("#modal-pagamentos").on('hidden.bs.modal', function () {
     if (!$('#LancamentoIdModal').val()) {
@@ -1027,12 +1024,11 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
     })
 }
 
-function Opcoes(row) {
-    realista = row;
+function Opcoes(id) {
     $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Participante/GetParticipante/",
-        data: { Id: row.Id },
+        data: { Id: id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',

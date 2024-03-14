@@ -1049,7 +1049,7 @@ function Opcoes(id) {
             $('.participante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
 
             arrayData = table.data().toArray()
-            let index = arrayData.findIndex(r => r.Id == row.Id)
+            let index = arrayData.findIndex(r => r.Id == id)
 
             $('#btn-previous').css('display', 'block')
             $('#btn-next').css('display', 'block')

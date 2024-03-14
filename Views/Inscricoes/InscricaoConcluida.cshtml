@@ -24,7 +24,7 @@
 
     @if (!string.IsNullOrEmpty(ViewBag.Configuracao.TokenPagSeguro))
     {
-        <a href="https://api.pagseguro.com/checkouts/CHEC_@ViewBag.PagSeguroPreferenceId" target="_blank" title="Pagar com PagSeguro" style="background-color: rgb(255, 255, 255); font-size: 13px; font-weight: 500;">
+        <a href="@ViewBag.PagSeguroPreferenceId" target="_blank" title="Pagar com PagSeguro" style="background-color: rgb(255, 255, 255); font-size: 13px; font-weight: 500;">
             <img src="//assets.pagseguro.com.br/ps-integration-assets/botoes/pagamentos/180x25-pagar.gif" alt="Pague com PagSeguro - é rápido, grátis e seguro!">
         </a>
     }

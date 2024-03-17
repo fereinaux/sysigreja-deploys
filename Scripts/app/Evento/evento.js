@@ -527,7 +527,7 @@ function GetUsuarios(id) {
                             return x.Eventos.find(y => y.EventoId == id)
                         }
 
-                    }).Eventos[0].Role
+                    }).Eventos.find(y => y.EventoId == id).Role
                 }
             },
             {

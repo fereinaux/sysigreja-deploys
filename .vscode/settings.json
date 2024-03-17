@@ -23,5 +23,39 @@
       "applicationName": "vscode-mssql"
     }
   ],
-  "dotnet.defaultSolution": "sysigreja-deploys.sln"
+  "dotnet.defaultSolution": "sysigreja-deploys.sln",
+  "sqltools.connections": [
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "Recon",
+      "group": "IECB",
+      "username": "reinaux",
+      "database": "recon",
+      "password": "T3_g0x0o9"
+    }
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "Trindade",
+      "group": "IECB",
+      "username": "reinaux",
+      "database": "trindade",
+      "password": "T3_g0x0o9"
+    }
+  ]
 }

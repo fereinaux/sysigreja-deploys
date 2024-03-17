@@ -179,7 +179,7 @@ namespace SysIgreja.Controllers
                                         Titulo = evento.Configuracao.Titulo,
                                         Numeracao = evento.Numeracao
                                     },
-                                    Perfil = "Coordenador"
+                                    Perfil = "Padrinho"
                                 }
                         )
                         .FirstOrDefault()

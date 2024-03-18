@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -224,7 +225,7 @@ namespace SysIgreja.Controllers
                         {
                             Id = x.Id,
                             Senha = x.Senha,
-                            EquipanteId = x.EquipanteId,
+                            EquipanteId = x.EquipanteId.Value,
                             UserName = x.UserName,
                             Perfil = x.Claims.Any(
                                 y => y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"
@@ -242,10 +243,26 @@ namespace SysIgreja.Controllers
                                         )
                                 )
                                 .FirstOrDefault()
-                                ?.Select(z => z.ConfiguracaoId)
+                                ?.Select(z => z.ConfiguracaoId).ToList()
                         }
                 )
                 .FirstOrDefault(x => x.EquipanteId == Id);
+
+            if (result == null)
+            {
+                var equipante = equipantesBusiness.GetEquipanteById(Id);
+
+                result = new
+                {
+                    Id = "",
+                    Senha = Membership.GeneratePassword(6, 1),
+                    EquipanteId = equipante.Id,
+                    UserName = equipante.Email,
+                    Perfil = "Admin",
+                    Nome = equipante.Nome,
+                    Eventos = new List<int>()
+                };
+            }
 
             return Json(new { Usuario = result }, JsonRequestBehavior.AllowGet);
         }
@@ -298,7 +315,7 @@ namespace SysIgreja.Controllers
 
             UserManager.Update(user);
             UserManager.ChangePassword(User.Identity.GetUserId(), oldPassword, senha);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -306,7 +323,7 @@ namespace SysIgreja.Controllers
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
             accountBusiness.DeleteUsuario(user.Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -316,7 +333,7 @@ namespace SysIgreja.Controllers
             user.FotoId = arquivoId;
 
             UserManager.Update(user);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -504,6 +521,10 @@ namespace SysIgreja.Controllers
         public ActionResult Register(RegisterViewModel model)
         {
             model.EquipanteId = model.EquipanteId > 0 ? model.EquipanteId : null;
+            var configs = configuracaoBusiness
+                            .GetConfiguracoesLight()
+                                             .OrderBy(x => x.Id)
+                   .ToList();
 
             ApplicationUser user = null;
 
@@ -574,9 +595,9 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                configuracaoBusiness
-                    .GetConfiguracoes()
-                    .ToList()
+
+
+                configs
                     .ForEach(config =>
                     {
                         permissoes.Add(
@@ -592,11 +613,10 @@ namespace SysIgreja.Controllers
                 user.Id,
                 new Claim("Permissões", JsonConvert.SerializeObject(permissoes))
             );
-            return Json(
-                new
-                {
-                    User = accountBusiness
+
+            var novoUser = accountBusiness
                         .GetUsuarios()
+                        .Include(x => x.Equipante)
                         .Where(x => x.Id == user.Id)
                         .ToList()
                         .Select(
@@ -614,7 +634,12 @@ namespace SysIgreja.Controllers
                                     Eventos = model.Eventos
                                 }
                         )
-                        .FirstOrDefault()
+                        .FirstOrDefault();
+
+            return Json(
+                new
+                {
+                    User = novoUser
                 },
                 JsonRequestBehavior.AllowGet
             );
@@ -665,7 +690,7 @@ namespace SysIgreja.Controllers
 
                 UserManager.ChangePassword(user.Id, oldPassword, Password);
                 UserManager.Update(user);
-                return new HttpStatusCodeResult(200,"OK");
+                return new HttpStatusCodeResult(200, "OK");
             }
             else
             {
@@ -706,7 +731,7 @@ namespace SysIgreja.Controllers
                 UserManager.Update(user);
                 emailSender.SendEmail(email, "Recuperação de senha", body, config.Identificador);
 
-                return new HttpStatusCodeResult(200,"OK");
+                return new HttpStatusCodeResult(200, "OK");
             }
             else
             {
@@ -937,14 +962,14 @@ namespace SysIgreja.Controllers
         public ActionResult ToggleUsuarioStatus(string Id)
         {
             accountBusiness.ToggleUsuarioStatus(Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
         public ActionResult DeleteUsuario(string Id)
         {
             accountBusiness.DeleteUsuario(Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]

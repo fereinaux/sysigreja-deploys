@@ -161,7 +161,6 @@ namespace SysIgreja.Controllers
                 HasAlergia = x.HasAlergia,
                 HasMedicacao = x.HasMedicacao,
                 HasTeste = x.HasTeste,
-                Instagram = x.Instagram,
                 HasRestricaoAlimentar = x.HasRestricaoAlimentar,
                 HasConvenio = x.HasConvenio,
                 Convenio = x.Convenio,

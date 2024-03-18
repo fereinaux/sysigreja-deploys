@@ -19,7 +19,6 @@ namespace SysIgreja.ViewModels
 
         [DisplayName("Cônjuge")]
         public string Conjuge { get; set; }
-        public string Instagram { get; set; }
 
         [DisplayName("Tamanho da Camisa")]
         public string Camisa { get; set; }

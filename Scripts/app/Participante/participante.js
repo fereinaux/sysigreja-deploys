@@ -316,7 +316,6 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
 <label style="display:${$('#participante-email').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
 <label style="display:${$('#participante-fone').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
 <label style="display:${$('#participante-conjuge').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
-<label style="display:${$('#participante-instagram').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Instagram"> Instagram <i></i></label>
 <label style="display:${$('#participante-camisa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Camisa"> Tamanho da Camisa <i></i></label>
 <label style="display:${$('#participante-cep').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
 <label style="display:${$('#participante-logradouro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
@@ -1153,7 +1152,6 @@ function GetParticipante(id) {
                 $(`#participante-email`).val(data.Participante.Email);
                 $(`#participante-nomepai`).val(data.Participante.NomePai);
                 $(`#participante-camisa`).val(data.Participante.Camisa);
-                $(`#participante-instagram`).val(data.Participante.Instagram);
                 $(`#participante-nomemae`).val(data.Participante.NomeMae);
                 $(`#participante-nomeconvite`).val(data.Participante.NomeConvite);
 
@@ -1351,7 +1349,6 @@ function PostParticipante() {
                     EventoId: SelectedEvent.Id,
                     Nome: $(`#participante-nome`).val(),
                     Apelido: $(`#participante-apelido`).val(),
-                    Instagram: $('#participante-instagram').val(),
                     DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#participante-email`).val(),
                     NomePai: $(`#participante-nomepai`).val(),
@@ -1593,13 +1590,6 @@ ${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-12 p-w-md m-t-
                                 <h5>Cônjuge</h5>
 
                                 <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" />
-                            </div>` : ''}
-
-
-${campos.find(x => x.Campo == 'Instagram') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Instagram</h5>
-
-                                <input type="text" class="form-control" id="participante-instagram" data-field="Apelido" />
                             </div>` : ''}
 
      ${campos.find(x => x.Campo == 'Camisa') ? `        <div class="col-sm-12 p-w-md m-t-md text-center">

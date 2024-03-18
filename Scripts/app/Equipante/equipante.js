@@ -328,7 +328,6 @@ ${GetButton('openModalCracha', data, 'blue', 'fa-id-badge', 'Crachá')}
 <label style="display:${$('#equipante-email').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Email"> Email <i></i></label>
 <label style="display:${$('#equipante-fone').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Fone"> Fone <i></i></label>
 <label style="display:${$('#equipante-conjuge').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Conjuge"> Cônjuge <i></i></label>
-<label style="display:${$('#equipante-instagram').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Instagram"> Instagram <i></i></label>
 <label style="display:${$('#equipante-camisa').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Camisa"> Tamanho da Camisa <i></i></label>
 <label style="display:${$('#equipante-cep').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="CEP"> CEP <i></i></label>
 <label style="display:${$('#equipante-logradouro').length > 0 ? 'block' : 'none'}"> <input id="campos-excel" class="campos-excel" type="checkbox" value="Logradouro"> Logradouro <i></i></label>
@@ -1178,7 +1177,6 @@ function PostEquipante() {
                     EventoId: $("#equipante-eventoid").val(),
                     Nome: $(`#equipante-nome`).val(),
                     Apelido: $(`#equipante-apelido`).val(),
-                    Instagram: $('#equipante-instagram').val(),
                     DataNascimento: moment($("#equipante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                     Email: $(`#equipante-email`).val(),
 
@@ -1669,12 +1667,6 @@ ${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-12 p-w-md m-t-
                                 <input type="text" class="form-control required" id="equipante-conjuge" data-field="Cônjuge" />
                             </div>` : ''}
 
-
-${campos.find(x => x.Campo == 'Instagram') ? ` <div class="col-sm-12 p-w-md m-t-md text-center">
-                                <h5>Instagram</h5>
-
-                                <input type="text" class="form-control required" id="equipante-instagram" data-field="Apelido" />
-                            </div>` : ''}
 
      ${campos.find(x => x.Campo == 'Camisa') ? `        <div class="col-sm-12 p-w-md m-t-md text-center">
                             <h5>Tamanho da Camisa</h5>

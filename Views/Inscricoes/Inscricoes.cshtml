@@ -296,7 +296,7 @@
                             </div>
                         }
 
-                        @if (ViewBag.Campos.Contains(CamposEnum.Equipe.GetDescription()))
+                        @if (ViewBag.Tipo == "Inscrições Equipe")
                         {
                             <div class="form-group" id="equipes-select">
                                 <label for="participante-equipe" class="">Equipe</label>
@@ -994,13 +994,10 @@
                                 Id: '(@ViewBag.Tipo)'.includes('Equipe') ? $('#EquipanteId').val() : 0,
                                 Nome: $(`#participante-nome`).val(),
                                 Apelido: $(`#participante-apelido`).val(),
-                                Instagram: $('#participante-instagram').val(),
                                 DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                                 Email: $(`#participante-email`).val(),
                                 Fone: getNumber('participante-fone'),
-                                Instagram: $(`#participante-instagram`).val(),
                                 Camisa: $(`#participante-camisa`).val(),
-                                Profissao: $(`#participante-profissao`).val(),
                                 CEP: $(`#participante-cep`).val(),
                                 Congregacao: $('#participante-congregacao').val() != "Outra" ? $('#participante-congregacao').val() : $(`#participante-congregacaodescricao`).val(),
                                 Logradouro: $(`#participante-logradouro`).val(),

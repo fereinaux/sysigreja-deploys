@@ -1173,11 +1173,7 @@ namespace SysIgreja.Controllers
                     .ForMember(
                         dest => dest.Logradouro,
                         opt => opt.MapFrom(x => x.Equipante.Logradouro)
-                    )
-                    .ForMember(
-                        dest => dest.Instagram,
-                        opt => opt.MapFrom(x => x.Equipante.Instagram)
-                    )
+                    )   
                     .ForMember(dest => dest.Bairro, opt => opt.MapFrom(x => x.Equipante.Bairro))
                     .ForMember(dest => dest.Cidade, opt => opt.MapFrom(x => x.Equipante.Cidade))
                     .ForMember(

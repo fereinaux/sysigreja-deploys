@@ -133,7 +133,6 @@ function PostParticipante() {
                         CancelarCheckin: false,
                         Nome: $(`#participante-nome`).val(),
                         Apelido: $(`#participante-apelido`).val(),
-                        Instagram: $('#participante-instagram').val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
 
@@ -211,7 +210,6 @@ function PostParticipante() {
                         Id: equipanteId,
                         Nome: $(`#participante-nome`).val(),
                         Apelido: $(`#participante-apelido`).val(),
-                        Instagram: $('#participante-instagram').val(),
                         DataNascimento: moment($("#participante-data-nascimento").val(), 'DD/MM/YYYY', 'pt-br').toJSON(),
                         Email: $(`#participante-email`).val(),
 
@@ -1100,11 +1098,6 @@ ${campos.find(x => x.Campo == 'Cônjuge') ? `  <div class="col-sm-6 p-w-md m-t-m
                                 <input type="text" class="form-control required" id="participante-conjuge" data-field="Cônjuge" />
                             </div>` : ''}
 
-${campos.find(x => x.Campo == 'Instagram') ? `  <div class="col-sm-6 p-w-md m-t-md text-center">
-                            <h5>Instagram</h5>
-
-                            <input type="text" class="form-control " id="participante-instagram" data-field="Instagram" />
-                        </div>` : ''}
 
 ${campos.find(x => x.Campo == 'Endereço') ? `<div class="col-sm-3 p-w-md m-t-md text-center">
                             <h5>CEP</h5>

@@ -409,7 +409,7 @@
                         data: JSON.stringify(
                             {
                                 id: ConfigLocal.Id,
-                                equipes: $(`#configuracao-equipes`).val().map(equipe => { return { EquipeId: equipe, ShowInscricao: $(`#configuracao-equipes-inscricao`).val().length == 0 || $(`#configuracao-equipes-inscricao`).val().find(eq => eq == equipe) != undefined } })
+                                equipes: $('#configuracao-equipes').select2('data').map(x => x.newTag ? equipes.find(y => y.Nome == x.id).Id : x.id).map(equipe => { return { EquipeId: equipe, ShowInscricao: $(`#configuracao-equipes-inscricao`).val().length == 0 || $(`#configuracao-equipes-inscricao`).val().find(eq => eq == equipe) != undefined } })
 
                             }),
                         success: function () {
@@ -466,6 +466,7 @@
                     type: "GET",
                     contentType: 'application/json; charset=utf-8',
                     success: function (dataConfiguracao) {
+                        $("#modal-configuracao").modal();
                         $.ajax({
                             url: "/Igreja/GetIgrejas/",
                             datatype: "json",
@@ -500,11 +501,11 @@
                                                         }),
                                                     success: function (data) {
                                                         // Append it to the select
-
-
-                                                        var otherOption = new Option(data.Igreja.Nome, data.Igreja.Id, false, false);
+                                                        igrejas.push({
+                                                            Id: data.Igreja.Id,
+                                                            Nome: data.Igreja.Nome
+                                                        })
                                                         // Append it to the select
-                                                        $(`#configuracao-igreja`).find("option[value='" + e.params.data.id + "']").attr('value', data.Igreja.Id).trigger('change');
                                                     }
                                                 });
                                             }
@@ -537,7 +538,7 @@
                                         var otherOption = new Option(data.CentroCusto.Descricao, data.CentroCusto.Id, false, false);
                                         // Append it to the select
                                         $(`#configuracao-centrocustoequipe`).append(otherOption).trigger('change');
-                                        $(`#configuracao-centrocustoinscricao`).find("option[value='" + e.params.data.id + "']").attr('value', data.CentroCusto.Id).trigger('change');
+                             
                                     }
                                 });
                             }
@@ -603,7 +604,7 @@
         function EditConfiguracao(id) {
 
             GetConfiguracao(id);
-            $("#modal-configuracao").modal();
+          
         }
 
 
@@ -865,26 +866,27 @@
                                     $(`#configuracao-equipes`).val(equipesLocal.map(equipe => equipe.EquipeId));
                                     $(`#configuracao-equipes`).select2({ ...createTagOptions, dropdownParent: $('#form-equipes') }).off('select2:select').on('select2:select', function (e) {
                                         if (e.params.data.newTag) {
-                                            postEquipe(e.params.data.id)
+                                            postEquipe(e.params.data.id, this)
                                         }
                                     });
 
                                     $(`#configuracao-equipes-inscricao`).val(equipesLocal.filter(x => x.ShowInscricao).map(equipe => equipe.EquipeId));
                                     $(`#configuracao-equipes-inscricao`).select2({ ...createTagOptions, dropdownParent: $('#form-equipes') }).off('select2:select').on('select2:select', function (e) {
                                         if (e.params.data.newTag) {
-                                            postEquipe(e.params.data.id)
+                                            postEquipe(e.params.data.id, this)
                                         }
                                     });
 
                                     $(`#configuracao-equipecirculo`).val(dataConfiguracao.Configuracao.EquipeCirculoId).select2({ ...createTagOptions, dropdownParent: $('#form-equipes') }).off('select2:select').on('select2:select', function (e) {
                                         if (e.params.data.newTag) {
-                                            postEquipe(e.params.data.id)
+                                            postEquipe(e.params.data.id, this)
                                         }
                                     });
                                     $(`#configuracao-equipecarona`).val(dataConfiguracao.Configuracao.EquipeCaronaId).select2({ ...createTagOptions, dropdownParent: $('#form-equipes') }
                                     ).off('select2:select').on('select2:select', function (e) {
+                                        
                                         if (e.params.data.newTag) {
-                                            postEquipe(e.params.data.id)
+                                            postEquipe(e.params.data.id, this)
                                         }
                                     });
                                     $(`#configuracao-vincular`).iCheck(dataConfiguracao.Configuracao.VincularMontagem ? 'check' : "uncheck")
@@ -894,18 +896,12 @@
 
                         }
                     })
-
-
-
-
-
-
                 }
             })
 
         }
 
-        function postEquipe(Equipe) {
+        function postEquipe(Equipe, select) {
             $.ajax({
                 url: "/Equipe/PostEquipe/",
                 datatype: "json",
@@ -918,9 +914,13 @@
                     }),
                 success: function (data) {
                     var otherOption = new Option(data.Equipe.Nome, data.Equipe.Id, false, false);
-                    // Append it to the select
-                    $(`.configuracao-equipes`).append(otherOption).trigger('change');
-                    $('.configuracao-equipes').find("option[value='" + Equipe + "']").attr('value', data.Equipe.Id).trigger('change');
+                    equipes.push({
+                        Id: data.Equipe.Id,
+                        Nome: data.Equipe.Nome
+                    })
+                    $(`.configuracao-equipes`).filter(function () {
+                        return $(this).attr('id') != $(select).attr('id')
+                    }).append(otherOption).trigger('change');                  
                 }
             });
         }
@@ -993,7 +993,7 @@
                             data: JSON.stringify(
                                 {
                                     id: ConfigLocal.Id,
-                                    igrejas: $(`#configuracao-igreja`).val().map(igreja => { return { IgrejaId: igreja } })
+                                    igrejas: $('#configuracao-igreja').select2('data').map(x => x.newTag ? igrejas.find(y => y.Nome == x.id).Id : x.id).map(igreja => { return { IgrejaId: igreja } })
 
                                 }),
                             success: function () {

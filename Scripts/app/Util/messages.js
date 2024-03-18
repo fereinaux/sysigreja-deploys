@@ -67,7 +67,7 @@ function MsgUsuario(user) {
 
 Você foi cadastrado(a) como _${getPerfilName(user)}_ para o *${getDestino(user)}*
 
-Para entrar no sistema, acesse: *${window.location.hostname}/login* 
+Para entrar no sistema, acesse: *https://${window.location.hostname}/login* 
 
 *Dados de Login:*
 

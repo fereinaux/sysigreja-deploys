@@ -862,6 +862,7 @@ function Pagamentos(Id) {
     $("#pagamentos-valor").val($("#pagamentos-valor").data("valor-realista"));
     $("#pagamentos-origem").val('')
     $("#pagamentos-data").val(moment().format('DD/MM/YYYY'));
+    $("#pagamentos-participanteid").val(Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
     CarregarTabelaPagamentos(Id);
     $("#modal-pagamentos").modal();

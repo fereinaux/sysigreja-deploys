@@ -65,7 +65,7 @@ async function print(linha, col) {
     $("#cracha").width(modelo.Largura * razao)
     $("#cracha").html(modelo.Conteudo)
     var formatArray = modelo.Papel == 'custom' ? new Array(modelo.Largura, modelo.Altura) : modelo.Papel
-    doc = new jsPDF(modelo.Papel == 'custom' ? 'p' : modelo.Orientacao, 'cm', formatArray);
+    doc = new jsPDF(modelo.Orientacao, 'cm', formatArray);
     atualRow = linha
     atualCol = col
     await printData(results)
@@ -97,25 +97,32 @@ async function renderCracha(data) {
     var imgData = canvas.toDataURL(
         'image/png');
 
-    doc.addImage(imgData, 'PNG', modelo.MargemVertical + (atualCol * modelo.Largura), modelo.MargemHorizontal + (atualRow * modelo.Altura), (modelo.Largura), (modelo.Altura));
+    if (modelo.Papel == 'custom') {
+        doc.addImage(imgData, 'PNG', 0, 0);
+    } else {
+        doc.addImage(imgData, 'PNG', modelo.MargemVertical + (atualCol * modelo.Largura), modelo.MargemHorizontal + (atualRow * modelo.Altura), (modelo.Largura), (modelo.Altura));
+    }
+
     $('#cracha').toggleClass('moldura-modal')
     $('span.nome-cracha').text('{Nome}')
     $('span.apelido-cracha').text('{Apelido}')
     $('span.equipe-cracha').text('{Equipe}')
     $('span.circulo-cracha').text('{Circulo}')
     $('span.quarto-cracha').text('{Quarto}')
-    if (atualCol < modelo.Colunas - 1) {
-        atualCol++
-    } else {
-        atualCol = 0
-        if (atualRow < modelo.Linhas - 1) {
-            atualRow++
+
+        if (atualCol < modelo.Colunas - 1) {
+            atualCol++
         } else {
-            doc.addPage();
-            atualRow = 0
             atualCol = 0
+            if (atualRow < modelo.Linhas - 1) {
+                atualRow++
+            } else {
+                doc.addPage();
+                atualRow = 0
+                atualCol = 0
+            }
         }
-    }
+    
 }
 
 function GetCrachas() {

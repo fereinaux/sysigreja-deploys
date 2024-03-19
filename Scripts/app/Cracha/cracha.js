@@ -313,10 +313,14 @@ function print() {
         var imgData = canvas.toDataURL(
             'image/png');
         var formatArray = $('#paper').val() == 'custom' ? new Array(Number($('#largura').val()), Number($('#altura').val())) : $('#paper').val()
-        var doc = new jsPDF($('#paper').val() == 'custom' ? 'p' : $('#orientation:checked').val(), 'cm', formatArray);
-        for (var i = 0; i < Number($('#rows').val()); i++) {
-            for (var z = 0; z < Number($('#cols').val()); z++) {
-                doc.addImage(imgData, 'PNG', Number($('#margin-h').val()) + (z * Number($('#largura').val())), Number($('#margin-w').val()) + (i * Number($('#altura').val())));
+        var doc = new jsPDF($('#orientation:checked').val(), 'cm', formatArray);
+        if ($('#paper').val() == 'custom') {
+            doc.addImage(imgData, 'PNG',0,0)
+        } else {
+            for (var i = 0; i < Number($('#rows').val()); i++) {
+                for (var z = 0; z < Number($('#cols').val()); z++) {
+                    doc.addImage(imgData, 'PNG', Number($('#margin-h').val()) + (z * Number($('#largura').val())), Number($('#margin-w').val()) + (i * Number($('#altura').val())));
+                }
             }
         }
         printDoc(doc)

@@ -874,6 +874,7 @@ namespace SysIgreja.Controllers
             {
                 case "Inscrições Equipe":
                     var eventoAtual = eventosBusiness.GetEventoById(EventoId.Value);
+                    ViewBag.EventoId = eventoAtual.Id;
                     var config = configuracaoBusiness.GetConfiguracao(eventoAtual.ConfiguracaoId);
                     Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
                     var ev = equipesBusiness
@@ -951,6 +952,7 @@ namespace SysIgreja.Controllers
                 default:
                     Participante participante = participantesBusiness.GetParticipanteById(Id);
                     var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
+                    ViewBag.EventoId = eventoAtualP.Id;
                     var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
                     var ValorParticipante = participante.Evento.EventoLotes.Any(
                         y => y.DataLote >= System.DateTime.Today

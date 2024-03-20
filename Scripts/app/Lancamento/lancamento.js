@@ -95,8 +95,8 @@ function GetLancamento(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 handleSelect()
-                $("#lancamento-id").val(data.Lancamento.Id);
-                $("#lancamento-centrocusto").val(data.Lancamento.CentroCustoId);
+                $("#lancamento-id").val(data.Lancamento.Id);                
+                $("#lancamento-centrocusto").val(data.Lancamento.CentroCustoId).trigger('change');
                 $("#lancamento-descricao").val(data.Lancamento.Descricao);
                 $("#lancamento-origem").val(data.Lancamento.Origem);
                 $("#lancamento-observacao").val(data.Lancamento.Observacao);
@@ -116,6 +116,7 @@ function GetLancamento(id) {
         $("#lancamento-observacao").val("");
         $("#lancamento-valor").val(0);
         $("#lancamento-data").val(moment().format('DD/MM/YYYY'));
+        $("#lancamento-centrocusto").val($("#lancamento-centrocusto option").not(".d-none").first().val()).trigger('change');
     }
 }
 
@@ -128,6 +129,16 @@ function EditLancamento(params) {
 
 function handleSelect() {
     $('#lancamento-eventoid').select2({ dropdownParent: $('#form-lancamento') })
+
+    if ($("#lancamento-tipo").val() == 1) {
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').addClass('d-none');
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').removeClass('d-none');
+    } else {
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').removeClass('d-none');
+        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').addClass('d-none');
+    }
+   
+
     $('#lancamento-centrocusto').select2({ ...createTagOptions, dropdownParent: $('#form-lancamento') }).off('select2:select').on('select2:select', function (e) {
         if (e.params.data.newTag) {
             $.ajax({
@@ -152,14 +163,7 @@ function handleSelect() {
     });
 
 
-    if ($("#lancamento-tipo").val() == 1) {
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').addClass('d-none');
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').removeClass('d-none');
-    } else {
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').removeClass('d-none');
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').addClass('d-none');
-    }
-    $("#lancamento-centrocusto").val($("#lancamento-centrocusto option").not(".d-none").first().val());
+
     $("#modal-lancamentos").modal();
 }
 

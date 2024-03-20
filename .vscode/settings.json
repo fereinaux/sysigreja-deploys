@@ -72,6 +72,22 @@
       "username": "reinaux",
       "database": "calvario",
       "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "SysIgreja",
+      "group": "SysIgreja",
+      "username": "reinaux",
+      "database": "sysigreja",
+      "password": "T3_g0x0o9"
     }
   ]
 }

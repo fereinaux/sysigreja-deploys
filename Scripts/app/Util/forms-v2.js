@@ -160,20 +160,20 @@ function ValidateForm(form) {
 
 
 function ValidateMinMax(form, formResult) {
-    AplicarCssPadrao($(`${form} .required`)); 
     $(`${form} input.required.full-date-changed`).each(function () {
+
         var input = $(this);
         if (input.data('min') && input.data('max')) {
-
-        var age = moment().diff(moment(input.val(), 'DD/MM/YYYY', 'pt-br'), 'years', false)        
-        if (age > (input.data('max')) || age < (input.data('min'))) {
+            AplicarCssPadrao(input);
+            var age = moment().diff(moment(input.val(), 'DD/MM/YYYY', 'pt-br'), 'years', false)
+            if (age > (input.data('max')) || age < (input.data('min'))) {
                 formResult.IsValid = false;
-            AplicarCssErro(input);
-            formResult.ErrorsValidacao += AddErro(`O participante precisa ter entre ${input.data('min')} e ${input.data('max')} anos`);
+                AplicarCssErro(input);
+                formResult.ErrorsValidacao += AddErro(`O participante precisa ter entre ${input.data('min')} e ${input.data('max')} anos`);
             }
-        
+
         }
-    }); 
+    });
     return formResult;
 }
 

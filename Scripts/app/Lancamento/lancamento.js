@@ -29,7 +29,7 @@
         data:
         {
             ConfiguracaoId: Usuario.IsGeral ? SelectedConfig.Id : null,
-            CentroCustoId: $('#busca-centrocusto').val() == 0 ? null : $('#busca-centrocusto').val() ,
+            CentroCustoId: $('#busca-centrocusto').val() == 0 ? null : $('#busca-centrocusto').val(),
             EventoId: !Usuario.IsGeral ? SelectedEvent.Id : null,
             MeioPagamentoId: $('#busca-meiopagamento').val() == 0 ? null : $('#busca-meiopagamento').val(),
             Tipo: tipo == "Receber" ? 1 : 2,
@@ -95,7 +95,7 @@ function GetLancamento(id) {
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 handleSelect()
-                $("#lancamento-id").val(data.Lancamento.Id);                
+                $("#lancamento-id").val(data.Lancamento.Id);
                 $("#lancamento-centrocusto").val(data.Lancamento.CentroCustoId).trigger('change');
                 $("#lancamento-descricao").val(data.Lancamento.Descricao);
                 $("#lancamento-origem").val(data.Lancamento.Origem);
@@ -109,7 +109,7 @@ function GetLancamento(id) {
     }
     else {
         handleSelect()
-        $("#lancamento-id").val(0);        
+        $("#lancamento-id").val(0);
         $("#lancamento-meiopagamento").val($("#lancamento-meiopagamento option:first").val());
         $("#lancamento-descricao").val("");
         $("#lancamento-origem").val("");
@@ -130,16 +130,7 @@ function EditLancamento(params) {
 function handleSelect() {
     $('#lancamento-eventoid').select2({ dropdownParent: $('#form-lancamento') })
 
-    if ($("#lancamento-tipo").val() == 1) {
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').addClass('d-none');
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').removeClass('d-none');
-    } else {
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').removeClass('d-none');
-        $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').addClass('d-none');
-    }
-   
-
-    $('#lancamento-centrocusto').select2({ ...createTagOptions, dropdownParent: $('#form-lancamento') }).off('select2:select').on('select2:select', function (e) {
+    $('#lancamento-centrocusto').empty().trigger("change").select2({ ...createTagOptions, data: SelectedEvent.CentroCustos.filter(x => x.Tipo == ($("#lancamento-tipo").val() == 1 ? "Receita" : "Despesa")).map(x => ({ id: x.Id, text: x.Descricao })), dropdownParent: $('#form-lancamento') }).off('select2:select').on('select2:select', function (e) {
         if (e.params.data.newTag) {
             $.ajax({
                 url: "/CentroCusto/PostCentroCusto/",
@@ -161,8 +152,6 @@ function handleSelect() {
         }
 
     });
-
-
 
     $("#modal-lancamentos").modal();
 }
@@ -222,8 +211,8 @@ $('.adm').css('display', 'none')
 $(".configId").css('display', 'none')
 
 $(document).off('ready-ajax').on('ready-ajax', () => {
-    $('.adm').css('display', Usuario.IsGeral ? 'block' : 'none')   
-    $('.notAdm').css('display', !Usuario.IsGeral ? 'block' : 'none')   
+    $('.adm').css('display', Usuario.IsGeral ? 'block' : 'none')
+    $('.notAdm').css('display', !Usuario.IsGeral ? 'block' : 'none')
     Filtrar();
 });
 

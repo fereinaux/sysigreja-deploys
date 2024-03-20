@@ -66,6 +66,7 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Extrato Financeiro";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
+            ViewBag.RenderConfig = User.IsInRole("Geral");
             return View();
         }
 

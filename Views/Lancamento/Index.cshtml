@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-xs-12 col-lg-3 adm">
                     <h5>Tipo do Evento</h5>
-                    @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "lancamento-configid", OnChange = "Filtrar", Roles = "Admin" })
+                    @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "lancamento-configid", OnChange = "Filtrar", Roles = "Financeiro,Admin" })
                 </div>
                 <div class="col-xs-12 col-lg-3 notAdm">
                     <h5>Evento</h5>

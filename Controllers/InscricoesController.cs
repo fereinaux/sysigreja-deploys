@@ -677,7 +677,7 @@ namespace SysIgreja.Controllers
                 if (participante != null)
                 {
                     var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
-
+                    ViewBag.EventoId = eventoAtualP.Id;
                     if (participante.Status == StatusEnum.Inscrito)
                     {
                         lancamentoBusiness.PostPagamento(
@@ -727,7 +727,7 @@ namespace SysIgreja.Controllers
                     if (equipante != null)
                     {
                         var eventoAtualP = eventosBusiness.GetEventoById(ev.EventoId.Value);
-
+                        ViewBag.EventoId = eventoAtualP.Id;
                         lancamentoBusiness.PostPagamento(
                             new Core.Models.Lancamento.PostPagamentoModel
                             {
@@ -776,7 +776,7 @@ namespace SysIgreja.Controllers
                 if (participante != null)
                 {
                     var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
-
+                    ViewBag.EventoId = eventoAtualP.Id;
                     if (participante.Status == StatusEnum.Inscrito)
                     {
                         lancamentoBusiness.PostPagamento(
@@ -826,7 +826,7 @@ namespace SysIgreja.Controllers
                     if (equipante != null)
                     {
                         var eventoAtualP = eventosBusiness.GetEventoById(ev.EventoId.Value);
-
+                        ViewBag.EventoId = eventoAtualP.Id;
                         lancamentoBusiness.PostPagamento(
                             new Core.Models.Lancamento.PostPagamentoModel
                             {
@@ -1039,6 +1039,7 @@ namespace SysIgreja.Controllers
             ViewBag.Login = configuracaoBusiness.GetLogin();
             ViewBag.Title = "Inscrição em Espera";
             Participante participante = participantesBusiness.GetParticipanteById(Id);
+            ViewBag.EventoId = participante.EventoId;
             var config = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
             var Valor = participante.Evento.EventoLotes.Any(
@@ -1085,6 +1086,7 @@ namespace SysIgreja.Controllers
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
             var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
+            ViewBag.EventoId = evento.Id;
             return View();
         }
 

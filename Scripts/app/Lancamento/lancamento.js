@@ -29,6 +29,7 @@
         data:
         {
             ConfiguracaoId: Usuario.IsGeral ? SelectedConfig.Id : null,
+            CentroCustoId: $('#busca-centrocusto').val() == 0 ? null : $('#busca-centrocusto').val() ,
             EventoId: !Usuario.IsGeral ? SelectedEvent.Id : null,
             MeioPagamentoId: $('#busca-meiopagamento').val() == 0 ? null : $('#busca-meiopagamento').val(),
             Tipo: tipo == "Receber" ? 1 : 2,
@@ -108,15 +109,16 @@ function GetLancamento(id) {
     }
     else {
         handleSelect()
-        $("#lancamento-id").val(0);
-        $("#lancamento-centrocusto").val($("#lancamento-centrocusto option").not(".d-none").first().val());
+        $("#lancamento-id").val(0);        
+        $("#lancamento-meiopagamento").val($("#lancamento-meiopagamento option:first").val());
         $("#lancamento-descricao").val("");
         $("#lancamento-origem").val("");
         $("#lancamento-observacao").val("");
-        $("#lancamento-meiopagamento").val($("#lancamento-meiopagamento option:first").val());
         $("#lancamento-valor").val(0);
+        $("#lancamento-data").val(moment().format('DD/MM/YYYY'));
     }
 }
+
 
 function EditLancamento(params) {
     $("#lancamento-tipo").val(params.Tipo == "Receber" ? 1 : 2);
@@ -125,6 +127,31 @@ function EditLancamento(params) {
 }
 
 function handleSelect() {
+    $('#lancamento-eventoid').select2({ dropdownParent: $('#form-lancamento') })
+    $('#lancamento-centrocusto').select2({ ...createTagOptions, dropdownParent: $('#form-lancamento') }).off('select2:select').on('select2:select', function (e) {
+        if (e.params.data.newTag) {
+            $.ajax({
+                url: "/CentroCusto/PostCentroCusto/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Id: null,
+                        Descricao: e.params.data.id,
+                        Tipo: $("#lancamento-tipo").val(),
+                        ConfiguracaoId: SelectedEvent.ConfiguracaoId
+                    }),
+                success: function (data) {
+                    $(`#lancamento-centrocusto`).find("option[value='" + e.params.data.id + "']").attr('value', data.CentroCusto.Id).trigger('change');
+
+                }
+            });
+        }
+
+    });
+
+
     if ($("#lancamento-tipo").val() == 1) {
         $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').addClass('d-none');
         $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').removeClass('d-none');
@@ -132,6 +159,7 @@ function handleSelect() {
         $('#modal-lancamentos .opt-centrocusto[data-tipo="Despesa"]').removeClass('d-none');
         $('#modal-lancamentos .opt-centrocusto[data-tipo="Receita"]').addClass('d-none');
     }
+    $("#lancamento-centrocusto").val($("#lancamento-centrocusto option").not(".d-none").first().val());
     $("#modal-lancamentos").modal();
 }
 

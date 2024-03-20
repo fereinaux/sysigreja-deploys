@@ -26,10 +26,13 @@
                         @Html.Partial("~/Views/Componentes/SelectConfig.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "lancamento-configid", OnChange = "Filtrar", Roles = "Financeiro,Admin" })
                     </div>
                 }
-                <div class="col-xs-12 col-lg-3 notAdm">
-                    <h5>Evento</h5>
-                    @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "lancamento-eventoid", OnChange = "Filtrar", Roles = "Financeiro,Admin" })
-                </div>
+                @if (!ViewBag.RenderConfig)
+                {
+                    <div class="col-xs-12 col-lg-3 notAdm">
+                        <h5>Evento</h5>
+                        @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "lancamento-eventoid", OnChange = "Filtrar", Roles = "Financeiro,Admin" })
+                    </div>
+                }
                 <div class="col-xs-12 col-lg-3">
                     <h5>Forma de Pagamento</h5>
                     <select class="form-control" id="busca-meiopagamento" onchange="Filtrar()">
@@ -115,11 +118,17 @@
                     <div class="row p-h-xs">
                         <input type="hidden" id="lancamento-id" />
                         <input type="hidden" id="lancamento-tipo" />
+                        @if (ViewBag.RenderConfig)
+                        {
+                            <div class="col-sm-6 p-w-md text-center adm">
+                                <h5>Evento</h5>
+                                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "lancamento-eventoid", OnChange = "handleSelect", Roles = "Financeiro,Admin" })
+                            </div>
+                        }
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Centro de Custo</h5>
-                            <select class="form-control" id="lancamento-centrocusto">
+                            <select class="form-control centro-custos" id="lancamento-centrocusto" style="width: 100%" data-field="Centro de Custo">
                             </select>
-
                         </div>
                         <div class="col-sm-6 p-w-md text-center">
                             <h5>Descrição</h5>

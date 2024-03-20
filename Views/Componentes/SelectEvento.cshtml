@@ -57,7 +57,7 @@
                 $("[id$='-etiquetas']").html(`${SelectedEvent.Etiquetas.map(etiqueta => `<option data-cor="${etiqueta.Cor}" value=${etiqueta.Id}>${etiqueta.Nome}</option>`)}`)
             }
             if (SelectedEvent.CentroCustos.length > 0) {
-                $("[id$='-centrocusto']").html(`${SelectedEvent.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
+                $("[id$='-centrocusto']").html(`${SelectedEvent.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`).select2()
 
                 $("#busca-centrocusto").html(`<option value="0">Selecione</option>${SelectedEvent.CentroCustos.map(centCusto => `<option class="opt-centrocusto" data-tipo=${centCusto.Tipo} value="${centCusto.Id}">${centCusto.Descricao}</option>`)}`)
 

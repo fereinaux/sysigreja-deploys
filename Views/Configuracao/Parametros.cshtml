@@ -538,7 +538,7 @@
                                         var otherOption = new Option(data.CentroCusto.Descricao, data.CentroCusto.Id, false, false);
                                         // Append it to the select
                                         $(`#configuracao-centrocustoequipe`).append(otherOption).trigger('change');
-                             
+                                        $(`#configuracao-centrocustoinscricao`).find("option[value='" + e.params.data.id + "']").attr('value', data.CentroCusto.Id).trigger('change');
                                     }
                                 });
                             }

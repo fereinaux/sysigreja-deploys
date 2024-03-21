@@ -946,6 +946,8 @@ namespace SysIgreja.Controllers
                     }
                     ViewBag.MercadoPagoId = ev.MercadoPagoId;
                     ViewBag.MercadoPagoPreferenceId = ev.MercadoPagoPreferenceId;
+                    ViewBag.PagSeguroId = ev.PagSeguroId;
+                    ViewBag.PagSeguroPreferenceId = ev.PagSeguroPreferenceId;
                     ViewBag.Title = "Inscrição Concluída";
                     ViewBag.EquipanteEvento = ev;
                     return View();

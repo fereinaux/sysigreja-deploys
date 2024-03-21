@@ -664,15 +664,15 @@ namespace SysIgreja.Controllers
             if (
                 participantesBusiness
                     .GetParticipantes()
-                    .Any(x => x.MercadoPagoId == external_reference && string.IsNullOrEmpty(external_reference))
+                    .Any(x => x.MercadoPagoId == external_reference && !string.IsNullOrEmpty(external_reference))
                 || equipesBusiness
                     .GetQueryEquipantesEventoSemFiltro()
-                    .Any(x => x.MercadoPagoId == external_reference && string.IsNullOrEmpty(external_reference))
+                    .Any(x => x.MercadoPagoId == external_reference && !string.IsNullOrEmpty(external_reference))
             )
             {
                 Participante participante = participantesBusiness
                     .GetParticipantes()
-                    .FirstOrDefault(x => x.MercadoPagoId == external_reference && string.IsNullOrEmpty(external_reference));
+                    .FirstOrDefault(x => x.MercadoPagoId == external_reference && !string.IsNullOrEmpty(external_reference));
 
                 if (participante != null)
                 {
@@ -720,7 +720,7 @@ namespace SysIgreja.Controllers
                     EquipanteEvento ev = equipesBusiness
                         .GetQueryEquipantesEventoSemFiltro()
                         .Include(x => x.Equipante)
-                        .FirstOrDefault(x => x.MercadoPagoId == external_reference && string.IsNullOrEmpty(external_reference));
+                        .FirstOrDefault(x => x.MercadoPagoId == external_reference && !string.IsNullOrEmpty(external_reference));
 
                     Equipante equipante = ev.Equipante;
 
@@ -765,14 +765,14 @@ namespace SysIgreja.Controllers
             }
             else if (participantesBusiness
                     .GetParticipantes()
-                    .Any(x => x.PagSeguroId == payment_id && string.IsNullOrEmpty(payment_id))
+                    .Any(x => x.PagSeguroId == payment_id && !string.IsNullOrEmpty(payment_id))
                 || equipesBusiness
                     .GetQueryEquipantesEventoSemFiltro()
-                    .Any(x => x.PagSeguroId == payment_id && string.IsNullOrEmpty(payment_id)))
+                    .Any(x => x.PagSeguroId == payment_id && !string.IsNullOrEmpty(payment_id)))
             {
                 Participante participante = participantesBusiness
        .GetParticipantes()
-       .FirstOrDefault(x => x.PagSeguroId == payment_id && string.IsNullOrEmpty(payment_id));
+       .FirstOrDefault(x => x.PagSeguroId == payment_id && !string.IsNullOrEmpty(payment_id));
                 if (participante != null)
                 {
                     var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
@@ -819,7 +819,7 @@ namespace SysIgreja.Controllers
                     EquipanteEvento ev = equipesBusiness
                         .GetQueryEquipantesEventoSemFiltro()
                         .Include(x => x.Equipante)
-                        .FirstOrDefault(x => x.PagSeguroId == payment_id && string.IsNullOrEmpty(payment_id));
+                        .FirstOrDefault(x => x.PagSeguroId == payment_id && !string.IsNullOrEmpty(payment_id));
 
                     Equipante equipante = ev.Equipante;
 

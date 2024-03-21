@@ -1,5 +1,5 @@
 const app = require('./app')
-const token = require('./token-sysigreja')
+const token = require('./token-sves')
 
 const options = {
   method: 'POST',
@@ -17,6 +17,10 @@ const options = {
     payment_notification_urls: ['https://sysigreja.com']
   })
 };
+
+const request = new Request('https://api.pagseguro.com/checkouts', options)
+
+request.json().then(req => console.log(req))
 
 fetch('https://api.pagseguro.com/checkouts', options)
   .then(response => response.json())

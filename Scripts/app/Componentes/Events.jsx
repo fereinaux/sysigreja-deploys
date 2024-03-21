@@ -317,25 +317,18 @@ function Events({ search, identificador }) {
 
 
         const [loaded, setLoaded] = useState()
+        const [size, setSize] = useState()
 
         useEffect(() => {
             if ($('.bloco-normal').width()) {
-
-                const img = new Image()
-                img.src = `/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width()) + 100}`
-                img.onload = () => setLoaded(img.src)
-
-
+                setSize(Math.round($('.bloco-normal').width()))
             }
 
         }, [$('.bloco-normal').width()]);
 
         return <div
             className="bloco bloco-normal"
-
-
             style={{
-
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
@@ -345,12 +338,18 @@ function Events({ search, identificador }) {
                 backgroundPosition: "center",
             }}
         >
-            <img src={loaded} style={{
-                position: "absolute",
-                width: $('.bloco-normal').width(),
-                height: $('.bloco-normal').width(),
-                top: "0"
-            }} ></img>
+            {size &&
+                <img src={`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${size + 100}`}
+
+                    onLoad={() => setTimeout(() => setLoaded(true)}
+                    style={{
+                        display: loaded ? "block" : "none",
+                        position: "absolute",
+                        width: size,
+                        height: size,
+                        top: "0"
+                    }} ></img>
+            }
             <span
                 className="badge m-r-xs"
                 style={{

@@ -835,7 +835,7 @@ namespace SysIgreja.Controllers
                     {
                         var eventoAtualP = eventosBusiness.GetEventoById(ev.EventoId.Value);
                         ViewBag.EventoId = eventoAtualP.Id;
-                        if (!equipante.Lancamentos.Any(x => x.EventoId == eventoAtualP.Id && x.MeioPagamento.Descricao == "Mercado Pago"))
+                        if (!equipante.Lancamentos.Any(x => x.EventoId == eventoAtualP.Id && x.MeioPagamento.Descricao == "PagSeguro"))
                         {
                             lancamentoBusiness.PostPagamento(
                             new Core.Models.Lancamento.PostPagamentoModel

@@ -720,6 +720,8 @@ namespace SysIgreja.Controllers
                     EquipanteEvento ev = equipesBusiness
                         .GetQueryEquipantesEventoSemFiltro()
                         .Include(x => x.Equipante)
+                        .Include(x => x.Equipante.Lancamentos)
+                        .Include(x => x.Equipante.Lancamentos.Select(y => y.MeioPagamento))
                         .FirstOrDefault(x => x.MercadoPagoId == external_reference && !string.IsNullOrEmpty(external_reference));
 
                     Equipante equipante = ev.Equipante;
@@ -728,24 +730,28 @@ namespace SysIgreja.Controllers
                     {
                         var eventoAtualP = eventosBusiness.GetEventoById(ev.EventoId.Value);
                         ViewBag.EventoId = eventoAtualP.Id;
-                        lancamentoBusiness.PostPagamento(
-                            new Core.Models.Lancamento.PostPagamentoModel
-                            {
-                                Data = TimeZoneInfo.ConvertTime(
-                                    DateTime.Now,
-                                    TimeZoneInfo.FindSystemTimeZoneById(
-                                        "E. South America Standard Time"
-                                    )
-                                ),
-                                Valor = eventoAtualP.ValorTaxa,
-                                Origem = "Mercado Pago",
-                                EquipanteId = equipante.Id,
-                                MeioPagamentoId = lancamentoBusiness
-                                    .GetMercadoPago(eventoAtualP.ConfiguracaoId.Value)
-                                    .Id,
-                                EventoId = eventoAtualP.Id
-                            }
-                        );
+
+                        if (!equipante.Lancamentos.Any(x => x.EventoId == eventoAtualP.Id && x.MeioPagamento.Descricao == "Mercado Pago"))
+                        {
+                            lancamentoBusiness.PostPagamento(
+                                new Core.Models.Lancamento.PostPagamentoModel
+                                {
+                                    Data = TimeZoneInfo.ConvertTime(
+                                        DateTime.Now,
+                                        TimeZoneInfo.FindSystemTimeZoneById(
+                                            "E. South America Standard Time"
+                                        )
+                                    ),
+                                    Valor = eventoAtualP.ValorTaxa,
+                                    Origem = "Mercado Pago",
+                                    EquipanteId = equipante.Id,
+                                    MeioPagamentoId = lancamentoBusiness
+                                        .GetMercadoPago(eventoAtualP.ConfiguracaoId.Value)
+                                        .Id,
+                                    EventoId = eventoAtualP.Id
+                                }
+                            );
+                        }
 
                         var configP = configuracaoBusiness.GetConfiguracao(
                             eventoAtualP.ConfiguracaoId
@@ -819,6 +825,8 @@ namespace SysIgreja.Controllers
                     EquipanteEvento ev = equipesBusiness
                         .GetQueryEquipantesEventoSemFiltro()
                         .Include(x => x.Equipante)
+                        .Include(x => x.Equipante.Lancamentos)
+                        .Include(x => x.Equipante.Lancamentos.Select(y => y.MeioPagamento))
                         .FirstOrDefault(x => x.PagSeguroId == payment_id && !string.IsNullOrEmpty(payment_id));
 
                     Equipante equipante = ev.Equipante;
@@ -827,7 +835,9 @@ namespace SysIgreja.Controllers
                     {
                         var eventoAtualP = eventosBusiness.GetEventoById(ev.EventoId.Value);
                         ViewBag.EventoId = eventoAtualP.Id;
-                        lancamentoBusiness.PostPagamento(
+                        if (!equipante.Lancamentos.Any(x => x.EventoId == eventoAtualP.Id && x.MeioPagamento.Descricao == "Mercado Pago"))
+                        {
+                            lancamentoBusiness.PostPagamento(
                             new Core.Models.Lancamento.PostPagamentoModel
                             {
                                 Data = TimeZoneInfo.ConvertTime(
@@ -837,7 +847,7 @@ namespace SysIgreja.Controllers
                                     )
                                 ),
                                 Valor = eventoAtualP.ValorTaxa,
-                                Origem = "Mercado Pago",
+                                Origem = "PagSeguro",
                                 EquipanteId = equipante.Id,
                                 MeioPagamentoId = lancamentoBusiness
                                     .GetPagSeguro(eventoAtualP.ConfiguracaoId.Value)
@@ -845,6 +855,7 @@ namespace SysIgreja.Controllers
                                 EventoId = eventoAtualP.Id
                             }
                         );
+                        }
 
                         var configP = configuracaoBusiness.GetConfiguracao(
                             eventoAtualP.ConfiguracaoId

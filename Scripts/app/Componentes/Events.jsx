@@ -325,14 +325,17 @@ function Events({ search, identificador }) {
 
     function AsyncBg({ evento }) {
 
-        const [size, setSize] = useState()
+
+        const [loaded, setLoaded] = useState()
 
         useEffect(() => {
-            setSize($('.bloco-normal').width())
+            if ($('.bloco-normal').width()) {
+ 
+               setLoaded(useProgressiveImage(`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${$('.bloco-normal').width()}`)) 
+            }
        
         }, [$('.bloco-normal').width()]);
-
-        const loaded = size ? useProgressiveImage(`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${size}`) : undefined
+        
         return <div
             className="bloco bloco-normal"
 

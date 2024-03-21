@@ -332,7 +332,7 @@ function Events({ search, identificador }) {
        
         }, [$('.bloco-normal').width()]);
 
-        const loaded = useProgressiveImage(`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${size}`)
+        const loaded = size ? useProgressiveImage(`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${size}`) : undefined
         return <div
             className="bloco bloco-normal"
 

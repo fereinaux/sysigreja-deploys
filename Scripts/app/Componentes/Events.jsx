@@ -322,29 +322,35 @@ function Events({ search, identificador }) {
             if ($('.bloco-normal').width()) {
 
                 const img = new Image()
-                img.src = `/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${$('.bloco-normal').width()}`
-                img.onload = () => setLoaded(img.src) 
- 
+                img.src = `/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width()) + 100}`
+                img.onload = () => setLoaded(img.src)
+
 
             }
-       
+
         }, [$('.bloco-normal').width()]);
-        
+
         return <div
             className="bloco bloco-normal"
 
 
             style={{
+
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
                 paddingBottom: "100%",
-                backgroundImage: `url(${loaded || '/assets/img/Loading_icon.gif'})`,
+                backgroundImage: `url('/assets/img/Loading_icon.gif')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
             }}
         >
-
+            <img src={loaded} style={{
+                position: "absolute",
+                width: $('.bloco-normal').width(),
+                height: $('.bloco-normal').width(),
+                top: "0"
+            }} ></img>
             <span
                 className="badge m-r-xs"
                 style={{

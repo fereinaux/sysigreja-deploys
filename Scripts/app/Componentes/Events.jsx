@@ -340,8 +340,7 @@ function Events({ search, identificador }) {
         >
             {size &&
                 <img src={`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${size + 100}`}
-
-                    onLoad={() => setTimeout(() => setLoaded(true)}
+                    onLoad={() => setLoaded(true)}
                     style={{
                         display: loaded ? "block" : "none",
                         position: "absolute",

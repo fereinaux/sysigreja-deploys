@@ -346,7 +346,8 @@ function Events({ search, identificador }) {
                         position: "absolute",
                         width: size,
                         height: size,
-                        top: "0"
+                        top: "0",
+                        objectFit: "cover"
                     }} ></img>
             }
             <span

@@ -22,11 +22,18 @@ function loadEventos() {
     );
 }
 
-const AsyncImage = (props) => {
+const useProgressiveImage = src => {
+    const [sourceLoaded, setSourceLoaded] = useState(null)
 
-    return <img {...props} />;
+    useEffect(() => {
+        const img = new Image()
+        img.src = src
+        img.onload = () => setSourceLoaded(src)
+    }, [src])
 
-};
+    return sourceLoaded
+}
+
 
 function Events({ search, identificador }) {
     const [eventos, setEventos] = useState([]);
@@ -47,6 +54,7 @@ function Events({ search, identificador }) {
     useEffect(() => {
         carregarEventos();
     }, [search, identificador]);
+
 
     async function carregarEventos() {
         const res = await $.ajax({
@@ -154,36 +162,7 @@ function Events({ search, identificador }) {
                         className="col-evento-select"
                     >
                         <a target="_blank" href={evento.UrlDestino} className="a-normal">
-                            <div
-                                className="bloco bloco-normal"
-                                style={{
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    width: "100%",
-                                    paddingBottom: "100%",
-                                    backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width())}')`,
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                }}
-                            >
-                   
-                                <span
-                                    className="badge m-r-xs"
-                                    style={{
-                                        position: "absolute",
-                                        top: "5px",
-                                        left: "5px",
-                                        zIndex: 999999,
-                                        background: "#fff",
-                                        color: "#000",
-                                        textOverflow: "ellipsis",
-                                        maxWidth: "90%",
-                                        overflowX: "hidden",
-                                    }}
-                                >
-                                    {evento.Identificador}
-                                </span>
-                            </div>
+                            <AsyncBg evento={evento} />
 
                             <div className="card-body">
                                 <span
@@ -243,35 +222,7 @@ function Events({ search, identificador }) {
                         className="col-evento-select"
                     >
                         <a target="_blank" href={evento.UrlDestino} className="a-normal">
-                            <div
-                                className="bloco bloco-normal"
-                                style={{
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    width: "100%",
-                                    paddingBottom: "100%",
-                                    backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width())}')`,
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                }}
-                            >                              
-                                <span
-                                    className="badge m-r-xs"
-                                    style={{
-                                        position: "absolute",
-                                        top: "5px",
-                                        left: "5px",
-                                        zIndex: 999999,
-                                        background: "#fff",
-                                        color: "#000",
-                                        textOverflow: "ellipsis",
-                                        maxWidth: "90%",
-                                        overflowX: "hidden",
-                                    }}
-                                >
-                                    {evento.Identificador}
-                                </span>
-                            </div>
+                            <AsyncBg evento={evento} />
 
                             <div className="card-body">
                                 <span
@@ -330,36 +281,7 @@ function Events({ search, identificador }) {
                         key={evento.Id}
                         className="col-evento-select"
                     >
-                        <div
-                            className="bloco bloco-normal"
-                            style={{
-                                justifyContent: "center",
-                                alignItems: "center",
-                                width: "100%",
-                                paddingBottom: "100%",
-                                backgroundImage: `url('/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${Math.round($('.bloco-normal').width())}')`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                            }}
-                        >                            
-                            <span
-                                className="badge m-r-xs"
-                                style={{
-                                    position: "absolute",
-                                    top: "5px",
-                                    left: "5px",
-                                    zIndex: 999999,
-                                    background: "#fff",
-                                    color: "#000",
-                                    textOverflow: "ellipsis",
-                                    maxWidth: "90%",
-                                    overflowX: "hidden",
-                                }}
-                            >
-                                {evento.Identificador}
-                            </span>
-                        </div>
-
+                        <AsyncBg evento={evento} />
                         <div className="card-body">
                             <span
                                 style={{
@@ -400,4 +322,48 @@ function Events({ search, identificador }) {
             </div>
         </>
     );
+
+    function AsyncBg({ evento }) {
+
+        const [size, setSize] = useState()
+
+        useEffect(() => {
+            setSize($('.bloco-normal').width())
+       
+        }, [$('.bloco-normal').width()]);
+
+        const loaded = useProgressiveImage(`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${size}`)
+        return <div
+            className="bloco bloco-normal"
+
+
+            style={{
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                paddingBottom: "100%",
+                backgroundImage: `url(${loaded || '/assets/img/Loading_icon.gif'})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
+        >
+
+            <span
+                className="badge m-r-xs"
+                style={{
+                    position: "absolute",
+                    top: "5px",
+                    left: "5px",
+                    zIndex: 999999,
+                    background: "#fff",
+                    color: "#000",
+                    textOverflow: "ellipsis",
+                    maxWidth: "90%",
+                    overflowX: "hidden",
+                }}
+            >
+                {evento.Identificador}
+            </span>
+        </div>;
+    }
 }

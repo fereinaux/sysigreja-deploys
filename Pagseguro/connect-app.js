@@ -1,0 +1,1 @@
+https://acesso.pagbank.com.br/connect?dest=https%3A%2F%2Fconnect.pagbank.com.br%2Foauth2%2Fauthorize%3Fid%3Dd3e4bb5b-d6f1-4c5b-a656-65063f8cdf54a9136d77-ed19-4573-b6e6-22d78adba485&flow=REPLICATED

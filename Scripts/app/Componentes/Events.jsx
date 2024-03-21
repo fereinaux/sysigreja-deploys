@@ -22,18 +22,6 @@ function loadEventos() {
     );
 }
 
-const useProgressiveImage = src => {
-    const [sourceLoaded, setSourceLoaded] = useState(null)
-
-    useEffect(() => {
-        const img = new Image()
-        img.src = src
-        img.onload = () => setSourceLoaded(src)
-    }, [src])
-
-    return sourceLoaded
-}
-
 
 function Events({ search, identificador }) {
     const [eventos, setEventos] = useState([]);
@@ -155,7 +143,7 @@ function Events({ search, identificador }) {
                     </h3>
                 </div>
             )}
-            <div class="events-holder">
+            <div className="events-holder">
                 {abertos.map((evento) => (
                     <div
                         key={evento.Id}
@@ -215,7 +203,7 @@ function Events({ search, identificador }) {
                     </h3>
                 </div>
             )}
-            <div class="events-holder">
+            <div className="events-holder">
                 {informativos.map((evento) => (
                     <div
                         key={evento.Id}
@@ -275,7 +263,7 @@ function Events({ search, identificador }) {
                     </h3>
                 </div>
             )}
-            <div class="events-holder">
+            <div className="events-holder">
                 {emBreve.map((evento) => (
                     <div
                         key={evento.Id}
@@ -326,12 +314,18 @@ function Events({ search, identificador }) {
     function AsyncBg({ evento }) {
 
 
+
+
         const [loaded, setLoaded] = useState()
 
         useEffect(() => {
             if ($('.bloco-normal').width()) {
+
+                const img = new Image()
+                img.src = `/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${$('.bloco-normal').width()}`
+                img.onload = () => setLoaded(img.src) 
  
-               setLoaded(useProgressiveImage(`/Inscricoes/GetBGEventoGlobal/${evento.Id}?size=${$('.bloco-normal').width()}`)) 
+
             }
        
         }, [$('.bloco-normal').width()]);

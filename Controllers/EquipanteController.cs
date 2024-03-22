@@ -1425,11 +1425,13 @@ namespace SysIgreja.Controllers
 
                         if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
                         {
-                            body = body.Replace("{{linkPagamento}}", $"https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${model.MercadoPagoPreferenceId}"); 
+                            body = body.Replace("{{linkPagamento}}", $"<a href='https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.Equipes.FirstOrDefault(x => x.EventoId == evento.Id).MercadoPagoPreferenceId}'  target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
                         }
                         else if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
                         {
-                            body = body.Replace("{{linkPagamento}}", model.PagSeguroPreferenceId);
+                            body = body.Replace("{{linkPagamento}}", $"<a href='{equipante.Equipes.FirstOrDefault(x => x.EventoId == evento.Id).PagSeguroPreferenceId}'  target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
+
+
                         }
                         else
                         {
@@ -1459,11 +1461,12 @@ namespace SysIgreja.Controllers
 
                     if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
                     {
-                        body = body.Replace("{{linkPagamento}}", $"https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${model.MercadoPagoPreferenceId}");
+                        body = body.Replace("{{linkPagamento}}", $"<a href='https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.Equipes.FirstOrDefault(x => x.EventoId == evento.Id).MercadoPagoPreferenceId}'  target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
                     }
                     else if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
                     {
-                        body = body.Replace("{{linkPagamento}}", model.PagSeguroPreferenceId);
+                        body = body.Replace("{{linkPagamento}}", $"<a href='{equipante.Equipes.FirstOrDefault(x => x.EventoId == evento.Id).PagSeguroPreferenceId}'  target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
+
                     }
                     else
                     {

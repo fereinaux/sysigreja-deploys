@@ -1423,6 +1423,21 @@ namespace SysIgreja.Controllers
                         );
                         body = body.Replace("{{msgConclusao}}", msgConclusao);
 
+                        if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
+                        {
+                            body = body.Replace("{{linkPagamento}}", $"https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${model.MercadoPagoPreferenceId}"); 
+                        }
+                        else if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
+                        {
+                            body = body.Replace("{{linkPagamento}}", model.PagSeguroPreferenceId);
+                        }
+                        else
+                        {
+                            body = body.Replace("{{linkPagamento}}", "");
+
+                        }
+
+
                         emailSender.SendEmail(
                             equipante.Email,
                             "Confirmar Inscrição",
@@ -1441,6 +1456,20 @@ namespace SysIgreja.Controllers
                 {
                     msgConclusao = msgConclusao.Replace("${Apelido}", equipante.Apelido);
                     body = body.Replace("{{msgConclusao}}", msgConclusao);
+
+                    if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
+                    {
+                        body = body.Replace("{{linkPagamento}}", $"https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${model.MercadoPagoPreferenceId}");
+                    }
+                    else if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
+                    {
+                        body = body.Replace("{{linkPagamento}}", model.PagSeguroPreferenceId);
+                    }
+                    else
+                    {
+                        body = body.Replace("{{linkPagamento}}", "");
+
+                    }
 
                     emailSender.SendEmail(
                         equipante.Email,

@@ -185,6 +185,7 @@ namespace SysIgreja.Controllers
                 Status = x.Status.GetDescription(),
                 Observacao = x.Observacao,
                 MercadoPagoPreferenceId = x.MercadoPagoPreferenceId,
+                PagSeguroPreferenceId = x.PagSeguroPreferenceId,
                 EtiquetasList = etiquetasBusiness
                     .GetEtiquetasByParticipante(x.Id)
                     ?.Select(y => new PostEtiquetaModel

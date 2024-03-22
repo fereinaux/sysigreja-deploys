@@ -972,6 +972,10 @@ namespace SysIgreja.Controllers
                         dest => dest.MercadoPagoPreferenceId,
                         opt => opt.MapFrom(x => x.MercadoPagoPreferenceId)
                     )
+                          .ForMember(
+                        dest => dest.PagSeguroPreferenceId,
+                        opt => opt.MapFrom(x => x.PagSeguroPreferenceId)
+                    )
                     .ForMember(dest => dest.Estado, opt => opt.MapFrom(x => x.Equipante.Estado))
                     .ForMember(dest => dest.Camisa, opt => opt.MapFrom(x => x.Equipante.Camisa))
                     .ForMember(

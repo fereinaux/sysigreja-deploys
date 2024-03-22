@@ -84,6 +84,8 @@ namespace SysIgreja.Controllers
                     .Any(x => x.MercadoPagoId == external_reference && !string.IsNullOrEmpty(external_reference))
             )
             {
+                ViewBag.MeioPagamento = "Mercado Pago";
+
                 Participante participante = participantesBusiness
                     .GetParticipantes()
                     .FirstOrDefault(x => x.MercadoPagoId == external_reference && !string.IsNullOrEmpty(external_reference));
@@ -190,6 +192,7 @@ namespace SysIgreja.Controllers
             .GetQueryEquipantesEventoSemFiltro()
                     .Any(x => x.PagSeguroId == payment_id && !string.IsNullOrEmpty(payment_id)))
             {
+                ViewBag.MeioPagamento = "PagoSeguro";
                 Participante participante = participantesBusiness
        .GetParticipantes()
        .FirstOrDefault(x => x.PagSeguroId == payment_id && !string.IsNullOrEmpty(payment_id));

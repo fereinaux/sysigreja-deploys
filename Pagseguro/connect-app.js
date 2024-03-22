@@ -1,1 +1,1 @@
-https://acesso.pagbank.com.br/connect?dest=https%3A%2F%2Fconnect.pagbank.com.br%2Foauth2%2Fauthorize%3Fid%3Dd3e4bb5b-d6f1-4c5b-a656-65063f8cdf54a9136d77-ed19-4573-b6e6-22d78adba485&flow=REPLICATED
+https://connect.pagseguro.uol.com.br/oauth2/authorize?client_id=ead28036-19b2-405f-829b-1d28be304f57&response_type=code&redirect_uri=https%3A%2F%2Fsysigreja.com&scope=checkout.create

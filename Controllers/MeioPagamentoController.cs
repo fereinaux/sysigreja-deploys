@@ -7,7 +7,6 @@ using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Business.MeioPagamento;
 using Core.Models.MeioPagamento;
-using Utils.Constants;
 
 namespace SysIgreja.Controllers
 {
@@ -57,7 +56,7 @@ namespace SysIgreja.Controllers
         {
             meioPagamentosBusiness.PostMeioPagamento(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -65,7 +64,7 @@ namespace SysIgreja.Controllers
         {
             meioPagamentosBusiness.DeleteMeioPagamento(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

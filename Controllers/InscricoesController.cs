@@ -2,20 +2,14 @@
 //using MercadoPago.Config;
 //using MercadoPago.Client.Preference;
 //using MercadoPago.Resource.Preference;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using AutoMapper;
-using Core.Business.Arquivos;
 using Core.Business.Categorias;
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
@@ -30,14 +24,9 @@ using Core.Business.PagSeguro;
 using Core.Business.Participantes;
 using Core.Models.Equipantes;
 using Core.Models.Participantes;
-using CsQuery;
 using Data.Entities;
-using Microsoft.AspNet.Identity;
-using Microsoft.Extensions.Logging;
-using Owin.Security.Providers.Orcid.Message;
 using QRCoder;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
@@ -146,7 +135,6 @@ namespace SysIgreja.Controllers
             }
         }
 
-
         public ActionResult GoToEquipe(string nome)
         {
             var evento = eventosBusiness
@@ -179,7 +167,11 @@ namespace SysIgreja.Controllers
 
             if (arquivo != null)
             {
-                return File(imageService.ResizeImageByte(arquivo.Conteudo, 50), arquivo.Tipo, arquivo.Nome);
+                return File(
+                    imageService.ResizeImageByte(arquivo.Conteudo, 50),
+                    arquivo.Tipo,
+                    arquivo.Nome
+                );
             }
             else
             {
@@ -201,7 +193,11 @@ namespace SysIgreja.Controllers
 
             if (arquivo != null)
             {
-                return File(imageService.ResizeImageByte(arquivo.Conteudo, 400), arquivo.Tipo, arquivo.Nome);
+                return File(
+                    imageService.ResizeImageByte(arquivo.Conteudo, 400),
+                    arquivo.Tipo,
+                    arquivo.Nome
+                );
             }
             else
             {
@@ -286,52 +282,42 @@ namespace SysIgreja.Controllers
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
             var eventos = eventosBusiness
                 .GetEventos()
-                .Where(
-                    x =>
+                .Where(x =>
+                    (
                         (
                             (
-                                (
-                                    (
-                                        x.Status == StatusEnum.Aberto
-                                        || x.Status == StatusEnum.EmBreve
-                                    )
-                                    || (
-                                        x.StatusEquipe == StatusEnum.Aberto
-                                        || x.StatusEquipe == StatusEnum.EmBreve
-                                    )
-                                )
+                                (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve)
                                 || (
-                                    x.DataEvento > DateTime.Today
-                                    && x.Status == StatusEnum.Informativo
+                                    x.StatusEquipe == StatusEnum.Aberto
+                                    || x.StatusEquipe == StatusEnum.EmBreve
                                 )
                             )
+                            || (x.DataEvento > DateTime.Today && x.Status == StatusEnum.Informativo)
                         )
+                    )
                 )
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            x.Id,
-                            Data = $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
-                            x.Valor,
-                            x.Numeracao,
-                            Identificador = x.Configuracao?.Identificador
-                                ?? x.Descricao.ToLower().Trim().Replace(" ", "-"),
-                            x.DataEvento,
-                            DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
-                            Titulo = x.Configuracao?.Titulo ?? x.Descricao,
-                            Status = x.Status.GetDescription(),
-                            StatusEquipe = x.StatusEquipe.GetDescription(),
-                            BackgroundId = x.Configuracao?.BackgroundId ?? x.ArteId,
-                            x.Configuracao?.CorBotao,
-                            x.Conteudo,
-                            x.Configuracao?.LogoId,
-                            x.DataExtenso,
-                            x.LinkLocal,
-                            x.NomeLocal
-                        }
-                )
+                .Select(x => new
+                {
+                    x.Id,
+                    Data = $"{x.DataEvento:dd} de {x.DataEvento:MMMM} de {x.DataEvento:yyyy}",
+                    x.Valor,
+                    x.Numeracao,
+                    Identificador = x.Configuracao?.Identificador
+                        ?? x.Descricao.ToLower().Trim().Replace(" ", "-"),
+                    x.DataEvento,
+                    DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
+                    Titulo = x.Configuracao?.Titulo ?? x.Descricao,
+                    Status = x.Status.GetDescription(),
+                    StatusEquipe = x.StatusEquipe.GetDescription(),
+                    BackgroundId = x.Configuracao?.BackgroundId ?? x.ArteId,
+                    x.Configuracao?.CorBotao,
+                    x.Conteudo,
+                    x.Configuracao?.LogoId,
+                    x.DataExtenso,
+                    x.LinkLocal,
+                    x.NomeLocal
+                })
                 .OrderBy(x => x.DataEvento)
                 .ToList();
 
@@ -357,12 +343,16 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetBGEventoGlobal(int Id, int? size)
         {
-
             var evento = eventosBusiness
-               .GetEventosGlobais()
-               .Where(x => x.Id == Id).FirstOrDefault();
+                .GetEventosGlobais()
+                .Where(x => x.Id == Id)
+                .FirstOrDefault();
 
-            return File(imageService.ResizeImageByte(evento.Background, size ?? 200), "image/jpeg", "Background");
+            return File(
+                imageService.ResizeImageByte(evento.Background, size ?? 200),
+                "image/jpeg",
+                "Background"
+            );
         }
 
         [HttpGet]
@@ -383,78 +373,81 @@ namespace SysIgreja.Controllers
 
             var eventos = eventosBusiness
                 .GetEventosGlobais()
-                .Where(
-                    x =>
+                .Where(x =>
+                    (
                         (
                             (
-                                (
-                                    (
-                                        x.Status == StatusEnum.Aberto
-                                        || x.Status == StatusEnum.EmBreve
-                                    )
-                                    || (
-                                        x.StatusEquipe == StatusEnum.Aberto
-                                        || x.StatusEquipe == StatusEnum.EmBreve
-                                    )
-                                )
+                                (x.Status == StatusEnum.Aberto || x.Status == StatusEnum.EmBreve)
                                 || (
-                                    x.DataEvento > DateTime.Today
-                                    && x.Status == StatusEnum.Informativo
+                                    x.StatusEquipe == StatusEnum.Aberto
+                                    || x.StatusEquipe == StatusEnum.EmBreve
                                 )
                             )
-                            && ((string.IsNullOrEmpty(search)) || UtilServices.RemoveAccents(x.TituloEvento).Contains(UtilServices.RemoveAccents(search)))
-                            && (
-                                 (identificadores?.Length > 0 && identificadores.Contains(x.Identificador) && identificador == x.Identificador) ||
-                                (identificadores?.Length > 0 && identificadores.Contains(x.Identificador) && string.IsNullOrEmpty(identificador))
-                                || (identificadores == null || identificadores.Length == 0)
-                            )
+                            || (x.DataEvento > DateTime.Today && x.Status == StatusEnum.Informativo)
                         )
+                        && (
+                            (string.IsNullOrEmpty(search))
+                            || UtilServices
+                                .RemoveAccents(x.TituloEvento)
+                                .Contains(UtilServices.RemoveAccents(search))
+                        )
+                        && (
+                            (
+                                identificadores?.Length > 0
+                                && identificadores.Contains(x.Identificador)
+                                && identificador == x.Identificador
+                            )
+                            || (
+                                identificadores?.Length > 0
+                                && identificadores.Contains(x.Identificador)
+                                && string.IsNullOrEmpty(identificador)
+                            )
+                            || (identificadores == null || identificadores.Length == 0)
+                        )
+                    )
                 )
                 .ToList()
-                .Select(
-                    x =>
-                        new GetEventosInscricaoViewModel
-                        {
-                            Id = x.Id,
-                            UrlDestino =
-                                x.UrlExterna
-                                ?? $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}",
-                            Data =
-                                $"{x.DataEvento.ToString("dd")} de {x.DataEvento.ToString("MMMM")} de {x.DataEvento.ToString("yyyy")}",
-                            Valor = type.Contains("Equipe")
-                                ? (
-                                    x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today)
-                                        ? x.EventoLotes.Where(
-                                            y => y.DataLote >= System.DateTime.Today
-                                        )
-                                            .OrderBy(y => y.DataLote)
-                                            .FirstOrDefault()
-                                            .ValorTaxa
-                                        : x.ValorTaxa
-                                )
-                                : x.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today)
-                                    ? x.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
-                                        .OrderBy(y => y.DataLote)
-                                        .FirstOrDefault()
-                                        .Valor
-                                    : x.Valor,
-                            Numeracao = x.Numeracao,
-                            DataEvento = x.DataEvento,
-                            DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
-                            Descricao = x.Descricao,
-                            Identificador = x.Identificador,
-                            Titulo = x.TituloEvento,
-                            Status = x.Status.GetDescription(),
-                            StatusEquipe = x.StatusEquipe.GetDescription(),
-                            Background = (!(linkBg ?? false) && x.Background != null)
-                                    ? (
-                                        isMobile.HasValue && isMobile.Value
-                                            ? imageService.ResizeImage(x.Background, 400)
-                                            : imageService.ResizeImage(x.Background, 700)
-                                    )
-                                    : "",
-                        }
-                )
+                .Select(x => new GetEventosInscricaoViewModel
+                {
+                    Id = x.Id,
+                    UrlDestino =
+                        x.UrlExterna ?? $"https://{x.Destino}/Inscricoes/Detalhes/{x.EventoId}",
+                    Data =
+                        $"{x.DataEvento:dd} de {x.DataEvento:MMMM} de {x.DataEvento:yyyy}",
+                    Valor = type.Contains("Equipe")
+                        ? (
+                            x.EventoLotes.Any(y => y.DataLote >= DateTime.Today)
+                                ? x
+                                    .EventoLotes.Where(y => y.DataLote >= DateTime.Today)
+                                    .OrderBy(y => y.DataLote)
+                                    .FirstOrDefault()
+                                    .ValorTaxa
+                                : x.ValorTaxa
+                        )
+                        : x.EventoLotes.Any(y => y.DataLote >= DateTime.Today)
+                            ? x
+                                .EventoLotes.Where(y => y.DataLote >= DateTime.Today)
+                                .OrderBy(y => y.DataLote)
+                                .FirstOrDefault()
+                                .Valor
+                            : x.Valor,
+                    Numeracao = x.Numeracao,
+                    DataEvento = x.DataEvento,
+                    DataCalendar = x.DataEvento.ToString("yyyy-MM-dd"),
+                    Descricao = x.Descricao,
+                    Identificador = x.Identificador,
+                    Titulo = x.TituloEvento,
+                    Status = x.Status.GetDescription(),
+                    StatusEquipe = x.StatusEquipe.GetDescription(),
+                    Background =
+                        (!(linkBg ?? false) && x.Background != null)
+                            ? (
+                                isMobile.HasValue && isMobile.Value
+                                    ? imageService.ResizeImage(x.Background, 400)
+                                    : imageService.ResizeImage(x.Background, 700)
+                            )
+                            : "",
+                })
                 .OrderBy(x => x.DataEvento)
                 .ToList();
 
@@ -470,7 +463,12 @@ namespace SysIgreja.Controllers
             ViewBag.Configuracao = login;
             var igrejas = eventosBusiness
                 .GetEventosGlobais()
-                .Where(x => (login.Identificadores?.Length > 0 && login.Identificadores.Contains(x.Identificador)))
+                .Where(x =>
+                    (
+                        login.Identificadores?.Length > 0
+                        && login.Identificadores.Contains(x.Identificador)
+                    )
+                )
                 .Select(x => x.Identificador)
                 .Distinct()
                 .ToList();
@@ -510,14 +508,18 @@ namespace SysIgreja.Controllers
                     ViewBag.Equipes = evento.Configuracao.Equipes.Any(x => x.ShowInscricao)
                         ? evento
                             .Configuracao.Equipes.Where(x => x.ShowInscricao)
-                            .Select(
-                                x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }
-                            )
+                            .Select(x => new EquipeViewModel
+                            {
+                                Id = x.EquipeId,
+                                Nome = x.Equipe.Nome
+                            })
                             .ToList()
                         : evento
-                            .Configuracao.Equipes.Select(
-                                x => new EquipeViewModel { Id = x.EquipeId, Nome = x.Equipe.Nome }
-                            )
+                            .Configuracao.Equipes.Select(x => new EquipeViewModel
+                            {
+                                Id = x.EquipeId,
+                                Nome = x.Equipe.Nome
+                            })
                             .ToList();
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                         return View("Casal");
@@ -541,8 +543,8 @@ namespace SysIgreja.Controllers
         public ActionResult Presenca(int Id)
         {
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
-            var reuniao = evento.Reunioes.FirstOrDefault(
-                x => x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado
+            var reuniao = evento.Reunioes.FirstOrDefault(x =>
+                x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado
             );
 
             if (reuniao == null)
@@ -584,13 +586,13 @@ namespace SysIgreja.Controllers
             )
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
 
-            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(
-                x => x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado
+            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(x =>
+                x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado
             );
             ViewBag.EventoId = Id;
-            evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today)
+            evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= DateTime.Today)
                 ? evento
-                    .EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                    .EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                     .OrderBy(y => y.DataLote)
                     .FirstOrDefault()
                     .Valor
@@ -625,13 +627,13 @@ namespace SysIgreja.Controllers
             )
                 return RedirectToAction("InscricoesEncerradas", new { Id = Id });
 
-            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(
-                x => x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado
+            ViewBag.Reuniao = evento.Reunioes.FirstOrDefault(x =>
+                x.DataReuniao.Date == DateTime.Today.Date && x.Status != StatusEnum.Deletado
             );
             ViewBag.EventoId = Id;
-            evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today)
+            evento.Valor = evento.EventoLotes.Any(y => y.DataLote >= DateTime.Today)
                 ? evento
-                    .EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                    .EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                     .OrderBy(y => y.DataLote)
                     .FirstOrDefault()
                     .Valor
@@ -673,11 +675,11 @@ namespace SysIgreja.Controllers
                         .Include(x => x.Presencas)
                         .Include(y => y.Presencas.Select(x => x.Reuniao))
                         .FirstOrDefault(x => x.EquipanteId == equipante.Id);
-                    var Valor = eventoAtual.EventoLotes.Any(
-                        y => y.DataLote >= System.DateTime.Today
+                    var Valor = eventoAtual.EventoLotes.Any(y =>
+                        y.DataLote >= DateTime.Today
                     )
                         ? eventoAtual
-                            .EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                            .EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                             .OrderBy(y => y.DataLote)
                             .FirstOrDefault()
                             .Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))
@@ -702,21 +704,19 @@ namespace SysIgreja.Controllers
                         )
                         .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
                     if (
-                        !ev.Presencas.Any(
-                            x =>
-                                x.Reuniao.DataReuniao.Date == DateTime.Today.Date
-                                && x.Reuniao.Status != StatusEnum.Deletado
+                        !ev.Presencas.Any(x =>
+                            x.Reuniao.DataReuniao.Date == DateTime.Today.Date
+                            && x.Reuniao.Status != StatusEnum.Deletado
                         )
                     )
                     {
-                        ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(
-                            x =>
-                                x.DataReuniao.Date == DateTime.Today.Date
-                                && x.Status != StatusEnum.Deletado
+                        ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(x =>
+                            x.DataReuniao.Date == DateTime.Today.Date
+                            && x.Status != StatusEnum.Deletado
                         );
                     }
                     ViewBag.QRCode =
-                        $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id.ToString()}&equipanteid={equipante.Id.ToString()}";
+                        $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtual.Id}&equipanteid={equipante.Id}";
 
                     if (config.TipoEventoId == TipoEventoEnum.Casais)
                     {
@@ -747,11 +747,11 @@ namespace SysIgreja.Controllers
                     var eventoAtualP = eventosBusiness.GetEventoById(participante.EventoId);
                     ViewBag.EventoId = eventoAtualP.Id;
                     var configP = configuracaoBusiness.GetConfiguracao(eventoAtualP.ConfiguracaoId);
-                    var ValorParticipante = participante.Evento.EventoLotes.Any(
-                        y => y.DataLote >= System.DateTime.Today
+                    var ValorParticipante = participante.Evento.EventoLotes.Any(y =>
+                        y.DataLote >= DateTime.Today
                     )
                         ? participante
-                            .Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                            .Evento.EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                             .OrderBy(y => y.DataLote)
                             .FirstOrDefault()
                             .Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))
@@ -784,15 +784,14 @@ namespace SysIgreja.Controllers
                             participante.Padrinho?.EquipanteEvento?.Equipante?.Nome ?? ""
                         );
                     ViewBag.QRCode =
-                        $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id.ToString()}&participanteid={participante.Id.ToString()}";
+                        $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={eventoAtualP.Id}&participanteid={participante.Id}";
                     if (configP.TipoEventoId == TipoEventoEnum.Casais)
                     {
                         var casal = participantesBusiness
                             .GetParticipantes()
-                            .FirstOrDefault(
-                                x =>
-                                    x.Conjuge == participante.Nome
-                                    && x.EventoId == participante.EventoId
+                            .FirstOrDefault(x =>
+                                x.Conjuge == participante.Nome
+                                && x.EventoId == participante.EventoId
                             );
                         ViewBag.MsgConclusao = ViewBag.MsgConclusao.Replace(
                             "${Apelido}",
@@ -815,7 +814,7 @@ namespace SysIgreja.Controllers
                         Apelido = participante.Apelido,
                         Evento =
                             $"{configParticipante.Titulo} "
-                            + $"{participante.Evento.Numeracao.ToString()}",
+                            + $"{participante.Evento.Numeracao}",
                         DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy"),
                         PadrinhoFone =
                             participante.Padrinho?.EquipanteEvento?.Equipante?.Fone ?? "",
@@ -835,11 +834,11 @@ namespace SysIgreja.Controllers
             ViewBag.EventoId = participante.EventoId;
             var config = configuracaoBusiness.GetConfiguracao(participante.Evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
-            var Valor = participante.Evento.EventoLotes.Any(
-                y => y.DataLote >= System.DateTime.Today
+            var Valor = participante.Evento.EventoLotes.Any(y =>
+                y.DataLote >= DateTime.Today
             )
                 ? participante
-                    .Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                    .Evento.EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                     .OrderBy(y => y.DataLote)
                     .FirstOrDefault()
                     .Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))
@@ -852,8 +851,8 @@ namespace SysIgreja.Controllers
             {
                 var casal = participantesBusiness
                     .GetParticipantesByEvento(participante.EventoId)
-                    .FirstOrDefault(
-                        x => x.Conjuge == participante.Nome && x.EventoId == participante.EventoId
+                    .FirstOrDefault(x =>
+                        x.Conjuge == participante.Nome && x.EventoId == participante.EventoId
                     );
                 apelido = $"{participante.Apelido} e {casal?.Apelido}";
             }
@@ -864,7 +863,7 @@ namespace SysIgreja.Controllers
                 Apelido = apelido,
                 Logo = participante.Evento.Configuracao.Titulo + ".png",
                 Evento =
-                    $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.Configuracao.Titulo} {participante.Evento.Descricao}",
+                    $"{participante.Evento.Numeracao}º {participante.Evento.Configuracao.Titulo} {participante.Evento.Descricao}",
                 Valor = Valor,
                 DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy")
             };
@@ -896,7 +895,11 @@ namespace SysIgreja.Controllers
                 Guid g = Guid.NewGuid();
                 string MercadoPagoId = g.ToString();
                 model.MercadoPagoId = MercadoPagoId;
-                var preference = MercadoPagoService.createPreference(MercadoPagoId, evento, evento.Valor);
+                var preference = MercadoPagoService.createPreference(
+                    MercadoPagoId,
+                    evento,
+                    evento.Valor
+                );
 
                 model.MercadoPagoPreferenceId = preference;
             }
@@ -949,11 +952,11 @@ namespace SysIgreja.Controllers
 
             Participante participante = participantesBusiness.GetParticipanteById(participanteid);
 
-            var ValorParticipante = participante.Evento.EventoLotes.Any(
-                y => y.DataLote >= System.DateTime.Today
+            var ValorParticipante = participante.Evento.EventoLotes.Any(y =>
+                y.DataLote >= DateTime.Today
             )
                 ? participante
-                    .Evento.EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                    .Evento.EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                     .OrderBy(y => y.DataLote)
                     .FirstOrDefault()
                     .Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))
@@ -987,15 +990,15 @@ namespace SysIgreja.Controllers
             );
             body = body.Replace(
                 "{{qrcodeParticipante}}",
-                $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={evento.Id.ToString()}&participanteid={participante.Id.ToString()}"
+                $"https://{Request.Url.Authority}/inscricoes/qrcode?eventoid={evento.Id}&participanteid={participante.Id}"
             );
 
             if (config.TipoEvento == TipoEventoEnum.Casais)
             {
                 var casal = participantesBusiness
                     .GetParticipantes()
-                    .FirstOrDefault(
-                        x => x.Conjuge == participante.Nome && x.EventoId == participante.EventoId
+                    .FirstOrDefault(x =>
+                        x.Conjuge == participante.Nome && x.EventoId == participante.EventoId
                     );
 
                 if (casal != null)
@@ -1062,7 +1065,7 @@ namespace SysIgreja.Controllers
                             new
                             {
                                 MontagemNegado = true,
-                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}"
+                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao}º" : "")} {evento.Configuracao.Titulo}"
                             },
                             JsonRequestBehavior.AllowGet
                         );
@@ -1070,8 +1073,8 @@ namespace SysIgreja.Controllers
                     else if (
                         equipante != null
                         && equipante.Equipes != null
-                        && equipante.Equipes.Any(
-                            x => x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Ativo
+                        && equipante.Equipes.Any(x =>
+                            x.EventoId == eventoId && x.StatusMontagem == StatusEnum.Ativo
                         )
                     )
                     {
@@ -1079,7 +1082,7 @@ namespace SysIgreja.Controllers
                             new
                             {
                                 Participante = equipante.Nome,
-                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}",
+                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao}º" : "")} {evento.Configuracao.Titulo}",
                                 Url = Url.Action(
                                     "InscricaoConcluida",
                                     new
@@ -1098,11 +1101,10 @@ namespace SysIgreja.Controllers
                         return Json(
                             new
                             {
-                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}",
-                                Montagem = equipante.Equipes.Any(
-                                    x =>
-                                        x.EventoId == eventoId
-                                        && x.StatusMontagem == StatusEnum.Montagem
+                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao}º" : "")} {evento.Configuracao.Titulo}",
+                                Montagem = equipante.Equipes.Any(x =>
+                                    x.EventoId == eventoId
+                                    && x.StatusMontagem == StatusEnum.Montagem
                                 ),
                                 Participante = mapper.Map<EquipanteListModel>(equipante)
                             },
@@ -1112,7 +1114,7 @@ namespace SysIgreja.Controllers
                     return Json(
                         new
                         {
-                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}"
+                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao}º" : "")} {evento.Configuracao.Titulo}"
                         },
                         JsonRequestBehavior.AllowGet
                     );
@@ -1120,17 +1122,16 @@ namespace SysIgreja.Controllers
                 default:
                     var participante = participantesBusiness
                         .GetParticipantesByEvento(eventoId)
-                        .FirstOrDefault(
-                            x =>
-                                x.Email == Email
-                                && (
-                                    new StatusEnum[]
-                                    {
-                                        StatusEnum.Confirmado,
-                                        StatusEnum.Inscrito,
-                                        StatusEnum.Espera
-                                    }
-                                ).Contains(x.Status)
+                        .FirstOrDefault(x =>
+                            x.Email == Email
+                            && (
+                                new StatusEnum[]
+                                {
+                                    StatusEnum.Confirmado,
+                                    StatusEnum.Inscrito,
+                                    StatusEnum.Espera
+                                }
+                            ).Contains(x.Status)
                         );
 
                     if (participante != null && participante.Status != StatusEnum.Espera)
@@ -1138,7 +1139,7 @@ namespace SysIgreja.Controllers
                             new
                             {
                                 Participante = participante.Nome,
-                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}",
+                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao}º" : "")} {evento.Configuracao.Titulo}",
                                 Url = Url.Action("InscricaoConcluida", new { Id = participante.Id })
                             },
                             JsonRequestBehavior.AllowGet
@@ -1158,7 +1159,7 @@ namespace SysIgreja.Controllers
                             new
                             {
                                 Participante = mapper.Map<EquipanteListModel>(participanteConsulta),
-                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}"
+                                Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao}º" : "")} {evento.Configuracao.Titulo}"
                             },
                             JsonRequestBehavior.AllowGet
                         );
@@ -1166,7 +1167,7 @@ namespace SysIgreja.Controllers
                     return Json(
                         new
                         {
-                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao.ToString()}º" : "")} {evento.Configuracao.Titulo}"
+                            Evento = $"{(evento.Numeracao > 0 ? $"{evento.Numeracao}º" : "")} {evento.Configuracao.Titulo}"
                         },
                         JsonRequestBehavior.AllowGet
                     );

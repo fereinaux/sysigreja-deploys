@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
-using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
@@ -19,14 +15,10 @@ using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.Participantes;
 using Core.Business.Reunioes;
-using Core.Models;
 using Core.Models.Equipantes;
-using Core.Models.Participantes;
 using Data.Entities;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
@@ -88,26 +80,20 @@ namespace SysIgreja.Controllers
             var eventos = eventosBusiness
                 .GetEventosComImagens()
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Evento = $"{(x.Numeracao > 0 ? $"{x.Numeracao}º " : string.Empty)}{x.Configuracao.Titulo}",
-                            Logo = x.Configuracao?.Logo != null
-                                ? imageService.ResizeImage(x.Configuracao?.Logo?.Conteudo, 50)
-                                : "",
-                            Background = x.Configuracao?.Background != null
-                                ? imageService.ResizeImage(
-                                    x.Configuracao?.Background?.Conteudo,
-                                    150
-                                )
-                                : "",
-                            Cor = x.Configuracao.CorBotao,
-                            CorHover = x.Configuracao.CorHoverBotao,
-                            Data = x.DataEvento.ToString("yyyy-MM-dd")
-                        }
-                );
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Evento = $"{(x.Numeracao > 0 ? $"{x.Numeracao}º " : string.Empty)}{x.Configuracao.Titulo}",
+                    Logo = x.Configuracao?.Logo != null
+                        ? imageService.ResizeImage(x.Configuracao?.Logo?.Conteudo, 50)
+                        : "",
+                    Background = x.Configuracao?.Background != null
+                        ? imageService.ResizeImage(x.Configuracao?.Background?.Conteudo, 150)
+                        : "",
+                    Cor = x.Configuracao.CorBotao,
+                    CorHover = x.Configuracao.CorHoverBotao,
+                    Data = x.DataEvento.ToString("yyyy-MM-dd")
+                });
 
             var result = new { Eventos = eventos };
             return Json(new { result }, JsonRequestBehavior.AllowGet);
@@ -126,35 +112,26 @@ namespace SysIgreja.Controllers
                 Financeiro = lancamentoBusiness
                     .GetLancamentos()
                     .Where(x => x.EventoId == EventoId && x.Valor > 0)
-                    .Select(
-                        x =>
-                            new
-                            {
-                                MeioPagamento = x.MeioPagamento.Descricao,
-                                Valor = x.Valor,
-                                Tipo = x.Tipo
-                            }
-                    )
+                    .Select(x => new
+                    {
+                        MeioPagamento = x.MeioPagamento.Descricao,
+                        Valor = x.Valor,
+                        Tipo = x.Tipo
+                    })
                     .GroupBy(x => new { x.Tipo, x.MeioPagamento })
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Tipo = x.Key.Tipo,
-                                MeioPagamento = x.Key.MeioPagamento,
-                                Valor = x.Sum(y => y.Valor)
-                            }
-                    )
+                    .Select(x => new
+                    {
+                        Tipo = x.Key.Tipo,
+                        MeioPagamento = x.Key.MeioPagamento,
+                        Valor = x.Sum(y => y.Valor)
+                    })
                     .ToList()
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Tipo = x.Tipo.GetDescription(),
-                                MeioPagamento = x.MeioPagamento,
-                                Valor = x.Valor
-                            }
-                    )
+                    .Select(x => new
+                    {
+                        Tipo = x.Tipo.GetDescription(),
+                        MeioPagamento = x.MeioPagamento,
+                        Valor = x.Valor
+                    })
                     .OrderByDescending(x => x.Tipo)
             };
 
@@ -171,26 +148,20 @@ namespace SysIgreja.Controllers
                 var resultCasais = participantesBusiness.GetParticipantesByEvento(EventoId);
 
                 var queryCasais = resultCasais
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Conjuge = resultCasais.FirstOrDefault(y => y.Nome == x.Conjuge),
-                                Nome = x
-                            }
-                    )
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Homem = x.Nome.Sexo == SexoEnum.Masculino
-                                    ? x.Nome
-                                    : (x.Conjuge != null ? x.Conjuge : null),
-                                Mulher = x.Nome.Sexo == SexoEnum.Feminino
-                                    ? x.Nome
-                                    : (x.Conjuge != null ? x.Conjuge : null),
-                            }
-                    )
+                    .Select(x => new
+                    {
+                        Conjuge = resultCasais.FirstOrDefault(y => y.Nome == x.Conjuge),
+                        Nome = x
+                    })
+                    .Select(x => new
+                    {
+                        Homem = x.Nome.Sexo == SexoEnum.Masculino
+                            ? x.Nome
+                            : (x.Conjuge != null ? x.Conjuge : null),
+                        Mulher = x.Nome.Sexo == SexoEnum.Feminino
+                            ? x.Nome
+                            : (x.Conjuge != null ? x.Conjuge : null),
+                    })
                     .Distinct();
 
                 var casais = queryCasais.Where(x => x.Homem != null && x.Mulher != null);
@@ -204,10 +175,9 @@ namespace SysIgreja.Controllers
                     Espera = casais.Where(x => x.Homem.Status == StatusEnum.Espera).Count(),
                     Presentes = casais.Where(x => x.Homem.Checkin).Count(),
                     Total = casais
-                        .Where(
-                            x =>
-                                x.Homem.Status != StatusEnum.Cancelado
-                                && x.Homem.Status != StatusEnum.Espera
+                        .Where(x =>
+                            x.Homem.Status != StatusEnum.Cancelado
+                            && x.Homem.Status != StatusEnum.Espera
                         )
                         .Count(),
                     Meninos = 0,
@@ -239,26 +209,24 @@ namespace SysIgreja.Controllers
                         .Count(),
                     Total = participantesBusiness
                         .GetParticipantesByEvento(EventoId)
-                        .Where(
-                            x => x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera
+                        .Where(x =>
+                            x.Status != StatusEnum.Cancelado && x.Status != StatusEnum.Espera
                         )
                         .Count(),
                     Meninos = participantesBusiness
                         .GetParticipantesByEvento(EventoId)
-                        .Where(
-                            x =>
-                                x.Sexo == SexoEnum.Masculino
-                                && x.Status != StatusEnum.Cancelado
-                                && x.Status != StatusEnum.Espera
+                        .Where(x =>
+                            x.Sexo == SexoEnum.Masculino
+                            && x.Status != StatusEnum.Cancelado
+                            && x.Status != StatusEnum.Espera
                         )
                         .Count(),
                     Meninas = participantesBusiness
                         .GetParticipantesByEvento(EventoId)
-                        .Where(
-                            x =>
-                                x.Sexo == SexoEnum.Feminino
-                                && x.Status != StatusEnum.Cancelado
-                                && x.Status != StatusEnum.Espera
+                        .Where(x =>
+                            x.Sexo == SexoEnum.Feminino
+                            && x.Status != StatusEnum.Cancelado
+                            && x.Status != StatusEnum.Espera
                         )
                         .Count(),
                     Tipo = "Individual"
@@ -289,15 +257,12 @@ namespace SysIgreja.Controllers
                     .OrderByDescending(x => x.DataCadastro)
                     .Take(5)
                     .ToList()
-                    .Select(
-                        x =>
-                            new ParticipanteViewModel
-                            {
-                                Nome = UtilServices.CapitalizarNome(x.Nome),
-                                Sexo = x.Sexo.GetDescription(),
-                                Idade = UtilServices.GetAge(x.DataNascimento)
-                            }
-                    )
+                    .Select(x => new ParticipanteViewModel
+                    {
+                        Nome = UtilServices.CapitalizarNome(x.Nome),
+                        Sexo = x.Sexo.GetDescription(),
+                        Idade = UtilServices.GetAge(x.DataNascimento)
+                    })
                     .ToList()
             };
 
@@ -312,16 +277,13 @@ namespace SysIgreja.Controllers
                 Reunioes = reunioesBusiness
                     .GetReunioes(EventoId)
                     .ToList()
-                    .Select(
-                        x =>
-                            new ReuniaoViewModel
-                            {
-                                Id = x.Id,
-                                DataReuniao = x.DataReuniao,
-                                Titulo = x.Titulo,
-                                Presenca = x.Presenca.Count()
-                            }
-                    )
+                    .Select(x => new ReuniaoViewModel
+                    {
+                        Id = x.Id,
+                        DataReuniao = x.DataReuniao,
+                        Titulo = x.Titulo,
+                        Presenca = x.Presenca.Count()
+                    })
                     .OrderBy(x => x.DataReuniao)
                     .ToList()
             };
@@ -340,16 +302,13 @@ namespace SysIgreja.Controllers
                     .ThenBy(x => x.Tipo)
                     .ThenBy(x => x.Equipante.Nome)
                     .ToList()
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Equipe = x.Equipe.Nome,
-                                Nome = x.Equipante.Nome,
-                                Tipo = x.Tipo.GetDescription(),
-                                Fone = x.Equipante.Fone
-                            }
-                    )
+                    .Select(x => new
+                    {
+                        Equipe = x.Equipe.Nome,
+                        Nome = x.Equipante.Nome,
+                        Tipo = x.Tipo.GetDescription(),
+                        Fone = x.Equipante.Fone
+                    })
             };
 
             return Json(new { result }, JsonRequestBehavior.AllowGet);
@@ -380,9 +339,17 @@ namespace SysIgreja.Controllers
                 Reunioes = reunioesBusiness
                     .GetReunioes(eventoId)
                     .ToList()
-                    .OrderBy(
-                        x =>
-                            TimeZoneInfo
+                    .OrderBy(x =>
+                        TimeZoneInfo
+                            .ConvertTime(
+                                DateTime.Now,
+                                TimeZoneInfo.FindSystemTimeZoneById(
+                                    "E. South America Standard Time"
+                                )
+                            )
+                            .Subtract(x.DataReuniao)
+                            .TotalDays < 0
+                            ? TimeZoneInfo
                                 .ConvertTime(
                                     DateTime.Now,
                                     TimeZoneInfo.FindSystemTimeZoneById(
@@ -390,29 +357,22 @@ namespace SysIgreja.Controllers
                                     )
                                 )
                                 .Subtract(x.DataReuniao)
-                                .TotalDays < 0
-                                ? TimeZoneInfo
-                                    .ConvertTime(
-                                        DateTime.Now,
-                                        TimeZoneInfo.FindSystemTimeZoneById(
-                                            "E. South America Standard Time"
-                                        )
+                                .TotalDays * -1
+                            : TimeZoneInfo
+                                .ConvertTime(
+                                    DateTime.Now,
+                                    TimeZoneInfo.FindSystemTimeZoneById(
+                                        "E. South America Standard Time"
                                     )
-                                    .Subtract(x.DataReuniao)
-                                    .TotalDays * -1
-                                : TimeZoneInfo
-                                    .ConvertTime(
-                                        DateTime.Now,
-                                        TimeZoneInfo.FindSystemTimeZoneById(
-                                            "E. South America Standard Time"
-                                        )
-                                    )
-                                    .Subtract(x.DataReuniao)
-                                    .TotalDays
+                                )
+                                .Subtract(x.DataReuniao)
+                                .TotalDays
                     )
-                    .Select(
-                        x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }
-                    ),
+                    .Select(x => new
+                    {
+                        DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"),
+                        Id = x.Id
+                    }),
                 Membros = mapper.Map<IEnumerable<EquipanteListModel>>(
                     membrosEquipe.OrderBy(x => x.Equipe.Nome).ThenBy(x => x.Equipante.Nome)
                 )
@@ -434,9 +394,8 @@ namespace SysIgreja.Controllers
             var circulo = circulosBusiness
                 .GetCirculos()
                 .Include(x => x.Participantes.Select(y => y.Participante.Presencas))
-                .Include(
-                    x =>
-                        x.Participantes.Select(y => y.Participante.Presencas.Select(z => z.Reuniao))
+                .Include(x =>
+                    x.Participantes.Select(y => y.Participante.Presencas.Select(z => z.Reuniao))
                 )
                 .FirstOrDefault(x => x.Dirigentes.Any(y => y.EquipanteId == equipanteEvento.Id));
             var participantes = circulo.Participantes.OrderBy(x => x.Participante.Nome);
@@ -451,9 +410,17 @@ namespace SysIgreja.Controllers
                 Reunioes = reunioesBusiness
                     .GetReunioesParticipantes(circulo.Id)
                     .ToList()
-                    .OrderBy(
-                        x =>
-                            TimeZoneInfo
+                    .OrderBy(x =>
+                        TimeZoneInfo
+                            .ConvertTime(
+                                DateTime.Now,
+                                TimeZoneInfo.FindSystemTimeZoneById(
+                                    "E. South America Standard Time"
+                                )
+                            )
+                            .Subtract(x.DataReuniao)
+                            .TotalDays < 0
+                            ? TimeZoneInfo
                                 .ConvertTime(
                                     DateTime.Now,
                                     TimeZoneInfo.FindSystemTimeZoneById(
@@ -461,29 +428,22 @@ namespace SysIgreja.Controllers
                                     )
                                 )
                                 .Subtract(x.DataReuniao)
-                                .TotalDays < 0
-                                ? TimeZoneInfo
-                                    .ConvertTime(
-                                        DateTime.Now,
-                                        TimeZoneInfo.FindSystemTimeZoneById(
-                                            "E. South America Standard Time"
-                                        )
+                                .TotalDays * -1
+                            : TimeZoneInfo
+                                .ConvertTime(
+                                    DateTime.Now,
+                                    TimeZoneInfo.FindSystemTimeZoneById(
+                                        "E. South America Standard Time"
                                     )
-                                    .Subtract(x.DataReuniao)
-                                    .TotalDays * -1
-                                : TimeZoneInfo
-                                    .ConvertTime(
-                                        DateTime.Now,
-                                        TimeZoneInfo.FindSystemTimeZoneById(
-                                            "E. South America Standard Time"
-                                        )
-                                    )
-                                    .Subtract(x.DataReuniao)
-                                    .TotalDays
+                                )
+                                .Subtract(x.DataReuniao)
+                                .TotalDays
                     )
-                    .Select(
-                        x => new { DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"), Id = x.Id }
-                    ),
+                    .Select(x => new
+                    {
+                        DataReuniao = x.DataReuniao.ToString("dd/MM/yyyy"),
+                        Id = x.Id
+                    }),
                 Membros = membros
             };
 
@@ -535,7 +495,7 @@ namespace SysIgreja.Controllers
         {
             equipesBusiness.TogglePresenca(EquipanteEventoId, ReuniaoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         public ActionResult Index()
@@ -551,72 +511,65 @@ namespace SysIgreja.Controllers
             );
 
             if (
-                permissoes.Any(
-                    x =>
-                        new string[] { "Admin", "Geral", }.Contains(x.Role)
-                        || (
-                            x.Eventos != null
-                            && x.Eventos.Any(
-                                y =>
-                                    new string[]
-                                    {
-                                        "Admin",
-                                        "Geral",
-                                        "Administrativo",
-                                        "Financeiro"
-                                    }.Contains(y.Role)
-                            )
+                permissoes.Any(x =>
+                    new string[] { "Admin", "Geral", }.Contains(x.Role)
+                    || (
+                        x.Eventos != null
+                        && x.Eventos.Any(y =>
+                            new string[]
+                            {
+                                "Admin",
+                                "Geral",
+                                "Administrativo",
+                                "Financeiro"
+                            }.Contains(y.Role)
                         )
+                    )
                 )
             )
             {
                 return RedirectToAction("Admin", "Home");
             }
             else if (
-                permissoes.Any(
-                    x =>
-                        new string[] { "Membro" }.Contains(x.Role)
-                        || x.Eventos.Any(y => new string[] { "Membro" }.Contains(y.Role))
+                permissoes.Any(x =>
+                    new string[] { "Membro" }.Contains(x.Role)
+                    || x.Eventos.Any(y => new string[] { "Membro" }.Contains(y.Role))
                 )
             )
             {
                 return NaoAutorizado();
             }
             else if (
-                permissoes.Any(
-                    x =>
-                        new string[] { "Padrinho" }.Contains(x.Role)
-                        || x.Eventos.Any(y => new string[] { "Padrinho" }.Contains(y.Role))
+                permissoes.Any(x =>
+                    new string[] { "Padrinho" }.Contains(x.Role)
+                    || x.Eventos.Any(y => new string[] { "Padrinho" }.Contains(y.Role))
                 )
             )
             {
                 return RedirectToAction("Index", "Participante");
             }
             else if (
-                permissoes.Any(
-                    x =>
-                        new string[] { "Convites" }.Contains(x.Role)
-                        || x.Eventos.Any(y => new string[] { "Convites" }.Contains(y.Role))
+                permissoes.Any(x =>
+                    new string[] { "Convites" }.Contains(x.Role)
+                    || x.Eventos.Any(y => new string[] { "Convites" }.Contains(y.Role))
                 )
             )
             {
                 return RedirectToAction("Montagem", "Equipante");
             }
             else if (
-                permissoes.Any(
-                    x =>
-                        new string[] { "Coordenador" }.Contains(x.Role)
-                        || x.Eventos.Any(y => new string[] { "Coordenador" }.Contains(y.Role))
+                permissoes.Any(x =>
+                    new string[] { "Coordenador" }.Contains(x.Role)
+                    || x.Eventos.Any(y => new string[] { "Coordenador" }.Contains(y.Role))
                 )
             )
             {
                 return RedirectToAction("Coordenador", "Home");
             }
             else if (
-                permissoes.Any(
-                    x =>
-                        new string[] { "Dirigente" }.Contains(x.Role)
-                        || x.Eventos.Any(y => new string[] { "Dirigente" }.Contains(y.Role))
+                permissoes.Any(x =>
+                    new string[] { "Dirigente" }.Contains(x.Role)
+                    || x.Eventos.Any(y => new string[] { "Dirigente" }.Contains(y.Role))
                 )
             )
             {
@@ -624,7 +577,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return new HttpStatusCodeResult(200,"OK");
+                return new HttpStatusCodeResult(200, "OK");
             }
         }
     }

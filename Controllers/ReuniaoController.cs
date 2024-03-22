@@ -9,8 +9,6 @@ using Core.Business.Eventos;
 using Core.Business.Reunioes;
 using Core.Models.Reunioes;
 using SysIgreja.ViewModels;
-using Utils.Constants;
-using Utils.Extensions;
 
 namespace SysIgreja.Controllers
 {
@@ -46,17 +44,14 @@ namespace SysIgreja.Controllers
         {
             var result = reuniaosBusiness
                 .GetReunioes(EventoId)
-                .Select(
-                    x =>
-                        new ReuniaoViewModel
-                        {
-                            Id = x.Id,
-                            DataReuniao = x.DataReuniao,
-                            Presenca = x.Presenca.Count(),
-                            Pauta = x.Pauta,
-                            Titulo = x.Titulo
-                        }
-                );
+                .Select(x => new ReuniaoViewModel
+                {
+                    Id = x.Id,
+                    DataReuniao = x.DataReuniao,
+                    Presenca = x.Presenca.Count(),
+                    Pauta = x.Pauta,
+                    Titulo = x.Titulo
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -67,17 +62,14 @@ namespace SysIgreja.Controllers
             var result = reuniaosBusiness
                 .GetQueryReunioes()
                 .Where(x => x.Id == Id)
-                .Select(
-                    x =>
-                        new ReuniaoViewModel
-                        {
-                            Id = x.Id,
-                            DataReuniao = x.DataReuniao,
-                            Presenca = x.Presenca.Count(),
-                            Pauta = x.Pauta,
-                            Titulo = x.Titulo
-                        }
-                )
+                .Select(x => new ReuniaoViewModel
+                {
+                    Id = x.Id,
+                    DataReuniao = x.DataReuniao,
+                    Presenca = x.Presenca.Count(),
+                    Pauta = x.Pauta,
+                    Titulo = x.Titulo
+                })
                 .FirstOrDefault();
 
             return Json(new { Reuniao = result }, JsonRequestBehavior.AllowGet);
@@ -88,7 +80,7 @@ namespace SysIgreja.Controllers
         {
             reuniaosBusiness.PostReuniao(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -96,7 +88,7 @@ namespace SysIgreja.Controllers
         {
             reuniaosBusiness.DeleteReuniao(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

@@ -8,14 +8,9 @@ using Core.Business.Circulos;
 using Core.Business.Configuracao;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
-using Core.Business.Quartos;
-using Core.Business.Reunioes;
 using Core.Models.Circulos;
-using Core.Models.Reunioes;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
-using Utils.Extensions;
 using Utils.Services;
 
 namespace SysIgreja.Controllers
@@ -63,42 +58,33 @@ namespace SysIgreja.Controllers
                 .GetCirculos()
                 .Where(x => x.EventoId == EventoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Dirigentes = x
+                        .Dirigentes.Select(y => new DirigenteViewModel
                         {
-                            Id = x.Id,
-                            Dirigentes = x.Dirigentes.Select(
-                                y =>
-                                    new DirigenteViewModel
-                                    {
-                                        Id = y.Id,
-                                        Nome = UtilServices.CapitalizarNome(
-                                            y.Equipante.Equipante.Nome
-                                        )
-                                    }
-                            )
-                                .ToList(),
-                            Participantes = x.Participantes.Select(y => new
-                            {
-                                Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
-                                y.Participante.SequencialEvento,
-                                y.Participante.Sexo,
-                                ParticipanteId = y.ParticipanteId,
-                                Latitude = y.Participante.Latitude,
-                                Longitude = y.Participante.Longitude,
-                                Endereco = $"{y.Participante.Logradouro} {y.Participante.Numero}",
-                                Bairro = y.Participante.Bairro,
-                                Cidade = y.Participante.Cidade,
-                                Referencia = y.Participante.Referencia
-                            }),
-                            QtdParticipantes = circulosBusiness
-                                .GetParticipantesByCirculos(x.Id)
-                                .Count(),
-                            Titulo = x.Titulo ?? x.Cor,
-                            Cor = x.Cor
-                        }
-                );
+                            Id = y.Id,
+                            Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)
+                        })
+                        .ToList(),
+                    Participantes = x.Participantes.Select(y => new
+                    {
+                        Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
+                        y.Participante.SequencialEvento,
+                        y.Participante.Sexo,
+                        ParticipanteId = y.ParticipanteId,
+                        Latitude = y.Participante.Latitude,
+                        Longitude = y.Participante.Longitude,
+                        Endereco = $"{y.Participante.Logradouro} {y.Participante.Numero}",
+                        Bairro = y.Participante.Bairro,
+                        Cidade = y.Participante.Cidade,
+                        Referencia = y.Participante.Referencia
+                    }),
+                    QtdParticipantes = circulosBusiness.GetParticipantesByCirculos(x.Id).Count(),
+                    Titulo = x.Titulo ?? x.Cor,
+                    Cor = x.Cor
+                });
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -122,14 +108,11 @@ namespace SysIgreja.Controllers
                 .GetDirigentes()
                 .Where(x => x.CirculoId == CirculoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Nome = UtilServices.CapitalizarNome(x.Equipante.Equipante.Nome)
-                        }
-                );
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = UtilServices.CapitalizarNome(x.Equipante.Equipante.Nome)
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -141,26 +124,18 @@ namespace SysIgreja.Controllers
                 .GetCirculos()
                 .Where(x => x.Id == Id)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Dirigentes = x.Dirigentes.Select(
-                                y =>
-                                    new DirigenteViewModel
-                                    {
-                                        Id = y.Id,
-                                        Nome = UtilServices.CapitalizarNome(
-                                            y.Equipante.Equipante.Nome
-                                        )
-                                    }
-                            ),
-                            x.Id,
-                            x.Titulo,
-                            x.EventoId,
-                            x.Cor
-                        }
-                )
+                .Select(x => new
+                {
+                    Dirigentes = x.Dirigentes.Select(y => new DirigenteViewModel
+                    {
+                        Id = y.Id,
+                        Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)
+                    }),
+                    x.Id,
+                    x.Titulo,
+                    x.EventoId,
+                    x.Cor
+                })
                 .FirstOrDefault();
 
             return Json(new { Circulo = result }, JsonRequestBehavior.AllowGet);
@@ -171,7 +146,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.PostCirculo(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -179,7 +154,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.DeleteCirculo(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -187,7 +162,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.DistribuirCirculos(EventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpGet]
@@ -210,7 +185,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
-                return new HttpStatusCodeResult(200,"OK");
+                return new HttpStatusCodeResult(200, "OK");
             }
         }
 
@@ -237,35 +212,29 @@ namespace SysIgreja.Controllers
             var query = circulosBusiness
                 .GetCirculosComParticipantes(EventoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                            x.Participante.SequencialEvento,
-                            x.Participante.Sexo,
-                            x.Circulo.Titulo,
-                            ParticipanteId = x.ParticipanteId,
-                            Latitude = x.Participante.Latitude,
-                            Longitude = x.Participante.Longitude,
-                            Endereco = $"{x.Participante.Logradouro} {x.Participante.Numero}",
-                            Bairro = x.Participante.Bairro,
-                            Cidade = x.Participante.Cidade,
-                            Referencia = x.Participante.Referencia,
-                            CirculoId = x.CirculoId,
-                            Cor = x.Circulo.Cor,
-                            Dirigentes = x.Circulo.Dirigentes.Select(
-                                y =>
-                                    new DirigenteViewModel
-                                    {
-                                        Id = y.Id,
-                                        Nome = UtilServices.CapitalizarNome(
-                                            UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)
-                                        )
-                                    }
-                            ),
-                        }
-                );
+                .Select(x => new
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                    x.Participante.SequencialEvento,
+                    x.Participante.Sexo,
+                    x.Circulo.Titulo,
+                    ParticipanteId = x.ParticipanteId,
+                    Latitude = x.Participante.Latitude,
+                    Longitude = x.Participante.Longitude,
+                    Endereco = $"{x.Participante.Logradouro} {x.Participante.Numero}",
+                    Bairro = x.Participante.Bairro,
+                    Cidade = x.Participante.Cidade,
+                    Referencia = x.Participante.Referencia,
+                    CirculoId = x.CirculoId,
+                    Cor = x.Circulo.Cor,
+                    Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel
+                    {
+                        Id = y.Id,
+                        Nome = UtilServices.CapitalizarNome(
+                            UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome)
+                        )
+                    }),
+                });
 
             return Json(
                 new
@@ -284,7 +253,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.ChangeCirculo(ParticipanteId, DestinoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -303,31 +272,28 @@ namespace SysIgreja.Controllers
                             .GetUsuarios()
                             .Where(x => x.Id == user.Id)
                             .ToList()
-                            .Select(
-                                x =>
-                                    new
-                                    {
-                                        Id = x.Id,
-                                        Senha = x.Senha,
-                                        hasChangedPassword = x.HasChangedPassword,
-                                        EquipanteId = x.EquipanteId,
-                                        UserName = x.UserName,
-                                        Fone = x.Equipante.Fone,
-                                        Nome = x.Equipante.Nome,
-                                        Evento = new
-                                        {
-                                            Titulo = evento.Configuracao.Titulo,
-                                            Numeracao = evento.Numeracao
-                                        },
-                                        Perfil = "Dirigente"
-                                    }
-                            )
+                            .Select(x => new
+                            {
+                                Id = x.Id,
+                                Senha = x.Senha,
+                                hasChangedPassword = x.HasChangedPassword,
+                                EquipanteId = x.EquipanteId,
+                                UserName = x.UserName,
+                                Fone = x.Equipante.Fone,
+                                Nome = x.Equipante.Nome,
+                                Evento = new
+                                {
+                                    Titulo = evento.Configuracao.Titulo,
+                                    Numeracao = evento.Numeracao
+                                },
+                                Perfil = "Dirigente"
+                            })
                             .FirstOrDefault()
                     },
                     JsonRequestBehavior.AllowGet
                 );
             }
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -335,7 +301,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.EsvaziarCirculo(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -343,14 +309,14 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.EsvaziarTodosCirculo(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
         public ActionResult DeleteDirigente(int Id)
         {
             circulosBusiness.DeleteDirigente(Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -358,7 +324,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.SaveGrupo(grupoId, circuloId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -366,7 +332,7 @@ namespace SysIgreja.Controllers
         {
             circulosBusiness.TogglePresenca(ParticipanteId, ReuniaoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

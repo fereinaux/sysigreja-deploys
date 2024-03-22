@@ -9,9 +9,6 @@ using Core.Business.Configuracao;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.Arquivos;
-using SysIgreja.ViewModels;
-using Utils.Constants;
-using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
@@ -142,16 +139,13 @@ namespace SysIgreja.Controllers
         {
             var result = query
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Nome = x.Nome,
-                            Extensao = x.Extensao,
-                            Data = x.DataCadastro?.ToString("dd/MM/yyyy")
-                        }
-                );
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = x.Nome,
+                    Extensao = x.Extensao,
+                    Data = x.DataCadastro?.ToString("dd/MM/yyyy")
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -192,7 +186,6 @@ namespace SysIgreja.Controllers
             return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
         }
 
-
         [HttpGet]
         public ActionResult GetFotoByEquipanteId(int Id)
         {
@@ -231,7 +224,7 @@ namespace SysIgreja.Controllers
         {
             arquivosBusiness.DeleteArquivo(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -239,7 +232,7 @@ namespace SysIgreja.Controllers
         {
             arquivosBusiness.DeleteFotoParticipante(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -247,7 +240,7 @@ namespace SysIgreja.Controllers
         {
             arquivosBusiness.DeleteFotoEquipante(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

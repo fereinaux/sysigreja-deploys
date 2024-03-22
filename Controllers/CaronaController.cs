@@ -11,8 +11,6 @@ using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.Carona;
-using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Services;
 
 namespace SysIgreja.Controllers
@@ -59,10 +57,9 @@ namespace SysIgreja.Controllers
                 .ToList();
             var pgList = equipantesBusiness
                 .GetEquipantes()
-                .Where(
-                    x =>
-                        (x.Nome.Contains(Search) || x.Apelido.Contains(Search))
-                        && !motoristaList.Contains(x.Id)
+                .Where(x =>
+                    (x.Nome.Contains(Search) || x.Apelido.Contains(Search))
+                    && !motoristaList.Contains(x.Id)
                 )
                 .ToList()
                 .Select(x => new { id = x.Id, text = $"{x.Nome} - {x.Apelido}" });
@@ -82,34 +79,26 @@ namespace SysIgreja.Controllers
                 .GetCaronas()
                 .Where(x => x.EventoId == EventoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Capacidade =
-                                $"{caronasBusiness.GetParticipantesByCaronas(x.Id).Count().ToString()}/{x.Capacidade.ToString()}",
-                            CapacidadeInt = x.Capacidade,
-                            Quantidade = caronasBusiness.GetParticipantesByCaronas(x.Id).Count(),
-                            Motorista = x.Motorista.Nome,
-                            Latitude = x.Motorista.Latitude,
-                            Longitude = x.Motorista.Longitude,
-                            MotoristaId = x.MotoristaId.Value,
-                            Endereco =
-                                $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
-                            Participantes = x.Participantes.Select(
-                            y =>
-                                new
-                                {
-                                    Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
-                                    Latitude = y.Participante.Latitude,
-                                    Longitude = y.Participante.Longitude,
-                                    Endereco = $"{y.Participante.Logradouro}, {y.Participante.Numero}, {y.Participante.Bairro}, {y.Participante.Cidade}",
-                                    ParticipanteId = y.ParticipanteId,
-                                }
-                        )
-                        }
-                );
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.Id).Count()}/{x.Capacidade}",
+                    CapacidadeInt = x.Capacidade,
+                    Quantidade = caronasBusiness.GetParticipantesByCaronas(x.Id).Count(),
+                    Motorista = x.Motorista.Nome,
+                    Latitude = x.Motorista.Latitude,
+                    Longitude = x.Motorista.Longitude,
+                    MotoristaId = x.MotoristaId.Value,
+                    Endereco = $"{x.Motorista.Logradouro}, {x.Motorista.Numero}, {x.Motorista.Bairro}, {x.Motorista.Cidade}",
+                    Participantes = x.Participantes.Select(y => new
+                    {
+                        Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
+                        Latitude = y.Participante.Latitude,
+                        Longitude = y.Participante.Longitude,
+                        Endereco = $"{y.Participante.Logradouro}, {y.Participante.Numero}, {y.Participante.Bairro}, {y.Participante.Cidade}",
+                        ParticipanteId = y.ParticipanteId,
+                    })
+                });
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -140,7 +129,7 @@ namespace SysIgreja.Controllers
         {
             caronasBusiness.PostCarona(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -148,7 +137,7 @@ namespace SysIgreja.Controllers
         {
             caronasBusiness.DeleteCarona(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -156,7 +145,7 @@ namespace SysIgreja.Controllers
         {
             caronasBusiness.DistribuirCarona(EventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpGet]
@@ -167,17 +156,14 @@ namespace SysIgreja.Controllers
                 {
                     Participantes = caronasBusiness
                         .GetParticipantesSemCarona(EventoId)
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Id = x.Id,
-                                    Nome = x.Nome,
-                                    Latitude = x.Latitude,
-                                    Longitude = x.Longitude,
-                                    Endereco = $"{x.Logradouro}, {x.Numero}, {x.Bairro}, {x.Cidade}",
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Id = x.Id,
+                            Nome = x.Nome,
+                            Latitude = x.Latitude,
+                            Longitude = x.Longitude,
+                            Endereco = $"{x.Logradouro}, {x.Numero}, {x.Bairro}, {x.Cidade}",
+                        })
                         .OrderBy(x => x.Nome)
                         .ToList()
                 },
@@ -194,23 +180,20 @@ namespace SysIgreja.Controllers
                     Caronas = caronasBusiness
                         .GetCaronasComParticipantes(EventoId)
                         .ToList()
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                                    Latitude = x.Participante.Latitude,
-                                    Longitude = x.Participante.Longitude,
-                                    Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}",
-                                    ParticipanteId = x.ParticipanteId,
-                                    CaronaId = x.CaronaId,
-                                    Motorista = x.Carona.Motorista.Nome,
-                                    Quantidade = caronasBusiness
-                                        .GetParticipantesByCaronas(x.CaronaId)
-                                        .Count(),
-                                    Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count().ToString()}/{x.Carona.Capacidade.ToString()}",
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                            Latitude = x.Participante.Latitude,
+                            Longitude = x.Participante.Longitude,
+                            Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}",
+                            ParticipanteId = x.ParticipanteId,
+                            CaronaId = x.CaronaId,
+                            Motorista = x.Carona.Motorista.Nome,
+                            Quantidade = caronasBusiness
+                                .GetParticipantesByCaronas(x.CaronaId)
+                                .Count(),
+                            Capacidade = $"{caronasBusiness.GetParticipantesByCaronas(x.CaronaId).Count()}/{x.Carona.Capacidade}",
+                        })
                         .OrderBy(x => x.Motorista)
                         .ThenBy(x => x.Nome)
                         .ToList()
@@ -225,7 +208,7 @@ namespace SysIgreja.Controllers
             var mensagem = caronasBusiness.ChangeCarona(ParticipanteId, DestinoId);
             if (mensagem == "OK")
             {
-                return new HttpStatusCodeResult(200,"OK");
+                return new HttpStatusCodeResult(200, "OK");
             }
 
             return new HttpStatusCodeResult(400, mensagem);
@@ -238,17 +221,14 @@ namespace SysIgreja.Controllers
                 .GetParticipantesByCaronas(CaronaId)
                 .OrderBy(x => x.Participante.Nome)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                            Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                            Motorista = UtilServices.CapitalizarNome(x.Carona.Motorista.Nome),
-                            Fone = x.Participante.Fone,
-                            Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}"
-                        }
-                );
+                .Select(x => new
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
+                    Motorista = UtilServices.CapitalizarNome(x.Carona.Motorista.Nome),
+                    Fone = x.Participante.Fone,
+                    Endereco = $"{x.Participante.Logradouro}, {x.Participante.Numero}, {x.Participante.Bairro}, {x.Participante.Cidade}"
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }

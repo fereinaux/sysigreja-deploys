@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
@@ -10,10 +8,6 @@ using Core.Business.Configuracao;
 using Core.Business.Cracha;
 using Core.Business.Eventos;
 using Core.Models.Cracha;
-using SysIgreja.ViewModels;
-using Utils.Constants;
-using Utils.Enums;
-using static Utils.Extensions.EnumExtensions;
 
 namespace SysIgreja.Controllers
 {
@@ -84,14 +78,14 @@ namespace SysIgreja.Controllers
         public ActionResult DeleteCracha(int Id)
         {
             crachaBusiness.DeleteCracha(Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
         public ActionResult CloneCracha(int Id)
         {
             crachaBusiness.CloneCracha(Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -99,7 +93,7 @@ namespace SysIgreja.Controllers
         {
             crachaBusiness.PostCracha(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

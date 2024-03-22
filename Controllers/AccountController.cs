@@ -13,7 +13,6 @@ using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
 using Core.Business.Eventos;
-using Core.Models;
 using Core.Models.Equipantes;
 using Data.Context;
 using Data.Entities;
@@ -22,7 +21,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
@@ -75,13 +73,7 @@ namespace SysIgreja.Controllers
             ViewBag.Title = "Organizadores";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
             var user = accountBusiness.GetUsuarioById(User.Identity.GetUserId());
-            if (
-                !user.Claims.Any(
-                    x =>
-                        x.ClaimType == ClaimTypes.Role
-                        && x.ClaimValue == "Geral"
-                )
-            )
+            if (!user.Claims.Any(x => x.ClaimType == ClaimTypes.Role && x.ClaimValue == "Geral"))
             {
                 return View("~/Views/NaoAutorizado/Index.cshtml");
             }
@@ -105,36 +97,28 @@ namespace SysIgreja.Controllers
             var query = accountBusiness
                 .GetUsuarios()
                 .ToList()
-                .Where(
-                    x =>
-                        x.EquipanteId.HasValue
-                        && x.Claims.Any(y => y.ClaimType == "Permissões")
-                        && JsonConvert
-                            .DeserializeObject<List<Permissoes>>(
-                                x.Claims.Where(y => y.ClaimType == "Permissões")
-                                    .FirstOrDefault()
-                                    .ClaimValue
-                            )
-                            .Any(
-                                z => z.Eventos != null && z.Eventos.Any(a => a.EventoId == eventoid)
-                            )
+                .Where(x =>
+                    x.EquipanteId.HasValue
+                    && x.Claims.Any(y => y.ClaimType == "Permissões")
+                    && JsonConvert
+                        .DeserializeObject<List<Permissoes>>(
+                            x.Claims.Where(y => y.ClaimType == "Permissões")
+                                .FirstOrDefault()
+                                .ClaimValue
+                        )
+                        .Any(z => z.Eventos != null && z.Eventos.Any(a => a.EventoId == eventoid))
                 )
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            UserName = x.UserName,
-                            Status = x.Status.GetDescription(),
-                            Nome = x.Equipante.Nome,
-                            EquipanteId = x.EquipanteId,
-                            Perfil = JsonConvert.DeserializeObject<List<Permissoes>>(
-                                x.Claims.Where(y => y.ClaimType == "Permissões")
-                                    .FirstOrDefault()
-                                    .ClaimValue
-                            )
-                        }
-                );
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Status = x.Status.GetDescription(),
+                    Nome = x.Equipante.Nome,
+                    EquipanteId = x.EquipanteId,
+                    Perfil = JsonConvert.DeserializeObject<List<Permissoes>>(
+                        x.Claims.Where(y => y.ClaimType == "Permissões").FirstOrDefault().ClaimValue
+                    )
+                });
 
             return Json(new { data = query }, JsonRequestBehavior.AllowGet);
         }
@@ -144,30 +128,25 @@ namespace SysIgreja.Controllers
         {
             var query = accountBusiness
                 .GetUsuarios()
-                .Where(
-                    x =>
-                        x.Claims.Any(
-                            y =>
-                                y.ClaimType == ClaimTypes.Role
-                                && new string[] { "Admin", "Geral" }.Contains(y.ClaimValue)
-                        )
+                .Where(x =>
+                    x.Claims.Any(y =>
+                        y.ClaimType == ClaimTypes.Role
+                        && new string[] { "Admin", "Geral" }.Contains(y.ClaimValue)
+                    )
                 )
                 .ToList()
-                .Select(
-                    x =>
-                        new UsuarioViewModel
-                        {
-                            Id = x.Id,
-                            UserName = x.UserName,
-                            Status = x.Status.GetDescription(),
-                            EquipanteId = x.EquipanteId,
-                            Perfil = x.Claims.Any(
-                                y => y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"
-                            )
-                                ? "Administrador Geral"
-                                : "Administrador de Eventos"
-                        }
-                );
+                .Select(x => new UsuarioViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Status = x.Status.GetDescription(),
+                    EquipanteId = x.EquipanteId,
+                    Perfil = x.Claims.Any(y =>
+                        y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"
+                    )
+                        ? "Administrador Geral"
+                        : "Administrador de Eventos"
+                });
 
             return Json(new { data = query }, JsonRequestBehavior.AllowGet);
         }
@@ -178,36 +157,25 @@ namespace SysIgreja.Controllers
             var result = accountBusiness
                 .GetUsuarios()
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Senha = x.Senha,
-                            EquipanteId = x.EquipanteId,
-                            UserName = x.UserName,
-                            Perfil = x.Claims.Any(
-                                y => y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"
-                            )
-                                ? "Geral"
-                                : "Admin",
-                            Nome = x.Equipante != null
-                                ? $"{x.Equipante.Nome} - {x.Equipante.Apelido}"
-                                : "",
-                            Eventos = x.Claims.Where(y => y.ClaimType == "Permissões")
-                                .Select(
-                                    z =>
-                                        JsonConvert.DeserializeObject<List<Permissoes>>(
-                                            z.ClaimValue
-                                        )
-                                )
-                                .FirstOrDefault()
-                                ?.Where(
-                                    y => y.Role == "Admin" || y.Eventos.Any(z => z.Role == "Admin")
-                                )
-                                .Select(z => z.ConfiguracaoId)
-                        }
-                )
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Senha = x.Senha,
+                    EquipanteId = x.EquipanteId,
+                    UserName = x.UserName,
+                    Perfil = x.Claims.Any(y =>
+                        y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"
+                    )
+                        ? "Geral"
+                        : "Admin",
+                    Nome = x.Equipante != null ? $"{x.Equipante.Nome} - {x.Equipante.Apelido}" : "",
+                    Eventos = x
+                        .Claims.Where(y => y.ClaimType == "Permissões")
+                        .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                        .FirstOrDefault()
+                        ?.Where(y => y.Role == "Admin" || y.Eventos.Any(z => z.Role == "Admin"))
+                        .Select(z => z.ConfiguracaoId)
+                })
                 .FirstOrDefault(x => x.Id == Id);
 
             return Json(new { Usuario = result }, JsonRequestBehavior.AllowGet);
@@ -219,33 +187,25 @@ namespace SysIgreja.Controllers
             var result = accountBusiness
                 .GetUsuarios()
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Senha = x.Senha,
-                            EquipanteId = x.EquipanteId.Value,
-                            UserName = x.UserName,
-                            Perfil = x.Claims.Any(
-                                y => y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"
-                            )
-                                ? "Geral"
-                                : "Admin",
-                            Nome = x.Equipante != null
-                                ? $"{x.Equipante.Nome} - {x.Equipante.Apelido}"
-                                : "",
-                            Eventos = x.Claims.Where(y => y.ClaimType == "Permissões")
-                                .Select(
-                                    z =>
-                                        JsonConvert.DeserializeObject<List<Permissoes>>(
-                                            z.ClaimValue
-                                        )
-                                )
-                                .FirstOrDefault()
-                                ?.Select(z => z.ConfiguracaoId).ToList()
-                        }
-                )
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Senha = x.Senha,
+                    EquipanteId = x.EquipanteId.Value,
+                    UserName = x.UserName,
+                    Perfil = x.Claims.Any(y =>
+                        y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"
+                    )
+                        ? "Geral"
+                        : "Admin",
+                    Nome = x.Equipante != null ? $"{x.Equipante.Nome} - {x.Equipante.Apelido}" : "",
+                    Eventos = x
+                        .Claims.Where(y => y.ClaimType == "Permissões")
+                        .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                        .FirstOrDefault()
+                        ?.Select(z => z.ConfiguracaoId)
+                        .ToList()
+                })
                 .FirstOrDefault(x => x.EquipanteId == Id);
 
             if (result == null)
@@ -385,8 +345,8 @@ namespace SysIgreja.Controllers
                 }
             }
 
-            var configPermissao = permissoes.FirstOrDefault(
-                x => x.ConfiguracaoId == evento.ConfiguracaoId
+            var configPermissao = permissoes.FirstOrDefault(x =>
+                x.ConfiguracaoId == evento.ConfiguracaoId
             );
             var eventoPermissao = new EventoPermissao { EventoId = EventoId, Role = Perfil };
 
@@ -426,25 +386,22 @@ namespace SysIgreja.Controllers
                         .GetUsuarios()
                         .Where(x => x.Id == user.Id)
                         .ToList()
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Id = x.Id,
-                                    Senha = x.Senha,
-                                    hasChangedPassword = x.HasChangedPassword,
-                                    EquipanteId = x.EquipanteId,
-                                    UserName = x.UserName,
-                                    Fone = x.Equipante.Fone,
-                                    Nome = x.Equipante.Nome,
-                                    Evento = new
-                                    {
-                                        Titulo = evento.Configuracao.Titulo,
-                                        Numeracao = evento.Numeracao
-                                    },
-                                    Perfil = Perfil
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Id = x.Id,
+                            Senha = x.Senha,
+                            hasChangedPassword = x.HasChangedPassword,
+                            EquipanteId = x.EquipanteId,
+                            UserName = x.UserName,
+                            Fone = x.Equipante.Fone,
+                            Nome = x.Equipante.Nome,
+                            Evento = new
+                            {
+                                Titulo = evento.Configuracao.Titulo,
+                                Numeracao = evento.Numeracao
+                            },
+                            Perfil = Perfil
+                        })
                         .FirstOrDefault()
                 },
                 JsonRequestBehavior.AllowGet
@@ -470,13 +427,13 @@ namespace SysIgreja.Controllers
                 );
             }
 
-            var configPermissao = permissoes.FirstOrDefault(
-                x => x.ConfiguracaoId == evento.ConfiguracaoId
+            var configPermissao = permissoes.FirstOrDefault(x =>
+                x.ConfiguracaoId == evento.ConfiguracaoId
             );
 
             configPermissao.Eventos.Remove(
-                configPermissao.Eventos.FirstOrDefault(
-                    x => x.EventoId == EventoId && x.Role == Perfil
+                configPermissao.Eventos.FirstOrDefault(x =>
+                    x.EventoId == EventoId && x.Role == Perfil
                 )
             );
 
@@ -492,25 +449,22 @@ namespace SysIgreja.Controllers
                         .GetUsuarios()
                         .Where(x => x.Id == user.Id)
                         .ToList()
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Id = x.Id,
-                                    Senha = x.Senha,
-                                    hasChangedPassword = x.HasChangedPassword,
-                                    EquipanteId = x.EquipanteId,
-                                    UserName = x.UserName,
-                                    Fone = x.Equipante.Fone,
-                                    Nome = x.Equipante.Nome,
-                                    Evento = new
-                                    {
-                                        Titulo = evento.Configuracao.Titulo,
-                                        Numeracao = evento.Numeracao
-                                    },
-                                    Perfil = Perfil
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Id = x.Id,
+                            Senha = x.Senha,
+                            hasChangedPassword = x.HasChangedPassword,
+                            EquipanteId = x.EquipanteId,
+                            UserName = x.UserName,
+                            Fone = x.Equipante.Fone,
+                            Nome = x.Equipante.Nome,
+                            Evento = new
+                            {
+                                Titulo = evento.Configuracao.Titulo,
+                                Numeracao = evento.Numeracao
+                            },
+                            Perfil = Perfil
+                        })
                         .FirstOrDefault()
                 },
                 JsonRequestBehavior.AllowGet
@@ -521,10 +475,7 @@ namespace SysIgreja.Controllers
         public ActionResult Register(RegisterViewModel model)
         {
             model.EquipanteId = model.EquipanteId > 0 ? model.EquipanteId : null;
-            var configs = configuracaoBusiness
-                            .GetConfiguracoesLight()
-                                             .OrderBy(x => x.Id)
-                   .ToList();
+            var configs = configuracaoBusiness.GetConfiguracoesLight().OrderBy(x => x.Id).ToList();
 
             ApplicationUser user = null;
 
@@ -595,15 +546,10 @@ namespace SysIgreja.Controllers
             }
             else
             {
-
-
-                configs
-                    .ForEach(config =>
-                    {
-                        permissoes.Add(
-                            new Permissoes { ConfiguracaoId = config.Id, Role = "Admin" }
-                        );
-                    });
+                configs.ForEach(config =>
+                {
+                    permissoes.Add(new Permissoes { ConfiguracaoId = config.Id, Role = "Admin" });
+                });
             }
 
             permissoes.AddRange(permissoesNaoAdm);
@@ -615,34 +561,25 @@ namespace SysIgreja.Controllers
             );
 
             var novoUser = accountBusiness
-                        .GetUsuarios()
-                        .Include(x => x.Equipante)
-                        .Where(x => x.Id == user.Id)
-                        .ToList()
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Id = x.Id,
-                                    Senha = x.Senha,
-                                    hasChangedPassword = x.HasChangedPassword,
-                                    EquipanteId = x.EquipanteId,
-                                    Fone = x.Equipante.Fone,
-                                    Nome = x.Equipante.Nome,
-                                    UserName = x.UserName,
-                                    Perfil = model.Perfil,
-                                    Eventos = model.Eventos
-                                }
-                        )
-                        .FirstOrDefault();
-
-            return Json(
-                new
+                .GetUsuarios()
+                .Include(x => x.Equipante)
+                .Where(x => x.Id == user.Id)
+                .ToList()
+                .Select(x => new
                 {
-                    User = novoUser
-                },
-                JsonRequestBehavior.AllowGet
-            );
+                    Id = x.Id,
+                    Senha = x.Senha,
+                    hasChangedPassword = x.HasChangedPassword,
+                    EquipanteId = x.EquipanteId,
+                    Fone = x.Equipante.Fone,
+                    Nome = x.Equipante.Nome,
+                    UserName = x.UserName,
+                    Perfil = model.Perfil,
+                    Eventos = model.Eventos
+                })
+                .FirstOrDefault();
+
+            return Json(new { User = novoUser }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
@@ -677,8 +614,8 @@ namespace SysIgreja.Controllers
         {
             var usuario = accountBusiness
                 .GetUsuarios()
-                .FirstOrDefault(
-                    x => x.RecoveryKey == RecoveryKey && !string.IsNullOrEmpty(RecoveryKey)
+                .FirstOrDefault(x =>
+                    x.RecoveryKey == RecoveryKey && !string.IsNullOrEmpty(RecoveryKey)
                 );
             if (usuario != null)
             {
@@ -937,21 +874,18 @@ namespace SysIgreja.Controllers
                         .GetUsuarios()
                         .Where(x => x.Id == user.Id)
                         .ToList()
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Id = x.Id,
-                                    EquipanteId = x.EquipanteId,
-                                    Nome = x.Equipante.Nome,
-                                    Fone = x.Equipante.Fone,
-                                    DataNascimento = x.Equipante.DataNascimento.HasValue
-                                        ? x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy")
-                                        : "",
-                                    Sexo = x.Equipante.Sexo.GetDescription(),
-                                    Email = x.Equipante.Email
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Id = x.Id,
+                            EquipanteId = x.EquipanteId,
+                            Nome = x.Equipante.Nome,
+                            Fone = x.Equipante.Fone,
+                            DataNascimento = x.Equipante.DataNascimento.HasValue
+                                ? x.Equipante.DataNascimento.Value.ToString("dd/MM/yyyy")
+                                : "",
+                            Sexo = x.Equipante.Sexo.GetDescription(),
+                            Email = x.Equipante.Email
+                        })
                         .FirstOrDefault()
                 },
                 JsonRequestBehavior.AllowGet

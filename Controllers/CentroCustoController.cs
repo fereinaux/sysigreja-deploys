@@ -5,11 +5,9 @@ using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.CentroCusto;
 using Core.Business.Configuracao;
-using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.CentroCusto;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
 using static Utils.Extensions.EnumExtensions;
 
@@ -48,15 +46,12 @@ namespace SysIgreja.Controllers
             var result = centroCustoBusiness
                 .GetCentroCustos(configuracaoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new CentroCustoViewModel
-                        {
-                            Descricao = x.Descricao,
-                            Id = x.Id,
-                            Tipo = x.Tipo.GetDescription()
-                        }
-                );
+                .Select(x => new CentroCustoViewModel
+                {
+                    Descricao = x.Descricao,
+                    Id = x.Id,
+                    Tipo = x.Tipo.GetDescription()
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -67,15 +62,12 @@ namespace SysIgreja.Controllers
             var result = centroCustoBusiness
                 .GetCentroCustos(eventosBusiness.GetEventoById(eventoid).ConfiguracaoId.Value)
                 .ToList()
-                .Select(
-                    x =>
-                        new CentroCustoViewModel
-                        {
-                            Descricao = x.Descricao,
-                            Id = x.Id,
-                            Tipo = x.Tipo.GetDescription()
-                        }
-                );
+                .Select(x => new CentroCustoViewModel
+                {
+                    Descricao = x.Descricao,
+                    Id = x.Id,
+                    Tipo = x.Tipo.GetDescription()
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -102,7 +94,7 @@ namespace SysIgreja.Controllers
         {
             centroCustoBusiness.DeleteCentroCusto(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

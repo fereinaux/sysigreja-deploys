@@ -1,11 +1,9 @@
 ﻿using System.Web;
-using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Eventos;
-using Utils.Constants;
 
 namespace SysIgreja.Controllers
 {

@@ -25,9 +25,7 @@ using Core.Business.Quartos;
 using Core.Models.Etiquetas;
 using Core.Models.Participantes;
 using Core.Models.Quartos;
-using CsQuery.ExtensionMethods.Internal;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
@@ -114,23 +112,20 @@ namespace SysIgreja.Controllers
             var query = participantesBusiness.GetParticipantes().Where(x => ids.Contains(x.Id));
 
             var result = query
-                .Select(
-                    x =>
-                        new
-                        {
-                            x.Fone,
-                            x.Nome,
-                            x.NomeContato,
-                            x.FoneContato,
-                            x.FoneMae,
-                            x.NomeMae,
-                            x.FoneConvite,
-                            x.NomeConvite,
-                            x.NomePai,
-                            x.FonePai,
-                            x.MercadoPagoPreferenceId
-                        }
-                )
+                .Select(x => new
+                {
+                    x.Fone,
+                    x.Nome,
+                    x.NomeContato,
+                    x.FoneContato,
+                    x.FoneMae,
+                    x.NomeMae,
+                    x.FoneConvite,
+                    x.NomeConvite,
+                    x.NomePai,
+                    x.FonePai,
+                    x.MercadoPagoPreferenceId
+                })
                 .ToList();
 
             return Json(new { Pessoas = result }, JsonRequestBehavior.AllowGet);
@@ -191,15 +186,12 @@ namespace SysIgreja.Controllers
                 MercadoPagoPreferenceId = x.MercadoPagoPreferenceId,
                 EtiquetasList = etiquetasBusiness
                     .GetEtiquetasByParticipante(x.Id)
-                    ?.Select(
-                        y =>
-                            new PostEtiquetaModel
-                            {
-                                Id = y.Id,
-                                Cor = y.Cor,
-                                Nome = y.Nome
-                            }
-                    ),
+                    ?.Select(y => new PostEtiquetaModel
+                    {
+                        Id = y.Id,
+                        Cor = y.Cor,
+                        Nome = y.Nome
+                    }),
                 Foto = x.Arquivos.Any(y => y.IsFoto)
                     ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo)
                     : ""
@@ -226,22 +218,18 @@ namespace SysIgreja.Controllers
                     .GetCirculosComParticipantes(result.EventoId)
                     .Where(x => x.ParticipanteId == Id)
                     ?.FirstOrDefault()
-                    ?.Circulo
-                    ?.Titulo ?? "",
+                    ?.Circulo?.Titulo ?? "",
                 Status = result.Status.GetDescription(),
                 Quarto = quartosBusiness
                     .GetQuartosComParticipantes(result.EventoId, TipoPessoaEnum.Participante)
                     .Where(x => x.ParticipanteId == Id)
                     .FirstOrDefault()
-                    ?.Quarto
-                    ?.Titulo ?? "",
+                    ?.Quarto?.Titulo ?? "",
                 Motorista = caronasBusiness
                     .GetCaronasComParticipantes(result.EventoId)
                     .Where(x => x.ParticipanteId == Id)
                     .FirstOrDefault()
-                    ?.Carona
-                    ?.Motorista
-                    ?.Nome ?? "",
+                    ?.Carona?.Motorista?.Nome ?? "",
                 QuartoAtual = new
                 {
                     Quarto = mapper.Map<PostQuartoModel>(quartoAtual),
@@ -262,7 +250,10 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipanteProfile(int Id)
         {
-            var result = participantesBusiness.GetParticipantes().Where(x => x.Id == Id).Include(x => x.Evento)
+            var result = participantesBusiness
+                .GetParticipantes()
+                .Where(x => x.Id == Id)
+                .Include(x => x.Evento)
                 .Include(x => x.ParticipantesEtiquetas)
                 .Include(x => x.ParticipantesEtiquetas.Select(y => y.Etiqueta))
                 .Include(x => x.Quartos)
@@ -275,7 +266,8 @@ namespace SysIgreja.Controllers
                 .Include(x => x.Circulos.Select(y => y.Circulo))
                 .Include(x => x.Caronas)
                 .Include(x => x.Caronas.Select(y => y.Carona))
-                .Include(x => x.Caronas.Select(y => y.Carona.Motorista)).FirstOrDefault();
+                .Include(x => x.Caronas.Select(y => y.Carona.Motorista))
+                .FirstOrDefault();
 
             return Json(
                 new { Participante = mapper.Map<ParticipanteListModel>(result) },
@@ -306,55 +298,44 @@ namespace SysIgreja.Controllers
                         y => y.Participante.Conjuge.Trim(),
                         (q1, q2) => new { q1, q2 }
                     )
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Conjuge = x.q1.Participante.Nome
-                                == new List<string>
-                                {
-                                    x.q1.Participante.Nome,
-                                    x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : ""
-                                }.Min()
-                                    ? x.q1
-                                    : x.q2.FirstOrDefault(),
-                                Nome = x.q1.Participante.Nome
-                                == new List<string>
-                                {
-                                    x.q1.Participante.Nome,
-                                    x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : ""
-                                }.Max()
-                                    ? x.q1
-                                    : x.q2.FirstOrDefault(),
-                            }
-                    )
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Homem = x.Nome.Participante.Sexo == SexoEnum.Masculino
-                                    ? x.Nome
-                                    : (x.Conjuge != null ? x.Conjuge : null),
-                                Mulher = x.Nome.Participante.Sexo == SexoEnum.Feminino
-                                    ? x.Nome
-                                    : (x.Conjuge != null ? x.Conjuge : null),
-                            }
-                    )
+                    .Select(x => new
+                    {
+                        Conjuge = x.q1.Participante.Nome
+                        == new List<string>
+                        {
+                            x.q1.Participante.Nome,
+                            x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : ""
+                        }.Min()
+                            ? x.q1
+                            : x.q2.FirstOrDefault(),
+                        Nome = x.q1.Participante.Nome
+                        == new List<string>
+                        {
+                            x.q1.Participante.Nome,
+                            x.q2.Any() ? x.q2.FirstOrDefault().Participante.Nome : ""
+                        }.Max()
+                            ? x.q1
+                            : x.q2.FirstOrDefault(),
+                    })
+                    .Select(x => new
+                    {
+                        Homem = x.Nome.Participante.Sexo == SexoEnum.Masculino
+                            ? x.Nome
+                            : (x.Conjuge != null ? x.Conjuge : null),
+                        Mulher = x.Nome.Participante.Sexo == SexoEnum.Feminino
+                            ? x.Nome
+                            : (x.Conjuge != null ? x.Conjuge : null),
+                    })
                     .Distinct();
 
-                var queryNova = queryCasais.Select(
-                    x =>
-                        new
-                        {
-                            Dupla = (x.Homem != null & x.Mulher != null)
-                                ? x.Homem.Participante.Apelido
-                                    + " e "
-                                    + x.Mulher.Participante.Apelido
-                                : null,
-                            x.Homem,
-                            x.Mulher,
-                        }
-                );
+                var queryNova = queryCasais.Select(x => new
+                {
+                    Dupla = (x.Homem != null & x.Mulher != null)
+                        ? x.Homem.Participante.Apelido + " e " + x.Mulher.Participante.Apelido
+                        : null,
+                    x.Homem,
+                    x.Mulher,
+                });
 
                 List<Data.Entities.Participante> resultCasais =
                     new List<Data.Entities.Participante>();
@@ -377,61 +358,42 @@ namespace SysIgreja.Controllers
 
                 var result = queryNova
                     .ToList()
-                    .Select(
-                        x =>
-                            new
+                    .Select(x => new
+                    {
+                        Nome = !string.IsNullOrEmpty(x.Dupla)
+                            ? UtilServices.CapitalizarNome(x.Dupla)
+                            : (
+                                !string.IsNullOrEmpty(x.Homem?.Participante?.Nome)
+                                    ? UtilServices.CapitalizarNome(x.Homem.Participante.Nome)
+                                    : UtilServices.CapitalizarNome(x.Mulher.Participante.Nome)
+                            ),
+                        Titulo = x.Homem?.Circulo?.Titulo ?? x.Mulher?.Circulo?.Titulo,
+                        Bairro = x.Homem?.Participante.Bairro,
+                        Cidade = x.Homem?.Participante.Cidade,
+                        SequencialEvento = x.Homem?.Participante?.SequencialEvento
+                            ?? x.Mulher?.Participante?.SequencialEvento,
+                        Dirigentes = x.Homem?.Circulo?.Dirigentes?.Select(
+                            y => new DirigenteViewModel
                             {
-                                Nome = !string.IsNullOrEmpty(x.Dupla)
-                                    ? UtilServices.CapitalizarNome(x.Dupla)
-                                    : (
-                                        !string.IsNullOrEmpty(x.Homem?.Participante?.Nome)
-                                            ? UtilServices.CapitalizarNome(
-                                                x.Homem.Participante.Nome
-                                            )
-                                            : UtilServices.CapitalizarNome(
-                                                x.Mulher.Participante.Nome
-                                            )
-                                    ),
-                                Titulo = x.Homem?.Circulo?.Titulo ?? x.Mulher?.Circulo?.Titulo,
-                                Bairro = x.Homem?.Participante.Bairro,
-                                Cidade = x.Homem?.Participante.Cidade,
-                                SequencialEvento = x.Homem?.Participante?.SequencialEvento
-                                    ?? x.Mulher?.Participante?.SequencialEvento,
-                                Dirigentes = x.Homem?.Circulo
-                                    ?.Dirigentes
-                                    ?.Select(
-                                        y =>
-                                            new DirigenteViewModel
-                                            {
-                                                Id = y.Id,
-                                                Nome = UtilServices.CapitalizarNome(
-                                                    y.Equipante.Equipante.Nome
-                                                ),
-                                                Apelido = UtilServices.CapitalizarNome(
-                                                    y.Equipante.Equipante.Apelido
-                                                ),
-                                                Fone = y.Equipante.Equipante.Fone
-                                            }
-                                    )
-                                    ?? x.Mulher?.Circulo
-                                        ?.Dirigentes
-                                        ?.Select(
-                                            y =>
-                                                new DirigenteViewModel
-                                                {
-                                                    Id = y.Id,
-                                                    Nome = UtilServices.CapitalizarNome(
-                                                        y.Equipante.Equipante.Nome
-                                                    ),
-                                                    Apelido = UtilServices.CapitalizarNome(
-                                                        y.Equipante.Equipante.Apelido
-                                                    ),
-                                                    Fone = y.Equipante.Equipante.Fone
-                                                }
-                                        ),
-                                Fone = $"{x.Homem?.Participante?.Fone} e {x.Mulher?.Participante?.Fone}"
+                                Id = y.Id,
+                                Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome),
+                                Apelido = UtilServices.CapitalizarNome(
+                                    y.Equipante.Equipante.Apelido
+                                ),
+                                Fone = y.Equipante.Equipante.Fone
                             }
-                    );
+                        )
+                            ?? x.Mulher?.Circulo?.Dirigentes?.Select(y => new DirigenteViewModel
+                            {
+                                Id = y.Id,
+                                Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome),
+                                Apelido = UtilServices.CapitalizarNome(
+                                    y.Equipante.Equipante.Apelido
+                                ),
+                                Fone = y.Equipante.Equipante.Fone
+                            }),
+                        Fone = $"{x.Homem?.Participante?.Fone} e {x.Mulher?.Participante?.Fone}"
+                    });
                 ;
 
                 var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
@@ -446,35 +408,25 @@ namespace SysIgreja.Controllers
 
                 var result = query
                     .ToList()
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Circulo = x.Circulo.Cor?.GetDescription(),
-                                Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                                Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
-                                Cor = x.Circulo.Cor?.GetDescription(),
-                                Titulo = x.Circulo.Titulo,
-                                SequencialEvento = x.Participante.SequencialEvento,
-                                Bairro = x.Participante.Bairro,
-                                Cidade = x.Participante.Cidade,
-                                Dirigentes = x.Circulo.Dirigentes.Select(
-                                    y =>
-                                        new DirigenteViewModel
-                                        {
-                                            Id = y.Id,
-                                            Nome = UtilServices.CapitalizarNome(
-                                                y.Equipante.Equipante.Nome
-                                            ),
-                                            Apelido = UtilServices.CapitalizarNome(
-                                                y.Equipante.Equipante.Apelido
-                                            ),
-                                            Fone = y.Equipante.Equipante.Fone
-                                        }
-                                ),
-                                Fone = x.Participante.Fone
-                            }
-                    );
+                    .Select(x => new
+                    {
+                        Circulo = x.Circulo.Cor?.GetDescription(),
+                        Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                        Apelido = UtilServices.CapitalizarNome(x.Participante.Apelido),
+                        Cor = x.Circulo.Cor?.GetDescription(),
+                        Titulo = x.Circulo.Titulo,
+                        SequencialEvento = x.Participante.SequencialEvento,
+                        Bairro = x.Participante.Bairro,
+                        Cidade = x.Participante.Cidade,
+                        Dirigentes = x.Circulo.Dirigentes.Select(y => new DirigenteViewModel
+                        {
+                            Id = y.Id,
+                            Nome = UtilServices.CapitalizarNome(y.Equipante.Equipante.Nome),
+                            Apelido = UtilServices.CapitalizarNome(y.Equipante.Equipante.Apelido),
+                            Fone = y.Equipante.Equipante.Fone
+                        }),
+                        Fone = x.Participante.Fone
+                    });
 
                 var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
                 json.MaxJsonLength = Int32.MaxValue;
@@ -489,29 +441,23 @@ namespace SysIgreja.Controllers
                 .GetParticipantesByQuartos(QuartoId, TipoPessoaEnum.Participante)
                 .OrderBy(x => x.Participante.Nome)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
-                            Medicacao = (x.Participante.Medicacao ?? "-")
-                                + "/"
-                                + (x.Participante.Alergia ?? "-"),
-                            Titulo = x.Quarto.Titulo,
-                            Equipante = x.Quarto.Equipante != null
-                                ? UtilServices.CapitalizarNome(x.Quarto.Equipante.Nome)
-                                : "",
-                            Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Titulo
-                                ?? x.Participante.Circulos?.LastOrDefault()
-                                    ?.Circulo
-                                    ?.Cor
-                                    ?.GetDescription()
-                                ?? "",
-                            Quantidade = quartosBusiness
-                                .GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante)
-                                .Count(),
-                        }
-                );
+                .Select(x => new
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
+                    Medicacao = (x.Participante.Medicacao ?? "-")
+                        + "/"
+                        + (x.Participante.Alergia ?? "-"),
+                    Titulo = x.Quarto.Titulo,
+                    Equipante = x.Quarto.Equipante != null
+                        ? UtilServices.CapitalizarNome(x.Quarto.Equipante.Nome)
+                        : "",
+                    Circulo = x.Participante.Circulos?.LastOrDefault()?.Circulo?.Titulo
+                        ?? x.Participante.Circulos?.LastOrDefault()?.Circulo?.Cor?.GetDescription()
+                        ?? "",
+                    Quantidade = quartosBusiness
+                        .GetParticipantesByQuartos(x.QuartoId, TipoPessoaEnum.Participante)
+                        .Count(),
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -535,18 +481,15 @@ namespace SysIgreja.Controllers
                     participantesBusiness
                         .GetAniversariantesByEvento(EventoId)
                         .ToList()
-                        .Select(
-                            x =>
-                                new AniversarianteModel
-                                {
-                                    Nome = UtilServices.CapitalizarNome(x.Nome),
-                                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                                    Dia = x.DataNascimento.HasValue
-                                        ? x.DataNascimento.Value.ToString("dd")
-                                        : "",
-                                    Idade = UtilServices.GetAge(x.DataNascimento).ToString()
-                                }
-                        )
+                        .Select(x => new AniversarianteModel
+                        {
+                            Nome = UtilServices.CapitalizarNome(x.Nome),
+                            Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                            Dia = x.DataNascimento.HasValue
+                                ? x.DataNascimento.Value.ToString("dd")
+                                : "",
+                            Idade = UtilServices.GetAge(x.DataNascimento).ToString()
+                        })
                         .ToList()
                 );
             }
@@ -557,18 +500,15 @@ namespace SysIgreja.Controllers
                     equipesBusiness
                         .GetEquipantesAniversariantesByEvento(EventoId)
                         .ToList()
-                        .Select(
-                            x =>
-                                new AniversarianteModel
-                                {
-                                    Nome = UtilServices.CapitalizarNome(x.Nome),
-                                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                                    Dia = x.DataNascimento.HasValue
-                                        ? x.DataNascimento.Value.ToString("dd")
-                                        : "",
-                                    Idade = UtilServices.GetAge(x.DataNascimento).ToString()
-                                }
-                        )
+                        .Select(x => new AniversarianteModel
+                        {
+                            Nome = UtilServices.CapitalizarNome(x.Nome),
+                            Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                            Dia = x.DataNascimento.HasValue
+                                ? x.DataNascimento.Value.ToString("dd")
+                                : "",
+                            Idade = UtilServices.GetAge(x.DataNascimento).ToString()
+                        })
                 );
             }
 
@@ -581,19 +521,15 @@ namespace SysIgreja.Controllers
             var result = participantesBusiness
                 .GetParentesByEvento(EventoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = UtilServices.CapitalizarNome(x.Nome),
-                            Circulo = circulosBusiness
-                                .GetCirculosComParticipantes(EventoId)
-                                .FirstOrDefault(y => y.ParticipanteId == x.Id)
-                                ?.Circulo
-                                .Cor?.GetDescription(),
-                            Parente = UtilServices.CapitalizarNome(x.Parente)
-                        }
-                )
+                .Select(x => new
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Nome),
+                    Circulo = circulosBusiness
+                        .GetCirculosComParticipantes(EventoId)
+                        .FirstOrDefault(y => y.ParticipanteId == x.Id)
+                        ?.Circulo.Cor?.GetDescription(),
+                    Parente = UtilServices.CapitalizarNome(x.Parente)
+                })
                 .ToList();
 
             return Json(new { data = result.OrderBy(x => x.Nome) }, JsonRequestBehavior.AllowGet);
@@ -622,30 +558,24 @@ namespace SysIgreja.Controllers
             var result = participantesBusiness
                 .GetRestricoesByEvento(EventoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = UtilServices.CapitalizarNome(x.Nome),
-                            Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                            Restricao = x.RestricaoAlimentar
-                        }
-                )
+                .Select(x => new
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                    Restricao = x.RestricaoAlimentar
+                })
                 .ToList();
 
             result.AddRange(
                 equipesBusiness
                     .GetEquipantesRestricoesByEvento(EventoId)
                     .ToList()
-                    .Select(
-                        x =>
-                            new
-                            {
-                                Nome = UtilServices.CapitalizarNome(x.Nome),
-                                Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                                Restricao = x.RestricaoAlimentar
-                            }
-                    )
+                    .Select(x => new
+                    {
+                        Nome = UtilServices.CapitalizarNome(x.Nome),
+                        Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                        Restricao = x.RestricaoAlimentar
+                    })
             );
 
             return Json(new { data = result.OrderBy(x => x.Nome) }, JsonRequestBehavior.AllowGet);
@@ -668,10 +598,9 @@ namespace SysIgreja.Controllers
         {
             var result = participantesBusiness
                 .GetParticipantesByEvento(model.EventoId.Value)
-                .Where(
-                    x =>
-                        x.EventoId == model.EventoId
-                        && (StatusEnum.Confirmado == x.Status || x.Status == StatusEnum.Inscrito)
+                .Where(x =>
+                    x.EventoId == model.EventoId
+                    && (StatusEnum.Confirmado == x.Status || x.Status == StatusEnum.Inscrito)
                 );
 
             if (model.Foto)
@@ -687,27 +616,19 @@ namespace SysIgreja.Controllers
             {
                 if (model.Etiquetas != null && model.Etiquetas.Count > 0)
                 {
-                    model.Etiquetas.ForEach(
-                        etiqueta =>
-                            result = result.Where(
-                                x =>
-                                    x.ParticipantesEtiquetas.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
-                                    )
-                            )
+                    model.Etiquetas.ForEach(etiqueta =>
+                        result = result.Where(x =>
+                            x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                        )
                     );
                 }
 
                 if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
                 {
-                    model.NaoEtiquetas.ForEach(
-                        etiqueta =>
-                            result = result.Where(
-                                x =>
-                                    !x.ParticipantesEtiquetas.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
-                                    )
-                            )
+                    model.NaoEtiquetas.ForEach(etiqueta =>
+                        result = result.Where(x =>
+                            !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                        )
                     );
                 }
 
@@ -725,15 +646,15 @@ namespace SysIgreja.Controllers
 
                 if (model.CirculoId != null)
                 {
-                    result = result.Where(
-                        x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
+                    result = result.Where(x =>
+                        (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
                     );
                 }
 
                 if (model.QuartoId != null)
                 {
-                    result = result.Where(
-                        x => (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId)))
+                    result = result.Where(x =>
+                        (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId)))
                     );
                 }
 
@@ -749,14 +670,14 @@ namespace SysIgreja.Controllers
                 {
                     if (model.order[0].dir == "asc")
                     {
-                        result = result.OrderBy(
-                            x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
+                        result = result.OrderBy(x =>
+                            x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
                         );
                     }
                     else
                     {
-                        result = result.OrderByDescending(
-                            x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
+                        result = result.OrderByDescending(x =>
+                            x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
                         );
                     }
                 }
@@ -793,10 +714,9 @@ namespace SysIgreja.Controllers
         {
             var result = participantesBusiness
                 .GetParticipantesByEvento(model.EventoId.Value)
-                .Where(
-                    x =>
-                        x.EventoId == model.EventoId
-                        && (StatusEnum.Confirmado == x.Status || x.Status == StatusEnum.Inscrito)
+                .Where(x =>
+                    x.EventoId == model.EventoId
+                    && (StatusEnum.Confirmado == x.Status || x.Status == StatusEnum.Inscrito)
                 );
 
             var queryCasais = result
@@ -807,78 +727,68 @@ namespace SysIgreja.Controllers
                     y => y.Conjuge?.ToLower().Trim(),
                     (q1, q2) => new { q1, q2 }
                 )
-                .Select(
-                    x =>
-                        new
-                        {
-                            Conjuge = x.q1.Nome
-                            == new List<string>
-                            {
-                                x.q1.Nome,
-                                x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
-                            }.Min()
-                                ? x.q1
-                                : x.q2.FirstOrDefault(),
-                            Nome = x.q1.Nome
-                            == new List<string>
-                            {
-                                x.q1.Nome,
-                                x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
-                            }.Max()
-                                ? x.q1
-                                : x.q2.FirstOrDefault(),
-                        }
-                )
-                .Select(
-                    x =>
-                        new
-                        {
-                            Homem = x.Nome.Sexo == SexoEnum.Masculino
-                                ? x.Nome
-                                : (x.Conjuge != null ? x.Conjuge : null),
-                            Mulher = x.Nome.Sexo == SexoEnum.Feminino
-                                ? x.Nome
-                                : (x.Conjuge != null ? x.Conjuge : null),
-                        }
-                )
+                .Select(x => new
+                {
+                    Conjuge = x.q1.Nome
+                    == new List<string>
+                    {
+                        x.q1.Nome,
+                        x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
+                    }.Min()
+                        ? x.q1
+                        : x.q2.FirstOrDefault(),
+                    Nome = x.q1.Nome
+                    == new List<string>
+                    {
+                        x.q1.Nome,
+                        x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
+                    }.Max()
+                        ? x.q1
+                        : x.q2.FirstOrDefault(),
+                })
+                .Select(x => new
+                {
+                    Homem = x.Nome.Sexo == SexoEnum.Masculino
+                        ? x.Nome
+                        : (x.Conjuge != null ? x.Conjuge : null),
+                    Mulher = x.Nome.Sexo == SexoEnum.Feminino
+                        ? x.Nome
+                        : (x.Conjuge != null ? x.Conjuge : null),
+                })
                 .Distinct();
 
             if (model.Etiquetas != null && model.Etiquetas.Count > 0)
             {
-                model.Etiquetas.ForEach(
-                    etiqueta =>
-                        queryCasais = queryCasais.Where(
-                            x =>
-                                (
-                                    x.Homem?.ParticipantesEtiquetas?.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
-                                    ) ?? false
-                                )
-                                || (
-                                    x.Mulher?.ParticipantesEtiquetas?.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
-                                    ) ?? false
-                                )
+                model.Etiquetas.ForEach(etiqueta =>
+                    queryCasais = queryCasais.Where(x =>
+                        (
+                            x.Homem?.ParticipantesEtiquetas?.Any(y =>
+                                y.EtiquetaId.ToString() == etiqueta
+                            ) ?? false
                         )
+                        || (
+                            x.Mulher?.ParticipantesEtiquetas?.Any(y =>
+                                y.EtiquetaId.ToString() == etiqueta
+                            ) ?? false
+                        )
+                    )
                 );
             }
 
             if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
             {
-                model.NaoEtiquetas.ForEach(
-                    etiqueta =>
-                        queryCasais = queryCasais.Where(
-                            x =>
-                                !x.Homem?.ParticipantesEtiquetas?.Any(
-                                    y => y.EtiquetaId.ToString() == etiqueta
-                                )
-                                ?? false
-                                    && (
-                                        !x.Mulher?.ParticipantesEtiquetas?.Any(
-                                            y => y.EtiquetaId.ToString() == etiqueta
-                                        ) ?? false
-                                    )
+                model.NaoEtiquetas.ForEach(etiqueta =>
+                    queryCasais = queryCasais.Where(x =>
+                        !x.Homem?.ParticipantesEtiquetas?.Any(y =>
+                            y.EtiquetaId.ToString() == etiqueta
                         )
+                        ?? false
+                            && (
+                                !x.Mulher?.ParticipantesEtiquetas?.Any(y =>
+                                    y.EtiquetaId.ToString() == etiqueta
+                                ) ?? false
+                            )
+                    )
                 );
             }
 
@@ -886,30 +796,28 @@ namespace SysIgreja.Controllers
             {
                 if (model.Status.Contains(StatusEnum.Checkin))
                 {
-                    queryCasais = queryCasais.Where(
-                        x =>
-                            (x.Homem.Checkin || x.Mulher.Checkin)
-                            || (
-                                model.Status.Contains(x.Homem.Status)
-                                || model.Status.Contains(x.Mulher.Status)
-                            )
+                    queryCasais = queryCasais.Where(x =>
+                        (x.Homem.Checkin || x.Mulher.Checkin)
+                        || (
+                            model.Status.Contains(x.Homem.Status)
+                            || model.Status.Contains(x.Mulher.Status)
+                        )
                     );
                 }
                 else
                 {
-                    queryCasais = queryCasais.Where(
-                        x =>
-                            (
-                                x.Homem != null
-                                && (
-                                    model.Status.Contains(x.Homem.Status)
-                                    || (x.Mulher != null && model.Status.Contains(x.Mulher.Status))
-                                        && (
-                                            (!x.Homem?.Checkin ?? false)
-                                            && (!x.Mulher?.Checkin ?? false)
-                                        )
-                                )
+                    queryCasais = queryCasais.Where(x =>
+                        (
+                            x.Homem != null
+                            && (
+                                model.Status.Contains(x.Homem.Status)
+                                || (x.Mulher != null && model.Status.Contains(x.Mulher.Status))
+                                    && (
+                                        (!x.Homem?.Checkin ?? false)
+                                        && (!x.Mulher?.Checkin ?? false)
+                                    )
                             )
+                        )
                     );
                 }
             }
@@ -918,78 +826,71 @@ namespace SysIgreja.Controllers
             {
                 if (model.PadrinhoId.Count == 0)
                 {
-                    queryCasais = queryCasais.Where(
-                        x => (!x.Homem.PadrinhoId.HasValue) || (!x.Mulher.PadrinhoId.HasValue)
+                    queryCasais = queryCasais.Where(x =>
+                        (!x.Homem.PadrinhoId.HasValue) || (!x.Mulher.PadrinhoId.HasValue)
                     );
                 }
                 else
                 {
-                    queryCasais = queryCasais.Where(
-                        x =>
-                            (
-                                x.Homem?.Padrinho != null
-                                && model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value)
-                            )
-                            || (
-                                x.Mulher?.Padrinho != null
-                                && model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value)
-                            )
+                    queryCasais = queryCasais.Where(x =>
+                        (
+                            x.Homem?.Padrinho != null
+                            && model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value)
+                        )
+                        || (
+                            x.Mulher?.Padrinho != null
+                            && model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value)
+                        )
                     );
                 }
             }
 
             if (model.CirculoId != null)
             {
-                queryCasais = queryCasais.Where(
-                    x =>
-                        (x.Homem?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId)))
-                        ?? false
-                            || (
-                                x.Mulher?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId))
-                                ?? false
-                            )
+                queryCasais = queryCasais.Where(x =>
+                    (x.Homem?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId)))
+                    ?? false
+                        || (
+                            x.Mulher?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId))
+                            ?? false
+                        )
                 );
             }
 
             if (model.QuartoId != null)
             {
-                queryCasais = queryCasais.Where(
-                    x =>
-                        (x.Homem?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId)))
-                        ?? false
-                            || (
-                                x.Mulher?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId))
-                                ?? false
-                            )
+                queryCasais = queryCasais.Where(x =>
+                    (x.Homem?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId)))
+                    ?? false
+                        || (
+                            x.Mulher?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId))
+                            ?? false
+                        )
                 );
             }
 
             if (model.search != null && model.search.value != null)
             {
                 model.search.value = model.search.value.RemoveAccents();
-                queryCasais = queryCasais.Where(
-                    x =>
-                        x.Homem != null
-                            ? (
-                                (x.Homem.Nome.RemoveAccents().Contains(model.search.value))
-                                || (x.Homem.Conjuge.RemoveAccents().Contains(model.search.value))
-                            )
-                            : (x.Mulher.Nome.RemoveAccents().Contains(model.search.value))
-                                || (x.Mulher.Conjuge.RemoveAccents().Contains(model.search.value))
+                queryCasais = queryCasais.Where(x =>
+                    x.Homem != null
+                        ? (
+                            (x.Homem.Nome.RemoveAccents().Contains(model.search.value))
+                            || (x.Homem.Conjuge.RemoveAccents().Contains(model.search.value))
+                        )
+                        : (x.Mulher.Nome.RemoveAccents().Contains(model.search.value))
+                            || (x.Mulher.Conjuge.RemoveAccents().Contains(model.search.value))
                 );
             }
 
-            var queryNova = queryCasais.Select(
-                x =>
-                    new
-                    {
-                        Dupla = (x.Homem != null & x.Mulher != null)
-                            ? x.Homem.Apelido + " e " + x.Mulher.Apelido
-                            : null,
-                        x.Homem,
-                        x.Mulher,
-                    }
-            );
+            var queryNova = queryCasais.Select(x => new
+            {
+                Dupla = (x.Homem != null & x.Mulher != null)
+                    ? x.Homem.Apelido + " e " + x.Mulher.Apelido
+                    : null,
+                x.Homem,
+                x.Mulher,
+            });
 
             List<Data.Entities.Participante> resultCasais = new List<Data.Entities.Participante>();
 
@@ -1030,27 +931,19 @@ namespace SysIgreja.Controllers
 
             if (model.Etiquetas != null && model.Etiquetas.Count > 0)
             {
-                model.Etiquetas.ForEach(
-                    etiqueta =>
-                        result = result.Where(
-                            x =>
-                                x.ParticipantesEtiquetas.Any(
-                                    y => y.EtiquetaId.ToString() == etiqueta
-                                )
-                        )
+                model.Etiquetas.ForEach(etiqueta =>
+                    result = result.Where(x =>
+                        x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                    )
                 );
             }
 
             if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
             {
-                model.NaoEtiquetas.ForEach(
-                    etiqueta =>
-                        result = result.Where(
-                            x =>
-                                !x.ParticipantesEtiquetas.Any(
-                                    y => y.EtiquetaId.ToString() == etiqueta
-                                )
-                        )
+                model.NaoEtiquetas.ForEach(etiqueta =>
+                    result = result.Where(x =>
+                        !x.ParticipantesEtiquetas.Any(y => y.EtiquetaId.ToString() == etiqueta)
+                    )
                 );
             }
 
@@ -1083,24 +976,24 @@ namespace SysIgreja.Controllers
 
             if (model.CirculoId != null)
             {
-                result = result.Where(
-                    x => (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
+                result = result.Where(x =>
+                    (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
                 );
                 filteredResultsCount = result.Count();
             }
 
             if (model.QuartoId != null)
             {
-                result = result.Where(
-                    x => (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId)))
+                result = result.Where(x =>
+                    (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId)))
                 );
                 filteredResultsCount = result.Count();
             }
 
             if (model.CaronaId != null)
             {
-                result = result.Where(
-                    x => (x.Caronas.Any(y => model.CaronaId.Contains(y.CaronaId)))
+                result = result.Where(x =>
+                    (x.Caronas.Any(y => model.CaronaId.Contains(y.CaronaId)))
                 );
                 filteredResultsCount = result.Count();
             }
@@ -1127,14 +1020,14 @@ namespace SysIgreja.Controllers
                 {
                     if (model.order[0].dir == "asc")
                     {
-                        result = result.OrderBy(
-                            x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
+                        result = result.OrderBy(x =>
+                            x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
                         );
                     }
                     else
                     {
-                        result = result.OrderByDescending(
-                            x => x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
+                        result = result.OrderByDescending(x =>
+                            x.Quartos.Any() ? x.Quartos.FirstOrDefault().Quarto.Titulo : ""
                         );
                     }
                 }
@@ -1191,40 +1084,34 @@ namespace SysIgreja.Controllers
                     y => y.Conjuge?.ToLower().Trim(),
                     (q1, q2) => new { q1, q2 }
                 )
-                .Select(
-                    x =>
-                        new
-                        {
-                            Conjuge = x.q1.Nome
-                            == new List<string>
-                            {
-                                x.q1.Nome,
-                                x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
-                            }.Min()
-                                ? x.q1
-                                : x.q2.FirstOrDefault(),
-                            Nome = x.q1.Nome
-                            == new List<string>
-                            {
-                                x.q1.Nome,
-                                x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
-                            }.Max()
-                                ? x.q1
-                                : x.q2.FirstOrDefault(),
-                        }
-                )
-                .Select(
-                    x =>
-                        new
-                        {
-                            Homem = x.Nome.Sexo == SexoEnum.Masculino
-                                ? x.Nome
-                                : (x.Conjuge != null ? x.Conjuge : null),
-                            Mulher = x.Nome.Sexo == SexoEnum.Feminino
-                                ? x.Nome
-                                : (x.Conjuge != null ? x.Conjuge : null),
-                        }
-                )
+                .Select(x => new
+                {
+                    Conjuge = x.q1.Nome
+                    == new List<string>
+                    {
+                        x.q1.Nome,
+                        x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
+                    }.Min()
+                        ? x.q1
+                        : x.q2.FirstOrDefault(),
+                    Nome = x.q1.Nome
+                    == new List<string>
+                    {
+                        x.q1.Nome,
+                        x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
+                    }.Max()
+                        ? x.q1
+                        : x.q2.FirstOrDefault(),
+                })
+                .Select(x => new
+                {
+                    Homem = x.Nome.Sexo == SexoEnum.Masculino
+                        ? x.Nome
+                        : (x.Conjuge != null ? x.Conjuge : null),
+                    Mulher = x.Nome.Sexo == SexoEnum.Feminino
+                        ? x.Nome
+                        : (x.Conjuge != null ? x.Conjuge : null),
+                })
                 .Distinct();
 
             var totalResultsCount = queryCasais.Count();
@@ -1232,40 +1119,36 @@ namespace SysIgreja.Controllers
 
             if (model.Etiquetas != null && model.Etiquetas.Count > 0)
             {
-                model.Etiquetas.ForEach(
-                    etiqueta =>
-                        queryCasais = queryCasais.Where(
-                            x =>
-                                (
-                                    x.Homem?.ParticipantesEtiquetas?.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
-                                    ) ?? false
-                                )
-                                || (
-                                    x.Mulher?.ParticipantesEtiquetas?.Any(
-                                        y => y.EtiquetaId.ToString() == etiqueta
-                                    ) ?? false
-                                )
+                model.Etiquetas.ForEach(etiqueta =>
+                    queryCasais = queryCasais.Where(x =>
+                        (
+                            x.Homem?.ParticipantesEtiquetas?.Any(y =>
+                                y.EtiquetaId.ToString() == etiqueta
+                            ) ?? false
                         )
+                        || (
+                            x.Mulher?.ParticipantesEtiquetas?.Any(y =>
+                                y.EtiquetaId.ToString() == etiqueta
+                            ) ?? false
+                        )
+                    )
                 );
             }
 
             if (model.NaoEtiquetas != null && model.NaoEtiquetas.Count > 0)
             {
-                model.NaoEtiquetas.ForEach(
-                    etiqueta =>
-                        queryCasais = queryCasais.Where(
-                            x =>
-                                !x.Homem?.ParticipantesEtiquetas?.Any(
-                                    y => y.EtiquetaId.ToString() == etiqueta
-                                )
-                                ?? false
-                                    && (
-                                        !x.Mulher?.ParticipantesEtiquetas?.Any(
-                                            y => y.EtiquetaId.ToString() == etiqueta
-                                        ) ?? false
-                                    )
+                model.NaoEtiquetas.ForEach(etiqueta =>
+                    queryCasais = queryCasais.Where(x =>
+                        !x.Homem?.ParticipantesEtiquetas?.Any(y =>
+                            y.EtiquetaId.ToString() == etiqueta
                         )
+                        ?? false
+                            && (
+                                !x.Mulher?.ParticipantesEtiquetas?.Any(y =>
+                                    y.EtiquetaId.ToString() == etiqueta
+                                ) ?? false
+                            )
+                    )
                 );
             }
 
@@ -1273,30 +1156,28 @@ namespace SysIgreja.Controllers
             {
                 if (model.Status.Contains(StatusEnum.Checkin))
                 {
-                    queryCasais = queryCasais.Where(
-                        x =>
-                            (x.Homem.Checkin || x.Mulher.Checkin)
-                            || (
-                                model.Status.Contains(x.Homem.Status)
-                                || model.Status.Contains(x.Mulher.Status)
-                            )
+                    queryCasais = queryCasais.Where(x =>
+                        (x.Homem.Checkin || x.Mulher.Checkin)
+                        || (
+                            model.Status.Contains(x.Homem.Status)
+                            || model.Status.Contains(x.Mulher.Status)
+                        )
                     );
                 }
                 else
                 {
-                    queryCasais = queryCasais.Where(
-                        x =>
-                            (
-                                x.Homem != null
-                                && (
-                                    model.Status.Contains(x.Homem.Status)
-                                    || (x.Mulher != null && model.Status.Contains(x.Mulher.Status))
-                                        && (
-                                            (!x.Homem?.Checkin ?? false)
-                                            && (!x.Mulher?.Checkin ?? false)
-                                        )
-                                )
+                    queryCasais = queryCasais.Where(x =>
+                        (
+                            x.Homem != null
+                            && (
+                                model.Status.Contains(x.Homem.Status)
+                                || (x.Mulher != null && model.Status.Contains(x.Mulher.Status))
+                                    && (
+                                        (!x.Homem?.Checkin ?? false)
+                                        && (!x.Mulher?.Checkin ?? false)
+                                    )
                             )
+                        )
                     );
                 }
 
@@ -1307,22 +1188,21 @@ namespace SysIgreja.Controllers
             {
                 if (model.PadrinhoId.Count == 0)
                 {
-                    queryCasais = queryCasais.Where(
-                        x => (!x.Homem.PadrinhoId.HasValue) || (!x.Mulher.PadrinhoId.HasValue)
+                    queryCasais = queryCasais.Where(x =>
+                        (!x.Homem.PadrinhoId.HasValue) || (!x.Mulher.PadrinhoId.HasValue)
                     );
                 }
                 else
                 {
-                    queryCasais = queryCasais.Where(
-                        x =>
-                            (
-                                x.Homem?.Padrinho != null
-                                && model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value)
-                            )
-                            || (
-                                x.Mulher?.Padrinho != null
-                                && model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value)
-                            )
+                    queryCasais = queryCasais.Where(x =>
+                        (
+                            x.Homem?.Padrinho != null
+                            && model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value)
+                        )
+                        || (
+                            x.Mulher?.Padrinho != null
+                            && model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value)
+                        )
                     );
                 }
                 filteredResultsCount = queryCasais.Count();
@@ -1330,28 +1210,26 @@ namespace SysIgreja.Controllers
 
             if (model.CirculoId != null)
             {
-                queryCasais = queryCasais.Where(
-                    x =>
-                        (x.Homem?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId)))
-                        ?? false
-                            || (
-                                x.Mulher?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId))
-                                ?? false
-                            )
+                queryCasais = queryCasais.Where(x =>
+                    (x.Homem?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId)))
+                    ?? false
+                        || (
+                            x.Mulher?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId))
+                            ?? false
+                        )
                 );
                 filteredResultsCount = queryCasais.Count();
             }
 
             if (model.QuartoId != null)
             {
-                queryCasais = queryCasais.Where(
-                    x =>
-                        (x.Homem?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId)))
-                        ?? false
-                            || (
-                                x.Mulher?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId))
-                                ?? false
-                            )
+                queryCasais = queryCasais.Where(x =>
+                    (x.Homem?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId)))
+                    ?? false
+                        || (
+                            x.Mulher?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId))
+                            ?? false
+                        )
                 );
                 filteredResultsCount = queryCasais.Count();
             }
@@ -1359,15 +1237,14 @@ namespace SysIgreja.Controllers
             if (model.search != null && model.search.value != null)
             {
                 model.search.value = model.search.value.RemoveAccents();
-                queryCasais = queryCasais.Where(
-                    x =>
-                        x.Homem != null
-                            ? (
-                                (x.Homem.Nome.RemoveAccents().Contains(model.search.value))
-                                || (x.Homem.Conjuge.RemoveAccents().Contains(model.search.value))
-                            )
-                            : (x.Mulher.Nome.RemoveAccents().Contains(model.search.value))
-                                || (x.Mulher.Conjuge.RemoveAccents().Contains(model.search.value))
+                queryCasais = queryCasais.Where(x =>
+                    x.Homem != null
+                        ? (
+                            (x.Homem.Nome.RemoveAccents().Contains(model.search.value))
+                            || (x.Homem.Conjuge.RemoveAccents().Contains(model.search.value))
+                        )
+                        : (x.Mulher.Nome.RemoveAccents().Contains(model.search.value))
+                            || (x.Mulher.Conjuge.RemoveAccents().Contains(model.search.value))
                 );
                 filteredResultsCount = queryCasais.Count();
             }
@@ -1384,17 +1261,14 @@ namespace SysIgreja.Controllers
 
             filteredResultsCount = queryCasais.Count();
 
-            var queryNova = queryCasais.Select(
-                x =>
-                    new
-                    {
-                        Dupla = (x.Homem != null & x.Mulher != null)
-                            ? x.Homem.Apelido + " e " + x.Mulher.Apelido
-                            : null,
-                        x.Homem,
-                        x.Mulher,
-                    }
-            );
+            var queryNova = queryCasais.Select(x => new
+            {
+                Dupla = (x.Homem != null & x.Mulher != null)
+                    ? x.Homem.Apelido + " e " + x.Mulher.Apelido
+                    : null,
+                x.Homem,
+                x.Mulher,
+            });
 
             queryNova = queryNova
                 .OrderBy(x => x.Dupla)
@@ -1439,22 +1313,17 @@ namespace SysIgreja.Controllers
                 .ToList();
 
             var result = list.OrderBy(x => x.Nome)
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Nome = UtilServices.CapitalizarNome(x.Nome),
-                            Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                            Foto = x.Arquivos.Any(y => y.IsFoto)
-                                ? Convert.ToBase64String(
-                                    x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo
-                                )
-                                : "",
-                            Circulo = x.Circulos.LastOrDefault()?.Circulo.Cor?.GetDescription()
-                                ?? x.Circulos.LastOrDefault()?.Circulo.Titulo
-                        }
-                );
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Nome = UtilServices.CapitalizarNome(x.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                    Foto = x.Arquivos.Any(y => y.IsFoto)
+                        ? Convert.ToBase64String(x.Arquivos.FirstOrDefault(y => y.IsFoto).Conteudo)
+                        : "",
+                    Circulo = x.Circulos.LastOrDefault()?.Circulo.Cor?.GetDescription()
+                        ?? x.Circulos.LastOrDefault()?.Circulo.Titulo
+                });
 
             var json = Json(new { data = result }, JsonRequestBehavior.AllowGet);
             json.MaxJsonLength = Int32.MaxValue;
@@ -1518,15 +1387,12 @@ namespace SysIgreja.Controllers
                     Padrinhos = padrinhosBusiness
                         .GetPadrinhos()
                         .Where(x => x.EquipanteEvento.EventoId == eventoId)
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Id = x.Id,
-                                    Nome = x.EquipanteEvento.Equipante.Nome,
-                                    EquipanteId = x.EquipanteEvento.EquipanteId
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Id = x.Id,
+                            Nome = x.EquipanteEvento.Equipante.Nome,
+                            EquipanteId = x.EquipanteEvento.EquipanteId
+                        })
                 },
                 JsonRequestBehavior.AllowGet
             );

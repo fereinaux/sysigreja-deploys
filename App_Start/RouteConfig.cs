@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Evernote.EDAM.Type;
 
 namespace SysIgreja
 {
@@ -19,11 +18,11 @@ namespace SysIgreja
             );
 
             routes.MapRoute(
-               name: "Presenca",
-               url: "{nome}/presenca",
-               defaults: new { controller = "Inscricoes", action = "PresencaByNome" },
-               constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
-           );
+                name: "Presenca",
+                url: "{nome}/presenca",
+                defaults: new { controller = "Inscricoes", action = "PresencaByNome" },
+                constraints: new { nome = @"^[a-zA-Z0-9\-\/_]{2,}$" }
+            );
 
             routes.MapRoute(
                 name: "Inscrições Equipe",

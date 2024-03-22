@@ -28,7 +28,6 @@ namespace SysIgreja.ViewModels
         public int QtdParticipantes { get; set; }
         public string Titulo { get; set; }
         public string Cor { get; set; }
-
     }
 
     public class CirculoParticipanteViewModel
@@ -37,13 +36,12 @@ namespace SysIgreja.ViewModels
         public string Nome { get; set; }
         public int SequencialEvento { get; set; }
         public SexoEnum Sexo { get; set; }
-      
+
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public string Endereco { get; set; }
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Referencia { get; set; }
-
     }
 }

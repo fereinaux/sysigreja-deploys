@@ -6,11 +6,7 @@ using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Categorias;
 using Core.Business.Configuracao;
-using Core.Business.Etiquetas;
 using Core.Business.Eventos;
-using Core.Models.Etiquetas;
-using Utils.Constants;
-using Utils.Enums;
 
 namespace SysIgreja.Controllers
 {
@@ -43,15 +39,12 @@ namespace SysIgreja.Controllers
             var result = categoriaBusiness
                 .GetCategorias()
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = x.Nome,
-                            Id = x.Id,
-                            Imagem = Convert.ToBase64String(x.Imagem.Conteudo)
-                        }
-                );
+                .Select(x => new
+                {
+                    Nome = x.Nome,
+                    Id = x.Id,
+                    Imagem = Convert.ToBase64String(x.Imagem.Conteudo)
+                });
 
             return Json(new { result }, JsonRequestBehavior.AllowGet);
         }
@@ -61,7 +54,7 @@ namespace SysIgreja.Controllers
         {
             categoriaBusiness.PostCategoria(Nome, ArquivoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

@@ -9,9 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
-using Utils.Extensions;
 
 namespace SysIgreja.Controllers
 {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Utils.Enums;
 
 namespace SysIgreja.ViewModels
 {

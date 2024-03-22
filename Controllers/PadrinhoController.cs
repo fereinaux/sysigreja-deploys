@@ -5,16 +5,12 @@ using System.Web.Mvc;
 using Arquitetura.Controller;
 using AutoMapper;
 using Core.Business.Account;
-using Core.Business.Caronas;
 using Core.Business.Configuracao;
 using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Padrinhos;
-using Core.Models.Carona;
 using Core.Models.Padrinhos;
-using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Services;
 
 namespace SysIgreja.Controllers
@@ -108,28 +104,20 @@ namespace SysIgreja.Controllers
 
             var queryResult = query.ToList();
 
-            var result = queryResult.Select(
-                x =>
-                    new
-                    {
-                        Id = x.Id,
-                        Quantidade = x.Participantes.Count(),
-                        Padrinho = x.EquipanteEvento.Equipante.Nome,
-                        PadrinhoId = x.EquipanteEvento.EquipanteId.Value,
-                        Participantes = x.Participantes.Select(
-                            y =>
-                                new
-                                {
-                                    Nome = UtilServices.CapitalizarNome(y.Nome),
-                                    ParticipanteId = y.Id,
-                                    PadrinhoId = y.PadrinhoId,
-                                    Padrinho = UtilServices.CapitalizarNome(
-                                       x.EquipanteEvento.Equipante.Nome
-                                    )
-                                }
-                        )
-                    }
-            );
+            var result = queryResult.Select(x => new
+            {
+                Id = x.Id,
+                Quantidade = x.Participantes.Count(),
+                Padrinho = x.EquipanteEvento.Equipante.Nome,
+                PadrinhoId = x.EquipanteEvento.EquipanteId.Value,
+                Participantes = x.Participantes.Select(y => new
+                {
+                    Nome = UtilServices.CapitalizarNome(y.Nome),
+                    ParticipanteId = y.Id,
+                    PadrinhoId = y.PadrinhoId,
+                    Padrinho = UtilServices.CapitalizarNome(x.EquipanteEvento.Equipante.Nome)
+                })
+            });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -163,25 +151,22 @@ namespace SysIgreja.Controllers
                         .GetUsuarios()
                         .Where(x => x.Id == user.Id)
                         .ToList()
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Id = x.Id,
-                                    Senha = x.Senha,
-                                    hasChangedPassword = x.HasChangedPassword,
-                                    EquipanteId = x.EquipanteId,
-                                    UserName = x.UserName,
-                                    Fone = x.Equipante.Fone,
-                                    Nome = x.Equipante.Nome,
-                                    Evento = new
-                                    {
-                                        Titulo = evento.Configuracao.Titulo,
-                                        Numeracao = evento.Numeracao
-                                    },
-                                    Perfil = "Padrinho"
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Id = x.Id,
+                            Senha = x.Senha,
+                            hasChangedPassword = x.HasChangedPassword,
+                            EquipanteId = x.EquipanteId,
+                            UserName = x.UserName,
+                            Fone = x.Equipante.Fone,
+                            Nome = x.Equipante.Nome,
+                            Evento = new
+                            {
+                                Titulo = evento.Configuracao.Titulo,
+                                Numeracao = evento.Numeracao
+                            },
+                            Perfil = "Padrinho"
+                        })
                         .FirstOrDefault()
                 },
                 JsonRequestBehavior.AllowGet
@@ -193,7 +178,7 @@ namespace SysIgreja.Controllers
         {
             padrinhosBusiness.DeletePadrinho(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -201,7 +186,7 @@ namespace SysIgreja.Controllers
         {
             padrinhosBusiness.DistribuirPadrinhos(EventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpGet]
@@ -229,18 +214,15 @@ namespace SysIgreja.Controllers
                     Padrinhos = padrinhosBusiness
                         .GetPadrinhosComParticipantes(EventoId)
                         .ToList()
-                        .Select(
-                            x =>
-                                new
-                                {
-                                    Nome = UtilServices.CapitalizarNome(x.Nome),
-                                    ParticipanteId = x.Id,
-                                    PadrinhoId = x.PadrinhoId,
-                                    Padrinho = UtilServices.CapitalizarNome(
-                                        x.Padrinho.EquipanteEvento.Equipante.Nome
-                                    )
-                                }
-                        )
+                        .Select(x => new
+                        {
+                            Nome = UtilServices.CapitalizarNome(x.Nome),
+                            ParticipanteId = x.Id,
+                            PadrinhoId = x.PadrinhoId,
+                            Padrinho = UtilServices.CapitalizarNome(
+                                x.Padrinho.EquipanteEvento.Equipante.Nome
+                            )
+                        })
                         .OrderBy(x => x.PadrinhoId)
                         .ThenBy(x => x.Nome)
                         .ToList()
@@ -254,7 +236,7 @@ namespace SysIgreja.Controllers
         {
             padrinhosBusiness.ChangePadrinho(ParticipanteId, DestinoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpGet]
@@ -263,18 +245,15 @@ namespace SysIgreja.Controllers
             var result = padrinhosBusiness
                 .GetParticipantesByPadrinhos(PadrinhoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = UtilServices.CapitalizarNome(x.Nome),
-                            Apelido = UtilServices.CapitalizarNome(x.Apelido),
-                            Padrinho = UtilServices.CapitalizarNome(
-                                x.Padrinho.EquipanteEvento.Equipante.Nome
-                            ),
-                            Fone = x.Fone
-                        }
-                )
+                .Select(x => new
+                {
+                    Nome = UtilServices.CapitalizarNome(x.Nome),
+                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
+                    Padrinho = UtilServices.CapitalizarNome(
+                        x.Padrinho.EquipanteEvento.Equipante.Nome
+                    ),
+                    Fone = x.Fone
+                })
                 .OrderBy(x => x.Padrinho)
                 .ThenBy(x => x.Nome);
 

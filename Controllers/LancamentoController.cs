@@ -6,7 +6,6 @@ using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
-using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Arquivos;
@@ -19,7 +18,6 @@ using Core.Business.MeioPagamento;
 using Core.Business.Participantes;
 using Core.Models.Lancamento;
 using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
@@ -119,8 +117,8 @@ namespace SysIgreja.Controllers
 
             if (model.ConfiguracaoId.HasValue)
             {
-                query = query.Where(
-                    x => model.ConfiguracaoId.Value == x.Evento.ConfiguracaoId.Value
+                query = query.Where(x =>
+                    model.ConfiguracaoId.Value == x.Evento.ConfiguracaoId.Value
                 );
             }
 
@@ -155,14 +153,14 @@ namespace SysIgreja.Controllers
             {
                 if (model.order[0].dir == "asc")
                 {
-                    query = query.OrderBy(
-                        x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"
+                    query = query.OrderBy(x =>
+                        $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"
                     );
                 }
                 else
                 {
-                    query = query.OrderByDescending(
-                        x => $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"
+                    query = query.OrderByDescending(x =>
+                        $"{x.Evento.Configuracao.Titulo} {x.Evento.Numeracao}"
                     );
                 }
             }
@@ -264,14 +262,12 @@ namespace SysIgreja.Controllers
                 DataLancamento = x.DataCadastro.Value.ToString("dd/MM/yyyy"),
                 FormaPagamento = x.MeioPagamento.Descricao,
                 Valor = UtilServices.DecimalToMoeda(x.Valor),
-                Participantes = x.Participantes.Select(
-                    y =>
-                        new Core.Models.Participantes.ParticipanteListModel
-                        {
-                            Id = y.Id,
-                            Nome = y.Nome
-                        }
-                )
+                Participantes = x
+                    .Participantes.Select(y => new Core.Models.Participantes.ParticipanteListModel
+                    {
+                        Id = y.Id,
+                        Nome = y.Nome
+                    })
                     .ToList(),
                 QtdAnexos = x.Arquivos.Count
             };
@@ -304,9 +300,8 @@ namespace SysIgreja.Controllers
 
             if (model.DataIni.HasValue && model.DataFim.HasValue)
             {
-                query = query.Where(
-                    x =>
-                        x.DataCadastro > model.DataIni.Value && x.DataCadastro < model.DataFim.Value
+                query = query.Where(x =>
+                    x.DataCadastro > model.DataIni.Value && x.DataCadastro < model.DataFim.Value
                 );
             }
 
@@ -318,7 +313,7 @@ namespace SysIgreja.Controllers
         {
             lancamentoBusiness.DeleteLancamento(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -326,7 +321,7 @@ namespace SysIgreja.Controllers
         {
             lancamentoBusiness.PostPagamento(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -334,7 +329,7 @@ namespace SysIgreja.Controllers
         {
             lancamentoBusiness.PostLancamento(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpGet]
@@ -367,42 +362,32 @@ namespace SysIgreja.Controllers
             var arrRel = Relatorio.Split(',');
             var result = lancamentoBusiness
                 .GetLancamentos()
-                .Where(
-                    x =>
-                        x.EventoId == EventoId
-                        && x.CentroCustoId.HasValue
-                        && arrRel.Contains(x.CentroCustoId.Value.ToString())
+                .Where(x =>
+                    x.EventoId == EventoId
+                    && x.CentroCustoId.HasValue
+                    && arrRel.Contains(x.CentroCustoId.Value.ToString())
                 )
                 .ToList()
-                .GroupBy(
-                    x =>
-                        new
-                        {
-                            x.Tipo,
-                            MeioPagamento = x.MeioPagamento.Descricao.Contains("Cartão")
-                                ? "Cartão"
-                                : x.MeioPagamento.Descricao
-                        }
-                )
-                .Select(
-                    x =>
-                        new
-                        {
-                            Tipo = x.Key.Tipo,
-                            MeioPagamento = x.Key.MeioPagamento,
-                            Valor = x.Sum(y => y.Valor)
-                        }
-                )
+                .GroupBy(x => new
+                {
+                    x.Tipo,
+                    MeioPagamento = x.MeioPagamento.Descricao.Contains("Cartão")
+                        ? "Cartão"
+                        : x.MeioPagamento.Descricao
+                })
+                .Select(x => new
+                {
+                    Tipo = x.Key.Tipo,
+                    MeioPagamento = x.Key.MeioPagamento,
+                    Valor = x.Sum(y => y.Valor)
+                })
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Tipo = x.Tipo.GetDescription(),
-                            MeioPagamento = x.MeioPagamento,
-                            Valor = x.Valor
-                        }
-                )
+                .Select(x => new
+                {
+                    Tipo = x.Tipo.GetDescription(),
+                    MeioPagamento = x.MeioPagamento,
+                    Valor = x.Valor
+                })
                 .OrderByDescending(x => x.Tipo);
 
             return Json(new { Consolidado = result }, JsonRequestBehavior.AllowGet);
@@ -414,26 +399,22 @@ namespace SysIgreja.Controllers
             var arrRel = Relatorio.Split(',');
             var result = lancamentoBusiness
                 .GetLancamentos()
-                .Where(
-                    x =>
-                        x.EventoId == EventoId
-                        && x.CentroCustoId.HasValue
-                        && arrRel.Contains(x.CentroCustoId.Value.ToString())
+                .Where(x =>
+                    x.EventoId == EventoId
+                    && x.CentroCustoId.HasValue
+                    && arrRel.Contains(x.CentroCustoId.Value.ToString())
                 )
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Tipo = x.Tipo.GetDescription(),
-                            MeioPagamento = x.MeioPagamento.Descricao,
-                            Valor = x.Valor,
-                            CentroCusto = x.CentroCusto.Descricao,
-                            Descricao = UtilServices.CapitalizarNome(x.Descricao),
-                            Origem = UtilServices.CapitalizarNome(x.Origem),
-                            Data = x.DataCadastro.Value.ToString("dd/MM/yyyy")
-                        }
-                )
+                .Select(x => new
+                {
+                    Tipo = x.Tipo.GetDescription(),
+                    MeioPagamento = x.MeioPagamento.Descricao,
+                    Valor = x.Valor,
+                    CentroCusto = x.CentroCusto.Descricao,
+                    Descricao = UtilServices.CapitalizarNome(x.Descricao),
+                    Origem = UtilServices.CapitalizarNome(x.Origem),
+                    Data = x.DataCadastro.Value.ToString("dd/MM/yyyy")
+                })
                 .OrderByDescending(x => x.Tipo)
                 .OrderBy(x => x.CentroCusto);
 

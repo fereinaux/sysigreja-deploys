@@ -4,11 +4,9 @@ using System.Web.Mvc;
 using Arquitetura.Controller;
 using Core.Business.Account;
 using Core.Business.Configuracao;
-using Core.Business.Equipes;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models.Etiquetas;
-using Utils.Constants;
 using Utils.Enums;
 
 namespace SysIgreja.Controllers
@@ -44,15 +42,12 @@ namespace SysIgreja.Controllers
             var result = etiquetasBusiness
                 .GetEtiquetas(configuracaoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = x.Nome,
-                            Id = x.Id,
-                            Cor = x.Cor
-                        }
-                );
+                .Select(x => new
+                {
+                    Nome = x.Nome,
+                    Id = x.Id,
+                    Cor = x.Cor
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -63,15 +58,12 @@ namespace SysIgreja.Controllers
             var result = etiquetasBusiness
                 .GetEtiquetas(eventosBusiness.GetEventoById(eventoId).ConfiguracaoId.Value)
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Nome = x.Nome,
-                            Id = x.Id,
-                            Cor = x.Cor
-                        }
-                );
+                .Select(x => new
+                {
+                    Nome = x.Nome,
+                    Id = x.Id,
+                    Cor = x.Cor
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -109,7 +101,7 @@ namespace SysIgreja.Controllers
         {
             etiquetasBusiness.DeleteEtiqueta(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -122,7 +114,7 @@ namespace SysIgreja.Controllers
         {
             etiquetasBusiness.AddEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -135,7 +127,7 @@ namespace SysIgreja.Controllers
         {
             etiquetasBusiness.RemoveEtiqueta(destinoId, etiquetaId, tipo, eventoId);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

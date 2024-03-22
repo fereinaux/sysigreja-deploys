@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
-using Arquitetura.ViewModels;
 using Core.Business.Account;
-using Core.Business.Arquivos;
 using Core.Business.Configuracao;
-using Core.Business.Equipantes;
-using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Igrejas;
-using Core.Business.Reunioes;
-using Core.Models;
-using Core.Models.Equipe;
 using Core.Models.Igreja;
-using Newtonsoft.Json;
-using SysIgreja.ViewModels;
-using Utils.Enums;
-using Utils.Extensions;
-using Utils.Services;
 
 namespace SysIgreja.Controllers
 {
@@ -87,7 +72,7 @@ namespace SysIgreja.Controllers
         {
             igrejasBusiness.DeleteIgreja(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using Arquitetura.Controller;
 using Arquitetura.ViewModels;
 using AutoMapper;
@@ -15,15 +14,11 @@ using Core.Business.Arquivos;
 using Core.Business.Circulos;
 using Core.Business.Configuracao;
 using Core.Business.Eventos;
-using Core.Models;
 using Core.Models.Configuracao;
 using Core.Models.DataTable;
-using Core.Models.Equipantes;
 using Core.Models.Eventos;
 using Data.Entities;
 using Newtonsoft.Json;
-using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
@@ -100,19 +95,16 @@ namespace SysIgreja.Controllers
         public ActionResult PopulateEventosByUser()
         {
             var user = GetApplicationUser();
-            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões")
+            var permissoes = user
+                .Claims.Where(x => x.ClaimType == "Permissões")
                 .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
-                .Select(
-                    x =>
-                        x.Select(
-                            y =>
-                                new
-                                {
-                                    ConfigId = y.ConfiguracaoId,
-                                    Eventos = y.Eventos,
-                                    Role = y.Role
-                                }
-                        )
+                .Select(x =>
+                    x.Select(y => new
+                    {
+                        ConfigId = y.ConfiguracaoId,
+                        Eventos = y.Eventos,
+                        Role = y.Role
+                    })
                 )
                 .ToList();
             List<int> eventosId = new List<int>();
@@ -145,108 +137,91 @@ namespace SysIgreja.Controllers
             var listEventosReturn = eventosBusiness
                 .GetEventos()
                 .OrderByDescending(x => x.DataEvento)
-                .Where(
-                    x =>
-                        eventosId.Contains(x.Id)
-                        || x.ConfiguracaoId.HasValue
-                            && configId.Contains(x.ConfiguracaoId.Value)
-                            && x.Status != StatusEnum.Deletado
+                .Where(x =>
+                    eventosId.Contains(x.Id)
+                    || x.ConfiguracaoId.HasValue
+                        && configId.Contains(x.ConfiguracaoId.Value)
+                        && x.Status != StatusEnum.Deletado
                 )
                 .ToList();
 
             var circulos = circulosBusiness
                 .GetCirculos()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Dirigentes = x.Dirigentes.Select(y => y.EquipanteId),
-                            EventoId = x.EventoId
-                        }
-                )
+                .Select(x => new
+                {
+                    Dirigentes = x.Dirigentes.Select(y => y.EquipanteId),
+                    EventoId = x.EventoId
+                })
                 .ToList();
 
             List<EventoClaimModel> eventosReturn = listEventosReturn
-                .Select(
-                    x =>
-                        new EventoClaimModel
+                .Select(x => new EventoClaimModel
+                {
+                    Role = configId.Contains(x.ConfiguracaoId.Value)
+                        ? "Admin"
+                        : eventoPermissao.FirstOrDefault(y => y.EventoId == x.Id).Role,
+                    Id = x.Id,
+                    ConfiguracaoId = x.ConfiguracaoId,
+                    Capacidade = x.Capacidade,
+                    DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
+                    Numeracao = x.Numeracao,
+                    AccessTokenMercadoPago = x.Configuracao.AccessTokenMercadoPago,
+                    TokenPagSeguro = x.Configuracao.TokenPagSeguro,
+                    BackgroundId = x.Configuracao.BackgroundId,
+                    Status = x.Status.GetDescription(),
+                    StatusEquipe = x.StatusEquipe.GetDescription(),
+                    TipoQuarto = x.Configuracao.TipoQuarto?.GetDescription(),
+                    Valor = x.Valor,
+                    ValorTaxa = x.ValorTaxa,
+                    Coordenador = x.Equipantes.Any(y =>
+                        y.EquipanteId == user.EquipanteId
+                        && y.EventoId == x.Id
+                        && y.Tipo == TiposEquipeEnum.Coordenador
+                    ),
+                    Dirigente =
+                        user.Equipante.Equipes.Any(y => y.EventoId == x.Id)
+                        && circulos.Any(y =>
+                            y.Dirigentes.Any(z =>
+                                z
+                                == user.Equipante.Equipes.FirstOrDefault(a => a.EventoId == x.Id).Id
+                            )
+                        ),
+                    CorBotao = x.Configuracao.CorBotao,
+                    EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,
+                    Identificador = x.Configuracao.Identificador,
+                    LogoId = x.Configuracao.LogoId,
+                    LogoRelatorioId = x.Configuracao.LogoRelatorioId,
+                    PublicTokenMercadoPago = x.Configuracao.PublicTokenMercadoPago,
+                    Titulo = x.Configuracao.Titulo,
+                    TipoEvento = x.Configuracao.TipoEvento?.GetDescription(),
+                    TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
+                    Mensagens = x.Configuracao.Mensagens.Select(
+                        y => new Core.Models.Mensagem.PostMessageModel
                         {
-                            Role = configId.Contains(x.ConfiguracaoId.Value)
-                                ? "Admin"
-                                : eventoPermissao.FirstOrDefault(y => y.EventoId == x.Id).Role,
-                            Id = x.Id,
-                            ConfiguracaoId = x.ConfiguracaoId,
-                            Capacidade = x.Capacidade,
-                            DataEvento = x.DataEvento.ToString("dd/MM/yyyy"),
-                            Numeracao = x.Numeracao,
-                            AccessTokenMercadoPago = x.Configuracao.AccessTokenMercadoPago,   
-                            TokenPagSeguro = x.Configuracao.TokenPagSeguro,
-                            BackgroundId = x.Configuracao.BackgroundId,
-                            Status = x.Status.GetDescription(),
-                            StatusEquipe = x.StatusEquipe.GetDescription(),
-                            TipoQuarto = x.Configuracao.TipoQuarto?.GetDescription(),
-                            Valor = x.Valor,
-                            ValorTaxa = x.ValorTaxa,
-                            Coordenador = x.Equipantes.Any(
-                                y =>
-                                    y.EquipanteId == user.EquipanteId
-                                    && y.EventoId == x.Id
-                                    && y.Tipo == TiposEquipeEnum.Coordenador
-                            ),
-                            Dirigente =
-                                user.Equipante.Equipes.Any(y => y.EventoId == x.Id)
-                                && circulos.Any(
-                                    y =>
-                                        y.Dirigentes.Any(
-                                            z =>
-                                                z
-                                                == user.Equipante.Equipes.FirstOrDefault(
-                                                    a => a.EventoId == x.Id
-                                                ).Id
-                                        )
-                                ),
-                            CorBotao = x.Configuracao.CorBotao,
-                            EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,
-                            Identificador = x.Configuracao.Identificador,
-                            LogoId = x.Configuracao.LogoId,
-                            LogoRelatorioId = x.Configuracao.LogoRelatorioId,
-                            PublicTokenMercadoPago = x.Configuracao.PublicTokenMercadoPago,
-                            Titulo = x.Configuracao.Titulo,
-                            TipoEvento = x.Configuracao.TipoEvento?.GetDescription(),
-                            TipoCirculo = x.Configuracao.TipoCirculo.GetDescription(),
-                            Mensagens = x.Configuracao.Mensagens.Select(
-                                y =>
-                                    new Core.Models.Mensagem.PostMessageModel
-                                    {
-                                        Id = y.Id,
-                                        Conteudo = y.Conteudo,
-                                        Titulo = y.Titulo,
-                                        Tipos = y.Tipos.Split(',')
-                                    }
-                            ),
-                            MeioPagamentos = x.Configuracao.MeioPagamentos.Select(
-                                y => new MeioPagamentoModel { Descricao = y.Descricao, Id = y.Id }
-                            ),
-                            CentroCustos = x.Configuracao.CentroCustos.Select(
-                                y =>
-                                    new CentroCustoModel
-                                    {
-                                        Descricao = y.Descricao,
-                                        Tipo = y.Tipo.GetDescription(),
-                                        Id = y.Id
-                                    }
-                            ),
-                            Etiquetas = x.Configuracao.Etiquetas.Where(y => y.Status != StatusEnum.Deletado).Select(
-                                y =>
-                                    new EtiquetaModel
-                                    {
-                                        Cor = y.Cor,
-                                        Id = y.Id,
-                                        Nome = y.Nome
-                                    }
-                            ),
+                            Id = y.Id,
+                            Conteudo = y.Conteudo,
+                            Titulo = y.Titulo,
+                            Tipos = y.Tipos.Split(',')
                         }
-                )
+                    ),
+                    MeioPagamentos = x.Configuracao.MeioPagamentos.Select(
+                        y => new MeioPagamentoModel { Descricao = y.Descricao, Id = y.Id }
+                    ),
+                    CentroCustos = x.Configuracao.CentroCustos.Select(y => new CentroCustoModel
+                    {
+                        Descricao = y.Descricao,
+                        Tipo = y.Tipo.GetDescription(),
+                        Id = y.Id
+                    }),
+                    Etiquetas = x
+                        .Configuracao.Etiquetas.Where(y => y.Status != StatusEnum.Deletado)
+                        .Select(y => new EtiquetaModel
+                        {
+                            Cor = y.Cor,
+                            Id = y.Id,
+                            Nome = y.Nome
+                        }),
+                })
                 .ToList();
 
             return Json(new { Eventos = (eventosReturn), }, JsonRequestBehavior.AllowGet);
@@ -265,7 +240,8 @@ namespace SysIgreja.Controllers
         public ActionResult PopulateConfigByUser()
         {
             var user = GetApplicationUser();
-            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões")
+            var permissoes = user
+                .Claims.Where(x => x.ClaimType == "Permissões")
                 .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
                 .Select(x => x.Select(y => new { ConfigId = y.ConfiguracaoId, Role = y.Role }))
                 .ToList();
@@ -294,19 +270,16 @@ namespace SysIgreja.Controllers
         public ActionResult GetEventos()
         {
             var user = GetApplicationUser();
-            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões")
+            var permissoes = user
+                .Claims.Where(x => x.ClaimType == "Permissões")
                 .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
-                .Select(
-                    x =>
-                        x.Select(
-                            y =>
-                                new
-                                {
-                                    ConfigId = y.ConfiguracaoId,
-                                    Eventos = y.Eventos,
-                                    Role = y.Role
-                                }
-                        )
+                .Select(x =>
+                    x.Select(y => new
+                    {
+                        ConfigId = y.ConfiguracaoId,
+                        Eventos = y.Eventos,
+                        Role = y.Role
+                    })
                 )
                 .ToList();
             List<int> configId = new List<int>();
@@ -319,28 +292,22 @@ namespace SysIgreja.Controllers
                 .GetEventos()
                 .Where(x => configId.Contains(x.ConfiguracaoId.Value) && x.ConfiguracaoId.HasValue)
                 .ToList()
-                .Select(
-                    x =>
-                        new EventoViewModel
-                        {
-                            Id = x.Id,
-                            DataEvento = x.DataEvento,
-                            Numeracao = x.Numeracao,
-                            Capacidade = x.Capacidade,
-                            TipoEvento = x.Configuracao.Titulo,
-                            Status = x.Status.GetDescription(),
-                            StatusEquipe = x.StatusEquipe.GetDescription(),
-                            Valor = x.Valor.ToString(
-                                "C",
-                                CultureInfo.CreateSpecificCulture("pt-BR")
-                            ),
-                            ValorTaxa = x.ValorTaxa.ToString(
-                                "C",
-                                CultureInfo.CreateSpecificCulture("pt-BR")
-                            ),
-                            QtdAnexos = arquivosBusiness.GetArquivosByEvento(x.Id).Count()
-                        }
-                );
+                .Select(x => new EventoViewModel
+                {
+                    Id = x.Id,
+                    DataEvento = x.DataEvento,
+                    Numeracao = x.Numeracao,
+                    Capacidade = x.Capacidade,
+                    TipoEvento = x.Configuracao.Titulo,
+                    Status = x.Status.GetDescription(),
+                    StatusEquipe = x.StatusEquipe.GetDescription(),
+                    Valor = x.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
+                    ValorTaxa = x.ValorTaxa.ToString(
+                        "C",
+                        CultureInfo.CreateSpecificCulture("pt-BR")
+                    ),
+                    QtdAnexos = arquivosBusiness.GetArquivosByEvento(x.Id).Count()
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -361,19 +328,16 @@ namespace SysIgreja.Controllers
             var extract = Request.QueryString["extract"];
 
             var user = GetApplicationUser();
-            var permissoes = user.Claims.Where(x => x.ClaimType == "Permissões")
+            var permissoes = user
+                .Claims.Where(x => x.ClaimType == "Permissões")
                 .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
-                .Select(
-                    x =>
-                        x.Select(
-                            y =>
-                                new
-                                {
-                                    ConfigId = y.ConfiguracaoId,
-                                    Eventos = y.Eventos,
-                                    Role = y.Role
-                                }
-                        )
+                .Select(x =>
+                    x.Select(y => new
+                    {
+                        ConfigId = y.ConfiguracaoId,
+                        Eventos = y.Eventos,
+                        Role = y.Role
+                    })
                 )
                 .ToList();
             List<int> configId = new List<int>();
@@ -453,44 +417,36 @@ namespace SysIgreja.Controllers
             query = query.Where(x => x.DataEvento <= dtFim && x.DataEvento >= dtIni);
 
             var result = query
-                .Where(
-                    x =>
-                        !string.IsNullOrEmpty(x.Configuracao.Titulo)
-                        && x.Status != StatusEnum.Informativo
+                .Where(x =>
+                    !string.IsNullOrEmpty(x.Configuracao.Titulo)
+                    && x.Status != StatusEnum.Informativo
                 )
                 .GroupBy(x => x.ConfiguracaoId)
-                .Select(
-                    x =>
-                        new
-                        {
-                            Titulo = x.Select(y => y.Configuracao.Titulo).FirstOrDefault(),
-                            Eventos = x.Select(y => y.Id).Distinct().Count(),
-                            Participantes = x.Sum(
-                                y =>
-                                    y.Participantes.Count(
-                                        z =>
-                                            z.Status == StatusEnum.Confirmado
-                                            || z.Status == StatusEnum.Checkin
-                                            || z.Status == StatusEnum.Inscrito
-                                    )
-                            ),
-                            Voluntarios = x.Sum(y => y.Equipantes.Count),
-                            Total = x.Sum(
-                                y =>
-                                    y.Lancamentos.Where(z => z.Tipo == TiposLancamentoEnum.Receber)
-                                        .Select(z => z.Valor)
-                                        .DefaultIfEmpty(0)
-                                        .Sum()
-                            ),
-                            LogoId = x.Select(
-                                    y =>
-                                        y.Configuracao.LogoRelatorioId != null
-                                            ? y.Configuracao.LogoRelatorioId
-                                            : y.Configuracao.LogoId
-                                )
-                                .FirstOrDefault()
-                        }
-                )
+                .Select(x => new
+                {
+                    Titulo = x.Select(y => y.Configuracao.Titulo).FirstOrDefault(),
+                    Eventos = x.Select(y => y.Id).Distinct().Count(),
+                    Participantes = x.Sum(y =>
+                        y.Participantes.Count(z =>
+                            z.Status == StatusEnum.Confirmado
+                            || z.Status == StatusEnum.Checkin
+                            || z.Status == StatusEnum.Inscrito
+                        )
+                    ),
+                    Voluntarios = x.Sum(y => y.Equipantes.Count),
+                    Total = x.Sum(y =>
+                        y.Lancamentos.Where(z => z.Tipo == TiposLancamentoEnum.Receber)
+                            .Select(z => z.Valor)
+                            .DefaultIfEmpty(0)
+                            .Sum()
+                    ),
+                    LogoId = x.Select(y =>
+                            y.Configuracao.LogoRelatorioId != null
+                                ? y.Configuracao.LogoRelatorioId
+                                : y.Configuracao.LogoId
+                        )
+                        .FirstOrDefault()
+                })
                 .ToList();
 
             return Json(new { Eventos = result }, JsonRequestBehavior.AllowGet);
@@ -503,16 +459,13 @@ namespace SysIgreja.Controllers
                 .GetEventos()
                 .Where(x => !x.ConfiguracaoId.HasValue)
                 .ToList()
-                .Select(
-                    x =>
-                        new EventoViewModel
-                        {
-                            Id = x.Id,
-                            DataEvento = x.DataEvento,
-                            Descricao = x.Descricao,
-                            ArteId = x.ArteId
-                        }
-                );
+                .Select(x => new EventoViewModel
+                {
+                    Id = x.Id,
+                    DataEvento = x.DataEvento,
+                    Descricao = x.Descricao,
+                    ArteId = x.ArteId
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -531,9 +484,9 @@ namespace SysIgreja.Controllers
         public int GetValorEvento(int Id)
         {
             var eventoAtual = eventosBusiness.GetEventoById(Id);
-            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today)
+            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= DateTime.Today)
                 ? eventoAtual
-                    .EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                    .EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                     .OrderBy(y => y.DataLote)
                     .FirstOrDefault()
                     .Valor
@@ -545,9 +498,9 @@ namespace SysIgreja.Controllers
         public int GetTaxaEvento(int Id)
         {
             var eventoAtual = eventosBusiness.GetEventoById(Id);
-            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= System.DateTime.Today)
+            var Valor = eventoAtual.EventoLotes.Any(y => y.DataLote >= DateTime.Today)
                 ? eventoAtual
-                    .EventoLotes.Where(y => y.DataLote >= System.DateTime.Today)
+                    .EventoLotes.Where(y => y.DataLote >= DateTime.Today)
                     .OrderBy(y => y.DataLote)
                     .FirstOrDefault()
                     .ValorTaxa
@@ -561,17 +514,14 @@ namespace SysIgreja.Controllers
             var result = eventosBusiness.GetEventoById(Id);
 
             var lotes = result
-                .EventoLotes.Select(
-                    x =>
-                        new LoteModel
-                        {
-                            Id = x.Id,
-                            DataLote = x.DataLote,
-                            EventoId = x.EventoId.Value,
-                            Valor = x.Valor,
-                            ValorTaxa = x.ValorTaxa
-                        }
-                )
+                .EventoLotes.Select(x => new LoteModel
+                {
+                    Id = x.Id,
+                    DataLote = x.DataLote,
+                    EventoId = x.EventoId.Value,
+                    Valor = x.Valor,
+                    ValorTaxa = x.ValorTaxa
+                })
                 .ToList();
 
             return Json(new { data = lotes }, JsonRequestBehavior.AllowGet);
@@ -581,14 +531,14 @@ namespace SysIgreja.Controllers
         public ActionResult ToggleEventoStatusEquipe(int Id)
         {
             eventosBusiness.ToggleEventoStatusEquipe(Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
         public ActionResult ToggleEventoStatus(int Id)
         {
             eventosBusiness.ToggleEventoStatus(Id);
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -596,7 +546,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.PostEvento(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -604,7 +554,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.PostInformativo(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -612,7 +562,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.PostArte(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -620,7 +570,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.CreateLote(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -628,7 +578,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.CloneEvento(id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -636,7 +586,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.DeleteEvento(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -644,7 +594,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.OfertaEvento(Id, Valor);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -652,7 +602,7 @@ namespace SysIgreja.Controllers
         {
             eventosBusiness.DeleteLote(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

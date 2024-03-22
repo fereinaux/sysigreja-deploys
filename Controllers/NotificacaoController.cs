@@ -1,29 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using Core.Business.Account;
-using Core.Business.Configuracao;
-using Core.Business.Equipantes;
 using Core.Business.Eventos;
 using Core.Business.Notificacao;
-using Core.Models;
-using Data.Context;
 using Data.Entities;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security;
 using Newtonsoft.Json;
-using SysIgreja.ViewModels;
-using Utils.Constants;
 using Utils.Enums;
-using Utils.Extensions;
-using Utils.Services;
 
 namespace SysIgreja.Controllers
 {
@@ -67,36 +53,29 @@ namespace SysIgreja.Controllers
                 .GetUsuarios()
                 .Where(x => x.Id == userId)
                 .ToList()
-                .Select(
-                    x =>
-                        x.Claims.Where(y => y.ClaimType == "Permissões")
-                            .Select(
-                                z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue)
-                            )
-                            .FirstOrDefault()
-                            ?.Select(z => z.ConfiguracaoId)
+                .Select(x =>
+                    x.Claims.Where(y => y.ClaimType == "Permissões")
+                        .Select(z => JsonConvert.DeserializeObject<List<Permissoes>>(z.ClaimValue))
+                        .FirstOrDefault()
+                        ?.Select(z => z.ConfiguracaoId)
                 )
                 .FirstOrDefault()
                 .ToList();
 
             var eventos = eventosBusiness
                 .GetEventos()
-                .Where(
-                    x =>
-                        x.ConfiguracaoId.HasValue
-                        && configs.Contains(x.ConfiguracaoId.Value)
-                        && x.IsPendente
+                .Where(x =>
+                    x.ConfiguracaoId.HasValue
+                    && configs.Contains(x.ConfiguracaoId.Value)
+                    && x.IsPendente
                 )
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            Id = x.Id,
-                            Valor = x.Valor,
-                            Evento = $"{x.Numeracao}º {x.Configuracao.Titulo}"
-                        }
-                );
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Valor = x.Valor,
+                    Evento = $"{x.Numeracao}º {x.Configuracao.Titulo}"
+                });
 
             return Json(
                 new { Notificacoes = result, Eventos = eventos },
@@ -110,15 +89,12 @@ namespace SysIgreja.Controllers
             var result = notificacaoBusiness
                 .queryNotificacoes()
                 .ToList()
-                .Select(
-                    x =>
-                        new
-                        {
-                            x.Titulo,
-                            DataCadastro = x.DataCadastro.Value.ToString("MM/dd/yyyy HH:mm:ss"),
-                            x.Link
-                        }
-                );
+                .Select(x => new
+                {
+                    x.Titulo,
+                    DataCadastro = x.DataCadastro.Value.ToString("MM/dd/yyyy HH:mm:ss"),
+                    x.Link
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -128,7 +104,7 @@ namespace SysIgreja.Controllers
         {
             notificacaoBusiness.SetNotificacoesLidas();
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

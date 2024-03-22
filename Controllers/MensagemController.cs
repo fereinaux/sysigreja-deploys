@@ -7,7 +7,6 @@ using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Business.Mensagem;
 using Core.Models.Mensagem;
-using Utils.Constants;
 
 namespace SysIgreja.Controllers
 {
@@ -42,16 +41,13 @@ namespace SysIgreja.Controllers
             var result = mensagemBusiness
                 .GetMensagems(configuracaoId)
                 .ToList()
-                .Select(
-                    x =>
-                        new PostMessageModel
-                        {
-                            Titulo = x.Titulo,
-                            Conteudo = x.Conteudo,
-                            Tipos = x.Tipos?.Split(','),
-                            Id = x.Id
-                        }
-                );
+                .Select(x => new PostMessageModel
+                {
+                    Titulo = x.Titulo,
+                    Conteudo = x.Conteudo,
+                    Tipos = x.Tipos?.Split(','),
+                    Id = x.Id
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -70,15 +66,12 @@ namespace SysIgreja.Controllers
 
             var result = query
                 .ToList()
-                .Select(
-                    x =>
-                        new PostMessageModel
-                        {
-                            Titulo = x.Titulo,
-                            Conteudo = x.Conteudo,
-                            Id = x.Id
-                        }
-                );
+                .Select(x => new PostMessageModel
+                {
+                    Titulo = x.Titulo,
+                    Conteudo = x.Conteudo,
+                    Id = x.Id
+                });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
@@ -96,7 +89,7 @@ namespace SysIgreja.Controllers
         {
             mensagemBusiness.PostMensagem(model);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [HttpPost]
@@ -104,7 +97,7 @@ namespace SysIgreja.Controllers
         {
             mensagemBusiness.DeleteMensagem(Id);
 
-            return new HttpStatusCodeResult(200,"OK");
+            return new HttpStatusCodeResult(200, "OK");
         }
     }
 }

@@ -759,6 +759,7 @@
     <Compile Include="Controllers\ParticipanteController.cs" />
     <Compile Include="Controllers\CirculoController.cs" />
     <Compile Include="Controllers\AjudaController.cs" />
+    <Compile Include="Controllers\RecebimentoController.cs" />
     <Compile Include="Controllers\RelatorioController.cs" />
     <Compile Include="Controllers\ReuniaoController.cs" />
     <Compile Include="Controllers\MeioPagamentoController.cs" />

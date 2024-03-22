@@ -11,15 +11,11 @@ const options = {
   },
   body: JSON.stringify({
     grant_type: 'authorization_code',
-    code: '3e4b54707bf74995b9a616917b293412',
+    code: '505bfa3dc37d402ba3d719dac16a8117',
     redirect_uri: 'https://sysigreja.com'
   })
 };
 
-const req = new Request('https://api.pagseguro.com/oauth2/token', options)
-console.log(req.headers.values())
-req.json().then(a => console.log(a))
-fetch(req)
-  .then(response => response)
-  .then(response => console.log(response))
+fetch('https://api.pagseguro.com/oauth2/token', options)
+  .then(response => response.json().then(json => console.log(json)))
   .catch(err => console.error(err));

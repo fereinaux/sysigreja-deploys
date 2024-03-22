@@ -124,7 +124,8 @@ namespace SysIgreja.Controllers
                     x.NomeConvite,
                     x.NomePai,
                     x.FonePai,
-                    x.MercadoPagoPreferenceId
+                    x.MercadoPagoPreferenceId,
+                    x.PagSeguroPreferenceId
                 })
                 .ToList();
 

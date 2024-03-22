@@ -1337,7 +1337,8 @@ namespace SysIgreja.Controllers
                     x.NomeConvite,
                     x.NomePai,
                     x.FonePai,
-                    x.Equipes.FirstOrDefault(y => y.EventoId == eventoId).MercadoPagoPreferenceId
+                    x.Equipes.FirstOrDefault(y => y.EventoId == eventoId).MercadoPagoPreferenceId,
+                    x.Equipes.FirstOrDefault(y => y.EventoId == eventoId).PagSeguroPreferenceId
                 })
                 .ToList();
 

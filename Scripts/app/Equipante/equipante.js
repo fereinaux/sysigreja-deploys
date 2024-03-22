@@ -1050,7 +1050,9 @@ function enviar() {
         type: "GET",
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.MercadoPagoPreferenceId}`);
+            var text = data.Mensagem.Conteudo.replaceAll('${Nome Participante}', equipante.Nome)
+                .replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${equipante.MercadoPagoPreferenceId}`)
+                .replaceAll('${Link do PagSeguro}', equipante.PagSeguroPreferenceId)
             windowReference.location = GetLinkWhatsApp(equipante.Fone, text)
         }
     });

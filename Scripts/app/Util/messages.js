@@ -209,7 +209,9 @@ async function enviarMensagens(mensagemId, ids, tipo, controller) {
                 {
                     name: pessoa[`Nome${tipo}`],
                     phone: `${pessoa[`Fone${tipo}`].replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '').replaceAll('.', '').replaceAll('-', '')}@c.us`,
-                    message: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', pessoa.Nome).replaceAll('${Nome Contato}', pessoa[`Nome${tipo}`]).replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${pessoa.MercadoPagoPreferenceId}`)
+                    message: dataMsg.Mensagem.Conteudo.replaceAll('${Nome Participante}', pessoa.Nome).replaceAll('${Nome Contato}', pessoa[`Nome${tipo}`])
+                        .replaceAll('${Link do MercadoPago}', `https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${pessoa.MercadoPagoPreferenceId}`)
+                        .replaceAll('${Link do PagSeguro}', pessoa.PagSeguroPreferenceId)
                 }),
         }))))
 

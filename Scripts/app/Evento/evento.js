@@ -382,9 +382,13 @@ function PostEvento() {
                     DataEvento: moment($("#evento-data").val(), 'DD/MM/YYYY', 'pt-br').toJSON()
                 }),
             success: function () {
-                SuccessMesageOperation();
-                CarregarTabelaEvento();
-                $("#modal-eventos").modal("hide");
+                if ($("#evento-id").val() == 0) {
+                    window.location.reload()
+                } else {
+                    SuccessMesageOperation();
+                    CarregarTabelaEvento();
+                    $("#modal-eventos").modal("hide");
+                }
             }
         });
     }

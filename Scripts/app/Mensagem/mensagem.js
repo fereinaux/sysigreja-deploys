@@ -42,11 +42,19 @@
 
     $("#table-mensagem").DataTable(tableMensagemConfig);
 
-    if ($('#mensagem-configId option:selected').data('mercadopago') !== '') {
+    if (SelectedConfig.AccessTokenMercadoPago) {
         $('#mercado-pago-link').css('display', 'block')
     } else {
         $('#mercado-pago-link').css('display', 'none')
     }
+
+    if (SelectedConfig.TokenPagSeguro) {
+        $('#pagseguro-link').css('display', 'block')
+    } else {
+        $('#pagseguro-link').css('display', 'none')
+    }
+
+
 }
 
 function GetMensagem(id) {

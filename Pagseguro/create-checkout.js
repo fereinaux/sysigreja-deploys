@@ -11,6 +11,7 @@ const options = {
   body: JSON.stringify({
     reference_id: 'Teste',
     customer_modifiable: true,
+    expiration_date: "2024-03-30T03:00:00Z",
     payment_methods: [{ type: 'PIX' }, { type: 'CREDIT_CARD' }, { type: "DEBIT_CARD" }],
     items: [{ reference_id: 'teste', name: 'teste', quantity: 1, unit_amount: 500000 }],
     redirect_url: 'https://sysigreja.com',

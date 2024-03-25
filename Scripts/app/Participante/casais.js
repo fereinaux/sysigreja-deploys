@@ -141,15 +141,14 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
         ordering: false,
         columns: [
             {
-                data: "Id", name: "Id", orderable: false, width: "2%", className: 'noVis',
+                data: "Id", name: "Id", title: '<div class="checkbox i-checks-green"><label> <input type="checkbox" id="select-all" data-id="all"> <i></i></label></div>', orderable: false, width: "2%", className: 'noVis',
                 "render": function (data, type, row) {
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, false) : '';
                 }
             },
             { data: "Dupla", name: "Dupla", title: "Dupla", visible: false, className: 'noVis' },
-            { data: "Sexo", name: "Sexo", title: "Sexo", visible: false, className: 'noVis' },
             {
-                data: "Sexo", orderData: 0, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
+                data: "Sexo", name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {
                     if (data == "Masculino") {
                         icon = "fa-male";
@@ -163,7 +162,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }
             },
             {
-                data: "Nome", name: "Nome", width: "25%", createdCell: function (td, cellData, rowData, row, col) {
+                data: "Nome", name: "Nome", title:"Nome", width: "25%", createdCell: function (td, cellData, rowData, row, col) {
 
                     $(td).css('cursor', 'pointer')
                     if (td._tippy) {
@@ -189,20 +188,20 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     </div>`
                 }
             },
-            { data: "Apelido", name: "Apelido", autoWidth: true, visible: false },
-            { data: "Conjuge", title: "Cônjuge", name: "Conjuge", autoWidth: true, visible: false },
-            { data: "NomeMae", name: "NomeMae", autoWidth: true, visible: false },
-            { data: "FoneMae", name: "FoneMae", autoWidth: true, visible: false },
-            { data: "NomePai", name: "NomePai", autoWidth: true, visible: false },
-            { data: "FonePai", name: "FonePai", autoWidth: true, visible: false },
-            { data: "NomeContato", name: "NomeContato", autoWidth: true, visible: false },
-            { data: "FoneContato", name: "FoneContato", autoWidth: true, visible: false },
-            { data: "NomeConvite", name: "NomeConvite", autoWidth: true, visible: false },
-            { data: "FoneConvite", name: "FoneConvite", autoWidth: true, visible: false },
-            { data: "Idade", name: "Idade", width: "5%", },
-            { data: "Padrinho", name: "Padrinho", width: "25%" },
+            { title: "Apelido ",data: "Apelido", name: "Apelido", autoWidth: true, visible: false },
+            { title: "Cônjuge",data: "Conjuge", title: "Cônjuge", name: "Conjuge", autoWidth: true, visible: false },
+            { title: "Nome Mãe",data: "NomeMae", name: "NomeMae", autoWidth: true, visible: false },
+            { title: "Fone Mãe",data: "FoneMae", name: "FoneMae", autoWidth: true, visible: false },
+            { title: "Nome Pai",data: "NomePai", name: "NomePai", autoWidth: true, visible: false },
+            { title: "Fone Pai",data: "FonePai", name: "FonePai", autoWidth: true, visible: false },
+            { title: "Nome Contato",data: "NomeContato", name: "NomeContato", autoWidth: true, visible: false },
+            { title: "Fone Contato",data: "FoneContato", name: "FoneContato", autoWidth: true, visible: false },
+            { title: "Nome Convite",data: "NomeConvite", name: "NomeConvite", autoWidth: true, visible: false },
+            { title: "Fone Convite",data: "FoneConvite", name: "FoneConvite", autoWidth: true, visible: false },
+            { title: "Idade",data: "Idade", name: "Idade", width: "5%", },
+            { title: "Padrinho",data: "Padrinho", name: "Padrinho", width: "25%" },
             {
-                data: "Status", name: "Status", width: "5%", render: function (data, type, row) {
+                title: "Status", data: "Status", name: "Status", width: "5%", render: function (data, type, row) {
                     if (row.Checkin) {
                         data = "Presente";
                         cor = "warning";

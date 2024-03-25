@@ -67,7 +67,7 @@
 
         async function getClaims() {
             if (xhrPopulate) {
-                promiseResult = await Promise.all(xhrPopulate)
+                promiseResult = await Promise.all(xhrPopulate)           
                 Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario: promiseResult[3].Usuario }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
@@ -81,7 +81,7 @@
                 xhrPopulate = [$.ajax(
                     {
                         type: "GET",
-                        url: "/Evento/PopulateEventosByUser",
+                        url: `/Evento/PopulateEventosByUser/${localStorage.getItem('eventoId') }`,
                     }),
                 $.ajax(
                     {
@@ -100,7 +100,7 @@
                     })
                 ]
 
-                promiseResult = await Promise.all(xhrPopulate)
+                promiseResult = await Promise.all(xhrPopulate)               
                 Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario: promiseResult[3].Usuario }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]

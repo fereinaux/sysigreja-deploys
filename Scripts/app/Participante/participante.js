@@ -159,7 +159,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, false) : '';
                 }
             },
-            { data: "Sexo", name: "Sexo", title: "Sexo", visible: false, className: 'noVis' },
+            { data: "Sexo", name: "Sexo", title: "Sexo", className: 'noVis' },
             {
                 data: "Sexo", orderData: 0, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {

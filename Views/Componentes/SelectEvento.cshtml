@@ -75,28 +75,79 @@
         })
     }
 
-    getClaims().then(claims => {
+    getClaims().then(async (claims) => {
         roles = '@Model.Roles'.replaceAll(' ', '').split(',')
+        filterRole = ''
         if (roles.length == 1 && roles[0] == "Coordenador") {
-            eventos = claims.Eventos.filter(evento => evento.Coordenador == true)
+            filterRole = "Coordenador"
+           const res = await $.ajax(
+                {
+                    type: "GET",
+                    url: `/Evento/PopulateEventosByUser?role=Coordenador`,
+               })
+
+            eventos = res.Eventos
         } else if (roles.length == 1 && roles[0] == "Dirigente") {
-            eventos = claims.Eventos.filter(evento => evento.Dirigente == true)
+            filterRole = "Dirigente"
+            const res = await $.ajax(
+                {
+                    type: "GET",
+                    url: `/Evento/PopulateEventosByUser?role=Dirigente`,
+                })
+
+            eventos = res.Eventos
         } else {
-            eventos = claims.Eventos.filter(evento => roles.includes(evento.Role))
+            const res = await $.ajax(
+                {
+                    type: "GET",
+                    url: `/Evento/PopulateEventosByUser/${roles.includes(SelectedEvent.Role) ? SelectedEvent?.Id : null}`,
+                })
+
+            eventos = res.Eventos.filter(evento => roles.includes(evento.Role))
         }
 
-        if (eventos.length > 0) {
-            eventos.forEach(function (evento) {
-                $(`#@(Model.Id)`).append($(`<option ${localStorage.getItem('eventoId') == evento.Id ? 'selected' : ''} data-casal="${evento.TipoEvento == 'Casais'}" value="${evento.Id}" data-role="${evento.Role}">${evento.Titulo} ${evento.Numeracao}</option>`));
-            });
+        Claims.Eventos = eventos
 
+        if (eventos.length > 0) {
             if (eventos.length == 1 || !eventos.map(evento => evento.Id).includes(SelectedEvent.Id)) {
                 SelectedEvent = eventos[0]
                 localStorage.setItem('eventoId', SelectedEvent.Id)
             }
+
+            var newOption = new Option(`${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`, SelectedEvent.Id, true, true);
+            $("#@(Model.Id)").append(newOption)
+
             $("#@(Model.Id)").select2(
                 {
-                    dropdownParent: "@(Model.DropdownParent)" ? $("#@(Model.DropdownParent)") : null
+                    dropdownParent: "@(Model.DropdownParent)" ? $("#@(Model.DropdownParent)") : null,
+                    ajax: {
+                        delay: 750,
+                        url: '/Evento/PopulateEventosByUser',
+                        data: function (params) {
+                            var query = {
+                                Search: params.term,
+                                role: filterRole,
+                                page: params.page || 1
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public
+                            return query;
+                        },
+                        processResults: function (data,params) {
+                            params.page = params.page || 1;
+                            xhrPopulate[0] = params.page == 1 ? data : { Eventos: [...xhrPopulate[0].Eventos, ...data.Eventos]}
+                            return {
+                                pagination: {
+                                    more: data.Eventos.length > 0
+                                },
+                                results: data.Eventos.map(evento => ({
+                                    id: evento.Id,
+                                    text: `${evento.Titulo} ${evento.Numeracao}`
+                                }))
+                                 
+                            };
+                        },
+                    },
                 })
 
             handleGlobals()

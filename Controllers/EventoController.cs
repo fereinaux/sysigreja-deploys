@@ -92,7 +92,7 @@ namespace SysIgreja.Controllers
         }
 
         [HttpGet]
-        public ActionResult PopulateEventosByUser()
+        public ActionResult PopulateEventosByUser(int? id, string Search, string role, int? page)
         {
             var user = GetApplicationUser();
             var permissoes = user
@@ -134,25 +134,54 @@ namespace SysIgreja.Controllers
                     });
             });
 
-            var listEventosReturn = eventosBusiness
-                .GetEventos()
-                .OrderByDescending(x => x.DataEvento)
-                .Where(x =>
-                    eventosId.Contains(x.Id)
-                    || x.ConfiguracaoId.HasValue
-                        && configId.Contains(x.ConfiguracaoId.Value)
-                        && x.Status != StatusEnum.Deletado
-                )
+            var queryEventos = eventosBusiness
+              .GetEventos()
+              .OrderByDescending(x => x.DataEvento)
+              .Where(x =>
+                  eventosId.Contains(x.Id)
+                  || x.ConfiguracaoId.HasValue
+                      && configId.Contains(x.ConfiguracaoId.Value)
+                      && x.Status != StatusEnum.Deletado
+              );
+
+            if (!string.IsNullOrEmpty(Search))
+            {
+                queryEventos = queryEventos.Where(x => (x.Configuracao.Titulo + " " + x.Numeracao.ToString()).Contains(Search));
+            }
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                if (role == "Coordenador")
+                {
+                    queryEventos = queryEventos.Where(x => x.Equipantes.Any(y =>
+                            y.EquipanteId == user.EquipanteId
+                            && y.EventoId == x.Id
+                            && y.Tipo == TiposEquipeEnum.Coordenador
+                        ));
+                }
+
+                if (role == "Dirigente")
+                {
+                    queryEventos = queryEventos.Where(x => x.Equipantes.Any(y =>
+                            y.EquipanteId == user.EquipanteId
+                            && y.EventoId == x.Id
+                            && y.CirculoDirigentes.Any()
+                        ));
+
+                }
+            }
+
+            var listEventosReturn = queryEventos
+                .Skip(page.HasValue ? (page.Value -1) * 5 : 0 )
+                .Take(5)
                 .ToList();
 
-            var circulos = circulosBusiness
-                .GetCirculos()
-                .Select(x => new
-                {
-                    Dirigentes = x.Dirigentes.Select(y => y.EquipanteId),
-                    EventoId = x.EventoId
-                })
-                .ToList();
+
+            if (id.HasValue && queryEventos.Any(x => x.Id == id) && !listEventosReturn.Any(x => x.Id == id))
+            {
+                listEventosReturn.Add(queryEventos.FirstOrDefault(x => x.Id == id));
+            }
+
 
             List<EventoClaimModel> eventosReturn = listEventosReturn
                 .Select(x => new EventoClaimModel
@@ -178,13 +207,10 @@ namespace SysIgreja.Controllers
                         && y.EventoId == x.Id
                         && y.Tipo == TiposEquipeEnum.Coordenador
                     ),
-                    Dirigente =
-                        user.Equipante.Equipes.Any(y => y.EventoId == x.Id)
-                        && circulos.Any(y =>
-                            y.Dirigentes.Any(z =>
-                                z
-                                == user.Equipante.Equipes.FirstOrDefault(a => a.EventoId == x.Id).Id
-                            )
+                    Dirigente = x.Equipantes.Any(y =>
+                            y.EquipanteId == user.EquipanteId
+                            && y.EventoId == x.Id
+                            && y.CirculoDirigentes.Any()
                         ),
                     CorBotao = x.Configuracao.CorBotao,
                     EquipeCirculo = x.Configuracao.EquipeCirculo?.Nome,

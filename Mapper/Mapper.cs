@@ -118,6 +118,7 @@ namespace SysIgreja.Controllers
                         opt => opt.MapFrom(x => x.TipoCirculo.GetDescription())
                     );
                 cfg.CreateMap<MeioPagamento, MeioPagamentoModel>();
+                cfg.CreateMap<CentroCusto, PostCentroCustoModel>();
                 cfg.CreateMap<CentroCusto, CentroCustoModel>()
                     .ForMember(dest => dest.Tipo, opt => opt.MapFrom(x => x.Tipo.GetDescription()));
                 cfg.CreateMap<Mensagem, PostMessageModel>();

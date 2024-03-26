@@ -81,7 +81,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetCentroCusto(int Id)
         {
-            return Json(new { CentroCusto = mapper.Map<CentroCustoModel>(centroCustoBusiness.GetCentroCustoById(Id))  }, JsonRequestBehavior.AllowGet);
+            return Json(new { CentroCusto = mapper.Map<PostCentroCustoModel>(centroCustoBusiness.GetCentroCustoById(Id))  }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

@@ -5,6 +5,7 @@ using System.Linq;
 using Arquitetura.ViewModels;
 using AutoMapper;
 using Core.Models.Carona;
+using Core.Models.CentroCusto;
 using Core.Models.Circulos;
 using Core.Models.Configuracao;
 using Core.Models.Cracha;

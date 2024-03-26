@@ -2,11 +2,15 @@
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
+using AutoMapper;
 using Core.Business.Account;
 using Core.Business.CentroCusto;
 using Core.Business.Configuracao;
+using Core.Business.Etiquetas;
 using Core.Business.Eventos;
 using Core.Models.CentroCusto;
+using Core.Models.Configuracao;
+using Core.Models.Etiquetas;
 using SysIgreja.ViewModels;
 using Utils.Enums;
 using static Utils.Extensions.EnumExtensions;
@@ -18,6 +22,7 @@ namespace SysIgreja.Controllers
     {
         private readonly ICentroCustoBusiness centroCustoBusiness;
         private readonly IEventosBusiness eventosBusiness;
+        private readonly IMapper mapper;
 
         public CentroCustoController(
             ICentroCustoBusiness centroCustoBusiness,
@@ -29,6 +34,7 @@ namespace SysIgreja.Controllers
         {
             this.centroCustoBusiness = centroCustoBusiness;
             this.eventosBusiness = eventosBusiness;
+            mapper = new MapperRealidade().mapper;
         }
 
         public ActionResult Index()
@@ -75,16 +81,14 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetCentroCusto(int Id)
         {
-            var result = centroCustoBusiness.GetCentroCustoById(Id);
-
-            return Json(new { CentroCusto = result }, JsonRequestBehavior.AllowGet);
+            return Json(new { CentroCusto = mapper.Map<CentroCustoModel>(centroCustoBusiness.GetCentroCustoById(Id))  }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult PostCentroCusto(PostCentroCustoModel model)
         {
             return Json(
-                new { CentroCusto = centroCustoBusiness.PostCentroCusto(model) },
+                new { CentroCusto = mapper.Map<CentroCustoModel>(centroCustoBusiness.PostCentroCusto(model)) },
                 JsonRequestBehavior.AllowGet
             );
         }

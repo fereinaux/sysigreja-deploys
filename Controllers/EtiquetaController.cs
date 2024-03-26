@@ -1,11 +1,14 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
+using AutoMapper;
 using Core.Business.Account;
 using Core.Business.Configuracao;
 using Core.Business.Etiquetas;
 using Core.Business.Eventos;
+using Core.Models.Equipantes;
 using Core.Models.Etiquetas;
 using Utils.Enums;
 
@@ -16,6 +19,7 @@ namespace SysIgreja.Controllers
     {
         private readonly IEventosBusiness eventosBusiness;
         private readonly IEtiquetasBusiness etiquetasBusiness;
+        private readonly IMapper mapper;
 
         public EtiquetaController(
             IEventosBusiness eventosBusiness,
@@ -27,6 +31,7 @@ namespace SysIgreja.Controllers
         {
             this.eventosBusiness = eventosBusiness;
             this.etiquetasBusiness = etiquetasBusiness;
+            mapper = new MapperRealidade().mapper;
         }
 
         public ActionResult Index()
@@ -91,7 +96,7 @@ namespace SysIgreja.Controllers
         public ActionResult PostEtiqueta(PostEtiquetaModel model)
         {
             return Json(
-                new { Etiqueta = etiquetasBusiness.PostEtiqueta(model), },
+                new { Etiqueta = mapper.Map<PostEtiquetaModel>(etiquetasBusiness.PostEtiqueta(model)),  },
                 JsonRequestBehavior.AllowGet
             );
         }

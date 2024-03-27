@@ -184,7 +184,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return `<div>
   ${isCor ? `<span style="background-color:${row.Circulo.trim()}" class="dot"></span>` : (isEmoji ? titulo.match(/\p{Emoji}+/gu) : "")}
                         <span>${row.Nome}</br></span>
-                        ${row.Etiquetas.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta.Cor};color:#fff">${etiqueta.Nome}</span>`).join().replace(/,/g, '')}
+                        ${row.Etiquetas.map(etiqueta => `<span  class="badge m-r-xs" style="background-color:${etiqueta?.Cor};color:#fff">${etiqueta?.Nome}</span>`).join().replace(/,/g, '')}
                     </div>`
                 }
             },

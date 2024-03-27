@@ -25,6 +25,7 @@ using Core.Business.Quartos;
 using Core.Models.Etiquetas;
 using Core.Models.Participantes;
 using Core.Models.Quartos;
+using Data.Entities;
 using SysIgreja.ViewModels;
 using Utils.Enums;
 using Utils.Extensions;
@@ -1068,6 +1069,19 @@ namespace SysIgreja.Controllers
             );
         }
 
+
+        public class PreCasalModel
+        {
+            public Participante Pessoa { get; set; }
+            public Participante Conjuge { get; set; }
+        }
+
+        public class CasalModel
+        {
+            public Participante Homem { get; set; }
+            public Participante Mulher { get; set; }
+        }
+
         [HttpPost]
         public ActionResult GetCasaisDatatable(FilterModel model)
         {
@@ -1075,46 +1089,24 @@ namespace SysIgreja.Controllers
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR", true);
 
             var result = participantesBusiness
-                .GetParticipantesByEvento(model.EventoId.Value)
-                .AsEnumerable();
+                .GetParticipantesByEvento(model.EventoId.Value);
 
             var queryCasais = result
-                .AsEnumerable()
-                .GroupJoin(
-                    result,
-                    x => x.Nome.ToLower().Trim(),
-                    y => y.Conjuge?.ToLower().Trim(),
-                    (q1, q2) => new { q1, q2 }
-                )
-                .Select(x => new
-                {
-                    Conjuge = x.q1.Nome
-                    == new List<string>
-                    {
-                        x.q1.Nome,
-                        x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
-                    }.Min()
-                        ? x.q1
-                        : x.q2.FirstOrDefault(),
-                    Nome = x.q1.Nome
-                    == new List<string>
-                    {
-                        x.q1.Nome,
-                        x.q2.Any() ? x.q2.FirstOrDefault().Nome : ""
-                    }.Max()
-                        ? x.q1
-                        : x.q2.FirstOrDefault(),
-                })
-                .Select(x => new
-                {
-                    Homem = x.Nome.Sexo == SexoEnum.Masculino
-                        ? x.Nome
-                        : (x.Conjuge != null ? x.Conjuge : null),
-                    Mulher = x.Nome.Sexo == SexoEnum.Feminino
-                        ? x.Nome
-                        : (x.Conjuge != null ? x.Conjuge : null),
-                })
-                .Distinct();
+                  .Select(x => new PreCasalModel
+                  {
+                      Conjuge = result.FirstOrDefault(y => y.Nome == x.Conjuge),
+                      Pessoa = x
+                  })
+                  .Select(x => new CasalModel
+                  {
+                      Homem = x.Pessoa.Sexo == SexoEnum.Masculino
+                          ? x.Pessoa
+                          : (x.Conjuge != null ? x.Conjuge : null),
+                      Mulher = x.Pessoa.Sexo == SexoEnum.Feminino
+                          ? x.Pessoa
+                          : (x.Conjuge != null ? x.Conjuge : null),
+                  })
+                  .Distinct();
 
             var totalResultsCount = queryCasais.Count();
             var filteredResultsCount = totalResultsCount;
@@ -1124,14 +1116,14 @@ namespace SysIgreja.Controllers
                 model.Etiquetas.ForEach(etiqueta =>
                     queryCasais = queryCasais.Where(x =>
                         (
-                            x.Homem?.ParticipantesEtiquetas?.Any(y =>
+                            x.Homem.ParticipantesEtiquetas.Any(y =>
                                 y.EtiquetaId.ToString() == etiqueta
-                            ) ?? false
+                            )
                         )
                         || (
-                            x.Mulher?.ParticipantesEtiquetas?.Any(y =>
+                            x.Mulher.ParticipantesEtiquetas.Any(y =>
                                 y.EtiquetaId.ToString() == etiqueta
-                            ) ?? false
+                            )
                         )
                     )
                 );
@@ -1141,14 +1133,14 @@ namespace SysIgreja.Controllers
             {
                 model.NaoEtiquetas.ForEach(etiqueta =>
                     queryCasais = queryCasais.Where(x =>
-                        !x.Homem?.ParticipantesEtiquetas?.Any(y =>
+                        !x.Homem.ParticipantesEtiquetas.Any(y =>
                             y.EtiquetaId.ToString() == etiqueta
                         )
-                        ?? false
+
                             && (
-                                !x.Mulher?.ParticipantesEtiquetas?.Any(y =>
+                                !x.Mulher.ParticipantesEtiquetas.Any(y =>
                                     y.EtiquetaId.ToString() == etiqueta
-                                ) ?? false
+                                )
                             )
                     )
                 );
@@ -1175,8 +1167,8 @@ namespace SysIgreja.Controllers
                                 model.Status.Contains(x.Homem.Status)
                                 || (x.Mulher != null && model.Status.Contains(x.Mulher.Status))
                                     && (
-                                        (!x.Homem?.Checkin ?? false)
-                                        && (!x.Mulher?.Checkin ?? false)
+                                        (!x.Homem.Checkin)
+                                        && (!x.Mulher.Checkin)
                                     )
                             )
                         )
@@ -1198,11 +1190,11 @@ namespace SysIgreja.Controllers
                 {
                     queryCasais = queryCasais.Where(x =>
                         (
-                            x.Homem?.Padrinho != null
+                            x.Homem.Padrinho != null
                             && model.PadrinhoId.Contains(x.Homem.PadrinhoId.Value)
                         )
                         || (
-                            x.Mulher?.Padrinho != null
+                            x.Mulher.Padrinho != null
                             && model.PadrinhoId.Contains(x.Mulher.PadrinhoId.Value)
                         )
                     );
@@ -1213,11 +1205,11 @@ namespace SysIgreja.Controllers
             if (model.CirculoId != null)
             {
                 queryCasais = queryCasais.Where(x =>
-                    (x.Homem?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId)))
-                    ?? false
+                    (x.Homem.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
+
                         || (
-                            x.Mulher?.Circulos?.Any(y => model.CirculoId.Contains(y.CirculoId))
-                            ?? false
+                            x.Mulher.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId))
+
                         )
                 );
                 filteredResultsCount = queryCasais.Count();
@@ -1226,11 +1218,11 @@ namespace SysIgreja.Controllers
             if (model.QuartoId != null)
             {
                 queryCasais = queryCasais.Where(x =>
-                    (x.Homem?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId)))
-                    ?? false
+                    (x.Homem.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId)))
+
                         || (
-                            x.Mulher?.Quartos?.Any(y => model.QuartoId.Contains(y.QuartoId))
-                            ?? false
+                            x.Mulher.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId))
+
                         )
                 );
                 filteredResultsCount = queryCasais.Count();
@@ -1286,11 +1278,15 @@ namespace SysIgreja.Controllers
                     if (casal.Homem != null)
                     {
                         casal.Homem.Dupla = casal.Dupla;
+                        casal.Homem.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
+                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId));
                         resultCasais.Add(casal.Homem);
                     }
                     if (casal.Mulher != null)
                     {
                         casal.Mulher.Dupla = casal.Dupla;
+                        casal.Mulher.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
+                        etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId));
                         resultCasais.Add(casal.Mulher);
                     }
                 });

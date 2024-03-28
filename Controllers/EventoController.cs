@@ -177,9 +177,9 @@ namespace SysIgreja.Controllers
                 .ToList();
 
 
-            if (id.HasValue && queryEventos.Any(x => x.Id == id) && !listEventosReturn.Any(x => x.Id == id))
+            if (id.HasValue)
             {
-                listEventosReturn.Add(queryEventos.FirstOrDefault(x => x.Id == id));
+                listEventosReturn = new List<Evento> { queryEventos.FirstOrDefault(x => x.Id == id) };
             }
 
 

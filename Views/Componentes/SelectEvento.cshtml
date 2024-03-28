@@ -139,8 +139,8 @@
                             return {
                                 pagination: {
                                     more: data.Eventos.length > 0
-                                },
-                                results: data.Eventos.map(evento => ({
+                                },                                
+                                results: data.Eventos.filter(evento => roles.includes(evento.Role)).map(evento => ({
                                     id: evento.Id,
                                     text: `${evento.Titulo} ${evento.Numeracao}`
                                 }))

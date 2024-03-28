@@ -179,7 +179,7 @@ namespace SysIgreja.Controllers
 
             if (id.HasValue)
             {
-                listEventosReturn = new List<Evento> { queryEventos.FirstOrDefault(x => x.Id == id) };
+                listEventosReturn =  queryEventos.Where(x => x.Id == id).ToList() ;
             }
 
 

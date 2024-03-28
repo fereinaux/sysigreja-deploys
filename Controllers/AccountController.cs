@@ -191,7 +191,7 @@ namespace SysIgreja.Controllers
                 {
                     Id = x.Id,
                     Senha = x.Senha,
-                    EquipanteId = x.EquipanteId.Value,
+                    EquipanteId = x.EquipanteId.HasValue ? x.EquipanteId.Value : 0,
                     UserName = x.UserName,
                     Perfil = x.Claims.Any(y =>
                         y.ClaimType == ClaimTypes.Role && y.ClaimValue == "Geral"

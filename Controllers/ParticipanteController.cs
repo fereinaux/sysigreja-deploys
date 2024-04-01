@@ -1278,6 +1278,7 @@ namespace SysIgreja.Controllers
                     if (casal.Homem != null)
                     {
                         casal.Homem.Dupla = casal.Dupla;
+                        casal.Homem.Padrinho.EquipanteEvento.Equipante.Nome = equipesBusiness.GetEquipanteEvento(casal.Homem.Padrinho.EquipanteEventoId.Value).Equipante.Nome;
                         casal.Homem.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
                         etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId));
                         resultCasais.Add(casal.Homem);
@@ -1285,6 +1286,7 @@ namespace SysIgreja.Controllers
                     if (casal.Mulher != null)
                     {
                         casal.Mulher.Dupla = casal.Dupla;
+                        casal.Mulher.Padrinho.EquipanteEvento.Equipante.Nome = equipesBusiness.GetEquipanteEvento(casal.Homem.Padrinho.EquipanteEventoId.Value).Equipante.Nome;
                         casal.Mulher.ParticipantesEtiquetas.ToList().ForEach(etiqueta =>
                         etiqueta.Etiqueta = etiquetasBusiness.GetEtiquetaById(etiqueta.EtiquetaId));
                         resultCasais.Add(casal.Mulher);

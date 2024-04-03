@@ -809,6 +809,8 @@ function CarregarTabelaPagamentos(id) {
         columns: [
             { data: "FormaPagamento", name: "FormaPagamento", autoWidth: true },
             { data: "Valor", name: "Valor", autoWidth: true },
+            { data: "DataLancamento", name: "DataLancamento", autoWidth: true },
+            { data: "Origem", name: "Origem", autoWidth: true },
             {
                 data: "Id", name: "Id", orderable: false, width: "15%",
                 "render": function (data, type, row) {

@@ -159,9 +159,9 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     return (row.Status != Cancelado && row.Status != Espera) ? GetCheckBox(data, false) : '';
                 }
             },
-            { data: "Sexo", name: "Sexo", title: "Sexo", className: 'noVis' },
+            { data: "Sexo", name: "Sexo", title: "Sexo", className: 'noVis', visible: false, width: "0%" },
             {
-                data: "Sexo", orderData: 0, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
+                data: "Sexo", orderable: false, name: "Sexo", title: "Sexo", className: "text-center", width: "5%",
                 "render": function (data, type, row) {
                     var icon, cor
                     if (data == "Masculino") {
@@ -266,6 +266,7 @@ ${GetButton('Pagamentos',data, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                         }
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconWhatsApp(row.Fone)}
+                            ${GetIconTel(row.Fone)}
                             ${GetButton('EditParticipante', data, 'blue', 'fa-edit', 'Editar')}                               
                             ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}  
                             ${GetButton('openModalCracha', data, 'blue', 'fa-id-badge', 'Crachá')}

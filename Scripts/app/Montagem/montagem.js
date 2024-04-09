@@ -398,7 +398,7 @@ function checkBulkActions() {
 }
 
 
-function Opcoes(row) {
+function Opcoes(Id) {
     $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Equipante/GetEquipante/",

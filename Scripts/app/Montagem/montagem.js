@@ -462,7 +462,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             $('#equipante-obs').val(data.Equipante.Observacao)
 
             arrayData = table.data().toArray()
-            let index = arrayData.findIndex(r => r.Id == row.Id)
+            let index = arrayData.findIndex(r => r.Id == Id)
 
             $('#btn-previous').css('display', 'block')
             $('#btn-next').css('display', 'block')

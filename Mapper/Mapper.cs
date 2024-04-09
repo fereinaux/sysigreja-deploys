@@ -347,16 +347,7 @@ namespace SysIgreja.Controllers
                                     : ""
                             )
                     )
-                    .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)))
-                     .ForMember(
-                        dest => dest.Quarto,
-                        opt =>
-                            opt.MapFrom(x =>
-                                x.Equipante.Quartos.Any()
-                                    ? x.Equipante.Quartos.Select(y => y.Quarto).First(y => y.EventoId == x.EventoId).Titulo
-                                    : ""
-                            )
-                    );
+                    .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
                 cfg.CreateMap<EquipanteEvento, CrachaCasalModel>()
                     .ForMember(
                         dest => dest.Nome,

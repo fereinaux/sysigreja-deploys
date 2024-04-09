@@ -241,7 +241,7 @@ function CarregarTabelaEquipante(callbackFunction) {
     ${GetIconWhatsApp(row.Fone)}
     ${GetIconTel(row.Fone)}
     ${!isConvite ? GetButton('GetHistorico', data, 'green', 'fas fa-history', 'Histórico') : ""}
-    ${GetButton('Opcoes', JSON.stringify(row), 'cinza', 'fas fa-info-circle', 'Opções')}
+    ${GetButton('Opcoes', data, 'cinza', 'fas fa-info-circle', 'Opções')}
     ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}
     ${!isConvite ? GetButton('DeleteMembroEquipe', data, 'red', 'fa-trash', 'Excluir') : ""}
 
@@ -399,11 +399,10 @@ function checkBulkActions() {
 
 
 function Opcoes(row) {
-    equipante = row;
     $('.equipante-etiquetas').select2({ dropdownParent: $("#form-opcoes") });
     $.ajax({
         url: "/Equipante/GetEquipante/",
-        data: { Id: row.Id, eventoId: SelectedEvent.Id },
+        data: { Id, eventoId: SelectedEvent.Id },
         datatype: "json",
         type: "GET",
         contentType: 'application/json; charset=utf-8',

@@ -12,6 +12,7 @@ using Core.Business.Configuracao;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Reunioes;
+using Core.Models.Equipantes;
 using Core.Models.Equipe;
 using SysIgreja.ViewModels;
 using Utils.Enums;
@@ -273,6 +274,7 @@ namespace SysIgreja.Controllers
             json.MaxJsonLength = Int32.MaxValue;
             return json;
         }
+
 
         [HttpGet]
         public ActionResult GetEquipantesByEvento(int EventoId)

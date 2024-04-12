@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Reflection;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -25,6 +27,8 @@ using Core.Business.Reunioes;
 using Core.Models.Equipantes;
 using Core.Models.Participantes;
 using Data.Entities.Base;
+using OfficeOpenXml;
+using Thrift.Protocol;
 using Utils.Enums;
 using Utils.Extensions;
 using Utils.Services;
@@ -116,6 +120,63 @@ namespace SysIgreja.Controllers
             GetConfiguracao();
 
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetHistoricoEquipes(int EventoId)
+        {
+            Guid g = Guid.NewGuid();
+
+            var evento = eventosBusiness.GetEventoById(EventoId);
+            var list = equipantesBusiness
+                        .GetEquipantes()
+                        .Include(x => x.Equipes)
+                        .Include(x => x.Equipes.Select(y => y.Evento))
+                       .Include(x => x.Equipes.Select(y => y.Equipe))
+                        .ToList()
+                        .Select(x => new
+                        {
+                            Nome = x.Nome,
+                            Equipes = x.Equipes.Where(y => y.Evento.ConfiguracaoId == evento.ConfiguracaoId).Select(y => new
+                            {
+                                Evento = $"{evento.Configuracao?.Titulo} {y.Evento.Numeracao}",
+                                Equipe = y.Equipe?.Nome
+
+                            }).GroupBy(y => y.Evento).Select(y => new
+                            {
+                                Evento = y.Key,
+                                Equipe = y.First().Equipe
+                            }),
+                        }).Where(x => x.Equipes.Any());
+
+            var eventoesList = eventosBusiness.GetEventos().Where(x => x.ConfiguracaoId == evento.ConfiguracaoId).Select(x => x.Numeracao).ToList().Select(x => $"{evento.Configuracao?.Titulo} {x}").ToList();
+
+            using (ExcelPackage pck = new ExcelPackage())
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Planilha");
+
+                if (list.Count() > 0)
+                {
+                    var i = 2;
+                    eventoesList.ForEach(ev =>
+                    {
+                        ws.Cells[1, i].Value = ev;
+                        i++;
+                    });
+
+                    ws.Cells.LoadFromCollection(list.Select(y => y.Nome), true);
+                    ws.Cells["A1"].Value = "Nome";
+                    ws.Cells[2, 2].LoadFromArrays(list.Select((r) => r.Equipes.Select(y => y.Equipe).Cast<object>().ToArray()));
+                }
+
+                MemoryStream result = new MemoryStream();
+                pck.SaveAs(result);
+                result.Position = 0;
+
+                Session[g.ToString()] = result;
+
+                return Content(g.ToString());
+            }
         }
 
         [HttpPost]

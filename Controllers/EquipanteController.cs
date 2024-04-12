@@ -26,6 +26,7 @@ using Core.Business.Quartos;
 using Core.Business.Reunioes;
 using Core.Models.Equipantes;
 using Core.Models.Participantes;
+using CsQuery.ExtensionMethods;
 using Data.Entities.Base;
 using OfficeOpenXml;
 using Thrift.Protocol;
@@ -122,13 +123,21 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+
+        public class HistoricoItem
+        {
+            public string Nome { get; set; }
+            public List<string> Equipes { get; set; }
+        }
+
+
         [HttpGet]
         public ActionResult GetHistoricoEquipes(int EventoId)
         {
             Guid g = Guid.NewGuid();
 
             var evento = eventosBusiness.GetEventoById(EventoId);
-            var list = equipantesBusiness
+            var query = equipantesBusiness
                         .GetEquipantes()
                         .Include(x => x.Equipes)
                         .Include(x => x.Equipes.Select(y => y.Evento))
@@ -137,19 +146,34 @@ namespace SysIgreja.Controllers
                         .Select(x => new
                         {
                             Nome = x.Nome,
-                            Equipes = x.Equipes.OrderBy(y => y.Evento.DataEvento).Where(y => y.Evento.ConfiguracaoId == evento.ConfiguracaoId).Select(y => new
-                            {
-                                Evento = $"{evento.Configuracao?.Titulo} {y.Evento.Numeracao}",
-                                Equipe = y.Equipe?.Nome
-
-                            }).GroupBy(y => y.Evento).Select(y => new
-                            {
-                                Evento = y.Key,
-                                Equipe = y.First().Equipe
-                            }),
+                            Equipes = x.Equipes.OrderBy(y => y.Evento.DataEvento).Where(y => y.Evento.ConfiguracaoId == evento.ConfiguracaoId)
                         }).Where(x => x.Equipes.Any());
 
-            var eventoesList = eventosBusiness.GetEventos().Where(x => x.ConfiguracaoId == evento.ConfiguracaoId).OrderBy(x => x.DataEvento).Select(x => x.Numeracao).ToList().Select(x => $"{evento.Configuracao?.Titulo} {x}").ToList();
+            var eventoesList = eventosBusiness.GetEventos().Where(x => x.ConfiguracaoId == evento.ConfiguracaoId).OrderBy(x => x.DataEvento).Select(x => new { x.Id, x.Numeracao }).ToList().Select(x => new
+            {
+                Id = x.Id,
+                Evento = $"{evento.Configuracao?.Titulo} {x.Numeracao}"
+            }).ToList();
+
+            var list = new List<HistoricoItem>();
+
+            query.ForEach(eq =>
+            {
+
+                var equipes = new List<string>();
+
+                eventoesList.ForEach(ev =>
+                {
+                    equipes.Add(eq.Equipes.FirstOrDefault(x => x.EventoId == ev.Id)?.Equipe?.Nome); ;
+                });
+
+                list.Add(new HistoricoItem
+                {
+                    Nome = eq.Nome,
+                    Equipes = equipes
+                });
+            });
+
 
             using (ExcelPackage pck = new ExcelPackage())
             {
@@ -160,13 +184,13 @@ namespace SysIgreja.Controllers
                     var i = 2;
                     eventoesList.ForEach(ev =>
                     {
-                        ws.Cells[1, i].Value = ev;
+                        ws.Cells[1, i].Value = ev.Evento;
                         i++;
                     });
 
                     ws.Cells.LoadFromCollection(list.Select(y => y.Nome), true);
                     ws.Cells["A1"].Value = "Nome";
-                    ws.Cells[2, 2].LoadFromArrays(list.Select((r) => r.Equipes.Select(y => y.Equipe).Cast<object>().ToArray()));
+                    ws.Cells[2, 2].LoadFromArrays(list.Select((r) => r.Equipes.Select(y => y).Cast<object>().ToArray()));
                 }
 
                 MemoryStream result = new MemoryStream();

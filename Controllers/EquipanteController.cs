@@ -137,7 +137,7 @@ namespace SysIgreja.Controllers
                         .Select(x => new
                         {
                             Nome = x.Nome,
-                            Equipes = x.Equipes.Where(y => y.Evento.ConfiguracaoId == evento.ConfiguracaoId).Select(y => new
+                            Equipes = x.Equipes.OrderBy(y => y.Evento.DataEvento).Where(y => y.Evento.ConfiguracaoId == evento.ConfiguracaoId).Select(y => new
                             {
                                 Evento = $"{evento.Configuracao?.Titulo} {y.Evento.Numeracao}",
                                 Equipe = y.Equipe?.Nome
@@ -149,7 +149,7 @@ namespace SysIgreja.Controllers
                             }),
                         }).Where(x => x.Equipes.Any());
 
-            var eventoesList = eventosBusiness.GetEventos().Where(x => x.ConfiguracaoId == evento.ConfiguracaoId).Select(x => x.Numeracao).ToList().Select(x => $"{evento.Configuracao?.Titulo} {x}").ToList();
+            var eventoesList = eventosBusiness.GetEventos().Where(x => x.ConfiguracaoId == evento.ConfiguracaoId).OrderBy(x => x.DataEvento).Select(x => x.Numeracao).ToList().Select(x => $"{evento.Configuracao?.Titulo} {x}").ToList();
 
             using (ExcelPackage pck = new ExcelPackage())
             {

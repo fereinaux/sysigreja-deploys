@@ -283,7 +283,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js" integrity="sha512-LRkOtikKE2LFHPWiWh0/bfFynswxRwCZ5O7PkXTVFPcprw376xfOemiEHEOmCCmiwS6eLFUh2fb+Gqxc0waTSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+    @*<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy.umd.min.js" integrity="sha512-2TtfktSlvvPzopzBA49C+MX6sdc7ykHGbBQUTH8Vk78YpkXVD5r6vrNU+nOmhhl1MyTWdVfxXdZfyFsvBvOllw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
@@ -502,13 +503,13 @@
                 $(settings.nTable).DataTable().on('draw', function () {
                     tippy('[data-tippy-content]');
                     handleServerSidePagin(settings, api);
-                })             
+                })
             }
         });
 
         function handleServerSidePagin(settings, api) {
             if (settings.oInit.serverSide) {
-                let page = (settings._iDisplayStart / settings._iDisplayLength) 
+                let page = (settings._iDisplayStart / settings._iDisplayLength)
                 if (settings._iRecordsDisplay < ((page) * settings._iDisplayLength)) {
                     api.page(page - 1).draw()
                 }
@@ -755,11 +756,15 @@
 
 
     </script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    @*<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @*<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>*@
+    @*<script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" integrity="sha512-8Q6Y9XnTbOE+JNvjBQwJ2H8S+UV4uA6hiRykhdtIyDYZ2TprdNmWOUaKdGzOhyr4dCyk287OejbPvwl7lrfqrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" integrity="sha512-MOCpqoRoisCTwJ8vQQiciZv0qcpROCidek3GTFS6KTk2+y7munJIlKCVkFCYY+p3ErYFXCjmFjnfTTRSC1OHWQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
-    <script src="https://unpkg.com/@("@")babel/standalone/babel.min.js"></script>
+    @*<script src="https://unpkg.com/@("@")babel/standalone/babel.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.4/babel.min.js" integrity="sha512-YpL+cyxeD6yi05xXUGpdeHyf7F4LFthEdJvNFp0kGSTssHu0M7kWxVQTZ6jD7s5z5cbibg6JpleJrO2wOKd0YA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/babel" src="~/Scripts/app/Componentes/EditModal.jsx"></script>
 
     <script>

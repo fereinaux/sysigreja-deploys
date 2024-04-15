@@ -346,6 +346,14 @@ namespace SysIgreja.Controllers
                                     )
                                     : ""
                             )
+                    ).ForMember(
+                        dest => dest.Quarto,
+                        opt =>
+                            opt.MapFrom(x =>
+                                x.Equipante.Quartos.Any()
+                                    ? x.Equipante.Quartos.Where(y => y.Quarto.EventoId == x.EventoId).Select(y => y.Quarto).First().Titulo
+                                    : ""
+                            )
                     )
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
                 cfg.CreateMap<EquipanteEvento, CrachaCasalModel>()

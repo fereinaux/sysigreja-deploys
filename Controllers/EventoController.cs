@@ -475,7 +475,10 @@ namespace SysIgreja.Controllers
                 })
                 .ToList();
 
-            return Json(new { Eventos = result }, JsonRequestBehavior.AllowGet);
+            var json = Json(new { Eventos = result }, JsonRequestBehavior.AllowGet);
+
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
         }
 
         [HttpPost]

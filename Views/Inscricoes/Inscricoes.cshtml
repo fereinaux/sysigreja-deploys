@@ -48,7 +48,7 @@
                         {
                             <div class="form-group">
                                 <label for="participante-data-nascimento" class="">Data de nascimento do @ViewBag.Sujeito</label>
-                                <input type="text" class="form-control full-date required" data-max="@ViewBag.Evento.IdadeMax" data-min="@ViewBag.Evento.IdadeMin" id="participante-data-nascimento" data-idade="17" data-field="Data de nascimento" />
+                                <input type="text" class="form-control full-date required" data-max="@(ViewBag.Tipo == "Inscrições Equipe" ? ViewBag.Evento.IdadeMax: "null")" data-min="@(ViewBag.Tipo == "Inscrições Equipe" ?ViewBag.Evento.IdadeMin : "")" id="participante-data-nascimento" data-idade="17" data-field="Data de nascimento" />
                             </div>
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))

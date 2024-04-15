@@ -420,7 +420,7 @@ namespace SysIgreja.Controllers
 
             query = query.Skip(model.Start).Take(model.Length);
 
-            return Json(
+            var json = Json(
                 new
                 {
                     data = mapper.Map<IEnumerable<EventoViewModel>>(query),
@@ -429,6 +429,9 @@ namespace SysIgreja.Controllers
                 },
                 JsonRequestBehavior.AllowGet
             );
+
+            json.MaxJsonLength = Int32.MaxValue;
+            return json;
         }
 
         [HttpPost]

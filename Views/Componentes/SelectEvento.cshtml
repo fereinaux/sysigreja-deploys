@@ -103,6 +103,7 @@
                     url: `/Evento/PopulateEventosByUser/${roles.includes(SelectedEvent.Role) ? SelectedEvent?.Id : null}`,
                 })
 
+
             eventos = res.Eventos.filter(evento => roles.includes(evento.Role))
         }
 
@@ -116,7 +117,7 @@
 
             var newOption = new Option(`${SelectedEvent.Titulo} ${SelectedEvent.Numeracao}`, SelectedEvent.Id, true, true);
             $("#@(Model.Id)").append(newOption)
-
+            console.log('aaaa');
             $("#@(Model.Id)").select2(
                 {
                     dropdownParent: "@(Model.DropdownParent)" ? $("#@(Model.DropdownParent)") : null,

@@ -58,7 +58,6 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
         }
     });
     $('#equipante-status-montagem').select2({ multiple: true, maximumSelectionLength: 1, placeholder: "Pesquisar" });
-    $('#eventoid').select2()
     $('#listagem').select2({
         ajax: {
             delay: 750,

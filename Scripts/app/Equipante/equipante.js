@@ -9,7 +9,7 @@ $('.search-data').on('keyup change clear', _.debounce(function () {
         $('#table-equipantes').DataTable().column($(this).data('column')).search(this.value).draw(false)
     }
 
-}, 500))
+}, 1500))
 
 function loadSearch() {
     $('.search-data').each((i, elm) => {

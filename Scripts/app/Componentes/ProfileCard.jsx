@@ -196,78 +196,238 @@ function ProfileCard({
 
     const initials = [...(participante?.Nome?.matchAll(rgx) ?? [])] || [];
 
+    function ConfirmFoto() {
+
+        $("#main-cropper")
+            .croppie("result", {
+                type: "canvas",
+                size: { height: 750, width: 500 }
+            })
+            .then(function (resp) {
+                var dataToPost = new FormData();
+                dataToPost.set('ParticipanteId', realista.Id)
+                dataToPost.set('Arquivo', dataURLtoFile(resp, `Foto ${realista.Nome}.jpg`))
+                dataToPost.set('IsFoto', true)
+                $.ajax(
+                    {
+                        processData: false,
+                        contentType: false,
+                        type: "POST",
+                        data: dataToPost,
+                        url: "/Arquivo/PostArquivo",
+                        success: function () {
+                            $("#modal-fotos").modal("hide");
+                            functionCallback()
+
+                        }
+                    });
+            });
+    }
+
+    function toggleFoto(id) {
+        ConfirmMessage("Essa ação removerá a foto, deseja continuar?").then((result) => {
+            if (result) {
+                $.ajax(
+                    {
+                        datatype: "json",
+                        type: "POST",
+                        contentType: 'application/json; charset=utf-8',
+                        url: "/Arquivo/DeleteFotoParticipante",
+                        data: JSON.stringify(
+                            {
+                                Id: id
+                            }),
+
+                        success: function () {
+                            functionCallback()
+
+                        }
+                    });
+            }
+        }
+        )
+    }
+
+
+    function dataURLtoFile(dataurl, filename) {
+
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+
+        return new File([u8arr], filename, { type: mime })
+
+    }
+
+    function Foto(row) {
+        tippy.hideAll()
+        realista = row
+
+        var input = $(`#foto`)[0]
+
+        const file = input.files[0];
+
+
+        if (!file) {
+            return;
+        }
+
+        new Compressor(file, {
+            quality: 0.6,
+            convertSize: 1000000,
+            // The compression process is asynchronous,
+            // which means you have to access the `result` in the `success` hook function.
+            success(result) {
+
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $("#main-cropper").croppie("bind", {
+                        url: e.target.result
+                    });
+
+                };
+
+                reader.readAsDataURL(result);
+
+
+                $("#modal-fotos").modal();
+                var boundaryWidth = $("#fotocontent").width();
+
+                var boundaryHeight = boundaryWidth * 1.5;
+
+                var viewportWidth = boundaryWidth - (boundaryWidth / 100 * 25);
+
+                var viewportHeight = boundaryHeight - (boundaryHeight / 100 * 25);
+
+                $("#main-cropper").croppie({
+
+                    viewport: { width: viewportWidth, height: viewportHeight },
+                    boundary: { width: boundaryWidth, height: boundaryHeight },
+                    enableOrientation: true,
+                    showZoomer: true,
+                    enableExif: true,
+                    enableResize: false,
+
+                });
+            },
+            error(err) {
+                console.log(err.message);
+            },
+        });
+    }
+
     return (
-        <div className={styleMode}
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                width: styleMode ? "100%" : "350px",
-                padding: "10px",
-                gap: "10px",
-            }}
-        >
-            {loading ? (
-                <div className="m-lg">
-                    <div className="sk-spinner sk-spinner-chasing-dots">
-                        <div
-                            style={{
-                                backgroundColor: styleMode ? "#333" : "#fff"
-                            }}
-                            className="sk-dot1"
-                        ></div>
-                        <div
-                            style={{
-                                backgroundColor: styleMode ? "#333" : "#fff"
-                            }}
-                            className="sk-dot2"
-                        ></div>
+        <><div className="modal inmodal" id="modal-fotos" role="dialog" aria-hidden="true">
+            <div className="modal-dialog" style={{ zIndex: 99999 }}>
+        <div className="modal-content animated bounceInRight">
+            <div className="modal-body">
+                <div className="moldura-modal p-h-xs">
+
+                    <div className="row p-md">
+                        <div className="col-lg-12" id="fotocontent">
+
+                            <div id="main-cropper"></div>
+
+                        </div>
+
                     </div>
+
                 </div>
-            ) : (
-                <>
-                    <div className="profile-container">
-                        <div className="profile-card">
-                            {!showInitials ? (
-                                <div className="avatar">
-                                    <img
-                                        onError={() =>
-                                            setShowInitials(
-                                                (
-                                                    (initials.shift()?.[1] || "") +
-                                                    (initials.pop()?.[1] || "")
-                                                ).toUpperCase()
-                                            )
-                                        }
-                                        src={`/Arquivo/GetFotoByEmail?email=${participante.Email}`}
-                                    ></img>
-                                </div>
-                            ) : (
-                                <div className="without-avatar">{showInitials}</div>
-                            )}
-                            <div className="basic-info">
-                                <h4>
-                                    <i
-                                        style={{
+
+                <div className="modal-footer">
+                            <button type="button" className="btn btn-primary pull-right m-l-sm" onClick={() => ConfirmFoto()}>Confirmar</button>
+                    <button type="button" className="btn btn-white pull-right m-l-sm" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+            <div className={styleMode}
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: styleMode ? "100%" : "350px",
+                    padding: "10px",
+                    gap: "10px",
+                }}
+            >
+                {loading ? (
+                    <div className="m-lg">
+                        <div className="sk-spinner sk-spinner-chasing-dots">
+                            <div
+                                style={{
+                                    backgroundColor: styleMode ? "#333" : "#fff"
+                                }}
+                                className="sk-dot1"
+                            ></div>
+                            <div
+                                style={{
+                                    backgroundColor: styleMode ? "#333" : "#fff"
+                                }}
+                                className="sk-dot2"
+                            ></div>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <div className="profile-container">
+                            <div className="profile-card">
+                                {!showInitials ? (
+
+                                    <div className="avatar">
+                                            <img
+                                                onClick={() => toggleFoto(participante.Id)}
+                                            onError={() =>
+                                                setShowInitials(
+                                                    (
+                                                        (initials.shift()?.[1] || "") +
+                                                        (initials.pop()?.[1] || "")
+                                                    ).toUpperCase()
+                                                )
+                                            }
+                                            src={`/Arquivo/GetFotoByEmail?email=${participante.Email}`}
+                                        ></img>
+                                    </div>
+                                ) : (
+                                    <form encType="multipart/form-data" id="frm-foto" method="post" noValidate="novalidate">
+                                        <label htmlFor="foto" className="inputFile">
+
+                                            <span className="btn btn-outline without-avatar">{showInitials} </span>
+                                            <input accept="image/*" onChange={() => Foto({ Nome: participante.Nome, Id: participante.Id, Fone: participante.Fone })} style={{ display: "none" }} className="custom-file-input inputFile" id="foto" name="foto" type="file" value="" />
+                                        </label>
+                                    </form>
+                                )}
+                                <div className="basic-info">
+                                    <h4>
+                                        <i
+                                            style={{
                                                 fontSize: "15px",
                                                 color: styleMode ? "#333" : "#fff",
-                                        }}
-                                        className={`fa fa-${{ Masculino: "male", Feminino: "female" }[
-                                            participante.Sexo
-                                            ]
-                                            }`}
-                                    ></i>
-                                    {" - "}
-                                    {participante.Nome}
-                                </h4>
-                                {participante.Status && (
-                                    <div>
-                                        <span
-                                            style={{
-                                                fontSize: "11px",
                                             }}
-                                            className={`text-center label label-${{
+                                            className={`fa fa-${{ Masculino: "male", Feminino: "female" }[
+                                                participante.Sexo
+                                            ]
+                                                }`}
+                                        ></i>
+                                        {" - "}
+                                        {participante.Nome}
+                                    </h4>
+                                    {participante.Status && (
+                                        <div>
+                                            <span
+                                                style={{
+                                                    fontSize: "11px",
+                                                }}
+                                                className={`text-center label label-${{
                                                     Confirmado: "primary",
                                                     Ativo: "primary",
                                                     Pago: "primary",
@@ -277,176 +437,203 @@ function ProfileCard({
                                                     Inscrito: "success",
                                                     Espera: "default",
                                                 }[participante.Status]
-                                                }`}
-                                        >
-                                            {participante.Status}
-                                        </span>
-                                    </div>
-                                )}
+                                                    }`}
+                                            >
+                                                {participante.Status}
+                                            </span>
+                                        </div>
+                                    )}
 
-                                {participante.Endereco && (
-                                    <span className="hide-multiple">
-                                        Endereço: {participante.Endereco} - {participante.Bairro}
-                                    </span>
-                                )}
+                                    {participante.Endereco && (
+                                        <span className="hide-multiple">
+                                            Endereço: {participante.Endereco} - {participante.Bairro}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
-                            </div>
-                            {participante.Status !== "Cancelado" &&  (
+                            {participante.Status !== "Cancelado" && (
                                 <>
                                     {!styleMode &&
-                                <div className="actions">
-                                    <span
-                                        onClick={() => {
-                                            if (
-                                                window.location.pathname == "/Participante" ||
-                                                window.location.pathname == "/Equipante"
-                                            ) {
-                                                tippy.hideAll();
-                                                Pagamentos(participante.Id);
-                                            } else {
-                                                window.open(
-                                                    type == "Participante"
-                                                        ? `/Participante?Id=${participante.Id}&action=money`
-                                                        : `/Equipante?Id=${participante.Id}&action=money`
-                                                );
-                                            }
-                                        }}
-                                        className="pointer"
-                                    >
-                                        <i
-                                            className=" far fa-money-bill-alt"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </span>
-                                    <span
-                                        onClick={() => {
-                                            if (
-                                                window.location.pathname == "/Participante" ||
-                                                window.location.pathname == "/Equipante"
-                                            ) {
-                                                tippy.hideAll();
-                                                Anexos(participante.Id);
-                                            } else {
-                                                window.open(
-                                                    type == "Participante"
-                                                        ? `/Participante?Id=${participante.Id}&action=files`
-                                                        : `/Equipante?Id=${participante.Id}&action=files`
-                                                );
-                                            }
-                                        }}
-                                        style={{
-                                            position: "relative",
-                                        }}
-                                        className="has-badge pointer "
-                                        {...attrClip}
-                                    >
-                                        {" "}
-                                        <i
-                                            className="fa fa-paperclip data-counter"
-                                            aria-hidden="true"
-                                        ></i>
-                                    </span>
-                                    <a
-                                        target="_blank"
-                                        href={GetLinkWhatsApp(participante.Fone)}
-                                        className="pointer"
-                                    >
-                                        <i className="fab fa-whatsapp" aria-hidden="true"></i>
-                                    </a>
-                                    <span
-                                        onClick={() => {
-                                            if (
-                                                window.location.pathname == "/Participante" ||
-                                                window.location.pathname == "/Equipante"
-                                            ) {
-                                                tippy.hideAll();
-                                                EditParticipante(participante.Id);
-                                            } else {
-                                                window.open(
-                                                    type == "Participante"
-                                                        ? `/Participante?Id=${participante.Id}&action=edit`
-                                                        : `/Equipante?Id=${participante.Id}&action=edit`
-                                                );
-                                            }
-                                        }}
-                                        className="pointer"
-                                    >
-                                        <i className="fas fa-edit" aria-hidden="true"></i>
-                                    </span>
-                                    <span
-                                        onClick={() => {
-                                            if (
-                                                window.location.pathname == "/Participante" ||
-                                                window.location.pathname == "/Equipante"
-                                            ) {
-                                                tippy.hideAll();
-                                                Opcoes(participante.Id);
-                                            } else {
-                                                window.open(
-                                                    type == "Participante"
-                                                        ? `/Participante?Id=${participante.Id}&action=options`
-                                                        : `/Equipante?Id=${participante.Id}&action=options`
-                                                );
-                                            }
-                                        }}
-                                        className="pointer"
-                                    >
-                                        <i className="fas fa-info-circle" aria-hidden="true"></i>
-                                    </span>
-                                    <span
-                                        onClick={() => {
-                                            if (
-                                                window.location.pathname == "/Participante" ||
-                                                window.location.pathname == "/Equipante"
-                                            ) {
-                                                tippy.hideAll();
-                                                openModalCracha(participante.Id);
-                                            } else {
-                                                window.open(
-                                                    type == "Participante"
-                                                        ? `/Participante?Id=${participante.Id}&action=badge`
-                                                        : `/Equipante?Id=${participante.Id}&action=badge`
-                                                );
-                                            }
-                                        }}
-                                        className="pointer"
-                                    >
-                                        <i className="fas fa-id-badge" aria-hidden="true"></i>
-                                    </span>
-                                </div>
-                                        }
+                                        <div className="actions">
+                                            <span
+                                                onClick={() => {
+                                                    if (
+                                                        window.location.pathname == "/Participante" ||
+                                                        window.location.pathname == "/Equipante"
+                                                    ) {
+                                                        tippy.hideAll();
+                                                        Pagamentos(participante.Id);
+                                                    } else {
+                                                        window.open(
+                                                            type == "Participante"
+                                                                ? `/Participante?Id=${participante.Id}&action=money`
+                                                                : `/Equipante?Id=${participante.Id}&action=money`
+                                                        );
+                                                    }
+                                                }}
+                                                className="pointer"
+                                            >
+                                                <i
+                                                    className=" far fa-money-bill-alt"
+                                                    aria-hidden="true"
+                                                ></i>
+                                            </span>
+                                            <span
+                                                onClick={() => {
+                                                    if (
+                                                        window.location.pathname == "/Participante" ||
+                                                        window.location.pathname == "/Equipante"
+                                                    ) {
+                                                        tippy.hideAll();
+                                                        Anexos(participante.Id);
+                                                    } else {
+                                                        window.open(
+                                                            type == "Participante"
+                                                                ? `/Participante?Id=${participante.Id}&action=files`
+                                                                : `/Equipante?Id=${participante.Id}&action=files`
+                                                        );
+                                                    }
+                                                }}
+                                                style={{
+                                                    position: "relative",
+                                                }}
+                                                className="has-badge pointer "
+                                                {...attrClip}
+                                            >
+                                                {" "}
+                                                <i
+                                                    className="fa fa-paperclip data-counter"
+                                                    aria-hidden="true"
+                                                ></i>
+                                            </span>
+                                            <a
+                                                target="_blank"
+                                                href={GetLinkWhatsApp(participante.Fone)}
+                                                className="pointer"
+                                            >
+                                                <i className="fab fa-whatsapp" aria-hidden="true"></i>
+                                            </a>
+                                            <span
+                                                onClick={() => {
+                                                    if (
+                                                        window.location.pathname == "/Participante" ||
+                                                        window.location.pathname == "/Equipante"
+                                                    ) {
+                                                        tippy.hideAll();
+                                                        EditParticipante(participante.Id);
+                                                    } else {
+                                                        window.open(
+                                                            type == "Participante"
+                                                                ? `/Participante?Id=${participante.Id}&action=edit`
+                                                                : `/Equipante?Id=${participante.Id}&action=edit`
+                                                        );
+                                                    }
+                                                }}
+                                                className="pointer"
+                                            >
+                                                <i className="fas fa-edit" aria-hidden="true"></i>
+                                            </span>
+                                            <span
+                                                onClick={() => {
+                                                    if (
+                                                        window.location.pathname == "/Participante" ||
+                                                        window.location.pathname == "/Equipante"
+                                                    ) {
+                                                        tippy.hideAll();
+                                                        Opcoes(participante.Id);
+                                                    } else {
+                                                        window.open(
+                                                            type == "Participante"
+                                                                ? `/Participante?Id=${participante.Id}&action=options`
+                                                                : `/Equipante?Id=${participante.Id}&action=options`
+                                                        );
+                                                    }
+                                                }}
+                                                className="pointer"
+                                            >
+                                                <i className="fas fa-info-circle" aria-hidden="true"></i>
+                                            </span>
+                                            <span
+                                                onClick={() => {
+                                                    if (
+                                                        window.location.pathname == "/Participante" ||
+                                                        window.location.pathname == "/Equipante"
+                                                    ) {
+                                                        tippy.hideAll();
+                                                        openModalCracha(participante.Id);
+                                                    } else {
+                                                        window.open(
+                                                            type == "Participante"
+                                                                ? `/Participante?Id=${participante.Id}&action=badge`
+                                                                : `/Equipante?Id=${participante.Id}&action=badge`
+                                                        );
+                                                    }
+                                                }}
+                                                className="pointer"
+                                            >
+                                                <i className="fas fa-id-badge" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    }
 
-                                <div className="etiquetas">
-                                    {participante.Etiquetas?.map((etiqueta) => (
-                                        <span
-                                            key={`etiqueta-${etiqueta.Id}`}
-                                            className="badge"
-                                            style={{
-                                                backgroundColor: etiqueta.Cor,
-                                                color: "#fff",
-                                            }}
-                                        >
-                                            {etiqueta.Nome}
-                                        </span>
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    {participante.Status !== "Cancelado" && (
-                        <>
-                            <div className="action-handler">
-                                <div
-                                    className="aba-selector"
-                                    style={{
-                                        display: "flex",
-                                        gap: "20px",
-                                        justifyContent: "space-around",
-                                        flexWrap: "wrap",
-                                        width: "100%",
-                                    }}
-                                >
-                                    {type == "Participante" && (
+                                    <div className="etiquetas">
+                                        {participante.Etiquetas?.map((etiqueta) => (
+                                            <span
+                                                key={`etiqueta-${etiqueta.Id}`}
+                                                className="badge"
+                                                style={{
+                                                    backgroundColor: etiqueta.Cor,
+                                                    color: "#fff",
+                                                }}
+                                            >
+                                                {etiqueta.Nome}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                        {participante.Status !== "Cancelado" && (
+                            <>
+                                <div className="action-handler">
+                                    <div
+                                        className="aba-selector"
+                                        style={{
+                                            display: "flex",
+                                            gap: "20px",
+                                            justifyContent: "space-around",
+                                            flexWrap: "wrap",
+                                            width: "100%",
+                                        }}
+                                    >
+                                        {type == "Participante" && (
+                                            <strong
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContent: "start",
+                                                    textAlign: "center",
+                                                    flex: "1 1 45%",
+                                                }}
+                                                onClick={() => setAba("Círculos")}
+                                                className={`pointer ${aba === "Círculos" ? "active" : ""
+                                                    }`}
+                                            >
+                                                <i className="fas fa-user-friends" aria-hidden="true"></i>{" "}
+                                                {SelectedEvent.EquipeCirculo}
+                                                <span
+                                                    style={{
+                                                        fontWeight: 400,
+                                                    }}
+                                                >
+                                                    <span
+                                                        style={{ backgroundColor: participante.Circulo }}
+                                                        className="dot"
+                                                    ></span>{" "}
+                                                    {participante.CirculoTitulo}
+                                                </span>
+                                            </strong>
+                                        )}
                                         <strong
                                             style={{
                                                 display: "flex",
@@ -455,167 +642,142 @@ function ProfileCard({
                                                 textAlign: "center",
                                                 flex: "1 1 45%",
                                             }}
-                                            onClick={() => setAba("Círculos")}
-                                            className={`pointer ${aba === "Círculos" ? "active" : ""
-                                                }`}
+                                            onClick={() => setAba("Quartos")}
+                                            className={`pointer ${aba === "Quartos" ? "active" : ""}`}
                                         >
-                                            <i className="fas fa-user-friends" aria-hidden="true"></i>{" "}
-                                            {SelectedEvent.EquipeCirculo}
+                                            <i className="fas fa-bed" aria-hidden="true"></i> Quartos
                                             <span
                                                 style={{
                                                     fontWeight: 400,
                                                 }}
                                             >
                                                 <span
-                                                    style={{ backgroundColor: participante.Circulo }}
+                                                    style={{
+                                                        backgroundColor: {
+                                                            Masculino: "#0095ff",
+                                                            Feminino: "#ff00d4",
+                                                            Misto: "#424242",
+                                                        }[participante.QuartoSexo],
+                                                    }}
                                                     className="dot"
                                                 ></span>{" "}
-                                                {participante.CirculoTitulo}
+                                                {participante.Quarto}
                                             </span>
                                         </strong>
-                                    )}
-                                    <strong
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "start",
-                                            textAlign: "center",
-                                            flex: "1 1 45%",
-                                        }}
-                                        onClick={() => setAba("Quartos")}
-                                        className={`pointer ${aba === "Quartos" ? "active" : ""}`}
-                                    >
-                                        <i className="fas fa-bed" aria-hidden="true"></i> Quartos
-                                        <span
-                                            style={{
-                                                fontWeight: 400,
-                                            }}
-                                        >
-                                            <span
+                                        {type == "Participante" && (
+                                            <strong
                                                 style={{
-                                                    backgroundColor: {
-                                                        Masculino: "#0095ff",
-                                                        Feminino: "#ff00d4",
-                                                        Misto: "#424242",
-                                                    }[participante.QuartoSexo],
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContent: "start",
+                                                    textAlign: "center",
+                                                    flex: "1 1 45%",
                                                 }}
-                                                className="dot"
-                                            ></span>{" "}
-                                            {participante.Quarto}
-                                        </span>
-                                    </strong>
-                                    {type == "Participante" && (
-                                        <strong
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                justifyContent: "start",
-                                                textAlign: "center",
-                                                flex: "1 1 45%",
-                                            }}
-                                            onClick={() => setAba("Padrinhos")}
-                                            className={`pointer ${aba === "Padrinhos" ? "active" : ""
-                                                }`}
-                                        >
-                                            <i className="fas fa-users-cog" aria-hidden="true"></i>{" "}
-                                            Padrinhos
-                                            <span
-                                                style={{
-                                                    fontWeight: 400,
-                                                }}
+                                                onClick={() => setAba("Padrinhos")}
+                                                className={`pointer ${aba === "Padrinhos" ? "active" : ""
+                                                    }`}
                                             >
-                                                {participante.Padrinho}
-                                            </span>
-                                        </strong>
-                                    )}
-                                    {type == "Participante" && (
-                                        <strong
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                justifyContent: "start",
-                                                textAlign: "center",
-                                                flex: "1 1 45%",
-                                            }}
-                                            onClick={() => setAba("Caronas")}
-                                            className={`pointer ${aba === "Caronas" ? "active" : ""}`}
-                                        >
-                                            <i className="fas fa-car" aria-hidden="true"></i> Caronas
-                                            <span
+                                                <i className="fas fa-users-cog" aria-hidden="true"></i>{" "}
+                                                Padrinhos
+                                                <span
+                                                    style={{
+                                                        fontWeight: 400,
+                                                    }}
+                                                >
+                                                    {participante.Padrinho}
+                                                </span>
+                                            </strong>
+                                        )}
+                                        {type == "Participante" && (
+                                            <strong
                                                 style={{
-                                                    fontWeight: 400,
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContent: "start",
+                                                    textAlign: "center",
+                                                    flex: "1 1 45%",
                                                 }}
+                                                onClick={() => setAba("Caronas")}
+                                                className={`pointer ${aba === "Caronas" ? "active" : ""}`}
                                             >
-                                                {participante.Motorista}
-                                            </span>
-                                        </strong>
-                                    )}
-                                    {type == "Equipante" && (
-                                        <strong
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                justifyContent: "start",
-                                                textAlign: "center",
-                                                flex: "1 1 45%",
-                                            }}
-                                            onClick={() => setAba("Equipes")}
-                                            className={`pointer ${aba === "Equipes" ? "active" : ""}`}
-                                        >
-                                            <i className="fas fa-broom" aria-hidden="true"></i>{" "}
-                                            Equipes
-                                            <span
+                                                <i className="fas fa-car" aria-hidden="true"></i> Caronas
+                                                <span
+                                                    style={{
+                                                        fontWeight: 400,
+                                                    }}
+                                                >
+                                                    {participante.Motorista}
+                                                </span>
+                                            </strong>
+                                        )}
+                                        {type == "Equipante" && (
+                                            <strong
                                                 style={{
-                                                    fontWeight: 400,
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContent: "start",
+                                                    textAlign: "center",
+                                                    flex: "1 1 45%",
                                                 }}
+                                                onClick={() => setAba("Equipes")}
+                                                className={`pointer ${aba === "Equipes" ? "active" : ""}`}
                                             >
-                                                {participante.Equipe}
-                                            </span>
-                                        </strong>
+                                                <i className="fas fa-broom" aria-hidden="true"></i>{" "}
+                                                Equipes
+                                                <span
+                                                    style={{
+                                                        fontWeight: 400,
+                                                    }}
+                                                >
+                                                    {participante.Equipe}
+                                                </span>
+                                            </strong>
+                                        )}
+                                    </div>
+                                    {aba == "Círculos" && Circulos && Circulos.length > 0 && (
+                                        <ChangeCirculoComponent
+                                            Participante={participante}
+                                            Circulos={Circulos}
+                                            functionCallback={functionCallback}
+                                        />
+                                    )}
+                                    {aba == "Quartos" && Quartos && Quartos.length > 0 && (
+                                        <ChangeQuartoComponent
+                                            Participante={participante}
+                                            Quartos={Quartos}
+                                            functionCallback={functionCallback}
+                                            type={type}
+                                        />
+                                    )}
+                                    {aba == "Padrinhos" && Padrinhos && Padrinhos.length > 0 && (
+                                        <ChangePadrinhoComponent
+                                            Participante={participante}
+                                            Padrinhos={Padrinhos}
+                                            functionCallback={functionCallback}
+                                        />
+                                    )}
+                                    {aba == "Caronas" && Caronas && Caronas.length > 0 && (
+                                        <ChangeCaronaComponent
+                                            Participante={participante}
+                                            Caronas={Caronas}
+                                            functionCallback={functionCallback}
+                                        />
+                                    )}
+                                    {aba == "Equipes" && Equipes && Equipes.length > 0 && (
+                                        <ChangeEquipesComponent
+                                            Participante={participante}
+                                            Equipes={Equipes}
+                                            functionCallback={functionCallback}
+                                        />
                                     )}
                                 </div>
-                                {aba == "Círculos" && Circulos && Circulos.length > 0 && (
-                                    <ChangeCirculoComponent
-                                        Participante={participante}
-                                        Circulos={Circulos}
-                                        functionCallback={functionCallback}
-                                    />
-                                )}
-                                {aba == "Quartos" && Quartos && Quartos.length > 0 && (
-                                    <ChangeQuartoComponent
-                                        Participante={participante}
-                                        Quartos={Quartos}
-                                        functionCallback={functionCallback}
-                                        type={type}
-                                    />
-                                )}
-                                {aba == "Padrinhos" && Padrinhos && Padrinhos.length > 0 && (
-                                    <ChangePadrinhoComponent
-                                        Participante={participante}
-                                        Padrinhos={Padrinhos}
-                                        functionCallback={functionCallback}
-                                    />
-                                )}
-                                {aba == "Caronas" && Caronas && Caronas.length > 0 && (
-                                    <ChangeCaronaComponent
-                                        Participante={participante}
-                                        Caronas={Caronas}
-                                        functionCallback={functionCallback}
-                                    />
-                                )}
-                                {aba == "Equipes" && Equipes && Equipes.length > 0 && (
-                                    <ChangeEquipesComponent
-                                        Participante={participante}
-                                        Equipes={Equipes}
-                                        functionCallback={functionCallback}
-                                    />
-                                )}
-                            </div>
-                        </>
-                    )}
-                </>
-            )}
-        </div>
+                            </>
+                        )}
+                    </>
+                )}
+            </div>
+        </>
+      
     );
 }
 

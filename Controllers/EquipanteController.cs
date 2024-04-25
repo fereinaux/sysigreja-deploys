@@ -127,6 +127,8 @@ namespace SysIgreja.Controllers
         public class HistoricoItem
         {
             public string Nome { get; set; }
+            public string Apelido { get; set; }
+            public string Fone { get; set; }
             public List<string> Equipes { get; set; }
         }
 
@@ -146,6 +148,8 @@ namespace SysIgreja.Controllers
                         .Select(x => new
                         {
                             Nome = x.Nome,
+                            Apelido = x.Apelido,
+                            Fone = x.Fone,
                             Equipes = x.Equipes.OrderBy(y => y.Evento.DataEvento).Where(y => y.Evento.ConfiguracaoId == evento.ConfiguracaoId)
                         }).Where(x => x.Equipes.Any());
 
@@ -170,6 +174,8 @@ namespace SysIgreja.Controllers
                 list.Add(new HistoricoItem
                 {
                     Nome = eq.Nome,
+                    Apelido = eq.Apelido,
+                    Fone = eq.Fone,
                     Equipes = equipes
                 });
             });
@@ -181,16 +187,18 @@ namespace SysIgreja.Controllers
 
                 if (list.Count() > 0)
                 {
-                    var i = 2;
+                    var i = 4;
                     eventoesList.ForEach(ev =>
                     {
                         ws.Cells[1, i].Value = ev.Evento;
                         i++;
                     });
 
-                    ws.Cells.LoadFromCollection(list.Select(y => y.Nome), true);
+                    ws.Cells.LoadFromCollection(list.Select(y => new { Nome = y.Nome, Apelido = y.Apelido, Telefone = y.Fone}), true);
                     ws.Cells["A1"].Value = "Nome";
-                    ws.Cells[2, 2].LoadFromArrays(list.Select((r) => r.Equipes.Select(y => y).Cast<object>().ToArray()));
+                    ws.Cells["A2"].Value = "Apelido";
+                    ws.Cells["A3"].Value = "Telefone";
+                    ws.Cells[2, 4].LoadFromArrays(list.Select((r) => r.Equipes.Select(y => y).Cast<object>().ToArray()));
                 }
 
                 MemoryStream result = new MemoryStream();
@@ -1721,6 +1729,14 @@ namespace SysIgreja.Controllers
         public ActionResult ToggleTeste(int Id)
         {
             equipantesBusiness.ToggleTeste(Id);
+
+            return new HttpStatusCodeResult(200, "OK");
+        }
+
+        [HttpPost]
+        public ActionResult ChangeCheckin(int ParticipanteId, bool Checkin, int EventoId)
+        {
+            equipantesBusiness.ChangeCheckin(ParticipanteId, Checkin, EventoId);
 
             return new HttpStatusCodeResult(200, "OK");
         }

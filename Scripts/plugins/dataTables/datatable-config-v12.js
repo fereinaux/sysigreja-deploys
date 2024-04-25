@@ -3,7 +3,6 @@
         return parseFloat(data.replace("R$", "").replace("&nbsp;", "").replace(/\./g, "").replace(",", "."));
     },
     "num-br-asc": function (a, b) {
-        console.log(a);
         return ((a < b) ? -1 : ((a > b) ? 1 : 0));
     },
     "num-br-desc": function (a, b) {

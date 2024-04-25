@@ -1539,9 +1539,24 @@ async function applyBulk() {
                 data: JSON.stringify(
                     {
                         ParticipanteId: id,
-                        DestinoId: $("#bulk-quarto-f").val(),
                         EventoId: SelectedEvent.Id,
+                        DestinoId: $("#bulk-quarto-f").val(),
                         tipo: 0
+                    }),
+            }))
+        }
+
+        if ($("#bulk-checkin").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Equipante/ChangeCheckin/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        EventoId: SelectedEvent.Id,
+                        Checkin: $("#bulk-checkin").val()
                     }),
             }))
         }

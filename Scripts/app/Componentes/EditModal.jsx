@@ -327,7 +327,6 @@ function Modal({ id, title, fields, data, execSubmit }) {
   }
 
   function handlePergunta() {
-    console.log("PERGUNTA");
   }
   return (
     <div className="modal inmodal" id={id} role="dialog" aria-hidden="true">

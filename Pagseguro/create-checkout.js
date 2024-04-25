@@ -1,5 +1,5 @@
 const app = require('./app')
-const token = require('./token-missoesrecon')
+const token = require('./token-paes')
 
 const options = {
   method: 'POST',

@@ -1734,6 +1734,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
+        public ActionResult ChangeCheckin(int ParticipanteId, bool Checkin, int EventoId)
+        {
+            equipantesBusiness.ChangeCheckin(ParticipanteId, Checkin, EventoId);
+
+            return new HttpStatusCodeResult(200, "OK");
+        }
+
+        [HttpPost]
         public ActionResult ToggleCheckin(int Id)
         {
             equipantesBusiness.ToggleCheckin(Id);

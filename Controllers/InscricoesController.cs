@@ -904,14 +904,16 @@ namespace SysIgreja.Controllers
                 model.MercadoPagoPreferenceId = preference;
             }
 
-            if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
-            {
-                Guid g = Guid.NewGuid();
-                string PagSeguroId = g.ToString();
-                model.PagSeguroId = PagSeguroId;
-                var preference = PagSeguroService.createCheckout(PagSeguroId, evento, evento.Valor);
+            if (!(model.Id > 0)) { 
+                if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
+                {
+                    Guid g = Guid.NewGuid();
+                    string PagSeguroId = g.ToString();
+                    model.PagSeguroId = PagSeguroId;
+                    var preference = PagSeguroService.createCheckout(PagSeguroId, evento, evento.Valor);
 
-                model.PagSeguroPreferenceId = preference;
+                    model.PagSeguroPreferenceId = preference;
+                }
             }
 
             if (equipante != null)

@@ -89,7 +89,7 @@ function CarregarTabelaPresenca() {
                             title: coluna.Data, data: "Id", name: "Id", orderable: false, width: "15%",
                             "render": function (data, type, row, meta) {
                                 if (type === 'export') {
-                                    if (new Date(parseInt(/-?\d+/.exec((row.Reunioes[index].DataReuniao))[0])) < new Date) {
+                                    if (parseDate(coluna.DataReuniao) < new Date) {
 
                                         return row.Reunioes[index].Presenca ? (row.Reunioes[index].Justificada ? "!" : '√') : "X"
                                     } else {
@@ -117,6 +117,9 @@ function CarregarTabelaPresenca() {
 
 
     }
+}
+function parseDate(date) {
+    return new Date(parseInt(/-?\d+/.exec(date)[0]))
 }
 
 async function loadScreen() {

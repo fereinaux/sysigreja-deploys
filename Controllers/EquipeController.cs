@@ -176,7 +176,7 @@ namespace SysIgreja.Controllers
                     && x.Status != StatusEnum.Deletado
                 )
                 .OrderBy(x => x.DataReuniao)
-                .Select(x => new { Data = x.DataReuniao.ToString("dd/MM"), Id = x.Id })
+                .Select(x => new { Data = x.DataReuniao.ToString("dd/MM"), Id = x.Id, DataReuniao = x.DataReuniao })
                 .ToList();
 
             var result = new List<PresencaViewModel>();

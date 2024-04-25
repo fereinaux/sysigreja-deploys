@@ -1384,6 +1384,16 @@ namespace SysIgreja.Controllers
             return new HttpStatusCodeResult(200, "OK");
         }
 
+        [HttpPost]
+        public ActionResult ChangeCheckin(int ParticipanteId, bool Checkin)
+        {
+            participantesBusiness.ChangeCheckin(ParticipanteId,Checkin);
+
+            return new HttpStatusCodeResult(200, "OK");
+        }
+
+        
+
         [HttpGet]
         public ActionResult GetPadrinhos(int eventoId)
         {

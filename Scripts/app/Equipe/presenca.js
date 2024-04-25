@@ -89,7 +89,12 @@ function CarregarTabelaPresenca() {
                             title: coluna.Data, data: "Id", name: "Id", orderable: false, width: "15%",
                             "render": function (data, type, row, meta) {
                                 if (type === 'export') {
-                                    return row.Reunioes[index].Presenca ? (row.Reunioes[index].Justificada ? "!" : '√') : "X"
+                                    if (parseDate(row.Reunioes[index].DataReuniao) < new Date) {
+
+                                        return row.Reunioes[index].Presenca ? (row.Reunioes[index].Justificada ? "!" : '√') : "X"
+                                    } else {
+                                        return ""
+                                    }
                                 }
 
                                 return `<span id="${data}${coluna.Id}" onclick='handlePresenca(${JSON.stringify({ RowIndex: meta.row, ColIndex: meta.col, Id: `${data}${coluna.Id}`, EquipanteId: data, ReuniaoId: coluna.Id, ReuniaoIndex: index })})' class="i-checks-green icheckbox_square-green ${row.Reunioes[index].Justificada ? "indeterminate" : (row.Reunioes[index].Presenca ? "checked" : "")}"></span>`

@@ -2055,6 +2055,21 @@ async function applyBulk() {
             }))
         }
 
+        if ($("#bulk-checkin").val() != 999) {
+            arrPromises.push($.ajax({
+                url: "/Participante/ChangeCheckin/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        ParticipanteId: id,
+                        Checkin: $("#bulk-checkin").val()
+                    }),
+            }))
+        }
+        
+
         if ($("#bulk-carona").val() != 999) {
             arrPromises.push($.ajax({
                 url: "/Carona/ChangeCarona/",

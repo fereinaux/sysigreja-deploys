@@ -629,7 +629,7 @@ function DeleteUsuario(row) {
                                 return x.Eventos.find(y => y.EventoId == eventoId)
                             }
 
-                        }).Eventos[0].Role,
+                        }).Eventos.find(y => y.EventoId == eventoId).Role
                     }),
                 success: function (data) {
                     SuccessMesageOperation()

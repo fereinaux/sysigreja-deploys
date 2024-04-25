@@ -372,6 +372,15 @@
                             @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "equipante-eventoid-bulk", OnChange = "loadEquipesBulk", Roles = "Financeiro,Administrativo,Admin,Padrinho" })
                         </div>
 
+                        <div class="col-sm-12 p-w-md text-center">
+                            <h5>Checkin</h5>
+                            <select class="form-control" id="bulk-checkin">
+                                <option value="999">Selecione</option>
+                                <option value="true">Marcar Presença</option>
+                                <option value="false">Desmarcar Presença</option>
+                            </select>
+                        </div>
+
                         <div class="col-sm-12 p-w-md text-center quarto-m not-evento-bulk">
                             <h5>Quarto Masculino</h5>
                             <select class="form-control quarto-normal" id="bulk-quarto-m" onchange="$('#bulk-quarto-misto').val(999)">

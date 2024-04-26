@@ -74,11 +74,11 @@ namespace SysIgreja.Controllers
                 .Include(x => x.Participantes)
                 .Include(x => x.Lancamentos)
                 .Include(y => y.Equipantes)
-                .Include(y =>y.Equipantes.Select(z => z.Equipante))
+                .Include(y => y.Equipantes.Select(z => z.Equipante))
                 .Include(y => y.Equipantes.Select(z => z.Equipante.Lancamentos))
-                .Where(x => !string.IsNullOrEmpty(x.Configuracao.AccessTokenMercadoPago)
+                .Where(x => !string.IsNullOrEmpty(x.Configuracao.AccessTokenMercadoPago) && (x.Status == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.Aberto)
                  && (x.Participantes.Any(
-                     y => !string.IsNullOrEmpty(y.MercadoPagoId)
+                     y => y.Status == StatusEnum.Inscrito && !string.IsNullOrEmpty(y.MercadoPagoId)
                      && !y.Lancamentos.Any(z => z.CentroCustoId == x.Configuracao.CentroCustoInscricaoId)
                      )
                  ) || x.Equipantes.Any(
@@ -88,21 +88,21 @@ namespace SysIgreja.Controllers
 
             eventos.ForEach(ev =>
             {
-                ev.Participantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId)
+
+                foreach (Participante p in ev.Participantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId) && y.Status == StatusEnum.Inscrito
                     && !y.Lancamentos.Any(z => z.CentroCustoId == ev.Configuracao.CentroCustoInscricaoId)
-                    ).ToList().ForEach(p =>
+                    ))
+                {
+                    var result = MercadoPagoService.lookPreferences(ev.Configuracao.AccessTokenMercadoPago, p.MercadoPagoId);
+
+                    if (result.Results.Count > 0 && result.Results[0].Status == "approved")
                     {
-                        var result = MercadoPagoService.lookPreferences(ev.Configuracao.AccessTokenMercadoPago, p.MercadoPagoId);
+                        Index(p.MercadoPagoId, "");
+                    }
+                }
 
-                        if (result.Results.Count > 0 && result.Results[0].Status == "approved")
-                        {
-                            Index(p.MercadoPagoId,"");
-                        }
-                    });
-
-                ev.Equipantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId)
-                    && !y.Equipante.Lancamentos.Any(z => z.CentroCustoId == ev.Configuracao.CentroCustoTaxaId && z.EventoId == ev.Id)
-                    ).ToList().ForEach(p =>
+                foreach (EquipanteEvento p in ev.Equipantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId)
+                    && !y.Equipante.Lancamentos.Any(z => z.CentroCustoId == ev.Configuracao.CentroCustoTaxaId && z.EventoId == ev.Id)))
                     {
                         var result = MercadoPagoService.lookPreferences(ev.Configuracao.AccessTokenMercadoPago, p.MercadoPagoId);
 
@@ -110,7 +110,7 @@ namespace SysIgreja.Controllers
                         {
                             Index(p.MercadoPagoId, "");
                         }
-                    });
+                    }
             });
 
 

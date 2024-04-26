@@ -70,7 +70,13 @@ namespace SysIgreja.Controllers
         public ActionResult LookPayments()
         {
 
-            var eventos = eventosBusiness.GetEventos().Where(x => !string.IsNullOrEmpty(x.Configuracao.AccessTokenMercadoPago)
+            var eventos = eventosBusiness.GetEventos()
+                .Include(x => x.Participantes)
+                .Include(x => x.Lancamentos)
+                .Include(y => y.Equipantes)
+                .Include(y =>y.Equipantes.Select(z => z.Equipante))
+                .Include(y => y.Equipantes.Select(z => z.Equipante.Lancamentos))
+                .Where(x => !string.IsNullOrEmpty(x.Configuracao.AccessTokenMercadoPago)
                  && (x.Participantes.Any(
                      y => !string.IsNullOrEmpty(y.MercadoPagoId)
                      && !y.Lancamentos.Any(z => z.CentroCustoId == x.Configuracao.CentroCustoInscricaoId)

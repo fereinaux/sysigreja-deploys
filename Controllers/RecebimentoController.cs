@@ -15,6 +15,7 @@ using Core.Business.Newsletter;
 using Core.Business.Notificacao;
 using Core.Business.Participantes;
 using Data.Entities;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using Utils.Enums;
 using Utils.Services;
 
@@ -70,49 +71,44 @@ namespace SysIgreja.Controllers
         public ActionResult LookPayments()
         {
 
-            var eventos = eventosBusiness.GetEventos()
-                .Include(x => x.Participantes)
-                .Include(x => x.Lancamentos)
-                .Include(y => y.Equipantes)
-                .Include(y => y.Equipantes.Select(z => z.Equipante))
-                .Include(y => y.Equipantes.Select(z => z.Equipante.Lancamentos))
-                .Where(x => !string.IsNullOrEmpty(x.Configuracao.AccessTokenMercadoPago) && (x.Status == StatusEnum.Aberto || x.StatusEquipe == StatusEnum.Aberto)
-                 && (x.Participantes.Any(
-                     y => y.Status == StatusEnum.Inscrito && !string.IsNullOrEmpty(y.MercadoPagoId)
-                     && !y.Lancamentos.Any(z => z.CentroCustoId == x.Configuracao.CentroCustoInscricaoId)
-                     )
-                 ) || x.Equipantes.Any(
-                     y => !string.IsNullOrEmpty(y.MercadoPagoId)
-                     && !y.Equipante.Lancamentos.Any(z => z.CentroCustoId == x.Configuracao.CentroCustoTaxaId && z.EventoId == x.Id)
-                     )).ToList();
-
-            eventos.ForEach(ev =>
+            var accessToken = eventosBusiness.GetEventoById(2200).Configuracao.AccessTokenMercadoPago;
+            equipesBusiness.GetEquipantesEvento(2200).ToList().ForEach(a =>
             {
-
-                foreach (Participante p in ev.Participantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId) && y.Status == StatusEnum.Inscrito
-                    && !y.Lancamentos.Any(z => z.CentroCustoId == ev.Configuracao.CentroCustoInscricaoId)
-                    ))
+                var result = MercadoPagoService.lookPreferences(accessToken, a.MercadoPagoId);
+                if (result.Results.Count > 0 && result.Results[0].Status == "approved")
                 {
-                    var result = MercadoPagoService.lookPreferences(ev.Configuracao.AccessTokenMercadoPago, p.MercadoPagoId);
-
-                    if (result.Results.Count > 0 && result.Results[0].Status == "approved")
-                    {
-                        Index(p.MercadoPagoId, "");
-                    }
+                    Index(a.MercadoPagoId, "");
                 }
-
-                foreach (EquipanteEvento p in ev.Equipantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId)
-                    && !y.Equipante.Lancamentos.Any(z => z.CentroCustoId == ev.Configuracao.CentroCustoTaxaId && z.EventoId == ev.Id)))
-                    {
-                        var result = MercadoPagoService.lookPreferences(ev.Configuracao.AccessTokenMercadoPago, p.MercadoPagoId);
-
-                        if (result.Results.Count > 0 && result.Results[0].Status == "approved")
-                        {
-                            Index(p.MercadoPagoId, "");
-                        }
-                    }
             });
 
+            return new HttpStatusCodeResult(200, "OK");
+        }
+
+        public class MercadoPagoNotificationModel
+        {
+            public string type { get; set; }
+            public MercadoPagoNotificationDataModel data { get; set; }
+        }
+
+        public class MercadoPagoNotificationDataModel
+        {
+            public string id { get; set; }
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult MercadoPagoNotification(MercadoPagoNotificationModel model, int id)
+        {
+            if (model.type == "payment")
+            {
+                var result = MercadoPagoService.lookPayment(eventosBusiness.GetEventoById(id).Configuracao.AccessTokenMercadoPago, model.data.id);
+                if (result.Status == "approved")
+                {
+                    return Index(result.ExternalReference, "");
+
+                }
+            }
 
             return new HttpStatusCodeResult(200, "OK");
         }

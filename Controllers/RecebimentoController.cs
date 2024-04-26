@@ -10,6 +10,7 @@ using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
+using Core.Business.MercadoPago;
 using Core.Business.Newsletter;
 using Core.Business.Notificacao;
 using Core.Business.Participantes;
@@ -64,6 +65,50 @@ namespace SysIgreja.Controllers
             this.eventosBusiness = eventosBusiness;
             this.newsletterBusiness = newsletterBusiness;
             mapper = new MapperRealidade().mapper;
+        }
+        [AllowAnonymous]
+        public ActionResult LookPayments()
+        {
+
+            var eventos = eventosBusiness.GetEventos().Where(x => !string.IsNullOrEmpty(x.Configuracao.AccessTokenMercadoPago)
+                 && (x.Participantes.Any(
+                     y => !string.IsNullOrEmpty(y.MercadoPagoId)
+                     && !y.Lancamentos.Any(z => z.CentroCustoId == x.Configuracao.CentroCustoInscricaoId)
+                     )
+                 ) || x.Equipantes.Any(
+                     y => !string.IsNullOrEmpty(y.MercadoPagoId)
+                     && !y.Equipante.Lancamentos.Any(z => z.CentroCustoId == x.Configuracao.CentroCustoTaxaId && z.EventoId == x.Id)
+                     )).ToList();
+
+            eventos.ForEach(ev =>
+            {
+                ev.Participantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId)
+                    && !y.Lancamentos.Any(z => z.CentroCustoId == ev.Configuracao.CentroCustoInscricaoId)
+                    ).ToList().ForEach(p =>
+                    {
+                        var result = MercadoPagoService.lookPreferences(ev.Configuracao.AccessTokenMercadoPago, p.MercadoPagoId);
+
+                        if (result.Results.Count > 0 && result.Results[0].Status == "approved")
+                        {
+                            Index(p.MercadoPagoId,"");
+                        }
+                    });
+
+                ev.Equipantes.Where(y => !string.IsNullOrEmpty(y.MercadoPagoId)
+                    && !y.Equipante.Lancamentos.Any(z => z.CentroCustoId == ev.Configuracao.CentroCustoTaxaId && z.EventoId == ev.Id)
+                    ).ToList().ForEach(p =>
+                    {
+                        var result = MercadoPagoService.lookPreferences(ev.Configuracao.AccessTokenMercadoPago, p.MercadoPagoId);
+
+                        if (result.Results.Count > 0 && result.Results[0].Status == "approved")
+                        {
+                            Index(p.MercadoPagoId, "");
+                        }
+                    });
+            });
+
+
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [AllowAnonymous]

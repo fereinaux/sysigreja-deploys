@@ -11,7 +11,7 @@ const options = {
   },
   body: JSON.stringify({
     grant_type: 'authorization_code',
-    code: 'b6e8214e16d741cab033efdb1333cd27',
+    code: '4c7d47df499a4cc292fe88c1470c7150',
     redirect_uri: 'https://sysigreja.com'
   })
 };

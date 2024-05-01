@@ -92,12 +92,12 @@
 
                 @if (ViewBag.Evento.UrlExterna != null)
                 {
-                    <span onclick="window.location.href = '@ViewBag.Evento.UrlExterna'" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                    <span onclick="window.location.href = '@ViewBag.Evento.UrlExterna'" class="btn btn-juventude mt-5"> Inscreva-se</span>
                 }
                 else
                 {
 
-                    <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5"><i class="fas fa-qrcode"></i> Inscreva-se já</span>
+                    <span onclick="$('#modal-decisao').modal()" class="btn btn-juventude mt-5"> Inscreva-se</span>
                 }
 
             </div>
@@ -108,29 +108,33 @@
     <div class="modal inmodal" id="modal-decisao" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h5 style=" display: inline-block; line-height: 1; font-weight: 600; padding: 0px 2rem 0 2rem;" class="modal-title">Para qual das opções você quer se inscrever?</h5>
+                </div>
                 <div class="modal-body">
 
                     <div class="decisao" disabled="@((int)ViewBag.Evento.Status != 4)" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições'">
-                        <i class="fas fa-qrcode"></i>
+                        <i class="fas fa-users"></i>
                         <div>
-                            <p>
-                                <strong>
-                                    Quero me inscrever
-                                </strong>
+                            <p style="font-size: 18px">
+                                Quero <strong style="font-weight:900">fazer</strong> o evento
+
                             </p>
-                            <small>Você irá participar das atividades regulares do evento</small>
+                            <small style="display:inline-block">
+                                Nesta opção, você se inscreverá para participar das atividades do evento
+                            </small>
                         </div>
                     </div>
                     <div class="decisao" disabled="@((int)ViewBag.Evento.StatusEquipe != 4)" onclick="window.location.href = '/Inscricoes/Inscricoes/@ViewBag.EventoId?Tipo=Inscrições Equipe'">
 
                         <i class="fas fa-broom"></i>
                         <div>
-                            <p>
-                                <strong>
-                                    Quero ser voluntário
-                                </strong>
+                            <p style="font-size: 18px">
+
+                                Quero <strong style="font-weight:900">servir</strong> no evento
+
                             </p>
-                            <small>Você irá contribuir com a equipe de trabalho do evento</small>
+                            <small style="display:inline-block">Nesta opção, você se inscreverá para fazer parte da equipe de trabalho do evento</small>
                         </div>
                     </div>
                 </div>
@@ -148,6 +152,15 @@ else if (!String.IsNullOrEmpty(ViewBag.Evento.Conteudo))
 
 
 <style>
+
+    .show {
+        display: flex !important;
+    }
+
+    .modal-dialog {
+        margin: auto;
+    }
+
     @@media (min-width: 768px) {
         .invisible-border {
             background: #fff;
@@ -244,14 +257,14 @@ else if (!String.IsNullOrEmpty(ViewBag.Evento.Conteudo))
         .fixed-footer span {
             flex: 1 1 0;
             width: 0;
-            font-size: 1rem !important;
-            letter-spacing: 0.5px;
+            font-size: 1.5rem !important;
+            letter-spacing: 1.5px;
             font-weight: 600;
             padding: 8px 2px;
         }
 
     .btn-juventude {
-        font-size: 1rem!important;
+        font-size: 2rem!important;
         flex: 1 1 0;
         width: 0;
     }
@@ -330,6 +343,7 @@ else if (!String.IsNullOrEmpty(ViewBag.Evento.Conteudo))
 
         .decisao i {
             font-size: 30px;
+            width: 40px;
         }
 
         .decisao p {

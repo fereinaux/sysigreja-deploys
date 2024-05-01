@@ -1,5 +1,5 @@
 const app = require('./app')
-const token = require('./token-paes')
+const token = require('./token-cursilhorecon')
 
 const options = {
   method: 'POST',
@@ -11,7 +11,7 @@ const options = {
   body: JSON.stringify({
     reference_id: 'Teste',
     customer_modifiable: true,
-    expiration_date: "2024-03-30T03:00:00Z",
+    expiration_date: "2024-06-30T03:00:00Z",
     payment_methods: [{ type: 'PIX' }, { type: 'CREDIT_CARD' }, { type: "DEBIT_CARD" }],
     items: [{ reference_id: 'teste', name: 'teste', quantity: 1, unit_amount: 500000 }],
     redirect_url: 'https://sysigreja.com',

@@ -5043,7 +5043,7 @@ a.close-canvas-menu {
 
 .modal-backdrop {
     z-index: 2040 !important;
-    opacity: 0.5 !important;
+    opacity: 0.8 !important;
 }
 
 .modal {

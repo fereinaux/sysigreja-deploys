@@ -217,8 +217,16 @@
                         {
                             <div class="form-group">
 
-                                <label for="participante-congregacao" class="">Participa de qual congregação?</label>
-                                <select class="form-control required" id="participante-congregacao"  data-field="Congregação">
+                                @if (ViewBag.Configuracao.ForcarCongregacao != null || ViewBag.Configuracao.ForcarCongregacao == true)
+                                {
+                                    <label for="participante-congregacao" class="">Se inscreve por qual congregação?</label>
+                                }
+                                else
+                                {
+                                    <label for="participante-congregacao" class="">Participa de qual congregação?</label>
+
+                                }
+                                <select class="form-control required" id="participante-congregacao" data-field="Congregação">
                                     @if (ViewBag.Configuracao.ForcarCongregacao != null || ViewBag.Configuracao.ForcarCongregacao == true)
                                     {
                                         <option disabled selected value="">Selecione uma Congregação </option>

@@ -102,6 +102,12 @@
                             <select class="form-control configuracao-igrejas required" id="configuracao-igreja" multiple="multiple" style="width: 100%" data-field="Congregações Participantes">
                             </select>
                         </div>
+
+                        <div class="col-sm-12 p-w-md text-center">
+                            <div class="checkbox i-checks-green" style="margin-left:20px;text-align:left">
+                                <label style="display:block"> <input id="configuracao-forcar-congregacao" type="checkbox"> Forçar escolha de uma das congregações participantes?? <i></i></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -515,7 +521,7 @@
                                 });
                             }
                         })
-
+                        $(`#configuracao-forcar-congregacao`).iCheck(dataConfiguracao.Configuracao.ForcarCongregacao ? 'check' : "uncheck")
                         $(`.centro-custos`).html(`${dataConfiguracao.Configuracao.CentroCustos.filter(x => x.Tipo == "Receita").map(p => `<option value=${p.Id}>${p.Descricao}</option>`)}`)
                         $(`#configuracao-centrocustoinscricao`).val(dataConfiguracao.Configuracao.CentroCustoInscricaoId).select2({ ...createTagOptions, dropdownParent: $('#form-configuracao') }).off('select2:select').on('select2:select', function (e) {
                             if (e.params.data.newTag) {
@@ -978,6 +984,7 @@
                             Titulo: $("#configuracao-titulo").val(),
                             Identificador: $(`#configuracao-identificador`).val(),
                             CorBotao: $(`#configuracao-corbotao`).val(),
+                            ForcarCongregacao: $(`#configuracao-forcar-congregacao:checked`).length > 0,
                             CentroCustoInscricaoId: $(`#configuracao-centrocustoinscricao`).val(),
                             CentroCustoTaxaId: $(`#configuracao-centrocustoequipe`).val(),
                             TipoCirculoId: $(`#configuracao-tipocirculo`).val(),

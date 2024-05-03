@@ -218,14 +218,22 @@
                             <div class="form-group">
 
                                 <label for="participante-congregacao" class="">Participa de qual congregação?</label>
-                                <select class="form-control" id="participante-congregacao">
+                                <select class="form-control required" id="participante-congregacao"  data-field="Congregação">
+                                    @if (ViewBag.Configuracao.ForcarCongregacao != null || ViewBag.Configuracao.ForcarCongregacao == true)
+                                    {
+                                        <option disabled selected value="">Selecione uma Congregação </option>
+                                    }
+
                                     @foreach (var igreja in ViewBag.Igrejas)
                                     {
 
                                         <option value="@igreja.Igreja">@igreja.Igreja</option>
                                     }
-                                    <option value="Nenhuma">Nenhuma</option>
-                                    <option value="Outra">Outra</option>
+                                    @if (ViewBag.Configuracao.ForcarCongregacao == null || ViewBag.Configuracao.ForcarCongregacao == false)
+                                    {
+                                        <option value="Nenhuma">Nenhuma</option>
+                                        <option value="Outra">Outra</option>
+                                    }
                                 </select>
                             </div>
                             <div class="form-group congregacao d-none">

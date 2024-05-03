@@ -251,7 +251,8 @@ namespace SysIgreja.Controllers
                 TipoEventoId = result.TipoEvento,
                 TipoQuartoId = result.TipoQuarto,
                 Titulo = result.Titulo,
-                VincularMontagem = result.VincularMontagem
+                VincularMontagem = result.VincularMontagem,
+                ForcarCongregacao = result.ForcarCongregacao
             };
 
             return Json(new { Configuracao = config }, JsonRequestBehavior.AllowGet);

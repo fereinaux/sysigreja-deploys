@@ -205,11 +205,12 @@ function ValidateRequired(form, formResult) {
 
     $(`${form} select.required`).each(function () {
         var input = $(this);
+
         if (input.attr('multiple') == 'multiple' && input.val().length == 0) {
             formResult.IsValid = false;
             AplicarCssErro(input);
             formResult.ErrorsInput += AddErro(input.data("field"));
-        } else if (input.attr('multiple') != 'multiple' && input.val() == "") {
+        } else if (input.attr('multiple') != 'multiple' && (!input.val() || input.val() == "")) {
             formResult.IsValid = false;
             AplicarCssErro(input);
             formResult.ErrorsInput += AddErro(input.data("field"));

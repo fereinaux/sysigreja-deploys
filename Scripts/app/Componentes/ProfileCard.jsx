@@ -420,7 +420,12 @@ function ProfileCard({
                                         ></i>
                                         {" - "}
                                         {participante.Nome}
-                                    </h4>
+                                        </h4>
+                                        <div className="m-b-sm">
+                                            <span>
+                                                {participante.Idade} anos
+                                            </span>                                            
+                                        </div>
                                     {participante.Status && (
                                         <div>
                                             <span

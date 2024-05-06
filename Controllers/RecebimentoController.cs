@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -88,12 +89,39 @@ namespace SysIgreja.Controllers
         {
             public string type { get; set; }
             public MercadoPagoNotificationDataModel data { get; set; }
+     
+        }
+
+        public class PagSeguroNotificationModel
+        {
+            public List<PagSeguroCharges> charges { get; set; }
+        }
+
+        public class PagSeguroCharges
+        {
+            public string status { get; set; }
+
         }
 
         public class MercadoPagoNotificationDataModel
         {
             public string id { get; set; }
 
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult PgRecebimento(PagSeguroNotificationModel model, string payment_id)
+        {
+            if (model.charges.Any(x => x.status == "PAID"))
+            {
+              
+                    return Index("", payment_id);
+
+                
+            }
+
+            return new HttpStatusCodeResult(200, "OK");
         }
 
         [AllowAnonymous]

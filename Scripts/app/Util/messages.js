@@ -104,7 +104,7 @@ async function createGroupEquipe(name, participants, eventoId, equipeId) {
     const status_response = await handleWhatsappConnected()
 
     const result = await $.ajax({
-        url: `https://api.iecbeventos.com.br/api/${status_response.token}/create-group`,
+        url: `https://api.sysigreja.com/api/${status_response.token}/create-group`,
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',
@@ -134,7 +134,7 @@ async function createGroupCirculo(name, participants, circuloId) {
     const status_response = await handleWhatsappConnected()
 
     const result = await $.ajax({
-        url: `https://api.iecbeventos.com.br/api/${status_response.token}/create-group`,
+        url: `https://api.sysigreja.com/api/${status_response.token}/create-group`,
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',
@@ -163,7 +163,7 @@ async function addGroup(groupId, phone) {
     const status_response = await handleWhatsappConnected()
 
     await $.ajax({
-        url: `https://api.iecbeventos.com.br/api/${status_response.token}/add-participant-group`,
+        url: `https://api.sysigreja.com/api/${status_response.token}/add-participant-group`,
         datatype: "json",
         type: "POST",
         contentType: 'application/json; charset=utf-8',
@@ -201,7 +201,7 @@ async function enviarMensagens(mensagemId, ids, tipo, controller) {
 
     async function callback() {
         const pResult = await Promise.allSettled(data.Pessoas.map(pessoa => ($.ajax({
-            url: `https://api.iecbeventos.com.br/api/${status_response.token}/send-message`,
+            url: `https://api.sysigreja.com/api/${status_response.token}/send-message`,
             datatype: "json",
             type: "POST",
             contentType: 'application/json; charset=utf-8',

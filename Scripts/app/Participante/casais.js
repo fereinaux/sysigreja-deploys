@@ -1386,7 +1386,7 @@ function verificaCep(input) {
     let cep = $(input).val()
     if (cep.length == 9) {
         $.ajax({
-            url: `https://api.iecbeventos.com.br/api/cep/${cep.replaceAll('-', '')}`,
+            url: `https://api.sysigreja.com/api/cep/${cep.replaceAll('-', '')}`,
             datatype: "json",
             type: "GET",
             contentType: 'application/json; charset=utf-8', timeout: 3000,

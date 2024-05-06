@@ -224,13 +224,13 @@
 
     async function handleWhatsappConnected() {
         const token = await $.ajax({
-            url: `https://api.iecbeventos.com.br/api/${username}/SysIgrejaToken/generate-token`,
+            url: `https://api.sysigreja.com.br/api/${username}/SysIgrejaToken/generate-token`,
             datatype: "json",
             type: "POST",
         })
 
         const status_response = await $.ajax({
-            url: `https://api.iecbeventos.com.br/api/${token.full}/status-session`,
+            url: `https://api.sysigreja.com.br/api/${token.full}/status-session`,
             datatype: "json",
             type: "GET",
         })
@@ -266,7 +266,7 @@
         $('#loader-qr').css('display', 'none')
         $("#whats-qr").css('display', 'block')
 
-        const socket = io.connect('https://api.iecbeventos.com.br/');
+        const socket = io.connect('https://api.sysigreja.com.br/');
 
         socket.on('session-logged', function (session) {
             if (session.session == username) {
@@ -286,7 +286,7 @@
         $('#modal-qr').modal()
         $('#loader-qr').css('display', 'blocked')
         const start_response = await $.ajax({
-            url: `https://api.iecbeventos.com.br/api/${token}/start-session`,
+            url: `https://api.sysigreja.com.br/api/${token}/start-session`,
             data: {
                 "webhook": "",
                 "waitQrCode": true

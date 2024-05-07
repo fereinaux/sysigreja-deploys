@@ -168,7 +168,7 @@ namespace SysIgreja.Controllers
             if (arquivo != null)
             {
                 return File(
-                    imageService.ResizeImageByte(arquivo.Conteudo, 50),
+                    imageService.ResizeImageByte(arquivo.Conteudo, 250),
                     arquivo.Tipo,
                     arquivo.Nome
                 );

@@ -111,7 +111,7 @@ namespace SysIgreja.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult PgRecebimento(PagSeguroNotificationModel model, string payment_id)
+        public ActionResult Pg(PagSeguroNotificationModel model, string payment_id)
         {
             if (model.charges.Any(x => x.status == "PAID"))
             {

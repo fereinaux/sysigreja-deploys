@@ -1013,7 +1013,7 @@ namespace SysIgreja.Controllers
 
                     if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
                     {
-                        body = body.Replace("{{linkPagamento}}", $"<a href='https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${participante.MercadoPagoPreferenceId}' target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
+                        body = body.Replace("{{linkPagamento}}", $"<a href='https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id={participante.MercadoPagoPreferenceId}' target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
                     }
                     else if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
                     {
@@ -1043,7 +1043,7 @@ namespace SysIgreja.Controllers
 
                 if (!string.IsNullOrEmpty(evento.Configuracao.AccessTokenMercadoPago))
                 {
-                    body = body.Replace("{{linkPagamento}}", $"<a href='https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=${participante.MercadoPagoPreferenceId}' target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
+                    body = body.Replace("{{linkPagamento}}", $"<a href='https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id={participante.MercadoPagoPreferenceId}' target='_blank' style='color: white;text-decoration: none;background: {evento.Configuracao.CorBotao};padding: 18px;font-size: 16px;border-radius: 12px;'>Pagar agora</a>");
                 }
                 else if (!string.IsNullOrEmpty(evento.Configuracao.TokenPagSeguro))
                 {

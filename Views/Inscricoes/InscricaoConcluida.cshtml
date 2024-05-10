@@ -7,47 +7,61 @@
         text-align: center !important;
     }
 
-    .fixed-footer {
-        background: #fff;
-    }
+    @@media (max-width: 768px) {
 
-    .fixed-footer {
-        border-top: 1px solid #dde0e4;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: 0;
-        border-radius: 0;
-        z-index: 2;
-    }
-
-        .fixed-footer .info-evento {
-            gap: 5px;
-            flex-direction: row;
+        .info-evento {
+            justify-content: flex-start;
+            left: 0;
+            right: 0;
         }
 
-        .fixed-footer span {
+        .info-evento, iframe, .btn-juventude {
+            margin: 0 auto !important;
+            width: 670px !important;
+        }
+    }
+
+        .fixed-footer {
+            background: #fff;
+        }
+
+        .fixed-footer {
+            border-top: 1px solid #dde0e4;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0;
+            border-radius: 0;
+            z-index: 2;
+        }
+
+            .fixed-footer .info-evento {
+                gap: 5px;
+                flex-direction: row;
+            }
+
+            .fixed-footer span {
+                flex: 1 1 0;
+                width: 0;
+                font-size: 1.5rem !important;
+                letter-spacing: 1.5px;
+                font-weight: 600;
+                padding: 8px 2px;
+            }
+
+        .btn-juventude {
+            font-size: 2rem !important;
             flex: 1 1 0;
             width: 0;
-            font-size: 1.5rem !important;
-            letter-spacing: 1.5px;
-            font-weight: 600;
-            padding: 8px 2px;
         }
 
-    .btn-juventude {
-        font-size: 2rem !important;
-        flex: 1 1 0;
-        width: 0;
-    }
-
-    .info-evento {
-        display: flex;
-        flex-direction: column;
-        padding: 10px;
-        z-index: 1;
-    }
+        .info-evento {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            z-index: 1;
+        }
 </style>
 <div class="icon-check-evento" style="position: absolute; z-index: 1000; left: 50%; height: 82px; padding: 13px; border-radius: 50%; top: 15px; left: 50%; transform: translateX(-50%);">
     <i class="fas fa-check" style="color:#fff;font-size:60px"></i>

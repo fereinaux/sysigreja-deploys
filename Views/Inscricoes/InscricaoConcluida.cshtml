@@ -17,40 +17,36 @@
         <iframe style="border:0; width:100%" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+20)+'px';" srcdoc="<div style='padding-right:20px;padding-bottom:40px' class='note-editor note-frame'><div class='note-editing-area'><div class='note-editable'>@Html.Raw(ViewBag.MsgConclusao.Replace("\"", "'"))</div></div></div><style>.note-editor.note-airframe .note-editing-area .note-editable, .note-editor.note-frame .note-editing-area .note-editable { padding-right: 20px; } .note-editor.note-airframe, .note-editor.note-frame { border: 0 !important;} body {margin:0; font-family: ' open sans', 'Helvetica Neue' , Helvetica, Arial, sans-serif !important;} .note-editor {height: auto !important;}.note-editor.fullscreen {z-index: 2050;}.note-editor.note-frame.fullscreen {z-index: 2020;}.note-editor.note-frame .note-editing-area .note-editable {color: #676a6c;padding: 15px;}.note-editor.note-frame {border: none;}.note-editor.panel {margin-bottom: 0;} .note-editable div { max-width: 100% !important; } </style><link href='https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css' rel='stylesheet'>"></iframe>
     }
 
+
     @if (!string.IsNullOrEmpty(ViewBag.Configuracao.PublicTokenMercadoPago))
     {
-        <div id="wallet_container"></div>
+
+        <div class="fixed-footer">
+
+            <div class="info-evento">
+
+                <span onclick="window.open('https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=@ViewBag.MercadoPagoPreferenceId')" class="btn btn-juventude mt-5"> Pague agora</span>
+            </div>
+        </div>
     }
 
     @if (!string.IsNullOrEmpty(ViewBag.Configuracao.TokenPagSeguro))
     {
-        <a href="@ViewBag.PagSeguroPreferenceId" target="_blank" title="Pagar com PagSeguro" style="background-color: rgb(255, 255, 255); font-size: 13px; font-weight: 500;">
-            <img src="//assets.pagseguro.com.br/ps-integration-assets/botoes/pagamentos/180x25-pagar.gif" alt="Pague com PagSeguro - é rápido, grátis e seguro!">
-        </a>
+
+
+        <div class="fixed-footer">
+
+            <div class="info-evento">
+
+                <span onclick="window.open('@ViewBag.PagSeguroPreferenceId')" class="btn btn-juventude mt-5"> Pague agora</span>
+            </div>
+        </div>
+       
     }
 
 </div>
 
 @section Scripts {
-
-    @if (ViewBag.Configuracao.PublicTokenMercadoPago != null)
-    {
-        <script>
-        const mp = new MercadoPago("@ViewBag.Configuracao.PublicTokenMercadoPago");
-
-        window.onload = function () {
-            mp.bricks().create("wallet", "wallet_container", {
-                initialization: {
-                    preferenceId: "@ViewBag.MercadoPagoPreferenceId",
-                },
-            });
-
-        }
-
-
-
-        </script>
-    }
 
 
 }

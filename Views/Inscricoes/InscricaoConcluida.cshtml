@@ -9,7 +9,7 @@
 
     @@media (min-width: 768px) {
 
-        .info-evento, iframe, .btn-juventude {
+        .info-evento, .btn-juventude {
             margin: 0 auto !important;
             width: 670px !important;
         }
@@ -71,7 +71,7 @@
 <div class="icon-check-evento" style="position: absolute; z-index: 1000; left: 50%; height: 82px; padding: 13px; border-radius: 50%; top: 15px; left: 50%; transform: translateX(-50%);">
     <i class="fas fa-check" style="color:#fff;font-size:60px"></i>
 </div>
-<div class="middle-box inscricoes animated fadeInDown " style="display:flex;flex-direction:column;margin-top:60px;position:relative;border-radius:12px !important;padding-bottom:40px">
+<div class="middle-box inscricoes animated fadeInDown " style="display: flex; flex-direction: column; margin-top: 60px; position: relative; overflow-x: hidden; border-radius: 12px !important; padding-bottom: 40px">
 
     @if (!String.IsNullOrEmpty(ViewBag.MsgConclusao))
     {

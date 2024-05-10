@@ -942,7 +942,7 @@ namespace SysIgreja.Controllers
                             opt.MapFrom(x =>
                                 x.Equipante.Lancamentos.Any(y =>
                                     y.CentroCustoId == y.Evento.Configuracao.CentroCustoTaxaId
-                                    && y.EventoId == x.EventoId
+                                    && y.EventoId == x.EventoId && y.Status != Utils.Enums.StatusEnum.Deletado
                                 )
                             )
                     )
@@ -1137,7 +1137,7 @@ namespace SysIgreja.Controllers
                             opt.MapFrom(x =>
                                 x.Equipante.Lancamentos.Any(y =>
                                     y.CentroCustoId == y.Evento.Configuracao.CentroCustoTaxaId
-                                    && y.EventoId == x.EventoId
+                                    && y.EventoId == x.EventoId && y.Status != Utils.Enums.StatusEnum.Deletado
                                 )
                             )
                     )

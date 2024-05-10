@@ -7,19 +7,24 @@
         text-align: center !important;
     }
 
-    @@media (max-width: 768px) {
-
-        .info-evento {
-            justify-content: flex-start;
-            left: 0;
-            right: 0;
-        }
+    @@media (min-width: 768px) {
 
         .info-evento, iframe, .btn-juventude {
             margin: 0 auto !important;
             width: 670px !important;
         }
     }
+
+
+        @@media (max-width: 768px) {
+
+            .info-evento {
+                justify-content: flex-start;
+                left: 0;
+                right: 0;
+            }
+
+        }
 
         .fixed-footer {
             background: #fff;

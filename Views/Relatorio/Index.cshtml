@@ -17,7 +17,7 @@
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
             <div class="ibox-tools pull-right">
-                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "relatorio-eventoid", OnChange = "getCentroCustoRel", Roles = "Admin" })
+                @Html.Partial("~/Views/Componentes/SelectEvento.cshtml", new SysIgreja.ViewModels.SelectViewModel { Id = "relatorio-eventoid", OnChange = "getCentroCustoRel", Roles = "Admin,Financeiro" })
             </div>
         </div>
         <div class="ibox-content">

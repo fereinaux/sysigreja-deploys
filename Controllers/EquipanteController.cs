@@ -304,13 +304,13 @@ namespace SysIgreja.Controllers
                         if (model.Status.Contains("pendente"))
                         {
                             result = result.Where(x =>
-                                (!x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId))
+                                (!x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId && y.Status != StatusEnum.Deletado))
                             );
                         }
                         else if (model.Status.Contains("pago"))
                         {
                             result = result.Where(x =>
-                                (x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId))
+                                (x.Equipante.Lancamentos.Any(y => y.EventoId == x.EventoId && y.Status != StatusEnum.Deletado))
                             );
                         }
                     }

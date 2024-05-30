@@ -14,6 +14,7 @@ function CarregarTabelaParticipante(callbackFunction) {
             success: (result) => {
                 eventoId = SelectedEvent.Id
                 $("#participante-padrinhoid").html(`
+                                   <option value=0>Sem Padrinho</option>
 ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
 `)
                 $("#participante-padrinhoid").val(filtros.PadrinhoId)
@@ -29,6 +30,7 @@ ${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
             success: (result) => {
                 eventoId = SelectedEvent.Id
                 $("#participante-circuloid").html(`
+                           <option value=0>Sem ${SelectedEvent.EquipeCirculo}</option>
 ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
 `)
                 $("#participante-circuloid").val(filtros.CirculoId)
@@ -44,6 +46,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo || p.Cor}</option>`)}
             success: (result) => {
                 eventoId = SelectedEvent.Id
                 $("#participante-quartoid").html(`
+                           <option value=0>Sem Quarto</option>
 ${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
 `)
 
@@ -60,6 +63,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
             success: (result) => {
                 eventoId = SelectedEvent.Id
                 $("#participante-motoristaid").html(`
+                <option value=0>Sem Carona</option>
 ${result.data.map(p => `<option value=${p.Id}>${p.Motorista}</option>`)}
 `)
                 $("#participante-motoristaid").val(filtros.CaronaId)

@@ -979,25 +979,48 @@ namespace SysIgreja.Controllers
 
             if (model.CirculoId != null)
             {
-                result = result.Where(x =>
-                    (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
-                );
+                if (model.CirculoId.Contains(0))
+                {
+                    result = result.Where(x => !x.Circulos.Any());
+                }
+                else
+                {
+                    result = result.Where(x =>
+                      (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
+                  );
+                }
+                
                 filteredResultsCount = result.Count();
             }
 
             if (model.QuartoId != null)
             {
-                result = result.Where(x =>
-                    (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId)))
-                );
+
+                if (model.QuartoId.Contains(0))
+                {
+                    result = result.Where(x => !x.Quartos.Any());
+                }
+                else
+                {
+                    result = result.Where(x =>
+                (x.Quartos.Any(y => model.QuartoId.Contains(y.QuartoId)))
+            );
+                }
                 filteredResultsCount = result.Count();
             }
 
             if (model.CaronaId != null)
             {
-                result = result.Where(x =>
-                    (x.Caronas.Any(y => model.CaronaId.Contains(y.CaronaId)))
-                );
+                if (model.CaronaId.Contains(0))
+                {
+                    result = result.Where(x => !x.Caronas.Any());
+                }
+                else
+                {
+                    result = result.Where(x =>
+                        (x.Caronas.Any(y => model.CaronaId.Where(z => z != 0).Contains(y.CaronaId)))
+                    );
+                }
                 filteredResultsCount = result.Count();
             }
 
@@ -1230,7 +1253,7 @@ namespace SysIgreja.Controllers
 
             if (model.search != null && model.search.value != null)
             {
-      
+
                 queryCasais = queryCasais.Where(x =>
                     x.Homem != null
                         ? (
@@ -1387,12 +1410,12 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult ChangeCheckin(int ParticipanteId, bool Checkin)
         {
-            participantesBusiness.ChangeCheckin(ParticipanteId,Checkin);
+            participantesBusiness.ChangeCheckin(ParticipanteId, Checkin);
 
             return new HttpStatusCodeResult(200, "OK");
         }
 
-        
+
 
         [HttpGet]
         public ActionResult GetPadrinhos(int eventoId)

@@ -11,6 +11,7 @@ using Core.Business.Equipantes;
 using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Models.Carona;
+using Utils.Extensions;
 using Utils.Services;
 
 namespace SysIgreja.Controllers
@@ -93,6 +94,7 @@ namespace SysIgreja.Controllers
                     Participantes = x.Participantes.Select(y => new
                     {
                         Nome = UtilServices.CapitalizarNome(y.Participante.Nome),
+                        Status = y.Participante.Status,
                         Latitude = y.Participante.Latitude,
                         Longitude = y.Participante.Longitude,
                         Endereco = $"{y.Participante.Logradouro}, {y.Participante.Numero}, {y.Participante.Bairro}, {y.Participante.Cidade}",
@@ -162,6 +164,7 @@ namespace SysIgreja.Controllers
                             Nome = x.Nome,
                             Latitude = x.Latitude,
                             Longitude = x.Longitude,
+                            Status = x.Status,
                             Endereco = $"{x.Logradouro}, {x.Numero}, {x.Bairro}, {x.Cidade}",
                         })
                         .OrderBy(x => x.Nome)

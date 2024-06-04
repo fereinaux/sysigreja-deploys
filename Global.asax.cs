@@ -4,6 +4,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Data.Context;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
+using Serilog;
 using Web;
 
 namespace SysIgreja
@@ -24,6 +26,10 @@ namespace SysIgreja
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             UnityConfig.RegisterComponents();
+            var log = new LoggerConfiguration().WriteTo.File(System.Web.Hosting.HostingEnvironment.MapPath("~/bin/Logs/log.txt"))
+       .CreateLogger();
+            Serilog.Log.Logger = log;
+            Serilog.Log.Logger.Information("Hello - Application_Start"); //Works
         }
 
         protected void Application_EndRequest()

@@ -88,6 +88,7 @@ namespace SysIgreja.Controllers
         public class MercadoPagoNotificationModel
         {
             public string type { get; set; }
+            public string topic { get; set; }
             public MercadoPagoNotificationDataModel data { get; set; }
      
         }

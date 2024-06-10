@@ -93,7 +93,18 @@ async function renderCracha(data) {
     $('span.circulo-cracha').text(data.Circulo || '')
     $('span.quarto-cracha').text(data.Quarto || '')
     $('#cracha').toggleClass('moldura-modal')
-    const canvas = await html2canvas($("#cracha")[0])
+    var html_string = $("#cracha").parent().html();
+    var iframe = document.createElement('iframe');
+    document.body.appendChild(iframe);
+
+        var iframedoc = iframe.contentDocument || iframe.contentWindow.document;
+    iframedoc.body.innerHTML = html_string;
+    $(iframedoc.body).css("line-height", 1.42857143)
+    $(iframedoc.body).css("font-family", "open sans, Helvetica Neue , Helvetica")   
+    console.log(iframedoc.body);
+        const canvas = await html2canvas($(iframedoc.body).find('#cracha')[0], {
+       
+        });
     var imgData = canvas.toDataURL(
         'image/png');
 
@@ -102,6 +113,7 @@ async function renderCracha(data) {
     } else {
         doc.addImage(imgData, 'PNG', modelo.MargemVertical + (atualCol * modelo.Largura), modelo.MargemHorizontal + (atualRow * modelo.Altura), (modelo.Largura), (modelo.Altura));
     }
+    
 
     $('#cracha').toggleClass('moldura-modal')
     $('span.nome-cracha').text('{Nome}')

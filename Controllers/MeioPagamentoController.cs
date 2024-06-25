@@ -48,7 +48,13 @@ namespace SysIgreja.Controllers
         {
             var result = meioPagamentosBusiness.GetMeioPagamentoById(Id);
 
-            return Json(new { MeioPagamento = result }, JsonRequestBehavior.AllowGet);
+            return Json(new
+            {
+
+                result.Id,
+                result.Descricao,
+
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

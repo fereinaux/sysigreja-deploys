@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity.Core.Metadata.Edm;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
@@ -50,9 +51,12 @@ namespace SysIgreja.Controllers
 
             return Json(new
             {
+                MeioPagamento = new
+                {
 
-                result.Id,
-                result.Descricao,
+                    result.Id,
+                    result.Descricao,
+                }
 
             }, JsonRequestBehavior.AllowGet);
         }

@@ -704,10 +704,10 @@ namespace SysIgreja.Controllers
                         )
                         .Replace("${DataEvento}", eventoAtual.DataEvento.ToString("dd/MM/yyyy"));
                     if (
-                        !ev.Presencas.Any(x =>
-                            x.Reuniao.DataReuniao.Date == DateTime.Today.Date
-                            && x.Reuniao.Status != StatusEnum.Deletado
-                        )
+                        !ev.Presencas?.Any(x =>
+                            x.Reuniao?.DataReuniao.Date == DateTime.Today.Date
+                            && x.Reuniao?.Status != StatusEnum.Deletado
+                        ) ?? false
                     )
                     {
                         ViewBag.Reuniao = eventoAtual.Reunioes.FirstOrDefault(x =>

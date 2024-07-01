@@ -15,36 +15,17 @@
                 <div class="p-h-xs m-b-lg" id="form-inscricao">
                     <input type="hidden" name="EquipanteId" id="EquipanteId" value="0" />
                     <div class="form-group">
-                        @if (ViewBag.Tipo != null && ViewBag.Tipo.Contains("Equipe"))
-                        {
-                            <label for="participante-email-marido" class="">Telefone do <strong>homem</strong></label>
-                            <div style="position:relative">
-                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('marido')" class="fas fa-search"></i>
-                                <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do <strong>homem</strong>" />
-                            </div>
+                        <label for="participante-email-marido" class="">Digite o e-mail do <strong>homem</strong></label>
+                        <div style="position:relative">
+                            <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('marido')" class="fas fa-search"></i>
+                            <input type="email" class="form-control" name="email" id="participante-email-marido" data-field="E-mail" />
+                        </div>
 
-                            <label for="participante-email-marido" class="">Telefone da <strong>mulher</strong></label>
-                            <div style="position:relative">
-                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('esposa')" class="fas fa-search"></i>
-                                <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da <strong>mulher</strong>" />
-                            </div>
-
-                        }
-                        else
-                        {
-                            <label for="participante-email-marido" class="">Digite o e-mail do <strong>homem</strong></label>
-                            <div style="position:relative">
-                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('marido')" class="fas fa-search"></i>
-                                <input type="email" class="form-control" name="email" id="participante-email-marido" data-field="E-mail" />
-                            </div>
-
-                            <label for="participante-email-marido" class="">Digite o e-mail da <strong>mulher</strong></label>
-                            <div style="position:relative">
-                                <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('esposa')" class="fas fa-search"></i>
-                                <input type="email" class="form-control" name="email" id="participante-email-esposa" data-field="E-mail" />
-                            </div>
-
-                        }
+                        <label for="participante-email-marido" class="">Digite o e-mail da <strong>mulher</strong></label>
+                        <div style="position:relative">
+                            <i style="position: absolute; top: 10px; font-size: 16px; right: 10px; cursor: pointer;" onclick="VerificaCadastro('esposa')" class="fas fa-search"></i>
+                            <input type="email" class="form-control" name="email" id="participante-email-esposa" data-field="E-mail" />
+                        </div>
                     </div>
                     <div class="pnl-cadastro">
                         @if (ViewBag.Campos.Contains(CamposEnum.Nome.GetDescription()))
@@ -82,19 +63,7 @@
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))
                         {
-                            if (ViewBag.Tipo.Contains("Equipe"))
-                            {
-                                <div class="form-group">
-                                    <label for="participante-email" class="">Digite o e-mail do <strong>homem</strong></label>
-                                    <input type="email" class="form-control" name="email" id="participante-email-marido" data-field="E-mail do <strong>homem</strong>" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="participante-email" class="">Digite o e-mail da <strong>mulher</strong></label>
-                                    <input type="email" class="form-control" name="email" id="participante-email-esposa" data-field="E-mail da <strong>mulher</strong>" />
-                                </div>
-                            }
-                            else
-                            {
+                        
                                 <div class="form-group">
                                     <label for="participante-fone" class="">Telefone do <strong>homem</strong></label>
                                     <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do <strong>homem</strong>" />
@@ -104,7 +73,7 @@
                                     <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da <strong>mulher</strong>" />
                                 </div>
 
-                            }
+                            
 
                         }
 
@@ -559,7 +528,7 @@
                    type: "POST",
                    contentType: 'application/json; charset=utf-8',
                    data: JSON.stringify({
-                       Email: tipo == 'marido' ? ('@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone-marido`).val() : $(`#participante-email-marido`).val()) :  ('@ViewBag.Tipo'.includes('Equipe') ? $(`#participante-fone-esposa`).val() : $(`#participante-email-esposa`).val()),
+                       Email: tipo == 'marido'? $(`#participante-email-marido`).val() : $(`#participante-email-esposa`).val(),
                        Tipo: '@ViewBag.Tipo'.includes('Equipe') ? "Inscrições Equipe" : "Inscrições",
                        eventoId: @ViewBag.EventoId
                    }),

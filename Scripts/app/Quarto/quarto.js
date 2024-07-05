@@ -193,7 +193,7 @@ function headerLandscape(doc, evento, page, quarto) {
 
     doc.setFont('helvetica', "bold")
     doc.text(12, 43, "Nome");
-    doc.text(115, 43, SelectedEvent.EquipeCirculo);
+    doc.text(115, 43, SelectedEvent.EquipeCirculo ?? "");
     doc.text(165, 43, "Medicamento/Alergia");
 
     doc.line(10, 45, widthP, 45);

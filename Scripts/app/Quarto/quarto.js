@@ -217,7 +217,7 @@ function header(doc, evento, page, quarto) {
 
     doc.setFont('helvetica', "bold")
     doc.text(12, 43, "Nome");
-    doc.text(115, 43, window.location.href.includes('Quarto/Voluntarios') ? "Apelido" : SelectedEvent.EquipeCirculo);
+    doc.text(115, 43, window.location.href.includes('Quarto/Voluntarios') ? "Apelido" : SelectedEvent.EquipeCirculo ?? "");
 
     doc.line(10, 45, widthP, 45);
     doc.setFont('helvetica', "normal")

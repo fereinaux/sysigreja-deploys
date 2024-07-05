@@ -237,7 +237,9 @@ function FillDocLandscape(doc, result) {
 
         doc.text(12, height, participante.Nome);
         var splitMedicacao = doc.splitTextToSize(participante.Medicacao, 80);
-        doc.text(115, height, participante.Circulo);
+   
+        doc.text(115, height, participante.Circulo ?? "");
+        
         doc.text(165, height, splitMedicacao);
         height += 6 * splitMedicacao.length;
     });
@@ -258,7 +260,7 @@ function FillDoc(doc, result) {
         }
 
         doc.text(12, height, participante.Nome);
-        var splitMedicacao = doc.splitTextToSize(window.location.href.includes('Quarto/Voluntarios') ? participante.Apelido : participante.Circulo, 80);
+        var splitMedicacao = doc.splitTextToSize(window.location.href.includes('Quarto/Voluntarios') ? participante.Apelido : participante.Circulo?? "", 80);
         doc.text(115, height, splitMedicacao);
         height += 6 * splitMedicacao.length;
     });
@@ -555,9 +557,9 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
   <li>
     Nome
   </li>
-  <li>
-    ${SelectedEvent.EquipeCirculo}
-  </li> 
+ 
+    ${SelectedEvent.EquipeCirculo ? ` <li>${SelectedEvent.EquipeCirculo}</li>` : ""}
+   
 </ul>`,
         interactive: true,
         allowHTML: true,

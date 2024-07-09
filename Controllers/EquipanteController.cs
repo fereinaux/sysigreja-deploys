@@ -329,12 +329,24 @@ namespace SysIgreja.Controllers
                 }
             }
 
+            if (model.Foto)
+            {
             var json = Json(
-                new { data = mapper.Map<IEnumerable<CrachaModel>>(result), },
+                new { data =  mapper.Map<IEnumerable<CrachaModel>>(result) , },
                 JsonRequestBehavior.AllowGet
             );
             json.MaxJsonLength = Int32.MaxValue;
             return json;
+                
+            } else
+            {
+                var json = Json(
+    new { data = mapper.Map<IEnumerable<CrachaSemFotoModel>>(result), },
+    JsonRequestBehavior.AllowGet
+);
+                json.MaxJsonLength = Int32.MaxValue;
+                return json;
+            }
         }
 
         [HttpPost]

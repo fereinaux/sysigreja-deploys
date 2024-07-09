@@ -35,6 +35,16 @@ namespace SysIgreja.Controllers
         public string Circulo { get; set; }
     }
 
+    public class CrachaSemFotoModel
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Apelido { get; set; }
+        public string Equipe { get; set; }
+        public string Quarto { get; set; }
+        public string Circulo { get; set; }
+    }
+
     public class EventoClaimModel
     {
         public int Id { get; set; }
@@ -307,6 +317,7 @@ namespace SysIgreja.Controllers
                                 (x.Equipes.Any() ? x.Equipes.LastOrDefault().Equipe.Nome : null)
                             )
                     );
+
                 cfg.CreateMap<Equipante, CrachaCasalModel>()
                     .ForMember(
                         dest => dest.Nome,
@@ -356,6 +367,25 @@ namespace SysIgreja.Controllers
                             )
                     )
                     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
+                cfg.CreateMap<EquipanteEvento, CrachaSemFotoModel>()
+     .ForMember(
+         dest => dest.Nome,
+         opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Nome))
+     )
+     .ForMember(
+         dest => dest.Apelido,
+         opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Equipante.Apelido))
+     )
+     .ForMember(
+         dest => dest.Quarto,
+         opt =>
+             opt.MapFrom(x =>
+                 x.Equipante.Quartos.Any()
+                     ? x.Equipante.Quartos.Where(y => y.Quarto.EventoId == x.EventoId).Select(y => y.Quarto).First().Titulo
+                     : ""
+             )
+     )
+     .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => (x.Equipe.Nome)));
                 cfg.CreateMap<EquipanteEvento, CrachaCasalModel>()
                     .ForMember(
                         dest => dest.Nome,

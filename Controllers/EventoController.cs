@@ -423,7 +423,7 @@ namespace SysIgreja.Controllers
             var json = Json(
                 new
                 {
-                    data = mapper.Map<IEnumerable<EventoViewModel>>(query),
+                    data = mapper.Map<IEnumerable<EventoDatatableViewModel>>(query),
                     recordsTotal = totalResultsCount,
                     recordsFiltered = filteredResultsCount,
                 },

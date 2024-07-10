@@ -154,6 +154,27 @@ namespace SysIgreja.Controllers
                         dest => dest.ValorTaxa,
                         opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.ValorTaxa))
                     );
+                cfg.CreateMap<Evento, EventoDatatableViewModel>()
+    .ForMember(
+        dest => dest.TipoEvento,
+        opt => opt.MapFrom(x => x.Configuracao.Titulo)
+    )
+    .ForMember(
+        dest => dest.Status,
+        opt => opt.MapFrom(x => x.Status.GetDescription())
+    )
+    .ForMember(
+        dest => dest.StatusEquipe,
+        opt => opt.MapFrom(x => x.StatusEquipe.GetDescription())
+    )
+    .ForMember(
+        dest => dest.Valor,
+        opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.Valor))
+    )
+    .ForMember(
+        dest => dest.ValorTaxa,
+        opt => opt.MapFrom(x => UtilServices.DecimalToMoeda(x.ValorTaxa))
+    );
                 cfg.CreateMap<Lancamento, LancamentosViewModel>()
                     .ForMember(
                         dest => dest.CentroCusto,

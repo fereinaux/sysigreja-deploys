@@ -93,9 +93,9 @@ function CarregarTabelaCirculo() {
         {
             data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
             "render": function (data, type, row) {
-                return `${GetButton('ListarDirigentes', JSON.stringify(row), 'blue', 'fa-list-alt', `Listar Dirigentes do(a) ${SelectedEvent.EquipeCirculo}`)}
-                            ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
-                            ${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
+                return `${GetButton('ListarDirigentes', data, 'blue', 'fa-list-alt', `Listar Dirigentes do(a) ${SelectedEvent.EquipeCirculo}`)}
+                            ${GetButton('PrintCirculo', data, 'green', 'fa-print', 'Imprimir')}  
+                            ${GetButton('EditCirculo',data, 'blue', 'fa-edit', 'Editar')}                            
                             ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}
                             ${GetButton('EsvaziarCirculo', data, 'red', 'fas fa-ban', 'Esvaziar')}`;
             }
@@ -254,11 +254,11 @@ $(document).off('ready-ajax').on('ready-ajax', () => {
     loadCirculo()
 });
 
-function PrintCirculo(row) {
+function PrintCirculo(id) {
 
     const ajaxPrint = (type) => $.ajax({
         url: '/Participante/GetParticipantesByCirculo',
-        data: { CirculoId: row.Id },
+        data: { CirculoId: id },
         datatype: "json",
         type: "GET",
         success: (result) => {
@@ -474,8 +474,8 @@ function GetCirculo(id) {
     }
 }
 
-function EditCirculo(row) {
-    GetCirculo(row.Id)
+function EditCirculo(id) {
+    GetCirculo(id)
     $("#modal-circulo").modal();
 }
 
@@ -850,10 +850,9 @@ $("#modal-dirigentes").on('hidden.bs.modal', function () {
     CarregarTabelaCirculo();
 });
 
-function ListarDirigentes(row) {
+function ListarDirigentes(id) {
     $("#circulo-dirigentes").val("Pesquisar").trigger("chosen:updated");
-    circuloId = row.Id
-    CarregarTabelaDirigentes(circuloId);
+    CarregarTabelaDirigentes(id);
 
     $("#modal-dirigentes").modal();
 }

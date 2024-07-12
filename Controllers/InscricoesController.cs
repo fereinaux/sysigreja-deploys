@@ -873,11 +873,11 @@ namespace SysIgreja.Controllers
 
         public ActionResult InscricoesEncerradas(int Id)
         {
-            ViewBag.Title = "Inscrições Encerradas";
             ViewBag.Login = configuracaoBusiness.GetLogin();
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
             var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
+            ViewBag.Title = evento.Status == StatusEnum.Encerrado ? "Inscrições Encerradas" : "Inscrições em Breve";
             ViewBag.Encerradas = (evento.Status == StatusEnum.Encerrado ? "estão encerradas." : "serão abertas em breve.");
             ViewBag.EventoId = evento.Id;
             return View();

@@ -878,6 +878,7 @@ namespace SysIgreja.Controllers
             var evento = eventosBusiness.GetEventos().FirstOrDefault(x => x.Id == Id);
             var config = configuracaoBusiness.GetConfiguracao(evento.ConfiguracaoId);
             ViewBag.Configuracao = config;
+            ViewBag.Encerradas = (evento.Status == StatusEnum.Encerrado ? "estão encerradas." : "serão abertas em breve.");
             ViewBag.EventoId = evento.Id;
             return View();
         }

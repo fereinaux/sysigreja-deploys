@@ -851,6 +851,7 @@ $("#modal-dirigentes").on('hidden.bs.modal', function () {
 });
 
 function ListarDirigentes(id) {
+    circuloId = id;
     $("#circulo-dirigentes").val("Pesquisar").trigger("chosen:updated");
     CarregarTabelaDirigentes(id);
 

@@ -601,7 +601,7 @@ function GetEquipante() {
                     $('.btn-cancelarcheckin').removeClass('d-none');
                     $('.btn-checkin').addClass('d-none');
                 } else {
-                    $('.status').text(data.Equipante.hasOferta ? "Confirmado" : "Inscrito");
+                    $('.status').text(data.Equipante?.hasOferta ? "Confirmado" : "Inscrito");
                     $('.btn-cancelarcheckin').addClass('d-none');
                     $('.btn-checkin').removeClass('d-none');
                 }

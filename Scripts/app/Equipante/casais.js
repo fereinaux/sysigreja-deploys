@@ -330,15 +330,19 @@ function selectAll() {
     $('.campos-excel').attr('checked', selected)
 }
 
-$('body').on('DOMNodeInserted', '.swal-overlay', function () {
-    tippy('.btn-export', {
-        content: `Exporta os campos selecionados`,
-        interactive: true,
-        allowHTML: true,
-        zIndex: 10005,
-        trigger: 'mouseenter'
-    });
+
+document.addEventListener('animationstart', function (event) {
+    if (event.animationName == 'widget_inserted') {
+        tippy('.btn-export', {
+            content: `Exporta os campos selecionados`,
+            interactive: true,
+            allowHTML: true,
+            zIndex: 10005,
+            trigger: 'mouseenter'
+        });
+    }
 });
+
 
 
 function Anexos(id) {

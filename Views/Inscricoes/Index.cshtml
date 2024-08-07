@@ -882,19 +882,21 @@
 //        });
 //    }
 
-    $('body').on('DOMNodeInserted', '.div-calendar', function () {
-        var element = $(this)
-        element.parent().parent().css('cursor', 'pointer')
-        element.parent().parent().css('background-color', 'transparent')
-        element.parent().parent().css('border-color', 'transparent')
+    document.addEventListener('animationstart', function (event) {
+        if (event.animationName == 'calendar') {
+            var element = $(this)
+            element.parent().parent().css('cursor', 'pointer')
+            element.parent().parent().css('background-color', 'transparent')
+            element.parent().parent().css('border-color', 'transparent')
 
 
-        element.parent().parent().click(function () {
-            window.open($(this).find('.div-calendar').data('url'),"_blank")
+            element.parent().parent().click(function () {
+                window.open($(this).find('.div-calendar').data('url'), "_blank")
 
-        })
+            })
 
-    });
+        }
+    })
 
     $(document).ready(() => {
         document.querySelector('title').innerHTML = decodeURI('@ViewBag.Configuracao.Titulo | @ViewBag.Title')

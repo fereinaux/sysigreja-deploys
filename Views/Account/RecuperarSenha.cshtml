@@ -195,30 +195,36 @@
 
     $(document).ready(() => {
 
-        $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
 
-            $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
-    max-height: 150px;
-    padding: 15px;" src="data:image/png;base64,@ViewBag.Configuracao.Logo">`)
 
+        document.addEventListener('animationstart', function (event) {
+            if (event.animationName == 'title') {
+                $('.swal-modal').css('background', '@ViewBag.Configuracao.CorBotao')
+                $('.swal-modal').css('color', 'white')
+                $('.swal-title').css('color', 'white')
+
+
+                $('.swal-modal').css('background', '@ViewBag.Configuracao.CorBotao')
+                $('.swal-modal').css('color', 'white')
+            }
+
+            if (event.animationName == 'content') {
+                $('.swal-content').css('color', 'white')
+                $('.swal-content__input').css('background','@ViewBag.Configuracao.CorBotao')
+            }
+
+
+            if (event.animationName == 'text') {
+                $('.swal-text').css('color', 'white')
+            }
+
+            if (event.animationName == 'swalIcon') {
+                $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
+max-height: 150px;
+padding: 15px;" src="data:image/png;base64,@ViewBag.Configuracao.Logo">`)
+            }
         });
-        $('body').on('DOMNodeInserted', '.swal-title', function () {
-            $('.swal-modal').css('background', '@ViewBag.Configuracao.CorBotao')
-            $('.swal-modal').css('color', 'white')
-            $('.swal-title').css('color', 'white')
 
-            $('.swal-modal').css('background', '@ViewBag.Configuracao.CorBotao')
-            $('.swal-modal').css('color', 'white')
-        });
-        $('body').on('DOMNodeInserted', '.swal-content', function () {
-            $('.swal-content').css('color', 'white')
-
-        });
-
-        $('body').on('DOMNodeInserted', '.swal-text', function () {
-            $('.swal-text').css('color', 'white')
-
-        });
 
             @if (ViewBag.Configuracao.BackgroundId != null)
             {

@@ -550,10 +550,11 @@ function PrintAll() {
 }
 
 
-
-$('body').on('DOMNodeInserted', '.swal-overlay', function () {
-    tippy('.btn-resume', {
-        content: `<ul style="padding-left: 10px;margin:5px;text-align:left">
+document.addEventListener('animationstart', function (event) {
+    console.log(event);
+    if (event.animationName == 'swalOverlay') {
+        tippy('.btn-resume', {
+            content: `<ul style="padding-left: 10px;margin:5px;text-align:left">
   <li>
     Nome
   </li>
@@ -561,14 +562,14 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     ${SelectedEvent.EquipeCirculo ? ` <li>${SelectedEvent.EquipeCirculo}</li>` : ""}
    
 </ul>`,
-        interactive: true,
-        allowHTML: true,
-        zIndex: 10005,
-        trigger: 'mouseenter'
-    });
+            interactive: true,
+            allowHTML: true,
+            zIndex: 10005,
+            trigger: 'mouseenter'
+        });
 
-    tippy('.btn-full', {
-        content: `<ul style="padding-left: 10px;margin:5px;text-align:left">
+        tippy('.btn-full', {
+            content: `<ul style="padding-left: 10px;margin:5px;text-align:left">
   <li>
     Nome
   </li>
@@ -582,12 +583,13 @@ $('body').on('DOMNodeInserted', '.swal-overlay', function () {
     Alergias
   </li>
 </ul>`,
-        interactive: true,
-        allowHTML: true,
-        zIndex: 10005,
-        trigger: 'mouseenter'
-    });
-});
+            interactive: true,
+            allowHTML: true,
+            zIndex: 10005,
+            trigger: 'mouseenter'
+        });
+    }
+})
 
 
 

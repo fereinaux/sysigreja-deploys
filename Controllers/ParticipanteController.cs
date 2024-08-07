@@ -989,7 +989,7 @@ namespace SysIgreja.Controllers
                       (x.Circulos.Any(y => model.CirculoId.Contains(y.CirculoId)))
                   );
                 }
-                
+
                 filteredResultsCount = result.Count();
             }
 

@@ -67,7 +67,7 @@
 
         async function getClaims() {
             if (xhrPopulate) {
-                promiseResult = await Promise.all(xhrPopulate)           
+                promiseResult = await Promise.all(xhrPopulate)
                 Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario: promiseResult[3].Usuario }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
@@ -81,7 +81,7 @@
                 xhrPopulate = [$.ajax(
                     {
                         type: "GET",
-                        url: `/Evento/PopulateEventosByUser/${localStorage.getItem('eventoId') }`,
+                        url: `/Evento/PopulateEventosByUser/${localStorage.getItem('eventoId')}`,
                     }),
                 $.ajax(
                     {
@@ -100,7 +100,7 @@
                     })
                 ]
 
-                promiseResult = await Promise.all(xhrPopulate)               
+                promiseResult = await Promise.all(xhrPopulate)
                 Claims = { Eventos: promiseResult[0].Eventos, Configuracoes: promiseResult[1].Configuracoes, Login: promiseResult[2].Login, Usuario: promiseResult[3].Usuario }
                 SelectedEvent = Claims.Eventos.find(evento => evento.Id == localStorage.getItem('eventoId')) || Claims.Eventos[0]
                 SelectedConfig = Claims.Configuracoes.find(config => config.Id == localStorage.getItem('configId')) || Claims.Configuracoes[0]
@@ -134,7 +134,7 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) { }
             })
-        } ,60000)
+        }, 60000)
 
 
     </script>
@@ -285,7 +285,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @*<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>*@
     @*<script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy.umd.min.js" integrity="sha512-2TtfktSlvvPzopzBA49C+MX6sdc7ykHGbBQUTH8Vk78YpkXVD5r6vrNU+nOmhhl1MyTWdVfxXdZfyFsvBvOllw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>*@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js" integrity="sha512-gbruucq/Opx9jlHfqqZeAg2LNK3Y4BbpXHKDhRC88/tARL/izPOE4Zt2w6X9Sn1UeWaGbL38zW7nkL2jdn5JIw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js" integrity="sha512-gbruucq/Opx9jlHfqqZeAg2LNK3Y4BbpXHKDhRC88/tARL/izPOE4Zt2w6X9Sn1UeWaGbL38zW7nkL2jdn5JIw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js"></script>
@@ -485,14 +485,14 @@
             }
         })
 
-        $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
+                document.addEventListener('animationstart', function (event) {
 
 
-            $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
-                max-height: 150px;
-                padding: 15px;" src="/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId || Login.LogoId}">`)
-
-
+            if (event.animationName == 'swalIcon') {
+   $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
+       max-height: 150px;
+       padding: 15px;" src="/Arquivo/GetArquivo/${SelectedEvent.LogoRelatorioId || Login.LogoId}">`)
+            }
         });
 
         $.extend($.fn.dataTable.defaults, {
@@ -643,7 +643,7 @@
 
 
         function renderPage(xhr, pushHistory) {
-          
+
             AajaxLoading = true
 
 

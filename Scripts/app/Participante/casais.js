@@ -4,7 +4,7 @@ function CarregarTabelaParticipante(callbackFunction) {
     handleParticipantes(casal)
     loadCampos(SelectedEvent.Id)
     GetCrachas()
-    
+
     if (SelectedEvent.Id != eventoId) {
         var filtros = getFiltros()
         $.ajax({
@@ -162,7 +162,7 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                 }
             },
             {
-                data: "Nome", name: "Nome", title:"Nome", width: "25%", createdCell: function (td, cellData, rowData, row, col) {
+                data: "Nome", name: "Nome", title: "Nome", width: "25%", createdCell: function (td, cellData, rowData, row, col) {
 
                     $(td).css('cursor', 'pointer')
                     if (td._tippy) {
@@ -188,18 +188,18 @@ ${dataMsg.data.map(p => `<option value=${p.Id}>${p.Titulo}</option>`)}
                     </div>`
                 }
             },
-            { title: "Apelido ",data: "Apelido", name: "Apelido", autoWidth: true, visible: false },
-            { title: "Cônjuge",data: "Conjuge", title: "Cônjuge", name: "Conjuge", autoWidth: true, visible: false },
-            { title: "Nome Mãe",data: "NomeMae", name: "NomeMae", autoWidth: true, visible: false },
-            { title: "Fone Mãe",data: "FoneMae", name: "FoneMae", autoWidth: true, visible: false },
-            { title: "Nome Pai",data: "NomePai", name: "NomePai", autoWidth: true, visible: false },
-            { title: "Fone Pai",data: "FonePai", name: "FonePai", autoWidth: true, visible: false },
-            { title: "Nome Contato",data: "NomeContato", name: "NomeContato", autoWidth: true, visible: false },
-            { title: "Fone Contato",data: "FoneContato", name: "FoneContato", autoWidth: true, visible: false },
-            { title: "Nome Convite",data: "NomeConvite", name: "NomeConvite", autoWidth: true, visible: false },
-            { title: "Fone Convite",data: "FoneConvite", name: "FoneConvite", autoWidth: true, visible: false },
-            { title: "Idade",data: "Idade", name: "Idade", width: "5%", },
-            { title: "Padrinho",data: "Padrinho", name: "Padrinho", width: "25%" },
+            { title: "Apelido ", data: "Apelido", name: "Apelido", autoWidth: true, visible: false },
+            { title: "Cônjuge", data: "Conjuge", title: "Cônjuge", name: "Conjuge", autoWidth: true, visible: false },
+            { title: "Nome Mãe", data: "NomeMae", name: "NomeMae", autoWidth: true, visible: false },
+            { title: "Fone Mãe", data: "FoneMae", name: "FoneMae", autoWidth: true, visible: false },
+            { title: "Nome Pai", data: "NomePai", name: "NomePai", autoWidth: true, visible: false },
+            { title: "Fone Pai", data: "FonePai", name: "FonePai", autoWidth: true, visible: false },
+            { title: "Nome Contato", data: "NomeContato", name: "NomeContato", autoWidth: true, visible: false },
+            { title: "Fone Contato", data: "FoneContato", name: "FoneContato", autoWidth: true, visible: false },
+            { title: "Nome Convite", data: "NomeConvite", name: "NomeConvite", autoWidth: true, visible: false },
+            { title: "Fone Convite", data: "FoneConvite", name: "FoneConvite", autoWidth: true, visible: false },
+            { title: "Idade", data: "Idade", name: "Idade", width: "5%", },
+            { title: "Padrinho", data: "Padrinho", name: "Padrinho", width: "25%" },
             {
                 title: "Status", data: "Status", name: "Status", width: "5%", render: function (data, type, row) {
                     if (row.Checkin) {
@@ -245,7 +245,7 @@ ${GetButton('Pagamentos', data, 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                                             
                         ${!row.HasFoto ? ` <label for="foto${data}" class="inputFile">
                                 <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>
-                                <input accept="image/*" onchange='Foto(${JSON.stringify({ Nome: row.Nome, Id: row.Id }) })' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
+                                <input accept="image/*" onchange='Foto(${JSON.stringify({ Nome: row.Nome, Id: row.Id })})' style="display: none;" class="custom-file-input inputFile" id="foto${data}" name="foto${data}" type="file" value="">
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleFoto(${data})"><i class="fa fa-camera" aria-hidden="true" title="Foto"></i></span>`
                         }
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
@@ -269,7 +269,7 @@ ${row.Status == Cancelado ? GetLabel('DeletarInscricao', JSON.stringify({ Nome: 
                 callbackFunction()
             }
 
-            
+
         },
 
         ajax: {
@@ -1415,16 +1415,17 @@ function selectAll() {
     $('.campos-excel').attr('checked', selected)
 }
 
-$('body').on('DOMNodeInserted', '.swal-overlay', function () {
-    tippy('.btn-export', {
-        content: `Exporta os campos selecionados`,
-        interactive: true,
-        allowHTML: true,
-        zIndex: 10005,
-        trigger: 'mouseenter'
-    });
-});
-
+document.addEventListener('animationstart', function (event) {
+    if (event.animationName == 'swalOverlay') {
+        tippy('.btn-export', {
+            content: `Exporta os campos selecionados`,
+            interactive: true,
+            allowHTML: true,
+            zIndex: 10005,
+            trigger: 'mouseenter'
+        });
+    }
+})
 
 
 function onLoadCampos() {

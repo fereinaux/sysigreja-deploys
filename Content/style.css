@@ -10560,7 +10560,7 @@ th {
             color: #5bbfc1;
         }
 
-    .profile-container, .action-handler {
+.profile-container, .action-handler {
     border-radius: 8px;
     border: 1px solid white;
     padding: 15px 20px;
@@ -10666,3 +10666,95 @@ th {
         grid-template-columns: 1fr 1fr;
     }
 }
+
+@keyframes title {
+    from {
+        z-index: 1;
+    }
+
+    to {
+        z-index: 1;
+    }
+}
+
+.swal-title {
+    animation-duration: 0.001s;
+    animation-name: title;
+}
+
+@keyframes content {
+    from {
+        z-index: 1;
+    }
+
+    to {
+        z-index: 1;
+    }
+}
+
+.swal-content {
+    animation-duration: 0.001s;
+    animation-name: content;
+}
+
+@keyframes text {
+    from {
+        z-index: 1;
+    }
+
+    to {
+        z-index: 1;
+    }
+}
+
+.swal-text {
+    animation-duration: 0.001s;
+    animation-name: text;
+}
+
+@keyframes calendar {
+    from {
+        z-index: 1;
+    }
+
+    to {
+        z-index: 1;
+    }
+}
+
+.div-calendar {
+    animation-duration: 0.001s;
+    animation-name: calendar;
+}
+
+@keyframes swalOverlay {
+    from {
+        z-index: 1;
+    }
+
+    to {
+        z-index: 1;
+    }
+}
+
+.swal-overlay {
+    animation-duration: 0.001s;
+    animation-name: swalOverlay;
+}
+
+@keyframes swalIcon {
+    from {
+        z-index: 1;
+    }
+
+    to {
+        z-index: 1;
+    }
+}
+
+.swal-icon--custom {
+    animation-duration: 0.001s;
+    animation-name: swalIcon;
+}
+
+

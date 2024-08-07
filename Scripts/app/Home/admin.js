@@ -101,19 +101,21 @@ function GetResultadosGeral() {
     }
 }
 
-$('body').on('DOMNodeInserted', '.div-calendar', function () {
-    var element = $(this)
-    element.parent().parent().css('cursor', 'pointer')
-    element.parent().parent().css('background-color', 'transparent')
-    element.parent().parent().css('border-color', 'transparent')
-
-    element.parent().parent().click(function () {
-        $('#eventoid').val($(this).find('.div-calendar').data('id')).trigger('change');
-
-    })
+document.addEventListener('animationstart', function (event) {
+    if (event.animationName == 'calendar') {
+        var element = $(this)
+        element.parent().parent().css('cursor', 'pointer')
+        element.parent().parent().css('background-color', 'transparent')
+        element.parent().parent().css('border-color', 'transparent')
 
 
-});
+        element.parent().parent().click(function () {
+            window.open($(this).find('.div-calendar').data('url'), "_blank")
+
+        })
+
+    }
+})
 
 
 

@@ -187,33 +187,34 @@
             var logo = '@(ViewBag.Configuracao.Logo)' ? "data:image/png;base64,@(ViewBag.Configuracao.Logo)" : "data:image/png;base64,@(ViewBag.Login.Logo)"
               var logoRelatorio = '@(ViewBag.Configuracao.LogoRelatorio)' ? "data:image/png;base64,@(ViewBag.Configuracao.LogoRelatorio)" :"data:image/png;base64,@(ViewBag.Login.Logo)"
 
-            $('body').on('DOMNodeInserted', '.swal-icon--custom', function () {
-
-                $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
-    max-height: 150px;
-    padding: 15px;" src="data:image/png;base64,${logoRelatorio}`)
-
-            });
-            $('body').on('DOMNodeInserted', '.swal-title', function () {
-                $('.swal-modal').css('background', corBotao)
-
+                   document.addEventListener('animationstart', function (event) {
+                       if (event.animationName == 'title') {
+                           $('.swal-modal').css('background', corBotao)
                 $('.swal-modal').css('color', 'white')
                 $('.swal-title').css('color', 'white')
 
+
                 $('.swal-modal').css('background', corBotao)
                 $('.swal-modal').css('color', 'white')
-            });
-            $('body').on('DOMNodeInserted', '.swal-content', function () {
+            }
+
+            if (event.animationName == 'content') {
                 $('.swal-content').css('color', 'white')
                 $('.swal-content__input').css('background', corBotao)
-                $('.swal-modal').css('background', corBotao)
+            }
 
-            });
 
-            $('body').on('DOMNodeInserted', '.swal-text', function () {
+            if (event.animationName == 'text') {
                 $('.swal-text').css('color', 'white')
+            }
 
-            });
+            if (event.animationName == 'swalIcon') {
+                $('.swal-icon--custom').replaceWith(`<img style="max-width: 60%;
+max-height: 150px;
+padding: 15px;" src="data:image/png;base64,${logoRelatorio}">`)
+            }
+        });
+
 
             $('#preloader').fadeOut();
 

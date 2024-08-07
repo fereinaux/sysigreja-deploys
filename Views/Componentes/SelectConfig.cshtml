@@ -16,25 +16,30 @@
 
             $('.bg-coord').css('background-color', SelectedConfig.CorBotao)
 
-            $('body').on('DOMNodeInserted', '.swal-title', function () {
-                $('.swal-modal').css('background', SelectedConfig.CorBotao)
-                $('.swal-modal').css('color', 'white')
-                $('.swal-title').css('color', 'white')
+
+            document.addEventListener('animationstart', function (event) {
+                if (event.animationName == 'title') {
+                    $('.swal-modal').css('background', SelectedConfig.CorBotao)
+                    $('.swal-modal').css('color', 'white')
+                    $('.swal-title').css('color', 'white')
 
 
-                $('.swal-modal').css('background', SelectedConfig.CorBotao)
-                $('.swal-modal').css('color', 'white')
+                    $('.swal-modal').css('background', SelectedConfig.CorBotao)
+                    $('.swal-modal').css('color', 'white')
+                }
+
+                if (event.animationName == 'content') {
+                    $('.swal-content').css('color', 'white')
+                    $('.swal-content__input').css('background', SelectedConfig.CorBotao)
+                }
+
+
+                if (event.animationName == 'text') {
+                    $('.swal-text').css('color', 'white')
+                }
             });
-            $('body').on('DOMNodeInserted', '.swal-content', function () {
-                $('.swal-content').css('color', 'white')
-                $('.swal-content__input').css('background', SelectedConfig.CorBotao)
 
-            });
-
-            $('body').on('DOMNodeInserted', '.swal-text', function () {
-                $('.swal-text').css('color', 'white')
-
-            });
+          
 
             $('.btn.btn-flat').css('background', SelectedConfig.CorBotao)
             $('.btn.btn-flat').css('margin-left', '7px')

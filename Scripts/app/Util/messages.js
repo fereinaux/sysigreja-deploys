@@ -92,12 +92,7 @@ function getPerfilName(user) {
 }
 
 function getDestino(user) {
-    switch (user.Perfil) {
-        case "Geral":
-            return `${window.location.hostname}`
-        default:
-            return `${user.Evento.Titulo} ${user.Evento.Numeracao}`
-    }
+    return user.Evento ? `${user.Evento.Titulo} ${user.Evento.Numeracao}` : `${window.location.hostname}`
 }
 
 async function createGroupEquipe(name, participants, eventoId, equipeId) {
@@ -152,7 +147,7 @@ async function createGroupCirculo(name, participants, circuloId) {
         data: JSON.stringify(
             {
                 grupoId: result.response.groupInfo[0].id,
-                circuloId                
+                circuloId
             }),
     })
 

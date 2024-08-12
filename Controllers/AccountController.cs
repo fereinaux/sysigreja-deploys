@@ -655,6 +655,7 @@ namespace SysIgreja.Controllers
                     body = reader.ReadToEnd();
                 }
 
+                body = body.Replace("{{logoEvento}}", $"https://{Request.Url.Host}/logoLogin");
                 body = body.Replace("{{name}}", usuario.Equipante.Nome);
                 body = body.Replace("{{buttonColor}}", config.CorBotao);
                 body = body.Replace("{{identificador}}", config.Identificador);

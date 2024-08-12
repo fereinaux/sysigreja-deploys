@@ -154,6 +154,28 @@ namespace SysIgreja.Controllers
         }
 
         [AllowAnonymous]
+        public ActionResult LogoLogin()
+        {
+            var login = configuracaoBusiness.GetLoginQuery().Include(x => x.Logo).FirstOrDefault();
+         
+            var arquivo = login.Logo;
+
+            if (arquivo != null)
+            {
+                return File(
+                    imageService.ResizeImageByte(arquivo.Conteudo, 250),
+                    arquivo.Tipo,
+                    arquivo.Nome
+                );
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        [AllowAnonymous]
         public ActionResult LogoByNome(string nome)
         {
             var evento = eventosBusiness

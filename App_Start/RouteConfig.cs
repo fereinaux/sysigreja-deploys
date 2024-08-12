@@ -39,6 +39,12 @@ namespace SysIgreja
             );
 
             routes.MapRoute(
+            name: "LogoLogin",
+            url: "/logoLogin",
+            defaults: new { controller = "Inscricoes", action = "LogoLogin" }
+        );
+
+            routes.MapRoute(
                 name: "Background",
                 url: "{nome}/background",
                 defaults: new { controller = "Inscricoes", action = "BackgroundByNome" },

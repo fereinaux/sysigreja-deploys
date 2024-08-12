@@ -40,7 +40,7 @@ namespace SysIgreja
 
             routes.MapRoute(
             name: "LogoLogin",
-            url: "/logoLogin",
+            url: "logoLogin",
             defaults: new { controller = "Inscricoes", action = "LogoLogin" }
         );
 

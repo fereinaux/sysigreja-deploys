@@ -1375,7 +1375,7 @@ function getFiltros(Foto) {
         Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null,
         QuartoId: $("#equipante-quartoid").val(),
         Foto: Foto,
-        Checkin: $("#equipante-checkin").val() === "nulo" ? null : ($("#equipante-checkin").val() === "sim" ? true  : false)
+        Checkin: $("#equipante-checkin").val() === "null" ? null : ($("#equipante-checkin").val() === "sim" ? true  : false)
     }
 }
 

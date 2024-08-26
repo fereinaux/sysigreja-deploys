@@ -1010,6 +1010,11 @@ namespace SysIgreja.Controllers
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;
 
+                if (model.Checkin != null)
+                {
+                    result = result.Where(x => x.Checkin == model.Checkin);
+                }
+
                 if (model.Etiquetas != null && model.Etiquetas.Count > 0)
                 {
                     model.Etiquetas.ForEach(etiqueta =>

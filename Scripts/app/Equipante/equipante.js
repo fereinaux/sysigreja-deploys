@@ -43,7 +43,7 @@ ${result.data.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
             }
         });
 
-
+        $("#equipante-checkin").select2()
 
         $.ajax({
             url: '/Quarto/GetQuartos',
@@ -1374,7 +1374,8 @@ function getFiltros(Foto) {
         NaoEtiquetas: $("#equipante-nao-marcadores").val(),
         Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null,
         QuartoId: $("#equipante-quartoid").val(),
-        Foto: Foto
+        Foto: Foto,
+        Checkin: $("#equipante-checkin").val() === "nulo" ? null : ($("#equipante-checkin").val() === "sim" ? true  : false)
     }
 }
 

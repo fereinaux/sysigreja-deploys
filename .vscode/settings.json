@@ -99,6 +99,54 @@
       "server": "162.246.23.197",
       "port": 1433,
       "driver": "MSSQL",
+      "name": "Associação Impacto",
+      "group": "Impacto",
+      "username": "reinaux",
+      "database": "aeimpacto",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "Getsêmani",
+      "group": "IECB",
+      "username": "reinaux",
+      "database": "getsemani",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "PDC",
+      "group": "IECB",
+      "username": "reinaux",
+      "database": "pdc",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
       "name": "Candeia",
       "group": "IECB",
       "username": "reinaux",

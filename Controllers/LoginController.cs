@@ -39,6 +39,11 @@ namespace SysIgreja.Controllers
         public LoginController(UserManager<ApplicationUser> userManager)
         {
             UserManager = userManager;
+
+            userManager.UserValidator = new UserValidator<ApplicationUser>(userManager)
+            {
+                AllowOnlyAlphanumericUserNames = false
+            };
         }
 
         public UserManager<ApplicationUser> UserManager { get; private set; }

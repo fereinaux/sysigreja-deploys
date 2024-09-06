@@ -73,7 +73,12 @@ Para entrar no sistema, acesse: *https://${window.location.hostname}/login*
 
 Usuário: ${user.UserName}
 ${!user.hasChangedPassword ? `Senha: ${user.Senha}` : ""}
+${getPerfilName(user) === "Coordenador" ?
+`*Para ter acesso a sua Equipe:*
+Clique no *Menu lateral* > clique em *Voluntários* > clique em *Coordenador* > selecione o Evento *${getDestino(user)}*.` : ""
+        }
 `
+
 }
 
 function getPerfilName(user) {

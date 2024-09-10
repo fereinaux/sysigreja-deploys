@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace SqlServerTypes
 {
     /// <summary>
-    /// Utility methods related to CLR Types for SQL Server
+    /// Utility methods related to CLR Types for SQL Server 
     /// </summary>
     public class Utilities
     {
@@ -21,10 +21,9 @@ namespace SqlServerTypes
         /// </param>
         public static void LoadNativeAssemblies(string rootApplicationPath)
         {
-            var nativeBinaryPath =
-                IntPtr.Size > 4
-                    ? Path.Combine(rootApplicationPath, @"SqlServerTypes\x64\")
-                    : Path.Combine(rootApplicationPath, @"SqlServerTypes\x86\");
+            var nativeBinaryPath = IntPtr.Size > 4
+                ? Path.Combine(rootApplicationPath, @"SqlServerTypes\x64\")
+                : Path.Combine(rootApplicationPath, @"SqlServerTypes\x86\");
 
             LoadNativeAssembly(nativeBinaryPath, "msvcr120.dll");
             LoadNativeAssembly(nativeBinaryPath, "SqlServerSpatial140.dll");
@@ -36,13 +35,10 @@ namespace SqlServerTypes
             var ptr = LoadLibrary(path);
             if (ptr == IntPtr.Zero)
             {
-                throw new Exception(
-                    string.Format(
-                        "Error loading {0} (ErrorCode: {1})",
-                        assemblyName,
-                        Marshal.GetLastWin32Error()
-                    )
-                );
+                throw new Exception(string.Format(
+                    "Error loading {0} (ErrorCode: {1})",
+                    assemblyName,
+                    Marshal.GetLastWin32Error()));
             }
         }
     }

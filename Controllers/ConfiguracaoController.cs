@@ -365,14 +365,6 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetEquipesFilhas(int id, int equipeId)
-        {
-            var result = configuracaoBusiness.GetEquipes(id).Where(x => x.EquipePaiId == equipeId);
-
-            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
         public ActionResult GetEquipesOrigem(int id, int equipeId)
         {
             var result = configuracaoBusiness

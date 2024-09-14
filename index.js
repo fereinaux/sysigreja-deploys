@@ -18,7 +18,7 @@ async function commit() {
     , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=f3224fb6-1a1f-b43a-b96b-2be9f6305752')
     , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=00de3eab-9a4c-1ffd-3a28-0e02059096f2')
     //candeia
-    , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=00de3eab-9a4c-1ffd-3a28-0e02059096f2')
+    , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=e8b72067-ef96-6724-c7b4-9ebde0a36c1a')
     //anglicana
     , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=33030063-d038-0eab-5d8c-44da689e4bcb')
     //somospaes

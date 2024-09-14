@@ -227,7 +227,7 @@ namespace SysIgreja.Controllers
                     )
                     .ForMember(
                         dest => dest.DataLancamento,
-                        opt => opt.MapFrom(x => x.DataCadastro.Value.ToString("dd/MM/yyyy"))
+                        opt => opt.MapFrom(x => x.DataCadastro.Value.ToString("dd/MM/yyyy HH:mm"))
                     )
                     .ForMember(
                         dest => dest.FormaPagamento,

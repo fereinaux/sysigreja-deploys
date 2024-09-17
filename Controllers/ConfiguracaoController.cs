@@ -41,11 +41,11 @@ namespace SysIgreja.Controllers
         {
             ViewBag.Title = "Parâmetros";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
-
+            ViewBag.Adicionar = true;
             var user =  accountBusiness.GetUsuarioById(User.Identity.GetUserId());
             if (!user.Claims.Any(x => x.ClaimType == ClaimTypes.Role && x.ClaimValue == "Geral"))
             {
-                return View("~/Views/NaoAutorizado/Index.cshtml");
+                ViewBag.Adicionar = false;
             }
             return View();
         }

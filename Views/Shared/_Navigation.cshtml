@@ -76,6 +76,16 @@
             </li>
 
             <li class="@Html.IsSelected(action: "Index", controller: "Ajuda")"><a href="@Url.Action("Index", "Ajuda")">      <i class="far fa-question-circle"></i><span class="nav-label">Central de Ajuda</span></a></li>
+
+            @foreach (var item in @System.Configuration.ConfigurationManager.AppSettings["links"].Split('@').ToList())
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+
+                <li class=""><a href="@item.Split(',')[0]" target="_blank"><i class="fas fa-link"></i> <span class="nav-label">    @item.Split(',')[1]</span></a></li>
+                }
+            
+            }
         </ul>
     </div>
 </nav>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using Arquitetura.Controller;
@@ -10,6 +11,7 @@ using Core.Business.Configuracao;
 using Core.Business.Eventos;
 using Core.Models.Configuracao;
 using Data.Entities;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using Utils.Enums;
 using static Utils.Extensions.EnumExtensions;
@@ -21,6 +23,7 @@ namespace SysIgreja.Controllers
     {
         private readonly IConfiguracaoBusiness configuracaoBusiness;
         private readonly IEventosBusiness eventoBusiness;
+        private readonly IAccountBusiness accountBusiness;
 
         public ConfiguracaoController(
             IConfiguracaoBusiness configuracaoBusiness,
@@ -31,6 +34,7 @@ namespace SysIgreja.Controllers
         {
             this.configuracaoBusiness = configuracaoBusiness;
             this.eventoBusiness = eventoBusiness;
+            this.accountBusiness = accountBusiness;
         }
 
         public ActionResult Parametros()
@@ -38,6 +42,11 @@ namespace SysIgreja.Controllers
             ViewBag.Title = "Parâmetros";
             Response.AddHeader("Title", HttpUtility.HtmlEncode(ViewBag.Title));
 
+            var user =  accountBusiness.GetUsuarioById(User.Identity.GetUserId());
+            if (!user.Claims.Any(x => x.ClaimType == ClaimTypes.Role && x.ClaimValue == "Geral"))
+            {
+                return View("~/Views/NaoAutorizado/Index.cshtml");
+            }
             return View();
         }
 

@@ -205,7 +205,7 @@ function ProfileCard({
             })
             .then(function (resp) {
                 var dataToPost = new FormData();
-                dataToPost.set(type == "Participante" ? 'ParticipanteId' ? "EquipanteId", realista.Id)
+                dataToPost.set(type == "Participante" ? 'ParticipanteId' : "EquipanteId", realista.Id)
                 dataToPost.set('Arquivo', dataURLtoFile(resp, `Foto ${realista.Nome}.jpg`))
                 dataToPost.set('IsFoto', true)
                 $.ajax(

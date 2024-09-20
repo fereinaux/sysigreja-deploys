@@ -232,7 +232,7 @@ function ProfileCard({
                         datatype: "json",
                         type: "POST",
                         contentType: 'application/json; charset=utf-8',
-                        url: type === "Participante" ? "/Arquivo/DeleteFotoParticipante" ? "/Arquivo/DeleteFotoEquipante",
+                        url: type === "Participante" ? "/Arquivo/DeleteFotoParticipante" : "/Arquivo/DeleteFotoEquipante",
                         data: JSON.stringify(
                             {
                                 Id: id

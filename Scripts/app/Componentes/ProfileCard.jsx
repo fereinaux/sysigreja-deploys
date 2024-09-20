@@ -205,7 +205,7 @@ function ProfileCard({
             })
             .then(function (resp) {
                 var dataToPost = new FormData();
-                dataToPost.set('ParticipanteId', realista.Id)
+                dataToPost.set(type == "Participante" ? 'ParticipanteId' ? "EquipanteId", realista.Id)
                 dataToPost.set('Arquivo', dataURLtoFile(resp, `Foto ${realista.Nome}.jpg`))
                 dataToPost.set('IsFoto', true)
                 $.ajax(
@@ -232,7 +232,7 @@ function ProfileCard({
                         datatype: "json",
                         type: "POST",
                         contentType: 'application/json; charset=utf-8',
-                        url: "/Arquivo/DeleteFotoParticipante",
+                        url: type === "Participante" ? "/Arquivo/DeleteFotoParticipante" ? "/Arquivo/DeleteFotoEquipante",
                         data: JSON.stringify(
                             {
                                 Id: id

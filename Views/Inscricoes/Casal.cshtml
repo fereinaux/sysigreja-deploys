@@ -63,17 +63,17 @@
                         }
                         @if (ViewBag.Campos.Contains(CamposEnum.Fone.GetDescription()))
                         {
-                        
-                                <div class="form-group">
-                                    <label for="participante-fone" class="">Telefone do <strong>homem</strong></label>
-                                    <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do <strong>homem</strong>" />
-                                </div>
-                                <div class="form-group">
-                                    <label for="participante-fone" class="">Telefone da <strong>mulher</strong></label>
-                                    <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da <strong>mulher</strong>" />
-                                </div>
 
-                            
+                            <div class="form-group">
+                                <label for="participante-fone" class="">Telefone do <strong>homem</strong></label>
+                                <input type="text" class="form-control fone" id="participante-fone-marido" data-field="Telefone do <strong>homem</strong>" />
+                            </div>
+                            <div class="form-group">
+                                <label for="participante-fone" class="">Telefone da <strong>mulher</strong></label>
+                                <input type="text" class="form-control fone" id="participante-fone-esposa" data-field="Telefone da <strong>mulher</strong>" />
+                            </div>
+
+
 
                         }
 
@@ -273,6 +273,11 @@
                                     }
                                 </select>
                             </div>
+
+                            <div class="form-group vagas d-none">
+                                <label for="participante-vagas" class="">Quantidade de Vagas?</label>
+                                <input type="number" class="form-control" id="participante-vagas" data-field="Quantidade de Vagas" />
+                            </div>
                         }
 
                         <div class="text-right">
@@ -408,12 +413,28 @@
 
 @section scripts {
     <script>
+            var equipeCarona =  @ViewBag.Configuracao.EquipeCaronaId
     document.styleSheets[0].addRule('#loader-1:before,#loader-1:after ', `border-top-color: @ViewBag.Configuracao.CorBotao !important;`);
         $(window).on('load', function () {
             $(`input`).val("");
             /* Page Loader active
            ========================================================*/
             $('#preloader').fadeOut();
+
+            if ($('#participante-equipe').val() == equipeCarona) {
+                $('.vagas').removeClass('d-none');
+                $("#participante-vagas").addClass('required');
+            }
+
+            $('#participante-equipe').on('change', function () {
+                if ($('#participante-equipe').val() == equipeCarona) {
+                    $('.vagas').removeClass('d-none');
+                    $("#participante-vagas").addClass('required');
+                } else {
+                    $('.vagas').addClass('d-none');
+                    $("#participante-vagas").removeClass('required');
+                }
+            })
         })
 
         var typingTimer;                //timer identifier
@@ -545,7 +566,7 @@
                                $("#participante-data-nascimento-marido").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                                $(`#participante-email-marido`).val(data.Participante.Email);
                                $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
-                   
+
 
                                setNumber('participante-fone-marido', data.Participante.Fone)
                                setNumber('participante-fone-convite', data.Participante.FoneConvite)
@@ -562,7 +583,7 @@
                                $(`#participante-apelido-esposa`).val(data.Participante.Apelido);
                                $("#participante-data-nascimento-esposa").val(moment(data.Participante.DataNascimento, 'DD/MM/YYYY').format('DD/MM/YYYY'));
                                $(`#participante-email-esposa`).val(data.Participante.Email);
-                               $(`#participante-nome-convite`).val(data.Participante.NomeConvite);        
+                               $(`#participante-nome-convite`).val(data.Participante.NomeConvite);
 
                                setNumber('participante-fone-esposa', data.Participante.Fone)
                                setNumber('participante-fone-convite', data.Participante.FoneConvite)
@@ -753,6 +774,7 @@
                                 Bairro: $(`#participante-bairro`).val(),
                                 Cidade: $(`#participante-cidade`).val(),
                                 EquipeId: $('#participante-equipe').val(),
+                                Vagas: $('#participante-vagas').val(),
                                 Estado: $(`#participante-estado`).val(),
                                 Numero: $(`#participante-numero`).val(),
                                 Complemento: $(`#participante-complemento`).val(),
@@ -811,7 +833,7 @@
                                         Fone: getNumber('participante-fone-esposa'),
                                         FoneConvite: getNumber('participante-fone-convite'),
                                         FoneContato: getNumber('participante-fone-contato'),
-                           
+
                                     }),
                                 success: function (url) {
                                     window.location.href = url;

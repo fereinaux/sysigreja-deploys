@@ -252,6 +252,31 @@ namespace SysIgreja.Controllers
         }
 
         [AllowAnonymous]
+        public ActionResult LogoRelatorioById(int id)
+        {
+            var evento = eventosBusiness
+                .GetEventos()
+                .Include(x => x.Configuracao.LogoRelatorio)
+                .Include(x => x.Configuracao.Logo)
+                .Where(x => x.Id == id)
+                .OrderByDescending(x => x.DataEvento)
+                .FirstOrDefault();
+
+            var arquivo =
+                evento?.Configuracao?.LogoRelatorio
+                ?? evento?.Configuracao?.Logo ?? configuracaoBusiness.GetLoginQuery().Include(x => x.Logo).FirstOrDefault().Logo;
+
+            if (arquivo != null)
+            {
+                return File(arquivo.Conteudo, arquivo.Tipo, arquivo.Nome);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [AllowAnonymous]
         public ActionResult BackgroundById(int id)
         {
             var evento = eventosBusiness

@@ -469,6 +469,10 @@
             $(`input`).val("");
 
             $('#preloader').fadeOut();
+            if ($('#participante-equipe').val() == equipeCarona) {
+                $('.vagas').removeClass('d-none');
+                $("#participante-vagas").addClass('required');
+            }
 
             $('#participante-equipe').on('change', function () {
                 if ($('#participante-equipe').val() == equipeCarona) {

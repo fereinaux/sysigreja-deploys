@@ -716,6 +716,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\img\ad\1.png" />
+    <Content Include="assets\img\ad\2.png" />
+    <Content Include="assets\img\ad\3.png" />
+    <Content Include="assets\img\ad\4.png" />
     <Content Include="assets\img\Loading_icon.gif" />
     <Content Include="Content\admin.css" />
     <Content Include="Content\animate.css" />

@@ -51,6 +51,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.css" integrity="sha512-n/Uz0nm+qm1KbAOnqYOg9OihX5n1gFz2a+VyHoMSHOK6AdMSpH5Sak6yVI/cx721pUJarnwDHMkljOQrFOirTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
 
+        body{
+font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+}
+.css-slideshow{
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+
+        .css-slideshow img {
+  margin-top: 15px;
+            width: 100%;
+        }
+
+
+
         body {
             font-family: "Roboto" !important;
         }
@@ -326,7 +344,7 @@
                 border-top-right-radius: 0px !important;
             }
 
-    
+
 
             .a-normal h3 {
                 font-size: 14px
@@ -596,17 +614,24 @@
                         </div>
                     }
                     @*else
-                        {
-                            <div class="col-md-4 col-xs-12 " style="display: flex">
-                                <a style="margin-left: auto;" href="https://lp.sysigreja.com" class="btn btn-outline button-create">CRIE SEU EVENTO</a>
-                            </div>
-                        }*@
+                    {
+                        <div class="col-md-4 col-xs-12 " style="display: flex">
+                            <a style="margin-left: auto;" href="https://lp.sysigreja.com" class="btn btn-outline button-create">CRIE SEU EVENTO</a>
+                        </div>
+                    }*@
 
 
 
                 </div>
             </div>
         </div>
+        <div class="css-slideshow row-eventos">
+            <img id="ad1" onclick="window.open('https://amzn.to/4faCZFb','_blank')" class="view" src="~/assets/img/ad/1.png"  />
+            <img id="ad2" onclick="window.open('https://amzn.to/48nsM5E','_blank')" class="d-none" src="~/assets/img/ad/2.png"  />
+            <img id="ad3" onclick="window.open('https://amzn.to/3ND0eeE','_blank')" class="d-none" src="~/assets/img/ad/3.png"  />
+            <img id="ad4" onclick="window.open('https://amzn.to/3NzQEJF','_blank')" class="d-none" src="~/assets/img/ad/4.png"  />
+        </div>
+
         <div class="row row-eventos" id="row-eventos" style="">
 
         </div>
@@ -617,6 +642,22 @@
     </div>
 </body>
 </html>
+
+<script>
+    setInterval(() => {
+        const oldId = Number($('.css-slideshow img.view')[0].id.substring(2, 3))
+
+        const newId = oldId == 4 ? 1 : oldId + 1
+
+        $(`#ad${oldId}`).removeClass("view")
+        $(`#ad${newId}`).addClass("view")
+
+        $(`#ad${newId}`).removeClass("d-none")
+        $(`#ad${oldId}`).addClass("d-none")
+        
+    },
+    7000)
+</script>
 
 <script src="~/Scripts/jquery-3.1.1.min.js"></script>
 <script src="~/Scripts/plugins/imaskjs/imask.js"></script>

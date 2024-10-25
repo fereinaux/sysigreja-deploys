@@ -638,6 +638,7 @@ font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", He
             <img id="ad2" onclick="window.open('https://amzn.to/48nsM5E','_blank')" class="d-none" src="~/assets/img/ad/2.png"  />
             <img id="ad3" onclick="window.open('https://amzn.to/3ND0eeE','_blank')" class="d-none" src="~/assets/img/ad/3.png"  />
             <img id="ad4" onclick="window.open('https://amzn.to/3NzQEJF','_blank')" class="d-none" src="~/assets/img/ad/4.png"  />
+            <img id="ad5" onclick="window.open('https://amzn.to/4fhftWC','_blank')" class="d-none" src="~/assets/img/ad/5.png" />
         </div>
 
         <div class="row row-eventos" id="row-eventos" style="">
@@ -655,7 +656,7 @@ font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", He
     setInterval(() => {
         const oldId = Number($('.css-slideshow img.view')[0].id.substring(2, 3))
 
-        const newId = oldId == 4 ? 1 : oldId + 1
+        const newId = oldId == 5 ? 1 : oldId + 1
 
         $(`#ad${oldId}`).removeClass("view")
         $(`#ad${newId}`).addClass("view")

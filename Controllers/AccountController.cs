@@ -333,6 +333,8 @@ namespace SysIgreja.Controllers
             }
             else
             {
+                user.Status = StatusEnum.Ativo;
+                UserManager.Update(user);
                 permissoes = user.Claims.Any(y => y.ClaimType == "Permissões")
                     ? JsonConvert.DeserializeObject<List<Permissoes>>(
                         user.Claims.Where(y => y.ClaimType == "Permissões")
@@ -908,6 +910,14 @@ namespace SysIgreja.Controllers
         [HttpPost]
         public ActionResult DeleteUsuario(string Id)
         {
+            var claims = UserManager.GetClaims(Id);
+            if (claims.Any(x => x.Type == "Permissões"))
+            {
+                UserManager.RemoveClaim(
+                    Id,
+                    claims.Where(x => x.Type == "Permissões").FirstOrDefault()
+                );
+            }
             accountBusiness.DeleteUsuario(Id);
             return new HttpStatusCodeResult(200, "OK");
         }

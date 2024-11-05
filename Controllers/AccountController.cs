@@ -333,8 +333,9 @@ namespace SysIgreja.Controllers
             }
             else
             {
+                user = UserManager.FindById(user.Id);
                 user.Status = StatusEnum.Ativo;
-                UserManager.Update(user);
+
                 permissoes = user.Claims.Any(y => y.ClaimType == "Permissões")
                     ? JsonConvert.DeserializeObject<List<Permissoes>>(
                         user.Claims.Where(y => y.ClaimType == "Permissões")

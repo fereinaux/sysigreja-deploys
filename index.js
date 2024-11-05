@@ -20,13 +20,13 @@ async function commit() {
     //candeia
     , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=e8b72067-ef96-6724-c7b4-9ebde0a36c1a')
     //anglicana
-    , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=33030063-d038-0eab-5d8c-44da689e4bcb')
+    // , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=33030063-d038-0eab-5d8c-44da689e4bcb')
     //somospaes
     , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=a77d2fa9-598e-0b6f-650b-e517b4dd3ba5')
     //impacto
     , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=ba236585-577f-2905-0bd0-bbedb42914a5')
     //sysigreja
-    , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=c4615387-45a9-6973-2f53-ef78f3dc2b4f')
+    // , axios.post('https://plesk6400.is.cc:8443/modules/git/public/web-hook.php?uuid=c4615387-45a9-6973-2f53-ef78f3dc2b4f')
   ]).then(() => {
     console.log('webhook done')
   })

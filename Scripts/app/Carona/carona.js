@@ -73,7 +73,7 @@ function CarregarTabelaCarona() {
 
                 if (!setView) {
                     setView = true
-                    mapSetView = dataArray.filter(x => x.Participantes?.some(y => y.Latitude && y.Longitude))[0].Participantes[0]
+                    mapSetView = dataArray.filter(x => x.Participantes?.some(y => y.Latitude && y.Longitude))[0]?.Participantes[0]
                     map.setView([mapSetView.Latitude, mapSetView.Longitude], 10);
                 }
                 dataArray.forEach(function (carona, index, array) {

@@ -57,12 +57,12 @@ function CarregarTabelaCarona() {
                 return {
                     ...carona,
                     Cor: '#424242',
-                    Title: carona.Motorista,
-                    Total: carona.Capacidade,
+                    Title: carona?.Motorista,
+                    Total: carona?.Capacidade,
                     Participantes:
-                        carona.Participantes.length > 0
-                            ? _.orderBy(carona.Participantes, "Nome", "asc")
-                            : _.orderBy(carona.Equipantes, "Nome", "asc"),
+                        carona?.Participantes.length > 0
+                            ? _.orderBy(carona?.Participantes, "Nome", "asc")
+                            : _.orderBy(carona?.Equipantes, "Nome", "asc"),
                 };
             }), PrintCarona)
             GetParticipantesSemCarona();

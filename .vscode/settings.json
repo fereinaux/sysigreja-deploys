@@ -99,22 +99,6 @@
       "server": "162.246.23.197",
       "port": 1433,
       "driver": "MSSQL",
-      "name": "Associação Impacto",
-      "group": "Impacto",
-      "username": "reinaux",
-      "database": "aeimpacto",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
       "name": "Getsêmani",
       "group": "IECB",
       "username": "reinaux",
@@ -163,22 +147,6 @@
       "server": "162.246.23.197",
       "port": 1433,
       "driver": "MSSQL",
-      "name": "Calvário",
-      "group": "IECB",
-      "username": "reinaux",
-      "database": "calvario",
-      "password": "T3_g0x0o9"
-    },
-    {
-      "mssqlOptions": {
-        "appName": "SQLTools",
-        "useUTC": true,
-        "encrypt": true
-      },
-      "previewLimit": 50,
-      "server": "162.246.23.197",
-      "port": 1433,
-      "driver": "MSSQL",
       "name": "Somos Paes",
       "group": "Anglicana",
       "username": "reinaux",
@@ -215,6 +183,38 @@
       "group": "SysIgreja",
       "username": "reinaux",
       "database": "sysigreja",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "Associação Impacto",
+      "group": "Impacto",
+      "username": "reinaux",
+      "database": "impacto",
+      "password": "T3_g0x0o9"
+    },
+    {
+      "mssqlOptions": {
+        "appName": "SQLTools",
+        "useUTC": true,
+        "encrypt": true
+      },
+      "previewLimit": 50,
+      "server": "162.246.23.197",
+      "port": 1433,
+      "driver": "MSSQL",
+      "name": "Calvário",
+      "group": "IECB",
+      "username": "reinaux",
+      "database": "iecbeventos",
       "password": "T3_g0x0o9"
     }
   ]
